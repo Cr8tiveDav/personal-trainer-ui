@@ -1,19 +1,31 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-export default function NotFound() {
+const NotFound = () => {
   return (
-    <main className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-6 text-center">
-      <p className="text-muted-foreground text-sm font-medium">404</p>
-      <h1 className="text-2xl font-semibold">Page not found</h1>
-      <p className="text-muted-foreground max-w-md text-sm">
-        The page you’re looking for doesn’t exist or has moved.
-      </p>
-      <Link
-        href="/"
-        className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2 inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium transition-colors"
-      >
-        Return home
-      </Link>
+    <main className='flex min-h-screen w-full flex-col items-center justify-center bg-gray-50 px-4'>
+      <div className='max-w-md text-center'>
+        <p className='mb-4 text-sm font-semibold uppercase tracking-widest text-primary'>
+          404 — Page not found
+        </p>
+
+        <h1 className='mb-6 text-4xl font-black leading-none text-muted-foreground md:text-5xl lg:text-6xl'>
+          You missed <br /> the call.
+        </h1>
+
+        <p className='mb-10 text-base leading-relaxed text-muted'>
+          This page doesnt exist, but your trainer does. Head back home and get
+          moving.
+        </p>
+
+        <Link
+          href='/'
+          className='inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90'
+        >
+          Back to home
+        </Link>
+      </div>
     </main>
   );
-}
+};
+
+export default NotFound;
