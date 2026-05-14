@@ -11,7 +11,7 @@ const faqs = [
     value: 'item-1',
     question: 'What is FitCall and how does it work?',
     answer:
-      'FitCall.me is an accountability-driven fitness platform that connects users with real fitness trainers who help them stay consistent through scheduled sessions, reminders, and real human follow
+      'FitCall.me is an accountability-driven fitness platform that connects users with real fitness trainers who help them stay consistent through scheduled sessions, reminders, and real human follow-up.',
   },
   {
     value: 'item-2',

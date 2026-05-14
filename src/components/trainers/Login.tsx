@@ -65,7 +65,7 @@ const Login = () => {
   };
 
   const inputBase =
-    'h-[48px] rounded-[10px] border border-[#E3E3E3] px-4 text-[14px] text-[#111111] placeholder:text-[#B0B0B0] placeholder:font-normal bg-white focus-visible:outline-none focus-visible:border-[#0B4D8
+    'h-[48px] rounded-[10px] border border-[#E3E3E3] px-4 text-[14px] text-[#111111] placeholder:text-[#B0B0B0] placeholder:font-normal bg-white focus-visible:outline-none focus-visible:border-[#0B4D8D] focus-visible:ring-2 focus-visible:ring-[rgba(11,77,141,0.1)] font-inter w-full transition duration-150 ease-in-out';
 
   return (
     <section className='min-h-screen flex items-center'>

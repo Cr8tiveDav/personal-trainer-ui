@@ -4,12 +4,12 @@ const problemSolution = [
   {
     title: 'The problem',
     content:
-      "Most fitness apps hand you a plan and walk away. Videos play, streaks break, and within weeks you're back to scrolling instead of training. Motivation is unreliable. Showing up is hard when no 
+      "Most fitness apps hand you a plan and walk away. Videos play, streaks break, and within weeks you're back to scrolling instead of training. Motivation is unreliable. Showing up is hard when no one's waiting.",
   },
   {
     title: 'Our solution',
     content:
-      "A real human on the other end of a call. Your trainer schedules with you, calls when it's time, and guides you through every rep. No pre-recorded videos. No guessing. Just structured sessions, 
+      "A real human on the other end of a call. Your trainer schedules with you, calls when it's time, and guides you through every rep. No pre-recorded videos. No guessing. Just structured sessions, week after week.",
   },
 ]
 

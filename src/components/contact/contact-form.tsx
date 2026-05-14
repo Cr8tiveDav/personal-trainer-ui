@@ -179,7 +179,7 @@ export function ContactForm() {
                   disabled={isSubmitting}
                 >
                   <FormControl>
-                    <SelectTrigger className="h-[48px] rounded-[10px] border border-[#E3E3E3] bg-white px-4 text-[14px] text-[#111111] [&>span[data-placeholder]]:text-[#B0B0B0] focus:border-[#0B4D8D] 
+                    <SelectTrigger className="h-[48px] rounded-[10px] border border-[#E3E3E3] bg-white px-4 text-[14px] text-[#111111] [&>span[data-placeholder]]:text-[#B0B0B0] focus:border-[#0B4D8D] focus:ring-2 focus:ring-[rgba(11,77,141,0.1)]">
                       <SelectValue placeholder="General question" />
                     </SelectTrigger>
                   </FormControl>
@@ -207,7 +207,7 @@ export function ContactForm() {
                 <FormControl>
                   <Textarea
                     placeholder="Tell us a little about what you're looking for..."
-                    className="min-h-[140px] resize-none rounded-[10px] border border-[#E3E3E3] bg-white p-4 text-[14px] text-[#111111] placeholder:text-[#B0B0B0] focus-visible:border-[#0B4D8D] focus-
+                    className="min-h-[140px] resize-none rounded-[10px] border border-[#E3E3E3] bg-white p-4 text-[14px] text-[#111111] placeholder:text-[#B0B0B0] focus-visible:border-[#0B4D8D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(11,77,141,0.1)]"
                     disabled={isSubmitting}
                     {...field}
                   />

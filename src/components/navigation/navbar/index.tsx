@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import useVersionSync from '~/actions/useVersionSync';
-import Logo from '~/components/global/main-logo';
-import { cn } from '~/utils';
-import { NAV_LINKS } from './links';
-import MobileNav from './mobile-navbar';
-import { Button } from '~/components/ui/button';
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import useVersionSync from '~/actions/useVersionSync'
+import Logo from '~/components/global/main-logo'
+import { cn } from '~/utils'
+import { NAV_LINKS } from './links'
+import MobileNav from './mobile-navbar'
+import { Button } from '~/components/ui/button'
 
 const Navbar = () => {
-  const [scrolling, setIsScrolling] = useState<boolean>(false);
-  const pathname = usePathname();
+  const [scrolling, setIsScrolling] = useState<boolean>(false)
+  const pathname = usePathname()
 
-  const version = 'v1.0';
-  useVersionSync(version);
+  const version = 'v1.0'
+  useVersionSync(version)
 
   useEffect(() => {
     const handleScrollEvent = () => {
-      setIsScrolling(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScrollEvent);
-    return () => window.removeEventListener('scroll', handleScrollEvent);
-  }, []);
+      setIsScrolling(window.scrollY > 10)
+    }
+    window.addEventListener('scroll', handleScrollEvent)
+    return () => window.removeEventListener('scroll', handleScrollEvent)
+  }, [])
 
   return (
     <nav
@@ -34,14 +34,14 @@ const Navbar = () => {
           : 'bg-transparent py-4 md:py-6'
       )}
     >
-      <div className='container mx-auto flex items-center justify-between'>
-        <div className='flex items-center'>
+      <div className="container mx-auto flex items-center justify-between">
+        <div className="flex items-center">
           <Logo />
         </div>
 
-        <div className='hidden items-center justify-center gap-x-2 md:flex lg:gap-x-4'>
+        <div className="hidden items-center justify-center gap-x-2 md:flex lg:gap-x-4">
           {NAV_LINKS.map((item, index) => {
-            const isActive = pathname === item.link;
+            const isActive = pathname === item.link
 
             return (
               <Link
@@ -54,25 +54,24 @@ const Navbar = () => {
               >
                 {item.route}
               </Link>
-            );
+            )
           })}
         </div>
 
-        <div className='flex items-center'>
+        <div className="flex items-center">
           <Button
-            size='lg'
             asChild
-            className='hidden bg-primary text-white hover:bg-[#1a3a5f] md:inline-flex'
+            className="hidden bg-[#0d2b45] text-white hover:bg-[#1a3a5f] md:inline-flex"
           >
-            <Link href='/waitlist'>Join Waitlist</Link>
+            <Link href="/waitlist">Join Waitlist</Link>
           </Button>
-          <div className='md:hidden'>
+          <div className="md:hidden">
             <MobileNav />
           </div>
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

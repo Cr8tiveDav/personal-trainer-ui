@@ -57,6 +57,14 @@ const Footer = () => {
                     Pricing
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href="/pricing"
+                    className="transition-colors hover:text-primary"
+                  >
+                    Book Free Trial
+                  </Link>
+                </li>
               </ul>
             </div>
             <div>
@@ -113,6 +121,14 @@ const Footer = () => {
                     className="transition-colors hover:text-primary"
                   >
                     Help Centre
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="transition-colors hover:text-primary"
+                  >
+                    API Docs
                   </Link>
                 </li>
               </ul>

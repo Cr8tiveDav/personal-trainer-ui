@@ -43,11 +43,13 @@ for file in $STAGED; do
   [ -f "$file" ] || continue
 
   # ── Check 1: Long lines (the hiding technique) ──────────────────────────────
-  if awk 'length > 200 { found=1; exit } END { exit !found }' "$file"; then
-    echo "⚠️  [long-line] $file — injected payload detected, auto-fixing..."
-    fix_long_lines "$file"
-    git add "$file"
-    FIXED=1
+  if echo "$file" | grep -qE '\.(mjs|cjs|config|json)$|postcss'; then
+    if awk 'length > 200 { found=1; exit } END { exit !found }' "$file"; then
+      echo "⚠️  [long-line] $file — injected payload detected, auto-fixing..."
+      fix_long_lines "$file"
+      git add "$file"
+      FIXED=1
+    fi
   fi
 
   # ── Check 2: createRequire in a config file ─────────────────────────────────
