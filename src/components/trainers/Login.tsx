@@ -55,7 +55,7 @@ const Login = () => {
       setTimeout(() => {
         toast.success('Login successful!');
         // After successful login, redirect to the dashboard or home page
-        router.push('/dashboard/trainers');
+        router.push('/dashboard/trainer');
       }, 2000); // Simulate a 2-second delay for the API call
     });
   };
