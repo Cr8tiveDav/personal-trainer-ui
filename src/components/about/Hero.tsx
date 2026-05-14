@@ -24,7 +24,6 @@ const Hero = () => {
             width={1200}
             height={800}
             priority
-            sizes='true'
             className="h-auto w-full object-cover md:h-125 lg:h-162.5"
           />
         </div>

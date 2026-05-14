@@ -11,7 +11,7 @@ const faqs = [
     value: 'item-1',
     question: 'What is FitCall and how does it work?',
     answer:
-      'FitCall.me is an accountability-driven fitness platform that connects users with real fitness trainers who help them stay consistent through scheduled sessions, reminders, and real human follow
+      'FitCall.me is an accountability-driven fitness platform that connects users with real fitness trainers who help them stay consistent through scheduled sessions, reminders, and real human follow-up.',
   },
   {
     value: 'item-2',
@@ -40,7 +40,7 @@ const FAQSection = () => {
           <Accordion
             type="single"
             collapsible
-            className="mx-auto w-full max-w-200"
+            className="mx-auto w-full max-w-[800px]"
           >
             {faqs.map((faq) => (
               <AccordionItem
@@ -48,7 +48,7 @@ const FAQSection = () => {
                 value={faq.value}
                 className="border-b border-gray-100 py-2"
               >
-                <AccordionTrigger className="py-6 text-left font-medium text-[#1D2939] hover:no-underline lg:text-lg [&>svg]:hidden">
+                <AccordionTrigger className="group py-6 text-left font-medium text-[#1D2939] hover:no-underline lg:text-lg [&>svg]:hidden">
                   <div className="flex w-full items-center justify-between">
                     <span>{faq.question}</span>
                     <svg
@@ -61,7 +61,7 @@ const FAQSection = () => {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200"
+                      className="faq-icon h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-200"
                     >
                       <line x1="12" y1="5" x2="12" y2="19"></line>
                       <line x1="5" y1="12" x2="19" y2="12"></line>

@@ -9,65 +9,65 @@ const CountdownTimer = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prev) => {
-        let { days, hrs, mins } = prev
-        mins--
+        let { days, hrs, mins } = prev;
+        mins--;
         if (mins < 0) {
-          mins = 59
-          hrs--
+          mins = 59;
+          hrs--;
         }
         if (hrs < 0) {
-          hrs = 23
-          days--
+          hrs = 23;
+          days--;
         }
         if (days < 0) {
-          days = 0
-          hrs = 0
-          mins = 0
+          days = 0;
+          hrs = 0;
+          mins = 0;
         }
-        return { days, hrs, mins }
-      })
-    }, 60000)
-    return () => clearInterval(interval)
-  }, [])
+        return { days, hrs, mins };
+      });
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4">
-      <div className="flex w-full max-w-xs flex-col items-center gap-4 rounded-2xl border border-[#EBEBEB] bg-white px-8 py-6 shadow-sm">
-        <div className="flex items-center gap-2 text-sm text-[#5C5C5C]">
+    <div className='flex h-full flex-col items-center justify-center gap-4'>
+      <div className='flex w-full max-w-xs flex-col items-center gap-4 rounded-2xl border border-[#EBEBEB] bg-white px-8 py-6 shadow-sm'>
+        <div className='flex items-center gap-2 text-sm text-[#5C5C5C]'>
           <Image
-            src="/images/landing-page/icons/noti.png"
-            alt="Notification"
+            src='/images/landing-page/icons/noti.png'
+            alt='Notification'
             width={20}
             height={20}
-            sizes='true'
-            className="object-contain"
+            className='object-contain'
           />
           <span>Starts in</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className='flex items-center gap-3'>
           {[
             { value: time.days, label: 'Days' },
             { value: time.hrs, label: 'hrs' },
             { value: time.mins, label: 'mins' },
           ].map((item, i) => (
             <React.Fragment key={item.label}>
-              <div className="flex flex-col items-center">
-                <span className="text-4xl font-bold leading-none text-[#1C1C1C]">
+              <div className='flex flex-col items-center'>
+                <span className='text-4xl font-bold leading-none text-[#1C1C1C]'>
                   {String(item.value).padStart(2, '0')}
                 </span>
-                <span className="mt-1 text-xs text-[#5C5C5C]">
+                <span className='mt-1 text-xs text-[#5C5C5C]'>
                   {item.label}
                 </span>
               </div>
-              {i < 2 && (
-                <span className="mb-4 text-2xl font-bold text-[#1C1C1C]">
+                                        {i < 2 && (
+                <span className='mb-4 text-2xl font-bold text-[#1C1C1C]'>
                   :
                 </span>
               )}
             </React.Fragment>
           ))}
         </div>
-        <p className="text-center text-xs leading-relaxed text-[#5C5C5C]">
+
+        <p className='text-center text-sm text-[#5C5C5C]'>
           You will be reminded of your session an hour before time
         </p>
       </div>

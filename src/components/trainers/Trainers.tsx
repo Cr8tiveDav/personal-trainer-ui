@@ -33,7 +33,11 @@ const TrainerSection = () => {
           onChange={setActiveCategory}
         />
 
+<<<<<<< HEAD
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 max-w-6xl mx-auto">
+=======
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+>>>>>>> 3df50710cbafcb38552223fbef89a114a358e285
           {filtered.map((trainer) => (
             <TrainerCard key={trainer.name} trainer={trainer} />
           ))}

@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import React from 'react'
-import Image from 'next/image'
-import { Autoplay, Navigation, Pagination, A11y } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import SectionHeader from '../ui/SectionHeader'
+import React from 'react';
+import Image from 'next/image';
+import { Autoplay, Navigation, Pagination, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import SectionHeader from '../ui/SectionHeader';
 
 const stories = [
   {
@@ -32,21 +32,21 @@ const stories = [
     footer:
       "By session twenty I realised it became about being someone who doesn't quit.",
   },
-]
+];
 
 const SuccessStory = () => {
   return (
-    <section className="w-full pb-14 md:mt-24">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className='w-full pb-14 md:mt-24'>
+      <div className='container mx-auto px-4 sm:px-6 lg:px-8'>
         <SectionHeader
-          title="How FitCall changed my life"
-          className="mb-8 md:mb-14"
+          title='How FitCall changed my life'
+          className='mb-8 md:mb-14'
         />
 
         <Swiper
           modules={[Autoplay, Navigation, Pagination, A11y]}
           slidesPerView={1}
-          loop={true}
+          loop={stories.length > 2}
           speed={800}
           autoplay={{
             delay: 4000,
@@ -57,38 +57,37 @@ const SuccessStory = () => {
             bulletClass: 'swiper-pagination-bullet custom-bullet',
             bulletActiveClass: 'custom-bullet-active',
           }}
-          className="pb-16"
+          className='pb-4 [&_.swiper-pagination]:!relative [&_.swiper-pagination]:!mt-8 [&_.swiper-pagination]:!bottom-auto'
         >
           {stories.map((story, index) => (
             <SwiperSlide key={index}>
-              <div className="w-full">
-                <div className="mb-6 text-left">
-                  <span className="text-lg font-medium tracking-wide text-primary">
+              <div className='w-full'>
+                <div className='mb-6 text-left'>
+                  <span className='text-lg font-medium tracking-wide text-primary'>
                     {story.name}
                   </span>
-                  <h3 className="mt-2 text-xl font-bold text-muted-foreground md:text-2xl">
+                  <h3 className='mt-2 text-xl font-bold text-muted-foreground md:text-2xl'>
                     &ldquo;{story.quote}&rdquo;
                   </h3>
                 </div>
 
-                <div className="grid grid-cols-1 gap-8 px-2 md:grid-cols-2 lg:gap-20">
-                  <div className="relative min-h-75 w-full md:min-h-100">
+                <div className='grid grid-cols-1 gap-8 px-2 md:grid-cols-2 lg:gap-20'>
+                  <div className='relative min-h-[300px] w-full md:min-h-[400px]'>
                     <Image
                       src={story.image}
                       alt={story.name}
                       fill
-                      sizes="true"
-                      className="rounded-xl object-cover"
+                      className='rounded-xl object-cover'
                       priority={index === 0}
                     />
                   </div>
 
-                  <div className="flex flex-col justify-center rounded-xl border border-gray-100 bg-white p-4 shadow-sm lg:p-8">
-                    <div className="space-y-6 text-base leading-relaxed text-muted">
+                  <div className='flex flex-col justify-center rounded-xl border border-gray-100 bg-white p-4 shadow-sm lg:p-8'>
+                    <div className='space-y-6 text-base leading-relaxed text-muted'>
                       {story.paragraphs.map((text, pIndex) => (
                         <p key={pIndex}>{text}</p>
                       ))}
-                      <p className="font-semibold text-gray-400">
+                      <p className='font-semibold text-gray-400'>
                         {story.footer}
                       </p>
                     </div>
@@ -100,7 +99,7 @@ const SuccessStory = () => {
         </Swiper>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default SuccessStory
+export default SuccessStory;

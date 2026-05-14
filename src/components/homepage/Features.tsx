@@ -14,20 +14,19 @@ const Features = () => {
         />
 
         <div className="flex flex-col gap-8 px-2">
-          <div className="flex h-auto items-end overflow-hidden rounded-3xl bg-[#F8F9FA] px-6 md:min-h-105 md:px-16 lg:px-24">
+          <div className="flex h-auto items-end overflow-hidden rounded-3xl bg-[#F8F9FA] px-6 md:min-h-[420px] md:px-16 lg:px-24">
             <div className="flex h-full w-full flex-col-reverse items-start justify-between gap-6 md:flex-row md:items-end md:gap-10">
-              <div className="relative w-full max-w-62.5 self-start md:max-w-87.5 md:self-end lg:max-w-105">
+              <div className="relative w-full max-w-[250px] self-start md:max-w-[350px] md:self-end lg:max-w-[420px]">
                 <Image
                   src="/features.png"
                   alt="Trainer Discovery"
                   width={450}
                   height={450}
-                  sizes='true'
                   className="h-auto w-full object-contain object-bottom"
                 />
               </div>
 
-              <div className="flex max-w-137.5 flex-col justify-end pt-4 text-left md:pb-16 md:pt-0">
+              <div className="flex max-w-[550px] flex-col justify-end pt-4 text-left md:pb-16 md:pt-0">
                 <h3 className="mb-2 text-xl font-bold leading-tight text-muted-foreground md:text-3xl lg:text-[44px]">
                   Trainer Discovery
                 </h3>
@@ -51,20 +50,19 @@ const Features = () => {
             </div>
           </div>
 
-          <div className="flex h-auto items-end overflow-hidden rounded-3xl bg-[#F8F9FA] px-6 md:min-h-105 md:px-16 lg:px-24">
+          <div className="flex h-auto items-end overflow-hidden rounded-3xl bg-[#F8F9FA] px-6 md:min-h-[420px] md:px-16 lg:px-24">
             <div className="flex h-full w-full flex-col-reverse items-start justify-between gap-6 md:flex-row-reverse md:items-end md:gap-10">
-              <div className="relative w-full max-w-62.5 self-start md:max-w-87.5 md:self-end lg:max-w-105">
+              <div className="relative w-full max-w-[250px] self-start md:max-w-[350px] md:self-end lg:max-w-[420px]">
                 <Image
                   src="/features1.png"
                   alt="Session Booking"
                   width={450}
                   height={450}
-                  sizes='true'
                   className="h-auto w-full object-contain object-bottom"
                 />
               </div>
 
-              <div className="flex max-w-137.5 flex-col justify-end pt-4 text-left md:pb-16 md:pt-0">
+              <div className="flex max-w-[550px] flex-col justify-end pt-4 text-left md:pb-16 md:pt-0">
                 <h3 className="mb-2 text-xl font-bold leading-tight text-muted-foreground md:text-3xl lg:text-[44px]">
                   Session Booking
                 </h3>

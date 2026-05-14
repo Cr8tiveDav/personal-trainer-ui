@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Button } from '@/components/ui/button'
+import { Button } from '~/components/ui/button'
 import {
   Form,
   FormControl,
@@ -11,19 +12,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+} from '~/components/ui/form'
+import { Input } from '~/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
+} from '~/components/ui/select'
+import { Textarea } from '~/components/ui/textarea'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react'
-import { submitContactForm } from '@/lib/api/contact'
 
 const formSchema = z.object({
   fullName: z
@@ -41,6 +41,7 @@ const formSchema = z.object({
     .min(10, { message: 'Message must be at least 10 characters.' }),
 })
 
+// Scaled-up input for laptop display — 48px height, 14px text
 const inputBase =
   'h-[48px] rounded-[10px] border border-[#E3E3E3] px-4 text-[14px] text-[#111111] ' +
   'placeholder:text-[#B0B0B0] placeholder:font-normal bg-white ' +
@@ -53,34 +54,22 @@ export function ContactForm() {
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: async (data) => {
-      const result = await formSchema.safeParseAsync(data)
-      if (result.success) {
-        return { values: result.data, errors: {} }
-      }
-      return {
-        values: {},
-        errors: result.error.issues.reduce((allErrors, currentError) => {
-          return {
-            ...allErrors,
-            [currentError.path[0]]: {
-              type: currentError.code,
-              message: currentError.message,
-            },
-          }
-        }, {}),
-      }
-    },
-    defaultValues: { fullName: '', email: '', subject: undefined, message: '' },
+    resolver: zodResolver(formSchema),
+    defaultValues: { fullName: '', email: '', subject: 'general', message: '' },
   })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
     setSubmitSuccess(false)
     setSubmitError(null)
-
     try {
-      await submitContactForm(values)
+      await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (values.email === 'fail@test.com')
+            reject(new Error('Form submission failed. Please try again.'))
+          else resolve(true)
+        }, 1500)
+      })
       setSubmitSuccess(true)
       form.reset()
     } catch (error) {
@@ -101,7 +90,7 @@ export function ContactForm() {
           aria-live="polite"
           aria-atomic="true"
         >
-          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
+          <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
           <div>
             <p className="text-sm font-semibold">Message sent successfully!</p>
             <p className="mt-1 text-xs opacity-80">
@@ -118,7 +107,7 @@ export function ContactForm() {
           aria-live="assertive"
           aria-atomic="true"
         >
-          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
+          <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
           <div>
             <p className="text-sm font-semibold">Submission Error</p>
             <p className="mt-1 text-xs opacity-80">{submitError}</p>
@@ -131,7 +120,7 @@ export function ContactForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-5"
         >
-          <div className="grid md:grid-cols-2 gap-5">
+          <div className="grid grid-cols-2 gap-5">
             <FormField
               control={form.control}
               name="fullName"
@@ -175,6 +164,7 @@ export function ContactForm() {
             />
           </div>
 
+          {/* Row 2: Subject dropdown */}
           <FormField
             control={form.control}
             name="subject"
@@ -189,11 +179,11 @@ export function ContactForm() {
                   disabled={isSubmitting}
                 >
                   <FormControl>
-                    <SelectTrigger className="h-12 rounded-[10px] border border-[#E3E3E3] bg-white px-4 text-[14px] text-[#B0B0B0] focus:border-[#0B4D8D] focus:ring-2 focus:ring-[rgba(11,77,141,0.1)]"
+                    <SelectTrigger className="h-[48px] rounded-[10px] border border-[#E3E3E3] bg-white px-4 text-[14px] text-[#111111] [&>span[data-placeholder]]:text-[#B0B0B0] focus:border-[#0B4D8D] focus:ring-2 focus:ring-[rgba(11,77,141,0.1)]">
                       <SelectValue placeholder="General question" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="bg-white">
                     <SelectItem value="general">General question</SelectItem>
                     <SelectItem value="training">Training plans</SelectItem>
                     <SelectItem value="billing">Billing</SelectItem>
@@ -205,6 +195,7 @@ export function ContactForm() {
             )}
           />
 
+          {/* Row 3: Message textarea — min-h 140px */}
           <FormField
             control={form.control}
             name="message"
@@ -216,7 +207,7 @@ export function ContactForm() {
                 <FormControl>
                   <Textarea
                     placeholder="Tell us a little about what you're looking for..."
-                    className="min-h-35 resize-none rounded-[10px] border border-[#E3E3E3] bg-white p-4 text-[14px] text-[#111111] placeholder:text-[#B0B0B0] focus-visible:border-[#0B4D8D] focus-visib
+                    className="min-h-[140px] resize-none rounded-[10px] border border-[#E3E3E3] bg-white p-4 text-[14px] text-[#111111] placeholder:text-[#B0B0B0] focus-visible:border-[#0B4D8D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(11,77,141,0.1)]"
                     disabled={isSubmitting}
                     {...field}
                   />
@@ -226,8 +217,9 @@ export function ContactForm() {
             )}
           />
 
-          <div className="flex md:flex-row flex-col items-center justify-between gap-4 pt-1">
-            <p className="text-[13px] leading-normal text-muted-foreground">
+          {/* Footer row */}
+          <div className="flex items-center justify-between gap-4 pt-1">
+            <p className="text-[13px] leading-[1.5] text-muted-foreground">
               By sending, you agree to our friendly{' '}
               <Link
                 href="/legal/privacy-policy"
@@ -237,7 +229,7 @@ export function ContactForm() {
               </Link>
               .
             </p>
-            <Button type="submit" disabled={isSubmitting} className='w-full lg:w-fit'>
+            <Button type="submit" disabled={isSubmitting} className='flex items-center gap-2'>
               {isSubmitting ? 'Sending...' : 'Send message'}
               {!isSubmitting && <ArrowRight className="h-4 w-4" />}
             </Button>
