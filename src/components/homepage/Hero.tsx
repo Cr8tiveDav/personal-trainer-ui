@@ -1,0 +1,99 @@
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '../ui/button';
+
+const Hero = () => {
+  return (
+    <section className='relative w-full overflow-hidden pt-28 md:pt-48'>
+      <div
+        className='absolute inset-0 z-0 opacity-[0.03]'
+        style={{
+          backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`,
+          backgroundSize: '40px 40px',
+        }}
+      ></div>
+
+      <div className='absolute -left-20 top-0 h-[600px] w-[600px] rounded-full bg-[#C2DCFF]/40 blur-[120px]'></div>
+      <div className='absolute -right-20 top-0 h-[600px] w-[600px] rounded-full bg-[#F5D9C0]/40 blur-[120px]'></div>
+
+      <div className='container relative z-10 mx-auto px-4'>
+        <div className='flex flex-col items-center text-center'>
+          <div className='mb-6 inline-flex items-center rounded-full border border-primary bg-transparent px-4 py-1.5 text-xs font-semibold text-primary shadow-sm'>
+            <span className='mr-2 h-2 w-2 animate-pulse rounded-full bg-primary'></span>
+            Live Trainer Accountability
+          </div>
+
+          <h1 className='mb-6 max-w-4xl text-4xl font-bold tracking-tight text-muted-foreground sm:text-5xl md:text-6xl'>
+            Stay Consistent With Real{' '}
+            <span className='relative mt-2 inline-block bg-primary/90 px-4 py-0.5 text-white'>
+              Trainers
+            </span>
+          </h1>
+
+          <p className='mb-10 max-w-2xl text-lg leading-relaxed text-muted md:text-xl'>
+            FitCall pairs you with a real trainer who calls you for every
+            session, Zoom, WhatsApp, or audio. Real accountability, structured
+            workouts, zero excuses.
+          </p>
+
+          <div className='mb-16 flex flex-col items-center gap-[10px] sm:flex-row'>
+            <Button
+              asChild
+              className='h-10 rounded-[10px] px-4 hover:bg-primary/90'
+            >
+              <Link
+                href='#'
+                className='flex items-center justify-center gap-[10px]'
+              >
+                <Image
+                  src='/images/landing-page/apple.svg'
+                  alt='Apple'
+                  width={20}
+                  height={20}
+                />
+                <span className='text-[15px] font-semibold text-white'>
+                  Download on App Store
+                </span>
+              </Link>
+            </Button>
+
+            <Button
+              asChild
+              variant='outline'
+              className='h-10 rounded-[10px] border border-border bg-transparent px-4 hover:bg-gray-50'
+            >
+              <Link
+                href='#'
+                className='flex items-center justify-center gap-[10px]'
+              >
+                <Image
+                  src='/images/landing-page/google-play.svg'
+                  alt='Playstore'
+                  width={20}
+                  height={20}
+                />
+                <span className='text-[15px] font-semibold text-[#111827]'>
+                  Download on Playstore
+                </span>
+              </Link>
+            </Button>
+          </div>
+
+          <div className='relative h-[300px] w-full md:h-[776px]'>
+            <Image
+              src='/images/landing-page/hero.png'
+              alt='Landing Page Hero'
+              fill
+              sizes="100vw"
+              className='w-full rounded-[32px] object-cover'
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
