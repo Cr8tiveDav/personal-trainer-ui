@@ -3,9 +3,9 @@ import Image from 'next/image'
 
 const FitnessLifestyle = () => {
   return (
-    <section className="bg-subtle-bg py-[9px] md:py-16">
+    <section className="bg-subtle-bg py-2.25 md:py-16">
       <div className="container flex flex-col items-center">
-        <div className="mb-[18.69px] text-center md:mb-[69px]">
+        <div className="mb-[18.69px] text-center md:mb-17.25">
           <h2 className="mb-[6.5px] text-xl font-bold text-accent-foreground md:mb-6 md:text-4xl lg:text-5xl">
             Built for your fitness lifestyle
           </h2>
@@ -21,6 +21,7 @@ const FitnessLifestyle = () => {
             width={1280}
             height={487}
             priority
+            sizes="true"
             className="rounded-[97.77px] object-cover md:rounded-3xl"
           />
         </div>

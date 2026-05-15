@@ -27,10 +27,11 @@ const PricingCard = ({ plan }: PricingCardProps) => {
       {isHighlighted && (
         <div className="absolute left-6 top-6 inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF3] px-3 py-1 text-xs font-medium text-[#027A48]">
           <Image
-            src="/images/landing-page/icons/icon.svg"
+            src="/icon.svg"
             alt="Check Icon"
             width={16}
             height={16}
+            sizes="true"
             className="h-4 w-4 object-contain"
           />
           {plan.highlight}
@@ -47,7 +48,7 @@ const PricingCard = ({ plan }: PricingCardProps) => {
           </span>
         </div>
 
-        <p className="mt-4 min-h-[48px] text-sm leading-relaxed text-muted">
+        <p className="mt-4 min-h-12 text-sm leading-relaxed text-muted">
           {plan.description}
         </p>
       </div>
@@ -62,10 +63,11 @@ const PricingCard = ({ plan }: PricingCardProps) => {
           >
             <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full">
               <Image
-                src="/images/landing-page/icons/icon.svg"
+                src="/icon.svg"
                 alt="Check Icon"
                 width={16}
                 height={16}
+                sizes="true"
                 className="h-4 w-4 object-contain"
               />
             </div>

@@ -1,15 +1,16 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import SectionHeader from '../ui/SectionHeader';
+import React, { useState } from 'react'
+import Image from 'next/image'
+
+import SectionHeader from '../ui/SectionHeader'
+import { AnimatePresence, motion } from 'motion/react'
 
 interface Feature {
-  icon: string;
-  title: string;
-  description: string;
-  image: string;
+  icon: string
+  title: string
+  description: string
+  image: string
 }
 
 const features: Feature[] = [
@@ -44,7 +45,7 @@ const WhyChoose = () => {
 
   return (
     <section className='mt-12 w-full overflow-hidden pb-14 md:mt-24'>
-      <div className='container mx-auto min-h-[504px] max-w-4xl px-4'>
+      <div className='container mx-auto min-h-126 max-w-4xl px-4'>
         <SectionHeader
           badge='WHY CHOOSE FITCALL?'
           title='Coaching that fits your lifestyle'
@@ -86,12 +87,12 @@ const WhyChoose = () => {
                   <div
                     key={index}
                     onClick={() => setActiveIndex(index)}
-                    className='relative flex h-[122px] items-center px-4'
+                    className='relative flex h-30.5 items-center px-4'
                   >
                     {isActive && (
                       <motion.div
                         layoutId='activeLine'
-                        className='absolute left-0 top-0 hidden h-full w-[4px] bg-primary lg:block'
+                        className='absolute left-0 top-0 hidden h-full w-1 bg-primary lg:block'
                         transition={{
                           type: 'spring',
                           stiffness: 300,
@@ -101,9 +102,9 @@ const WhyChoose = () => {
                     )}
                     <div
                       key={index}
-                      className='relative flex w-[576px] items-start gap-4 rounded-2xl border px-4 py-3 transition-all duration-300 md:items-center md:gap-4 md:px-5 md:py-6'
+                      className='relative flex w-xl items-start gap-4 rounded-2xl border border-gray-300 px-4 py-3 transition-all duration-300 md:items-center md:gap-4 md:px-5 md:py-6'
                     >
-                      <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border'>
+                      <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-300'>
                         <Image
                           src={feature.icon}
                           alt={feature.title}

@@ -5,7 +5,7 @@ const CTASection = () => {
   return (
     <section className="bg-white py-20">
       <div className="container mx-auto px-4">
-        <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary via-[#063660] to-[#0C6FC6] px-6 py-16 text-center text-white md:py-24">
+        <div className="relative overflow-hidden rounded-lg bg-linear-to-br from-primary via-[#063660] to-[#0C6FC6] px-6 py-16 text-center text-white md:py-24">
           <div className="relative z-10 mx-auto max-w-2xl">
             <h2 className="text-2xl font-bold leading-[1.1] tracking-tight md:text-4xl">
               Stop skipping workouts. Start showing up.
@@ -16,7 +16,7 @@ const CTASection = () => {
               and feel the difference one phone call makes.
             </p>
 
-            <Button className="mt-10 min-w-[300px] bg-white font-bold text-primary transition-transform hover:scale-105 hover:bg-blue-50 hover:text-blue-900 active:scale-95">
+            <Button className="mt-10 min-w-75 bg-white font-bold text-primary transition-transform hover:scale-105 hover:bg-blue-50 hover:text-blue-900 active:scale-95">
               <Link href="/pricing">Download FitCall</Link>
             </Button>
           </div>

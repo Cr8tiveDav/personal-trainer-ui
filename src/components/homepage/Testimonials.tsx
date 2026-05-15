@@ -6,11 +6,11 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import SectionHeader from '../ui/SectionHeader'
 import TestimonialCard from './TestimonialCard'
 import { testimonials } from './testimonials-data'
-import { cn } from '~/utils'
+import { cn } from '@/lib/utils'
 
 const Testimonials = () => {
   return (
-    <section className="bg-[#fcfcfc] py-16 md:py-24">
+    <section className="relative w-full overflow-hidden bg-[#fcfcfc] py-16 md:py-24">
       <div className="container relative mx-auto px-4">
         <SectionHeader
           badge="OUR TESTIMONIAL"
@@ -20,18 +20,17 @@ const Testimonials = () => {
         />
 
         <div className="relative mx-auto mt-16 max-w-6xl">
-          {/* Navigation Arrows - Positioned to the sides of the cards */}
-          <button className="swiper-button-prev-custom absolute -left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-100 bg-white shadow-md transition-all hover:bg-slate-50 md:-left-16">
+          <button className="swiper-button-prev-custom absolute -left-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-100 bg-white shadow-md">
             <ChevronLeft className="h-5 w-5 text-slate-400" />
           </button>
-          <button className="swiper-button-next-custom absolute -right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-100 bg-white shadow-md transition-all hover:bg-slate-50 md:-right-16">
+
+          <button className="swiper-button-next-custom absolute -right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-100 bg-white shadow-md">
             <ChevronRight className="h-5 w-5 text-slate-400" />
           </button>
-
           <Swiper
             modules={[Navigation, Pagination, A11y, Autoplay]}
             centeredSlides={true}
-            loop={testimonials.length > 6}
+            loop={true}
             slidesPerView={1}
             spaceBetween={20}
             breakpoints={{
@@ -44,7 +43,7 @@ const Testimonials = () => {
               nextEl: '.swiper-button-next-custom',
               prevEl: '.swiper-button-prev-custom',
             }}
-            className="!py-10"
+            className="py-10"
           >
             {testimonials.map((item) => (
               <SwiperSlide
