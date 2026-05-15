@@ -11,6 +11,7 @@ export default function EnvironmentSwitcher() {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration guard for Zustand-persisted store; avoids SSR/client mismatch
     setMounted(true)
   }, [])
 
