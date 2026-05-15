@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+LONG_LINE_EXCLUDE="pnpm-lock.yaml|yarn.lock|package-lock.json|.*\.min\.js|.*\.min\.css|.*\.map|.*\.lockb|.*\.svg"
 
 FIXED=0
 FAILED=0
