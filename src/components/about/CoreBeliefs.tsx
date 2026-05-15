@@ -44,6 +44,7 @@ const CoreBeliefs = () => {
                     src={item.icon}
                     alt={item.title}
                     width={24}
+                    sizes='true'
                     height={24}
                     className='h-6 w-6'
                   />

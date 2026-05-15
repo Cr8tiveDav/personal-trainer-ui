@@ -7,11 +7,7 @@ import { ChevronDown } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 
-<<<<<<< HEAD
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-=======
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
->>>>>>> 3df50710cbafcb38552223fbef89a114a358e285
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,13 +17,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuTrigger,
-<<<<<<< HEAD
-} from '@/components/ui/dropdown-menu'
-import { cn } from '@/lib/utils'
-=======
 } from '~/components/ui/dropdown-menu'
 import { cn } from '~/utils'
->>>>>>> 3df50710cbafcb38552223fbef89a114a358e285
 
 const handleLogout = async () => {
   await signOut({

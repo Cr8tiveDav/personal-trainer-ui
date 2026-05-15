@@ -102,9 +102,9 @@ const WhyChoose = () => {
                     )}
                     <div
                       key={index}
-                      className='relative flex w-xl items-start gap-4 rounded-2xl border px-4 py-3 transition-all duration-300 md:items-center md:gap-4 md:px-5 md:py-6'
+                      className='relative flex w-xl items-start gap-4 rounded-2xl border border-gray-300 px-4 py-3 transition-all duration-300 md:items-center md:gap-4 md:px-5 md:py-6'
                     >
-                      <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border'>
+                      <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-300'>
                         <Image
                           src={feature.icon}
                           alt={feature.title}

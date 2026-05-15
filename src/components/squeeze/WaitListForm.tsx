@@ -3,11 +3,10 @@
 import { useState } from 'react'
 import { joinWaitlist } from '@/lib/api/waitlist'
 import { Button } from '../ui/button'
-import { CheckCircle2, X } from 'lucide-react'
+import { toast } from 'sonner'
 
 export const WaitlistForm = () => {
   const [loading, setLoading] = useState(false)
-  const [showPopup, setShowPopup] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,16 +22,16 @@ export const WaitlistForm = () => {
     e.preventDefault()
     setLoading(true)
 
-    try {
-      await joinWaitlist(formData)
-      setShowPopup(true)
-      setFormData({ name: '', email: '', phone_number: '', location: '' })
-    } catch (error) {
-      console.error(error)
-      alert('Something went wrong. Please try again.')
-    } finally {
-      setLoading(false)
-    }
+    toast.promise(joinWaitlist(formData), {
+      loading: 'Adding you to the elite queue...',
+      success: () => {
+        setFormData({ name: '', email: '', phone_number: '', location: '' })
+        return 'Entry confirmed! We’ll be in touch soon.'
+      },
+      error: 'Something went wrong. Please try again.',
+    })
+
+    setLoading(false)
   }
 
   const inputStyles =
@@ -85,37 +84,6 @@ export const WaitlistForm = () => {
           {loading ? 'Processing...' : 'Join the Waitlist'}
         </Button>
       </form>
-
-      {/* Inline Success Popup */}
-      {showPopup && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center rounded-xl bg-white/10 backdrop-blur-md border border-white/20 animate-in fade-in zoom-in duration-300">
-          <div className="relative flex flex-col items-center p-8 text-center bg-white rounded-2xl shadow-2xl border border-gray-100 max-w-[90%]">
-            <button 
-              onClick={() => setShowPopup(false)}
-              className="absolute top-3 right-3 text-gray-400 hover:text-gray-600"
-            >
-              <X size={18} />
-            </button>
-            
-            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600">
-              <CheckCircle2 size={28} />
-            </div>
-            
-            <h3 className="text-lg font-bold text-gray-900">Entry Confirmed</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              You’ve been added to the elite queue. We’ll be in touch soon.
-            </p>
-            
-            <Button 
-              onClick={() => setShowPopup(false)}
-              className="mt-6 w-full py-2"
-              variant="outline"
-            >
-              Dismiss
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

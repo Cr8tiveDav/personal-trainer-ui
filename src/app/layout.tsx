@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-const interClass = 'font-sans'
+import { Toaster } from "sonner"; // [!code ++]
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
+const interClass = 'font-sans'
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 const appName = "Personal Trainer";
 
@@ -29,6 +30,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={cn(interClass, 'max-w-480 mx-auto antialiased')}>
         {children}
+       
+        <Toaster position="top-center" richColors closeButton />
       </body>
     </html>
   );
