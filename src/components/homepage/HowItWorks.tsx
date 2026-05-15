@@ -112,7 +112,7 @@ const HowItWorks = () => {
       <div className='container flex flex-col'>
         <SectionHeader
           badge='HOW IT WORKS'
-          title='Not another workout plan a system built for you'
+          title='Not another workout plan, a system built for you'
           align='center'
           className='max-w-3xl mx-auto mb-8 md:mb-14'
         />

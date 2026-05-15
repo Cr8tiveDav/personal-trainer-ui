@@ -83,7 +83,7 @@ const Footer = () => {
                     href='/contact'
                     className='transition-colors hover:text-primary'
                   >
-                    Contact
+                    Contact Us
                   </Link>
                 </li>
               </ul>
