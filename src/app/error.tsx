@@ -14,23 +14,36 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-6 text-center">
-      <h1 className="text-2xl font-semibold">Something went wrong</h1>
-      <p className="text-muted-foreground max-w-md text-sm">
-        An unexpected error occurred. Please try again.
-      </p>
-      {error.digest ? (
-        <code className="text-muted-foreground bg-muted rounded px-2 py-1 text-xs">
-          ref: {error.digest}
-        </code>
-      ) : null}
-      <button
-        type="button"
-        onClick={() => unstable_retry()}
-        className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2 inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium transition-colors"
-      >
-        Try again
-      </button>
+    <main className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-50 px-4">
+      <div className="max-w-md text-center">
+        <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-primary">
+          500 — Server Error
+        </p>
+
+        <h1 className="mb-6 text-4xl font-black leading-none text-muted-foreground md:text-5xl lg:text-6xl">
+          Something went <br /> wrong.
+        </h1>
+
+        <p className="mb-10 text-base leading-relaxed text-muted">
+          An unexpected error occurred. Please try again.
+        </p>
+
+        {error.digest ? (
+          <p className="mb-6">
+            <code className="text-muted-foreground bg-muted rounded px-2 py-1 text-xs">
+              ref: {error.digest}
+            </code>
+          </p>
+        ) : null}
+
+        <button
+          type="button"
+          onClick={() => unstable_retry()}
+          className="inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+        >
+          Try again
+        </button>
+      </div>
     </main>
   );
 }
