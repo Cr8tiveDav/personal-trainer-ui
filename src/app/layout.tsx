@@ -1,38 +1,23 @@
-import type { Metadata } from 'next';
-import { Geist, Roboto_Mono, Figtree } from 'next/font/google';
-import './globals.css';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
-import { cn } from '@/lib/utils';
-import { Providers } from './provider';
+import type { Metadata } from "next";
+import { Toaster } from "sonner"; // [!code ++]
+import "./globals.css";
+import { cn } from "@/lib/utils";
 
-const figtree = Figtree({ subsets: ['latin'], variable: '--font-sans' });
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const robotoMono = Roboto_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
-
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
-const appName = process.env.NEXT_PUBLIC_APP_NAME ?? 'Next Starter';
+const interClass = 'font-sans'
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+const appName = "Personal Trainer";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: 'African Personal Trainer | FitCall.me',
-    template: `%s | FitCall.me`,
+    default: appName,
+    template: `%s · ${appName}`,
   },
-  description:
-    'FitCall.me connects users with professional African personal trainers through a modern and accessible fitness platform designed for training, wellness, and personalized coaching.',
+  description: "Personal Trainer — Your dedicated fitness companion for personalized workouts and professional guidance.",
   icons: {
-    icon: '/logo.svg',
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
   },
 };
 
@@ -42,19 +27,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang='en'
-      className={cn(
-        'h-full',
-        'antialiased',
-        geistSans.variable,
-        robotoMono.variable,
-        'font-sans',
-        figtree.variable
-      )}
-    >
-      <body className='min-h-full flex flex-col'>
-        <Providers>{children}</Providers>
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn(interClass, 'max-w-480 mx-auto antialiased')}>
+        {children}
+       
+        <Toaster position="top-center" richColors closeButton />
       </body>
     </html>
   );

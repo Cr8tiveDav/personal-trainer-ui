@@ -1,0 +1,214 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches:
+      - staging
+      - main
+  schedule:
+    - cron: '0 0 */2 * *'
+
+concurrency:
+  group: frontend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_lint_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'main' || github.ref }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Lint code
+        run: pnpm lint
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Run Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+
+  deploy-staging:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    needs: build_lint_test
+    name: Deploy Frontend Staging
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Checkout frontend repo
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Create environment file
+        run: |
+          echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env.production
+          echo "API_URL=${{ secrets.API_URL }}" >> .env.production
+          echo "NEXT_PUBLIC_APP_ENV=${{ secrets.NEXT_PUBLIC_APP_ENV }}" >> .env.production
+          echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env.production
+          echo "PORT=3001" >> .env.production
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm build
+
+      - name: Prepare deployment artifact
+        run: |
+          mkdir -p deploy
+          cp -r .next deploy/.next
+          cp -r public deploy/public
+          cp package.json deploy/package.json
+          cp pnpm-lock.yaml deploy/pnpm-lock.yaml
+          cp next.config.* deploy/ 2>/dev/null || true
+          cp .env.production deploy/.env.production
+
+      - name: Deploy frontend staging
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+          SOURCE: deploy/
+          TARGET: /var/www/personal-trainer/frontend/staging/
+          ARGS: -rlgoDzvc --delete
+
+      - name: Install dependencies and restart staging frontend
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          request_pty: false
+          script: |
+            set -e
+            cd /var/www/personal-trainer/frontend/staging
+            pnpm install --prod --frozen-lockfile
+            sudo -n /usr/bin/systemctl restart personal-trainer-frontend-staging
+            for i in $(seq 1 30); do
+              if systemctl is-active --quiet personal-trainer-frontend-staging; then
+                echo "Service active after ${i}s"
+                exit 0
+              fi
+              sleep 1
+            done
+            echo "Service failed to become active after 30s"
+            sudo -n /usr/bin/systemctl status personal-trainer-frontend-staging
+            exit 1
+
+  deploy-production:
+    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    needs: build_lint_test
+    name: Deploy Frontend Production
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout frontend repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && 'main' || github.ref }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Create environment file
+        run: |
+          echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env.production
+          echo "API_URL=${{ secrets.API_URL }}" >> .env.production
+          echo "NEXT_PUBLIC_APP_ENV=${{ secrets.NEXT_PUBLIC_APP_ENV }}" >> .env.production
+          echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env.production
+          echo "PORT=3002" >> .env.production
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: pnpm build
+
+      - name: Prepare deployment artifact
+        run: |
+          mkdir -p deploy
+          cp -r .next deploy/.next
+          cp -r public deploy/public
+          cp package.json deploy/package.json
+          cp pnpm-lock.yaml deploy/pnpm-lock.yaml
+          cp next.config.* deploy/ 2>/dev/null || true
+          cp .env.production deploy/.env.production
+
+      - name: Deploy frontend production
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          REMOTE_PORT: ${{ secrets.SERVER_PORT }}
+          SOURCE: deploy/
+          TARGET: /var/www/personal-trainer/frontend/production/
+          ARGS: -rlgoDzvc --delete
+
+      - name: Install dependencies and restart production frontend
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          request_pty: false
+          script: |
+            set -e
+            cd /var/www/personal-trainer/frontend/production
+            pnpm install --prod --frozen-lockfile
+            sudo -n /usr/bin/systemctl restart personal-trainer-frontend-production
+            for i in $(seq 1 30); do
+              if systemctl is-active --quiet personal-trainer-frontend-production; then
+                echo "Service active after ${i}s"
+                exit 0
+              fi
+              sleep 1
+            done
+            echo "Service failed to become active after 30s"
+            sudo -n /usr/bin/systemctl status personal-trainer-frontend-production
+            exit 1

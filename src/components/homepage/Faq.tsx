@@ -40,7 +40,7 @@ const FAQSection = () => {
           <Accordion
             type="single"
             collapsible
-            className="mx-auto w-full max-w-[800px]"
+            className="mx-auto w-full max-w-200"
           >
             {faqs.map((faq) => (
               <AccordionItem
