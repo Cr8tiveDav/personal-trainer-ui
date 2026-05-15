@@ -8,18 +8,17 @@ interface DimensionProperties {
   winHeight: number
 }
 const useWindowHeight = () => {
-  const [dimensions, setDimensions] = useState<DimensionProperties>({
-    scrollY: 0,
-    totalHeight: 0,
-    winHeight: 0,
-  })
+  const [dimensions, setDimensions] = useState<DimensionProperties>(() =>
+    typeof window === 'undefined'
+      ? { scrollY: 0, totalHeight: 0, winHeight: 0 }
+      : {
+          scrollY: window.scrollY,
+          totalHeight: document.documentElement.scrollHeight,
+          winHeight: window.innerHeight,
+        }
+  )
 
   useEffect(() => {
-    setDimensions({
-      scrollY: window.scrollY,
-      totalHeight: document.documentElement.scrollHeight,
-      winHeight: window.innerHeight,
-    })
     const handleScroll = () => {
       setDimensions({
         scrollY: window.scrollY,
