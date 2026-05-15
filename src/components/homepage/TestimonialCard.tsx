@@ -10,7 +10,7 @@ interface Properties {
 
 const TestimonialCard = (properties: Properties) => {
   return (
-    <div className="shadow-xs flex h-full min-h-[283px] flex-col justify-between rounded-[24px] border border-gray-100 bg-background p-4 lg:w-[330px]">
+    <div className="shadow-xs flex h-full min-h-70.75 flex-col justify-between rounded-3xl border border-gray-100 bg-background p-4 lg:w-82.5">
       <div>
         <div data-testid="rating" className="mb-6 flex justify-start">
           <Rating />
@@ -22,12 +22,13 @@ const TestimonialCard = (properties: Properties) => {
       </div>
 
       <div className="mt-8 flex items-center space-x-4">
-        <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full">
+        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full">
           <Image
             src={properties?.image}
             alt={properties?.name}
             width={48}
             height={48}
+            sizes="true"
             className="h-full w-full object-cover"
           />
         </div>

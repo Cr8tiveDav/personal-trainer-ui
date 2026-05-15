@@ -35,8 +35,8 @@ const TeamCard: React.FC<TeamCardProperties> = ({
   twitterURL,
 }) => {
   return (
-    <Card className="bg-subtle flex h-[400px] w-[277px] cursor-pointer flex-col gap-4 border-none shadow-none">
-      <div className="relative h-[205px] overflow-hidden bg-neutral-300">
+    <Card className="bg-subtle flex h-100 w-69.25 cursor-pointer flex-col gap-4 border-none shadow-none">
+      <div className="relative h-51.25 overflow-hidden bg-neutral-300">
         <Image
           src={imageSrc}
           alt={imageAlt}

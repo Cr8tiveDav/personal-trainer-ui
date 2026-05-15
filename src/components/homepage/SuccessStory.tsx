@@ -57,7 +57,7 @@ const SuccessStory = () => {
             bulletClass: 'swiper-pagination-bullet custom-bullet',
             bulletActiveClass: 'custom-bullet-active',
           }}
-          className='pb-4 [&_.swiper-pagination]:!relative [&_.swiper-pagination]:!mt-8 [&_.swiper-pagination]:!bottom-auto'
+          className='pb-4 [&_.swiper-pagination]:relative! [&_.swiper-pagination]:mt-8! [&_.swiper-pagination]:bottom-auto!'
         >
           {stories.map((story, index) => (
             <SwiperSlide key={index}>
@@ -72,7 +72,7 @@ const SuccessStory = () => {
                 </div>
 
                 <div className='grid grid-cols-1 gap-8 px-2 md:grid-cols-2 lg:gap-20'>
-                  <div className='relative min-h-[300px] w-full md:min-h-[400px]'>
+                  <div className='relative min-h-75 w-full md:min-h-100'>
                     <Image
                       src={story.image}
                       alt={story.name}

@@ -1,5 +1,5 @@
 'use client'
-import { cn } from '~/utils' // Adjust this path to your utility helper
+import { cn } from '@/lib/utils' // Adjust this path to your utility helper
 
 interface SectionHeaderProps {
   badge?: string
@@ -29,7 +29,7 @@ const SectionHeader = ({
       {badge && (
         <span
           className={cn(
-            'mb-4 inline-flex items-center rounded-full bg-primarybadge px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] text-primary',
+            'mb-4 inline-flex items-center rounded-full bg-primarybadge px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-primary',
             'border border-blue-100/50 shadow-sm'
           )}
         >

@@ -58,28 +58,37 @@ export function ContactForm() {
     defaultValues: { fullName: '', email: '', subject: 'general', message: '' },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true)
-    setSubmitSuccess(false)
-    setSubmitError(null)
-    try {
-      await new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (values.email === 'fail@test.com')
-            reject(new Error('Form submission failed. Please try again.'))
-          else resolve(true)
-        }, 1500)
-      })
-      setSubmitSuccess(true)
-      form.reset()
-    } catch (error) {
-      setSubmitError(
-        error instanceof Error ? error.message : 'An unexpected error occurred.'
-      )
-    } finally {
-      setIsSubmitting(false)
+ async function onSubmit(values: z.infer<typeof formSchema>) {
+  setIsSubmitting(true)
+  setSubmitSuccess(false)
+  setSubmitError(null)
+
+  try {
+    const response = await fetch('/api/contact', { // Ensure this matches your file path
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(values),
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      // Logic to handle API-specific error messages
+      throw new Error(data.message || 'Something went wrong. Please try again.')
     }
+
+    setSubmitSuccess(true)
+    form.reset()
+  } catch (error) {
+    setSubmitError(
+      error instanceof Error ? error.message : 'An unexpected error occurred.'
+    )
+  } finally {
+    setIsSubmitting(false)
   }
+}
 
   return (
     <div className="w-full rounded-lg border border-[#ECECEC] bg-white p-4 md:p-6">
@@ -90,7 +99,7 @@ export function ContactForm() {
           aria-live="polite"
           aria-atomic="true"
         >
-          <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-500" />
+          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
           <div>
             <p className="text-sm font-semibold">Message sent successfully!</p>
             <p className="mt-1 text-xs opacity-80">
@@ -107,7 +116,7 @@ export function ContactForm() {
           aria-live="assertive"
           aria-atomic="true"
         >
-          <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-500" />
+          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
           <div>
             <p className="text-sm font-semibold">Submission Error</p>
             <p className="mt-1 text-xs opacity-80">{submitError}</p>
@@ -179,7 +188,7 @@ export function ContactForm() {
                   disabled={isSubmitting}
                 >
                   <FormControl>
-                    <SelectTrigger className="h-[48px] rounded-[10px] border border-[#E3E3E3] bg-white px-4 text-[14px] text-[#111111] [&>span[data-placeholder]]:text-[#B0B0B0] focus:border-[#0B4D8D] focus:ring-2 focus:ring-[rgba(11,77,141,0.1)]">
+                    <SelectTrigger className="h-12 rounded-[10px] border border-[#E3E3E3] bg-white px-4 text-[14px] text-[#111111] [&>span[data-placeholder]]:text-[#B0B0B0] focus:border-[#0B4D8D] focus:ring-2 focus:ring-[rgba(11,77,141,0.1)]">
                       <SelectValue placeholder="General question" />
                     </SelectTrigger>
                   </FormControl>
@@ -207,7 +216,7 @@ export function ContactForm() {
                 <FormControl>
                   <Textarea
                     placeholder="Tell us a little about what you're looking for..."
-                    className="min-h-[140px] resize-none rounded-[10px] border border-[#E3E3E3] bg-white p-4 text-[14px] text-[#111111] placeholder:text-[#B0B0B0] focus-visible:border-[#0B4D8D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(11,77,141,0.1)]"
+                    className="min-h-35 resize-none rounded-[10px] border border-[#E3E3E3] bg-white p-4 text-[14px] text-[#111111] placeholder:text-[#B0B0B0] focus-visible:border-[#0B4D8D] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(11,77,141,0.1)]"
                     disabled={isSubmitting}
                     {...field}
                   />
@@ -219,7 +228,7 @@ export function ContactForm() {
 
           {/* Footer row */}
           <div className="flex items-center justify-between gap-4 pt-1">
-            <p className="text-[13px] leading-[1.5] text-muted-foreground">
+            <p className="text-[13px] leading-normal text-muted-foreground">
               By sending, you agree to our friendly{' '}
               <Link
                 href="/legal/privacy-policy"

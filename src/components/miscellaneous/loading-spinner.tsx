@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react'
-import { cn } from '~/utils'
+import { cn } from '@/lib/utils'
 
 export interface SVGProperties extends React.SVGAttributes<SVGSVGElement> {
   asChild?: boolean
