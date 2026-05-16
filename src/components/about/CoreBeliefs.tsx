@@ -37,7 +37,7 @@ const CoreBeliefs = () => {
             {beliefs.map((item, index) => (
               <div
                 key={index}
-                className='rounded-2xl border border-gray-100 bg-white p-6 transition-shadow hover:shadow-sm'
+                className='rounded-2xl border border-[#EBEBEB] bg-white p-6'
               >
                 <div className='mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primarybadge'>
                   <Image
