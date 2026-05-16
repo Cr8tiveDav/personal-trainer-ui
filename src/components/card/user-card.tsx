@@ -6,6 +6,7 @@
 import { ChevronDown } from 'lucide-react'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { useState } from 'react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar'
 import {
@@ -28,6 +29,7 @@ const handleLogout = async () => {
 
 const UserCard = () => {
   const { data: session, status } = useSession()
+  const [cacheBust] = useState(() => Date.now())
 
   return (
     <DropdownMenu>
@@ -43,7 +45,7 @@ const UserCard = () => {
           {status === 'authenticated' && (
             <Avatar className="size-8 sm:size-10">
               <AvatarImage
-                src={`${session.user.image}?t=${Date.now()}`}
+                src={`${session.user.image}?t=${cacheBust}`}
                 alt="User Avatar"
               />
               <AvatarFallback className="bg-primary/30 uppercase">

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <main className="w-full bg-secondary pt-28 md:pt-48">
-      <section className="w-full pb-10 md:pb-[90px]">
+      <section className="w-full pb-10 md:pb-22.5">
         <div className="container">
           <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-24">
             <div className="flex flex-col justify-start">
@@ -27,7 +27,7 @@ export default function ContactPage() {
                 <span className="text-primary">with us</span>
               </h1>
 
-              <p className="max-w-[480px] text-base leading-relaxed text-muted md:text-lg">
+              <p className="max-w-120 text-base leading-relaxed text-muted md:text-lg">
                 Have questions about FitCall, trainers, or getting started?
                 We&apos;re here to help &mdash; no scripts, just real humans.
               </p>

@@ -12,6 +12,7 @@ const Logo = ({ size = 'big' }: Properties) => {
       <Image
         src={isSmall ? '/logo.svg' : '/logo.svg'}
         alt="FitCall logo"
+        sizes='true'
         width={isSmall ? 40 : 57}
         height={isSmall ? 38 : 52}
         className="object-contain"

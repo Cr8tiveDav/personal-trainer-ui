@@ -16,11 +16,11 @@ const Hero = () => {
               Live trainer accountability
             </div>
 
-            <h1 className="mb-6 break-words text-left text-4xl font-bold leading-tight tracking-tight text-muted-foreground sm:text-5xl md:text-6xl">
+            <h1 className="mb-6 wrap-break-word text-left text-4xl font-bold leading-tight tracking-tight text-muted-foreground sm:text-5xl md:text-6xl">
               Never miss a workout session
             </h1>
 
-            <p className="mb-8 max-w-full break-words text-left text-base leading-relaxed text-muted">
+            <p className="mb-8 max-w-full wrap-break-word text-left text-base leading-relaxed text-muted">
               Connect with vetted fitness trainers who call you at your
               scheduled time — live, on video. Join the waitlist for exclusive
               early access to FitCall.
@@ -30,7 +30,7 @@ const Hero = () => {
           </div>
 
           <div className="flex w-full min-w-0 justify-center lg:w-1/2">
-            <div className="relative h-[320px] w-full max-w-[100%] overflow-hidden rounded-md sm:h-[420px] md:h-[500px] md:max-w-[500px] lg:h-[600px]">
+            <div className="relative h-80 w-full max-w-full overflow-hidden rounded-md sm:h-105 md:h-125 md:max-w-125 lg:h-150">
               <Swiper
                 modules={[Pagination, Scrollbar, A11y, Autoplay]}
                 autoplay={{ delay: 5000, disableOnInteraction: false }}
@@ -45,6 +45,7 @@ const Hero = () => {
                       alt="Professional Trainer"
                       fill
                       priority
+                      sizes="true"
                       className="object-cover"
                     />
                   </div>

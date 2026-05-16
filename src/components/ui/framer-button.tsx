@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react'
 import LoadingSpinner from '../miscellaneous/loading-spinner'
-import { motion } from 'framer-motion'
-import { cn } from '~/utils'
+import { motion } from 'motion/react'
+import { cn } from '@/lib/utils'
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading: boolean
