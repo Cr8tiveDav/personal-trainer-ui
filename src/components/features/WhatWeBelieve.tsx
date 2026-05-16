@@ -55,7 +55,7 @@ const WhatWeBelieve = () => {
                   src={item.icon}
                   alt={item.title}
                   width={24}
-                  sizes='true'
+                  sizes='24px'
                   height={24}
                   className='h-6 w-6'
                 />

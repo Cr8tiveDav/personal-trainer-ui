@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils';
+import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
 const CTASection = ({ className }: { className?: string }) => {

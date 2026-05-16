@@ -59,7 +59,7 @@ const Hero = () => {
             <Button asChild size='lg' className='h-14 w-full max-w-65 px-6'>
               <Link
                 href='#'
-                target='_blank'
+                // target='_blank'
                 rel='noopener noreferrer'
                 className='flex items-center justify-center gap-3'
               >
@@ -86,7 +86,7 @@ const Hero = () => {
             >
               <Link
                 href='#'
-                target='_blank'
+                // target='_blank'
                 rel='noopener noreferrer'
                 className='flex items-center justify-center gap-3'
               >

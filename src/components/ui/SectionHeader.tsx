@@ -1,5 +1,5 @@
 'use client';
-import { cn } from '@/lib/utils'; // Adjust this path to your utility helper
+import { cn } from '@/lib/utils';
 
 import { ReactNode } from 'react';
 
