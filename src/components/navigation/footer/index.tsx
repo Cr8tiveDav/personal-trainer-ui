@@ -35,7 +35,7 @@ const Footer = () => {
               <ul className='space-y-3 text-sm text-muted'>
                 <li>
                   <Link
-                    href='#how-it-works'
+                    href='/how-it-works'
                     className='transition-colors hover:text-primary'
                   >
                     How it Works
@@ -127,7 +127,9 @@ const Footer = () => {
 
           <div className='order-1 flex items-center gap-4 md:order-2'>
             <Link
-              href='#'
+              href='https://x.com/FitCall_me'
+              target='_blank'
+              rel='noopener noreferrer'
               className='flex items-center gap-2 text-gray-400 transition-colors hover:text-black'
             >
               <div className='relative h-4 w-4'>
@@ -141,7 +143,9 @@ const Footer = () => {
               </div>
             </Link>
             <Link
-              href='#'
+              href='https://www.instagram.com/fitcall.me/'
+              target='_blank'
+              rel='noopener noreferrer'
               className='text-gray-400 transition-colors hover:text-black'
             >
               <div className='relative h-4 w-4'>
@@ -156,6 +160,8 @@ const Footer = () => {
             </Link>
             <Link
               href='#'
+              // target='_blank'
+              rel='noopener noreferrer'
               className='text-gray-400 transition-colors hover:text-black'
             >
               <div className='relative h-5 w-5'>
