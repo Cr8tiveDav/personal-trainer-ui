@@ -77,6 +77,7 @@ const SuccessStory = () => {
                       src={story.image}
                       alt={story.name}
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className='rounded-xl object-cover'
                       priority={index === 0}
                     />
