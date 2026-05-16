@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(interClass, 'max-w-480 mx-auto antialiased')}>
+      <body className={cn(interClass, 'w-full mx-auto antialiased')}>
         {children}
        
         <Toaster position="top-center" richColors closeButton />

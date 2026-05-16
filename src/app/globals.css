@@ -3,7 +3,6 @@
 @import 'shadcn/tailwind.css';
 
 
-
 @import 'swiper/css';
 @import 'swiper/css/navigation';
 @import 'swiper/css/pagination';
@@ -63,7 +62,7 @@
 
 @layer base {
   :root {
-    --background: 0, 0%, 100%, 1;
+    --background: 0, 0%, 97%, 1;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -101,7 +100,7 @@
     margin-left: auto;
     margin-right: auto;
     width: 100%;
-    max-width: 1400px;
+    max-width: 1300px;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
@@ -160,9 +159,7 @@
   border-radius: 10px;
 }
 
-.radial-gradient {
-  background: radial-gradient(circle at 50% 0%, hsl(25 95% 53%), transparent 60%), hsl(25 95% 53%);
-}
+
 
 .linear-mask {
   mask-image: linear-gradient(-75deg, white calc(var(--x) + 20%), transparent calc(var(--x) + 30%), white calc(var(--x) + 100%));
@@ -187,4 +184,63 @@
   0% { stroke-dasharray: 0 150; stroke-dashoffset: 0; }
   47.5% { stroke-dasharray: 42 150; stroke-dashoffset: -16; }
   95%, 100% { stroke-dasharray: 42 150; stroke-dashoffset: -59; }
+}
+
+.login-input {
+  height: 48px;
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #e3e3e3;
+  padding-inline: 1rem;
+  font-size: 14px;
+  color: #111111;
+  background-color: #ffffff;
+  transition: border-color 150ms ease-in-out, box-shadow 150ms ease-in-out;
+  outline: none;
+}
+
+.login-input:focus {
+  border-color: #0b4d8d;
+  box-shadow: 0 0 0 2px rgba(11, 77, 141, 0.1);
+  outline: none;
+  caret-color: #111111;
+}
+
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+  -webkit-text-fill-color: #111111;
+}
+
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover,
+.login-input:-webkit-autofill:focus,
+.login-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: #111111 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.login-input::placeholder {
+  color: #b0b0b0;
+  font-weight: 400;
+}
+
+.login-input:focus {
+  border-color: #0b4d8d;
+  box-shadow: 0 0 0 2px rgba(11, 77, 141, 0.1);
+}
+
+.login-input--error {
+  border-color: var(--destructive);
+}
+
+.login-input--error:focus {
+  border-color: var(--destructive);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--destructive) 10%, transparent);
+}
+
+.login-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
