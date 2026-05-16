@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/dist/client/link';
 import { Button } from '../ui/button';
 
 const CTASection = () => {
@@ -21,9 +20,9 @@ const CTASection = () => {
     const isAndriod = /android/i.test(userAgent);
 
     if (isIOS) {
-      window.open(iosLink, '_blank');
+      window.open(iosLink, '_blank', 'noopener,noreferrer');
     } else if (isAndriod) {
-      window.open(androidLink, '_blank');
+      window.open(androidLink, '_blank', 'noopener,noreferrer');
     } else {
       // Handle desktop or unsupported platforms
       alert(

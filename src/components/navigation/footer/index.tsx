@@ -160,7 +160,7 @@ const Footer = () => {
             </Link>
             <Link
               href='#'
-              target='_blank'
+              // target='_blank'
               rel='noopener noreferrer'
               className='text-gray-400 transition-colors hover:text-black'
             >
