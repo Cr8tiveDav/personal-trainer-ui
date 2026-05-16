@@ -44,7 +44,8 @@ for file in $STAGED; do
   [ -f "$file" ] || continue
 
   # ── Check 1: Long lines (the hiding technique) ──────────────────────────────
-  if echo "$file" | grep -qE '\.(mjs|cjs|config|json)$|postcss'; then
+  if ! echo "$file" | grep -qE "(${LONG_LINE_EXCLUDE})$" &&
+     echo "$file" | grep -qE '\.(mjs|cjs|config|json)$|postcss'; then
     if awk 'length > 200 { found=1; exit } END { exit !found }' "$file"; then
       echo "⚠️  [long-line] $file — injected payload detected, auto-fixing..."
       fix_long_lines "$file"
