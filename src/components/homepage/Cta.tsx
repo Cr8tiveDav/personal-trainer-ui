@@ -1,8 +1,9 @@
 'use client';
 
+import { cn } from '@/utils';
 import { Button } from '../ui/button';
 
-const CTASection = () => {
+const CTASection = ({ className }: { className?: string }) => {
   const handleDownloadRedirect = () => {
     const userAgent = navigator.userAgent || navigator.vendor;
 
@@ -32,7 +33,7 @@ const CTASection = () => {
   };
 
   return (
-    <section className='bg-white py-20'>
+    <section className={cn('bg-white py-20', className)}>
       <div className='container mx-auto px-4'>
         <div className='relative overflow-hidden rounded-lg bg-linear-to-br from-primary via-[#063660] to-[#0C6FC6] px-6 py-16 text-center text-white md:py-24'>
           <div className='relative z-10 mx-auto max-w-2xl'>

@@ -1,12 +1,14 @@
-'use client'
-import { cn } from '@/lib/utils' // Adjust this path to your utility helper
+'use client';
+import { cn } from '@/lib/utils'; // Adjust this path to your utility helper
+
+import { ReactNode } from 'react';
 
 interface SectionHeaderProps {
-  badge?: string
-  title: string
-  description?: string
-  align?: 'left' | 'center'
-  className?: string
+  badge?: string;
+  title: ReactNode;
+  description?: ReactNode;
+  align?: 'left' | 'center';
+  className?: string;
 }
 
 const SectionHeader = ({
@@ -46,12 +48,12 @@ const SectionHeader = ({
       </h2>
 
       {description && (
-        <p className="mt-4 text-sm leading-relaxed opacity-90 md:text-base">
+        <p className='mt-4 text-sm text-muted leading-relaxed opacity-90 md:text-base'>
           {description}
         </p>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SectionHeader
+export default SectionHeader;
