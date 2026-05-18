@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { UserPlus, Users, Megaphone, BarChart2, LucideIcon, Dumbbell, LineChart } from 'lucide-react'
+import { Users, Megaphone,  LucideIcon, Dumbbell, LineChart } from 'lucide-react'
 
 interface QuickAction {
   label: string

@@ -15,8 +15,8 @@ const Hero = () => {
         }}
       ></div>
 
-      <div className='absolute -left-20 top-0 h-200 w-200 rounded-full bg-[#2d5894]/20 blur-[120px]'></div>
-      <div className='absolute -right-20 top-0 h-200 w-200 rounded-full bg-[#eca465]/20 blur-[120px]'></div>
+      <div className='absolute -left-20 top-0 h-200 w-150 rounded-full bg-[#C2DCFF]/70 blur-[120px]'></div>
+      <div className='absolute -right-20 top-0 h-200 w-150 rounded-full bg-[#F5D9C0]/70 blur-[120px]'></div>
 
       <div className='container relative z-10 mx-auto px-4'>
         <div className='flex flex-col items-center text-center'>

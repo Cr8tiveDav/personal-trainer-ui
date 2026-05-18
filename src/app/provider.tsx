@@ -9,7 +9,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster as Sonner } from '~/components/ui/sonner'
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
-import { ReactLenis } from 'lenis/react'
+
 
 function makeQueryClient() {
   return new QueryClient({

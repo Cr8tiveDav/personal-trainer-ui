@@ -4,7 +4,6 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  const token = request.cookies.get('session_token')?.value
   const userType = request.cookies.get('user_type')?.value
 
   const isAdminDashboard = pathname.startsWith('/admin/dashboard')
