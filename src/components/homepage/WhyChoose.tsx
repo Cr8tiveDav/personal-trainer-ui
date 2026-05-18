@@ -1,16 +1,16 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import Image from 'next/image'
+import React, { useState } from 'react';
+import Image from 'next/image';
 
-import SectionHeader from '../ui/SectionHeader'
-import { AnimatePresence, motion } from 'motion/react'
+import SectionHeader from '../ui/SectionHeader';
+import { AnimatePresence, motion } from 'motion/react';
 
 interface Feature {
-  icon: string
-  title: string
-  description: string
-  image: string
+  icon: string;
+  title: string;
+  description: string;
+  image: string;
 }
 
 const features: Feature[] = [
@@ -64,12 +64,13 @@ const WhyChoose = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className='h-full w-full'
+                  className='relative h-full w-full'
                 >
                   <Image
                     src={features[activeIndex].image}
                     alt={`App Interface ${activeIndex + 1}`}
                     fill
+                    sizes='(max-width: 1024px) 100vw, 50vw'
                     priority
                     className='object-contain object-center drop-shadow-2xl'
                   />

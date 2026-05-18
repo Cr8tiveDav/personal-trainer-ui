@@ -44,7 +44,7 @@ export async function loginAction(
       success: true,
       redirectTo:
         type === 'admin'
-          ? '/dashboard/admin'
+          ? '/admin/dashboard'
           : '/dashboard/trainers',
     };
   } catch (error: any) {
