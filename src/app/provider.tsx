@@ -7,10 +7,9 @@ import {
   isServer,
 } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { SessionProvider } from 'next-auth/react'
 import { Toaster as Sonner } from '~/components/ui/sonner'
 import { AppProgressBar as ProgressBar } from 'next-nprogress-bar'
-import { ReactLenis } from 'lenis/react'
+
 
 function makeQueryClient() {
   return new QueryClient({
@@ -45,17 +44,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const queryClient = getQueryClient()
 
   return (
-    <SessionProvider>
-      <QueryClientProvider client={queryClient}>
-        <ProgressBar
-          style="style"
-          options={{ showSpinner: false }}
-          shallowRouting
-        />
-        <ReactLenis root>{children}</ReactLenis>
-        <ReactQueryDevtools initialIsOpen={false} />
-        <Sonner richColors expand={true} position="top-right" />
-      </QueryClientProvider>
-    </SessionProvider>
+
+    <QueryClientProvider client={queryClient}>
+      <ProgressBar
+        style="style"
+        options={{ showSpinner: false }}
+        shallowRouting
+      />
+       {children}
+      <ReactQueryDevtools initialIsOpen={false} />
+      <Sonner richColors expand={true} position="top-right" />
+    </QueryClientProvider>
+
   )
 }

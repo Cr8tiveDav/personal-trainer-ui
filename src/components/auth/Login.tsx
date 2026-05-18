@@ -20,121 +20,118 @@ import { Eye, EyeOff, Asterisk } from 'lucide-react';
 import { Input } from '../ui/input';
 import { cn } from '~/utils';
 import { useRouter } from 'next/navigation';
-
 import { toast } from 'sonner';
+import { loginAction } from '@/actions/auth';
 
-const Login = () => {
+type LoginType = 'admin' | 'trainer';
+
+interface LoginProps {
+  type: LoginType;
+}
+
+const Login = ({ type }: LoginProps) => {
   const router = useRouter();
   const [isLoading, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
-  // const { status } = useSession()
-
-  // useEffect(() => {
-  //   if (status === 'authenticated') {
-  //     router.push('/')
-  //   }
-  // }, [status, router])
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: '',
       password: '',
-      rememberMe: false,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    const { email, password } = values;
+    const formData = new FormData();
+    formData.append('email', values.email);
+    formData.append('password', values.password);
+    formData.append('type', type);
 
-    startTransition(() => {
-      // Perform login logic here, e.g., call an API to authenticate the user
-      // For demonstration, we'll just log the values and redirect to a dashboard
-      console.log('Login values:', values);
-      // Simulate an API call with a timeout
-      setTimeout(() => {
+    startTransition(async () => {
+      const result = await loginAction(null, formData);
+
+      if (result?.success && result.redirectTo) {
         toast.success('Login successful!');
-        // After successful login, redirect to the dashboard or home page
-        router.push('/dashboard/trainer');
-      }, 2000); // Simulate a 2-second delay for the API call
+        router.push(result.redirectTo);
+      } else {
+        toast.error(result?.error || 'Authentication failed');
+      }
     });
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const inputBase =
-    'h-[48px] rounded-[10px] border border-[#E3E3E3] px-4 text-[14px] text-[#111111] placeholder:text-[#B0B0B0] placeholder:font-normal bg-white focus-visible:outline-none focus-visible:border-[#0B4D8D] focus-visible:ring-2 focus-visible:ring-[rgba(11,77,141,0.1)] font-inter w-full transition duration-150 ease-in-out';
-
   return (
-    <section className='min-h-screen flex items-center'>
-      <div className='container'>
-        <div className='mx-auto grid max-w-[1201px] grid-cols-1 shadow-lg md:grid-cols-2 rounded-[20px] md:rounded-l-none md:rounded-r-[20px]'>
-          <article className='relative hidden w-full md:block md:h-auto'>
+    <section className='min-h-screen bg-secondary flex items-center py-6 sm:py-8'>
+      <div className='container px-4 sm:px-6'>
+        <div className='mx-auto grid max-w-[1201px] md:grid-cols-2'>
+          <article className='relative hidden w-full min-h-[678px]  md:block'>
             <Image
               src='/images/trainer/login-image.png'
               fill
               alt='Trainer Login Form'
-              className='object-cover object-center'
+              className='object-cover object-center rounded-[4px]'
             />
           </article>
-          <article className='md:px-[80px] md:py-[75px] bg-white rounded-[20px] md:-ml-[20px] relative z-10 px-6 py-12 flex flex-col justify-center'>
+
+          <article className='relative z-30 right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12'>
             <Image
               src='/images/trainer/logo.svg'
               alt='Logo'
               width={173}
               height={32}
-              className='mb-8 md:mb-24'
+              className='mb-8 w-[130px] sm:w-[150px] md:mb-16 lg:mb-20'
             />
 
-            <h2 className='mb-11 text-2xl font-bold'>Login</h2>
+            <h2 className='mb-8 text-xl font-medium'>
+              {type === 'admin' ? 'Login as an Admin' : 'Login as a Trainer'}
+            </h2>
 
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className='space-y-6'
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
                 <FormField
                   control={form.control}
                   name='email'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className='text-neutralColor-dark-2 flex items-center'>
+                      <FormLabel className='flex items-center text-sm text-neutralColor-dark-2 sm:text-base'>
                         Email
                         <Asterisk
                           strokeWidth={2}
-                          className='relative -top-1 h-3 w-3 text-red-800'
+                          className='relative -top-1 h-2.5 w-2.5 text-red-800 sm:h-3 sm:w-3'
                         />
                       </FormLabel>
+
                       <FormControl>
                         <Input
                           disabled={isLoading}
                           placeholder='johndoe@example.com'
                           {...field}
                           className={cn(
-                            inputBase,
+                            'login-input text-sm h-[44px] sm:text-base',
                             form.formState.errors.email &&
-                              'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/10'
+                              'login-input--error'
                           )}
                         />
                       </FormControl>
+
                       <FormMessage data-testid='email-error' />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name='password'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className='text-neutralColor-dark-2 flex items-center'>
-                        Password{' '}
+                      <FormLabel className='flex items-center text-sm text-neutralColor-dark-2 sm:text-base'>
+                        Password
                         <Asterisk
                           strokeWidth={2}
-                          className='relative -top-1 h-3 w-3 text-red-800'
+                          className='relative -top-1 h-2.5 w-2.5 text-red-800 sm:h-3 sm:w-3'
                         />
                       </FormLabel>
+
                       <div className='relative'>
                         <FormControl>
                           <Input
@@ -143,44 +140,50 @@ const Login = () => {
                             placeholder='Enter Password'
                             {...field}
                             className={cn(
-                              inputBase,
+                              'login-input pr-10 h-[44px] text-sm sm:text-base',
                               form.formState.errors.password &&
-                                'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/10'
+                                'login-input--error'
                             )}
                           />
                         </FormControl>
+
                         <button
                           type='button'
-                          onClick={togglePasswordVisibility}
+                          onClick={() =>
+                            setShowPassword(prev => !prev)
+                          }
                           className='absolute inset-y-0 right-0 flex items-center pr-3'
                         >
                           {showPassword ? (
                             <Eye
-                              className='h-5 w-5 text-gray-400'
-                              data-testid='eye-icon'
+                              className='h-4 w-4 text-gray-400 sm:h-5 sm:w-5'
+                              data-testid='eye-off-icon'
                             />
                           ) : (
                             <EyeOff
-                              className='h-5 w-5 text-gray-400'
-                              data-testid='eye-off-icon'
+                              className='h-4 w-4 text-gray-400 sm:h-5 sm:w-5'
+                              data-testid='eye-icon'
                             />
                           )}
                         </button>
                       </div>
+
                       <FormMessage data-testid='password-error' />
                     </FormItem>
                   )}
                 />
+
                 <FramerButton
                   isLoading={isLoading}
                   disabled={isLoading}
                   text='Login'
-                  className='mb-0 rounded-md'
+                  className='bg-primary text-sm sm:text-base'
                 />
-                <div className='!mt-2 flex justify-end text-sm'>
+
+                <div className='!mt-2 flex justify-end'>
                   <Link
                     href='/forgot-password'
-                    className='text-sm font-semibold text-red-800 cursor-pointer'
+                    className='cursor-pointer text-xs font-semibold text-red-800 sm:text-sm'
                   >
                     Forgot Password?
                   </Link>

@@ -1,6 +1,5 @@
-import { notFound } from 'next/navigation';
-import React from 'react';
-import Login from '@/components/trainers/Login';
+import { notFound } from 'next/navigation'
+import Login from '@/components/auth/Login';
 
 type Props = {
   params: Promise<{ secretPath: string }>;
@@ -15,7 +14,7 @@ const TrainerLoginPage = async ({ params }: Props) => {
     notFound();
   }
 
-  return <Login />;
+  return <Login type="trainer" />;
 };
 
 export default TrainerLoginPage;
