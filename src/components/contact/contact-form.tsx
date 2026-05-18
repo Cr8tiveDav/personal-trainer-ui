@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useTransition } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -23,7 +23,9 @@ import {
 } from '~/components/ui/select'
 import { Textarea } from '~/components/ui/textarea'
 import Link from 'next/link'
-import { ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react'
+import { ArrowRight,} from 'lucide-react'
+import { toast } from 'sonner'
+import { contactAction } from '@/actions/contact' 
 
 const formSchema = z.object({
   fullName: z
@@ -41,7 +43,6 @@ const formSchema = z.object({
     .min(10, { message: 'Message must be at least 10 characters.' }),
 })
 
-// Scaled-up input for laptop display — 48px height, 14px text
 const inputBase =
   'h-[48px] rounded-[10px] border border-[#E3E3E3] px-4 text-[14px] text-[#111111] ' +
   'placeholder:text-[#B0B0B0] placeholder:font-normal bg-white ' +
@@ -49,81 +50,34 @@ const inputBase =
   'focus-visible:ring-[rgba(11,77,141,0.1)]'
 
 export function ContactForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
+  const [isSubmitting, startTransition] = useTransition()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { fullName: '', email: '', subject: 'general', message: '' },
   })
 
- async function onSubmit(values: z.infer<typeof formSchema>) {
-  setIsSubmitting(true)
-  setSubmitSuccess(false)
-  setSubmitError(null)
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const formData = new FormData()
+    formData.append('fullName', values.fullName)
+    formData.append('email', values.email)
+    formData.append('subject', values.subject)
+    formData.append('message', values.message)
 
-  try {
-    const response = await fetch('/api/contact', { // Ensure this matches your file path
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
+    startTransition(async () => {
+      const result = await contactAction(null, formData)
+
+      if (result?.success) {
+        toast.success('Message sent successfully!')
+        form.reset()
+      } else {
+        toast.error(result?.error || 'Something went wrong. Please try again.')
+      }
     })
-
-    const data = await response.json()
-
-    if (!response.ok) {
-      // Logic to handle API-specific error messages
-      throw new Error(data.message || 'Something went wrong. Please try again.')
-    }
-
-    setSubmitSuccess(true)
-    form.reset()
-  } catch (error) {
-    setSubmitError(
-      error instanceof Error ? error.message : 'An unexpected error occurred.'
-    )
-  } finally {
-    setIsSubmitting(false)
   }
-}
 
   return (
     <div className="w-full rounded-lg border border-[#ECECEC] bg-white p-4 md:p-6">
-      {submitSuccess && (
-        <div
-          className="mb-5 flex items-start gap-3 rounded-[10px] bg-green-50 p-4 text-green-700"
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-green-500" />
-          <div>
-            <p className="text-sm font-semibold">Message sent successfully!</p>
-            <p className="mt-1 text-xs opacity-80">
-              We&apos;ll get back to you shortly.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {submitError && (
-        <div
-          className="mb-5 flex items-start gap-3 rounded-[10px] bg-red-50 p-4 text-red-700"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-red-500" />
-          <div>
-            <p className="text-sm font-semibold">Submission Error</p>
-            <p className="mt-1 text-xs opacity-80">{submitError}</p>
-          </div>
-        </div>
-      )}
-
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -173,7 +127,6 @@ export function ContactForm() {
             />
           </div>
 
-          {/* Row 2: Subject dropdown */}
           <FormField
             control={form.control}
             name="subject"
@@ -204,7 +157,6 @@ export function ContactForm() {
             )}
           />
 
-          {/* Row 3: Message textarea — min-h 140px */}
           <FormField
             control={form.control}
             name="message"
@@ -226,7 +178,6 @@ export function ContactForm() {
             )}
           />
 
-          {/* Footer row */}
           <div className="flex items-center justify-between gap-4 pt-1">
             <p className="text-[13px] leading-normal text-muted-foreground">
               By sending, you agree to our friendly{' '}
@@ -238,7 +189,7 @@ export function ContactForm() {
               </Link>
               .
             </p>
-            <Button type="submit" disabled={isSubmitting} className='flex items-center gap-2'>
+            <Button type="submit" disabled={isSubmitting} className="flex items-center gap-2">
               {isSubmitting ? 'Sending...' : 'Send message'}
               {!isSubmitting && <ArrowRight className="h-4 w-4" />}
             </Button>

@@ -1,87 +1,108 @@
 'use client'
 
-import { useState } from 'react'
-import { joinWaitlist } from '@/lib/api/waitlist'
+import { useTransition } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 import { Button } from '../ui/button'
 import { toast } from 'sonner'
+import { waitlistAction } from '@/actions/waitlist'
+
+const waitlistSchema = z.object({
+  name: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
+  email: z.string().min(1, { message: 'Email is required.' }).email({ message: 'Please enter a valid email address.' }),
+  phone_number: z.string().min(7, { message: 'Please enter a valid phone number.' }),
+  location: z.string().min(2, { message: 'Location is required.' }),
+})
+
+type WaitlistValues = z.infer<typeof waitlistSchema>
+
+const inputStyles =
+  'min-h-12 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary transition-all'
+
+const errorStyles = 'mt-1 text-xs text-red-500'
 
 export const WaitlistForm = () => {
-  const [loading, setLoading] = useState(false)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone_number: '',
-    location: '',
+  const [isSubmitting, startTransition] = useTransition()
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<WaitlistValues>({
+    resolver: zodResolver(waitlistSchema),
+    defaultValues: { name: '', email: '', phone_number: '', location: '' },
   })
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
+  function onSubmit(values: WaitlistValues) {
+    const formData = new FormData()
+    formData.append('name', values.name)
+    formData.append('email', values.email)
+    formData.append('phone_number', values.phone_number)
+    formData.append('location', values.location)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
+    startTransition(async () => {
+      const result = await waitlistAction(null, formData)
 
-    toast.promise(joinWaitlist(formData), {
-      loading: 'Adding you to the elite queue...',
-      success: () => {
-        setFormData({ name: '', email: '', phone_number: '', location: '' })
-        return 'Entry confirmed! We’ll be in touch soon.'
-      },
-      error: 'Something went wrong. Please try again.',
+      if (result?.success) {
+        toast.success('Entry confirmed! Well be in touch soon.')
+        reset()
+      } else {
+        toast.error(result?.error || 'Something went wrong. Please try again.')
+      }
     })
-
-    setLoading(false)
   }
-
-  const inputStyles =
-    'min-h-12 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary transition-all'
 
   return (
     <div className="relative w-full max-w-lg">
-      <form
-        onSubmit={handleSubmit}
-        className="flex w-full flex-col gap-3"
-      >
-        <input
-          required
-          name="name"
-          type="text"
-          placeholder="Full name"
-          value={formData.name}
-          onChange={handleChange}
-          className={inputStyles}
-        />
-        <input
-          required
-          name="email"
-          type="email"
-          placeholder="johndoe@example.com"
-          value={formData.email}
-          onChange={handleChange}
-          className={inputStyles}
-        />
-        <input
-          required
-          name="phone_number"
-          type="tel"
-          placeholder="Phone number"
-          value={formData.phone_number}
-          onChange={handleChange}
-          className={inputStyles}
-        />
-        <input
-          required
-          name="location"
-          type="text"
-          placeholder="Location (e.g. Lagos, Nigeria)"
-          value={formData.location}
-          onChange={handleChange}
-          className={inputStyles}
-        />
+      <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-3">
+        <div>
+          <input
+            type="text"
+            placeholder="Full name"
+            {...register('name')}
+            className={inputStyles}
+            disabled={isSubmitting}
+          />
+          {errors.name && <p className={errorStyles}>{errors.name.message}</p>}
+        </div>
 
-        <Button type="submit" disabled={loading}>
-          {loading ? 'Processing...' : 'Join the Waitlist'}
+        <div>
+          <input
+            type="email"
+            placeholder="johndoe@example.com"
+            {...register('email')}
+            className={inputStyles}
+            disabled={isSubmitting}
+          />
+          {errors.email && <p className={errorStyles}>{errors.email.message}</p>}
+        </div>
+
+        <div>
+          <input
+            type="tel"
+            placeholder="Phone number"
+            {...register('phone_number')}
+            className={inputStyles}
+            disabled={isSubmitting}
+          />
+          {errors.phone_number && <p className={errorStyles}>{errors.phone_number.message}</p>}
+        </div>
+
+        <div>
+          <input
+            type="text"
+            placeholder="Location (e.g. Lagos, Nigeria)"
+            {...register('location')}
+            className={inputStyles}
+            disabled={isSubmitting}
+          />
+          {errors.location && <p className={errorStyles}>{errors.location.message}</p>}
+        </div>
+
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Processing...' : 'Join the Waitlist'}
         </Button>
       </form>
     </div>
