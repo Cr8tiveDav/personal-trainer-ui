@@ -88,7 +88,7 @@ const Hero = () => {
               src='/images/landing-page/hero.png'
               alt='Landing Page Hero'
               fill
-              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+              sizes='100vw'
               loading='eager'
               className='w-full rounded-4xl object-cover'
             />

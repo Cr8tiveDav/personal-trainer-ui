@@ -1,0 +1,171 @@
+'use client'
+
+import Image from 'next/image'
+import { useState } from 'react'
+import {
+  Users,
+  Hourglass,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Dumbbell,
+  LayoutDashboard,
+  CreditCard,
+  LineChart,
+  X,
+} from 'lucide-react'
+import { SidebarItem } from './sidebarItem'
+import { cn } from '~/utils'
+
+const NAV_SECTIONS = [
+  {
+    label: 'OVERVIEW',
+    items: [
+      { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+    ],
+  },
+  {
+    label: 'MANAGEMENT',
+    items: [
+      { label: 'Trainers', href: '/admin/trainers', icon: Dumbbell },
+      { label: 'Clients', href: '/admin/users', icon: Users },
+      { label: 'Sessions', href: '/admin/sessions', icon: Hourglass },
+    ],
+  },
+  {
+    label: 'FINANCE',
+    items: [
+      { label: 'Payments', href: '/admin/payments', icon: CreditCard },
+    ],
+  },
+  {
+    label: 'PLATFORM',
+    items: [
+      { label: 'Analytics', href: '/admin/analytics', icon: LineChart },
+      { label: 'Settings', href: '/admin/settings', icon: Settings },
+    ],
+  },
+]
+
+interface SidebarProps {
+  userName: string
+  userEmail: string
+  userAvatar?: string
+  mobileOpen?: boolean
+  onMobileClose?: () => void
+}
+
+interface SidebarInnerProps {
+  userName: string
+  userEmail: string
+  userAvatar?: string
+  collapsed: boolean
+  onCollapse: () => void
+  onMobileClose?: () => void
+  isMobile?: boolean
+}
+
+function SidebarInner({
+  userName,
+  userEmail,
+  userAvatar,
+  collapsed,
+  onCollapse,
+  onMobileClose,
+  isMobile,
+}: SidebarInnerProps) {
+  return (
+    <>
+      <div className={cn('mb-8 flex items-center border-b border-gray-200 pb-6', collapsed ? 'justify-center' : 'justify-between px-1')}>
+        {!collapsed && (
+          <Image src='/images/trainer/logo.svg' alt='Fitcall' width={100} height={24} />
+        )}
+        {isMobile ? (
+          <button onClick={onMobileClose} className='text-gray-400 hover:text-gray-600'>
+            <X className='h-5 w-5' />
+          </button>
+        ) : (
+          <button
+            onClick={onCollapse}
+            className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors'
+          >
+            {collapsed ? <ChevronRight className='h-4 w-4' /> : <ChevronLeft className='h-4 w-4' />}
+          </button>
+        )}
+      </div>
+
+      <nav className='flex flex-1 flex-col gap-6 overflow-y-auto'>
+        {NAV_SECTIONS.map((section) => (
+          <div key={section.label}>
+            {!collapsed && (
+              <p className='mb-2 px-3 text-[10px] font-semibold tracking-widest uppercase text-gray-400'>
+                {section.label}
+              </p>
+            )}
+            <div className='flex flex-col gap-1'>
+              {section.items.map((item) => (
+                <SidebarItem key={item.href} {...item} collapsed={collapsed} />
+              ))}
+            </div>
+          </div>
+        ))}
+      </nav>
+
+      <div className={cn('flex items-center gap-3 rounded-lg border border-gray-100 p-3', collapsed && 'justify-center')}>
+        {userAvatar ? (
+          <Image src={userAvatar} alt={userName} width={36} height={36} className='rounded-full object-cover shrink-0' />
+        ) : (
+          <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white'>
+            {userName.charAt(0).toUpperCase()}
+          </div>
+        )}
+        {!collapsed && (
+          <div className='min-w-0'>
+            <p className='truncate text-sm font-semibold text-gray-900'>{userName}</p>
+            <p className='truncate text-xs text-gray-400'>{userEmail}</p>
+          </div>
+        )}
+      </div>
+    </>
+  )
+}
+
+export function Sidebar({ userName, userEmail, userAvatar, mobileOpen, onMobileClose }: SidebarProps) {
+  const [collapsed, setCollapsed] = useState(false)
+
+  return (
+    <>
+      <aside
+        className={cn(
+          'hidden md:flex shrink-0 flex-col border-r border-gray-100 bg-white px-4 py-6 transition-all duration-300',
+          collapsed ? 'w-[68px]' : 'w-[280px]'
+        )}
+      >
+        <SidebarInner
+          userName={userName}
+          userEmail={userEmail}
+          userAvatar={userAvatar}
+          collapsed={collapsed}
+          onCollapse={() => setCollapsed(prev => !prev)}
+        />
+      </aside>
+
+      {mobileOpen && (
+        <div className='fixed inset-0 z-50 md:hidden'>
+          <div className='absolute inset-0 bg-black/40' onClick={onMobileClose} />
+          <aside className='relative flex h-full w-[280px] flex-col border-r border-gray-100 bg-white px-4 py-6'>
+            <SidebarInner
+              userName={userName}
+              userEmail={userEmail}
+              userAvatar={userAvatar}
+              collapsed={false}
+              onCollapse={() => {}}
+              onMobileClose={onMobileClose}
+              isMobile
+            />
+          </aside>
+        </div>
+      )}
+    </>
+  )
+}

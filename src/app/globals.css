@@ -139,7 +139,7 @@
 }
 
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 1px;
 }
 
 ::selection {

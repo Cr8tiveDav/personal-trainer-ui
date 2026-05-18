@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Toaster } from "sonner"; // [!code ++]
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { Providers } from "./provider";
 
 const interClass = 'font-sans'
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-const appName = "Personal Trainer";
+const appName = "Personal Trainer || FITCALL.ME";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
@@ -29,9 +29,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(interClass, 'w-full mx-auto antialiased')}>
-        {children}
-       
-        <Toaster position="top-center" richColors closeButton />
+        <Providers>
+          {children}
+        </Providers>
+        
       </body>
     </html>
   );
