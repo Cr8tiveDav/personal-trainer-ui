@@ -21,7 +21,7 @@ export function RecentActivity() {
   const list = activities ?? []
 
   return (
-    <div className='flex-1 rounded-xl border border-gray-100 bg-white p-5 shadow-sm'>
+    <div className='flex-1 rounded-xl border border-gray-100 bg-white p-5 shadow-sm h-full'>
       <div className='mb-4 flex items-center justify-between'>
         <h2 className='text-base font-semibold text-gray-900'>Recent activity</h2>
         <Link

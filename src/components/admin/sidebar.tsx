@@ -6,13 +6,12 @@ import {
   Users,
   Hourglass,
   Settings,
-  ChevronLeft,
   ChevronRight,
   Dumbbell,
-  LayoutDashboard,
   CreditCard,
   LineChart,
   X,
+  Menu,
 } from 'lucide-react'
 import { SidebarItem } from './sidebarItem'
 import { cn } from '~/utils'
@@ -21,7 +20,7 @@ const NAV_SECTIONS = [
   {
     label: 'OVERVIEW',
     items: [
-      { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+      { label: 'Dashboard', href: '/admin/dashboard', icon: Menu },
     ],
   },
   {
@@ -89,7 +88,7 @@ function SidebarInner({
             onClick={onCollapse}
             className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors'
           >
-            {collapsed ? <ChevronRight className='h-4 w-4' /> : <ChevronLeft className='h-4 w-4' />}
+            {collapsed ? <ChevronRight className='h-4 w-4' /> : <Image src="/collapse.svg" alt='collapse' width={20} height={20} className='h-4 w-4' />}
           </button>
         )}
       </div>
