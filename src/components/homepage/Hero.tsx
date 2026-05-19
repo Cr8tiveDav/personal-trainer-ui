@@ -15,13 +15,13 @@ const Hero = () => {
         }}
       ></div>
 
-      <div className='absolute -left-20 top-0 h-200 w-150 rounded-full bg-[#C2DCFF]/70 blur-[120px]'></div>
-      <div className='absolute -right-20 top-0 h-200 w-150 rounded-full bg-[#F5D9C0]/70 blur-[120px]'></div>
+      <div className="absolute -left-20 top-0 h-200 w-150 rounded-full bg-[#C2DCFF]/30 blur-[120px]"></div>
+      <div className="absolute -right-20 top-0 h-200 w-150 rounded-full bg-[#F5D9C0]/30 blur-[120px]"></div>
 
-      <div className='container relative z-10 mx-auto px-4'>
-        <div className='flex flex-col items-center text-center'>
-          <div className='mb-6 inline-flex items-center rounded-full border border-primary bg-primarybadge px-4 py-1.5 text-xs font-semibold text-primary shadow-sm'>
-            <span className='mr-2 h-2 w-2 animate-pulse rounded-full bg-primary'></span>
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="flex flex-col items-center text-center">
+          <div className="mb-6 inline-flex items-center rounded-full border border-primary px-4 py-1.5 text-xs font-semibold text-primary shadow-sm">
+            <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-primary"></span>
             Live Trainer Accountability
           </div>
 
