@@ -95,22 +95,8 @@
   }
 }
 
-@layer utilities {
-  .container {
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    max-width: 1300px;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-
-  @media (min-width: 1024px) {
-    .container {
-      padding-left: 1rem;
-      padding-right: 1rem;
-    }
-  }
+@utility container {
+  @apply mx-auto w-full max-w-[1280px] px-6 lg:p-0;
 }
 
 .custom-bullet {
