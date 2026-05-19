@@ -1,19 +1,21 @@
 name: Deploy Frontend
 
 on:
-  push:
+  pull_request:
     branches:
-      - staging
       - main
+      - staging
+    types: [closed]
   schedule:
-    - cron: '0 0 */2 * *'
+    - cron: "0 0 */2 * *"
 
 concurrency:
-  group: frontend-${{ github.ref }}
+  group: frontend-${{ github.event_name == 'schedule' && 'main-schedule' || github.event.pull_request.base.ref }}
   cancel-in-progress: true
 
 jobs:
   build_lint_test:
+    if: github.event_name == 'schedule' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +27,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -44,13 +46,13 @@ jobs:
       - name: Run Trivy vulnerability scan
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          severity: 'CRITICAL,HIGH'
-          exit-code: '1'
+          scan-type: "fs"
+          scan-ref: "."
+          severity: "CRITICAL,HIGH"
+          exit-code: "1"
 
   deploy-staging:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'staging'
     needs: build_lint_test
     name: Deploy Frontend Staging
     runs-on: ubuntu-latest
@@ -131,7 +133,7 @@ jobs:
             exit 1
 
   deploy-production:
-    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    if: github.event_name == 'schedule' || (github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main')
     needs: build_lint_test
     name: Deploy Frontend Production
     runs-on: ubuntu-latest
