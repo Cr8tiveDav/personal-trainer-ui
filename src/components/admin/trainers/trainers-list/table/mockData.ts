@@ -1,0 +1,150 @@
+export type TrainerStatus = 'Active' | 'Suspended' | 'Pending';
+export type TrainerAvailability = 'Available' | 'Offline' | 'Busy';
+
+export interface Trainer {
+  id: string;
+  name: string;
+  email: string;
+  avatarUrl?: string; // Optional if we don't have images
+  specialty: string;
+  status: TrainerStatus;
+  sessions: number | null;
+  earnings: number;
+  availability: TrainerAvailability;
+  dateAdded: string;
+}
+
+export const mockTrainers: Trainer[] = [
+  {
+    id: '1',
+    name: 'Amara J.',
+    email: 'amaraj@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=1',
+    specialty: 'Nutrition & Wellness',
+    status: 'Active',
+    sessions: 146,
+    earnings: 24910,
+    availability: 'Offline',
+    dateAdded: '6 May 2026',
+  },
+  {
+    id: '2',
+    name: 'Cara K.',
+    email: 'carak@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=2',
+    specialty: 'Nutrition & Wellness',
+    status: 'Active',
+    sessions: 100,
+    earnings: 11820,
+    availability: 'Offline',
+    dateAdded: '2 May 2025',
+  },
+  {
+    id: '3',
+    name: 'Helen E.',
+    email: 'henenry@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=3',
+    specialty: 'Yoga & Mobility',
+    status: 'Active',
+    sessions: 20,
+    earnings: 290,
+    availability: 'Available',
+    dateAdded: '15 Dec 2024',
+  },
+  {
+    id: '4',
+    name: 'Dani K.',
+    email: 'dani@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=4',
+    specialty: 'Yoga & Mobility',
+    status: 'Active',
+    sessions: 12,
+    earnings: 120,
+    availability: 'Available',
+    dateAdded: '4 Sept 2024',
+  },
+  {
+    id: '5',
+    name: 'Sally V.',
+    email: 'sallyv@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=5',
+    specialty: 'Yoga & Mobility',
+    status: 'Suspended',
+    sessions: 0,
+    earnings: 0,
+    availability: 'Offline',
+    dateAdded: '12 Aug 2024',
+  },
+  {
+    id: '6',
+    name: 'Jade K.',
+    email: 'kjade@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=6',
+    specialty: 'Strength & Conditioning',
+    status: 'Pending',
+    sessions: null,
+    earnings: 0,
+    availability: 'Offline',
+    dateAdded: '30 Jun 2024',
+  },
+  {
+    id: '7',
+    name: 'Jubril K.',
+    email: 'jubk@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=7',
+    specialty: 'Strength & Conditioning',
+    status: 'Active',
+    sessions: 10,
+    earnings: 200,
+    availability: 'Available',
+    dateAdded: '21 Mar 2024',
+  },
+  {
+    id: '8',
+    name: 'Murphy E.',
+    email: 'edmurp@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=8',
+    specialty: 'CrossFit',
+    status: 'Active',
+    sessions: 46,
+    earnings: 1140,
+    availability: 'Available',
+    dateAdded: '9 Nov 2023',
+  },
+  {
+    id: '9',
+    name: 'Emeka A.',
+    email: 'ejimax@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=9',
+    specialty: 'Pilates',
+    status: 'Suspended',
+    sessions: 0,
+    earnings: 0,
+    availability: 'Offline',
+    dateAdded: '9 Nov 2023',
+  },
+  {
+    id: '10',
+    name: 'Ebube A.',
+    email: 'eddy@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=10',
+    specialty: 'Pilates',
+    status: 'Active',
+    sessions: 122,
+    earnings: 38420,
+    availability: 'Busy',
+    dateAdded: '9 Nov 2023',
+  },
+  {
+    id: '11',
+    name: 'Chioma A.',
+    email: 'chilove@fitc...',
+    avatarUrl: 'https://i.pravatar.cc/150?u=11',
+    specialty: 'CrossFit',
+    status: 'Active',
+    sessions: 29,
+    earnings: 320,
+    availability: 'Available',
+    dateAdded: '9 Nov 2023',
+  },
+];
