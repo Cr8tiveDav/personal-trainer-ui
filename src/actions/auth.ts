@@ -39,8 +39,14 @@ export async function loginAction(prevState: any, formData: FormData) {
       path: '/',
     });
 
-  
-    cookieStore.set('user_profile', JSON.stringify(result.data.user), {
+   
+    const userProfile = {
+      name: result.data.user?.name ?? '',
+      email: result.data.user?.email ?? '',
+      avatar_url: result.data.user?.avatar_url ?? null,
+    };
+
+    cookieStore.set('user_profile', JSON.stringify(userProfile), {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
