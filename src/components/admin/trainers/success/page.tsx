@@ -8,7 +8,7 @@ interface TrainerCreatedSuccessProps {
 
 export function TrainerCreatedSuccess({ trainerName }: TrainerCreatedSuccessProps) {
   return (
-    <div className='flex flex-col items-center justify-center py-20 text-center'>
+    <div className='flex flex-col h-screen items-center justify-center py-20 text-center'>
       <div className='flex h-16 w-16 items-center justify-center rounded-full bg-green-500 mb-6'>
         <Image src="/success.svg" alt='sucess' width={100}  height={100} />
       </div>

@@ -10,7 +10,7 @@ const AddTrainerButton = () => {
       <Button
         size='lg'
         variant='default'
-        className='h-12 w-39.25 py-3 px-4.5 text-white text-base font-semibold  rounded-md cursor-pointer'
+        className='w-39.25 text-white text-base font-semibold  rounded-md cursor-pointer'
       >
         <Image
           src='/images/admin-dashboard/icons/plus.svg'

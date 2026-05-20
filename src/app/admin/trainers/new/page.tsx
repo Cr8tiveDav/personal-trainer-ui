@@ -6,12 +6,12 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
 import { toast } from 'sonner'
-import { BasicInfoValues, Step1BasicInfo } from '../step1/page'
+import { BasicInfoValues, Step1BasicInfo } from '../../../../components/admin/trainers/step1/page'
 import { createTrainerAction, uploadTrainerImageAction, uploadTrainerVideoAction } from '@/actions/addtrainer'
-import { TrainerCreatedSuccess } from '../success/page'
-import { AddTrainerStepper } from '../addtrainerstepper/page'
-import { Step2MediaUpload } from '../step2/page'
-import { Step3AccountSetup } from '../step3/page'
+import { TrainerCreatedSuccess } from '../../../../components/admin/trainers/success/page'
+import { AddTrainerStepper } from '../../../../components/admin/trainers/addtrainerstepper/page'
+import { Step2MediaUpload } from '../../../../components/admin/trainers/step2/page'
+import { Step3AccountSetup } from '../../../../components/admin/trainers/step3/page'
 
 
 interface MediaFiles {
