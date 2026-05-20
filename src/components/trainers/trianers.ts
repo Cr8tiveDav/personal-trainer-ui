@@ -24,28 +24,28 @@ export type Trainer = {
 export const trainers: Trainer[] = [
   {
     name: 'Tobi Adeyemi',
-    sessions: 24,
+    sessions: 48,
     specialties: ['Strength', 'Mobility & Recovery'],
     image: '/images/landing-page/tra1.jpg',
     categories: ['Strength', 'Mobility & Recovery'],
   },
   {
     name: 'John Mathew',
-    sessions: 24,
+    sessions: 136,
     specialties: ['Strength', 'Mobility & Recovery'],
     image: '/images/landing-page/tra2.png',
     categories: ['Strength', 'Strength & Conditioning'],
   },
   {
-    name: 'Isreal Dennis',
-    sessions: 24,
+    name: 'Israel Dennis',
+    sessions: 82,
     specialties: ['Strength', 'Yoga & Flexibility'],
     image: '/images/landing-page/tra3.jpg',
     categories: ['Strength', 'Yoga & Flexibility'],
   },
   {
     name: 'Ayobami Gabriel',
-    sessions: 24,
+    sessions: 64,
     specialties: [
       'Pilates & Core',
       'Mobility & Recovery',
@@ -56,14 +56,14 @@ export const trainers: Trainer[] = [
   },
   {
     name: 'Bakare Samuel',
-    sessions: 24,
+    sessions: 210,
     specialties: ['Strength', 'Mobility & Recovery'],
     image: '/images/landing-page/tra5.jpg',
     categories: ['Strength', 'Mobility & Recovery'],
   },
   {
     name: 'James Gray',
-    sessions: 24,
+    sessions: 95,
     specialties: ['Strength', 'Mobility & Recovery'],
     image: '/images/landing-page/tra6.jpg',
     categories: ['Strength', 'Mobility & Recovery'],
