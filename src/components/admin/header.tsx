@@ -29,7 +29,7 @@ export function AdminHeader({ userName, userAvatar, onMenuClick }: AdminHeaderPr
     }, [])
 
     return (
-        <header className='flex h-[60px] items-center gap-4 border-b border-gray-100 bg-white px-4 md:px-6'>
+        <header className='flex h-[75px] items-center gap-4 border border-gray-100 bg-white px-4 md:px-6'>
             <div className='w-full flex items-center gap-2'>
                 <button
                     onClick={onMenuClick}
