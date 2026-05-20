@@ -5,18 +5,25 @@ import { Trainer } from '../../types';
 import { MoreVertical } from 'lucide-react';
 import { cn } from '@/utils';
 
+import { useRouter } from 'next/navigation';
+
 interface TrainerTableRowProps {
   trainer: Trainer;
 }
 
 const TrainerTableRow: React.FC<TrainerTableRowProps> = ({ trainer }) => {
+  const router = useRouter();
+
   // Determine availability dot color
   let availabilityColor = 'bg-[#D9D9D9]';
   if (trainer.availability === 'Available') availabilityColor = 'bg-[#14561C]';
   if (trainer.availability === 'Busy') availabilityColor = 'bg-[#A86908]';
 
   return (
-    <tr className='border-b border-gray-100 hover:bg-gray-50/50 transition-colors'>
+    <tr 
+      onClick={() => router.push(`/admin/trainers/${trainer.id}`)}
+      className='border-b border-gray-100 hover:bg-gray-50/50 transition-colors cursor-pointer'
+    >
       <td className='py-4 px-6'>
         <div className='flex items-center gap-3'>
           {trainer.avatarUrl ? (
