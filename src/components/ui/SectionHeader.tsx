@@ -31,7 +31,7 @@ const SectionHeader = ({
       {badge && (
         <span
           className={cn(
-            'mb-4 inline-flex items-center rounded-full bg-primarybadge px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest text-primary',
+            'mb-4 inline-flex items-center rounded-full bg-primarybadge px-4 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#063660]',
             'border border-blue-100/50 shadow-sm'
           )}
         >
@@ -48,7 +48,7 @@ const SectionHeader = ({
       </h2>
 
       {description && (
-        <p className='mt-4 text-sm text-muted leading-relaxed opacity-90 md:text-base'>
+        <p className='mt-2 text-sm text-muted leading-relaxed opacity-90 md:text-base'>
           {description}
         </p>
       )}

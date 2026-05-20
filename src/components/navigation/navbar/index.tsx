@@ -24,9 +24,9 @@ const Navbar = () => {
   return (
     <nav
       className={cn(
-        'fixed left-0 right-0 h-[88px] items-center flex  top-0 z-50 border-b border-gray-200 transition-all duration-300',
+        'fixed left-0 right-0 h-[88px] items-center flex  top-0 z-50 border-b border-gray-100 transition-all duration-300',
         scrolling
-          ? 'bg-white/90  shadow-md backdrop-blur-md'
+          ? 'bg-white/90  shadow-xs backdrop-blur-md'
           : 'bg-white/20 '
       )}
     >
@@ -58,10 +58,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center">
-          <Button
-            asChild
-            className="hidden bg-[#0d2b45] text-white hover:bg-[#1a3a5f] md:inline-flex md:min-w-35"
-          >
+          <Button asChild size='lg' className="hidden md:inline-flex">
             <Link href="/waitlist">Join Waitlist</Link>
           </Button>
           <div className="md:hidden">
