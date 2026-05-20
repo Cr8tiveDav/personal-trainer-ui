@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { Trainer } from '../../types';
+import { Trainer } from '../types';
 import { cn } from '@/utils';
 
 interface ProfileHeaderProps {

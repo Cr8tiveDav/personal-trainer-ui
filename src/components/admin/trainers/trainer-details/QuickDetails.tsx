@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trainer } from '../../types';
+import { Trainer } from '../types';
 import StatusBadge from '../trainers-list/table/StatusBadge';
 
 interface QuickDetailsProps {
