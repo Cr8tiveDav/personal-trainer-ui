@@ -11,5 +11,9 @@ export default async function VideoDetailPage({ params }: Props) {
   const exists = mockVideos.find((v) => v.id === id)
   if (!exists) notFound()
 
-  return <VideoDetailView video={{ ...mockVideoDetail, id }} />
+  return (
+    <div className='w-full px-4 pb-6 lg:px-10'>
+      <VideoDetailView video={{ ...mockVideoDetail, id }} />
+    </div>
+  )
 }

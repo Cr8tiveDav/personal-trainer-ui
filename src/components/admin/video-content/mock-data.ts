@@ -5,6 +5,7 @@ export type VideoItem = {
   title: string
   thumbnail?: string
   trainer: string
+  trainerSpecialty: string
   trainerAvatar?: string
   duration: string
   status: VideoStatus
@@ -17,6 +18,7 @@ export type VideoDetail = {
   thumbnail?: string
   videoUrl?: string
   trainer: string
+  trainerSpecialty: string
   trainerAvatar?: string
   trainerEmail: string
   duration: string
@@ -29,56 +31,63 @@ export const mockVideos: VideoItem[] = [
   {
     id: '1',
     title: 'Full Body HIIT Workout',
-    trainer: 'Amara J.',
-    duration: '45:00',
+    trainer: 'Marcus Reed',
+    trainerSpecialty: 'Strength & Conditioning',
+    duration: '01:24',
     status: 'Approved',
     uploadedAt: '6 May 2026',
   },
   {
     id: '2',
     title: 'Core Strength Fundamentals',
-    trainer: 'Cara K.',
-    duration: '30:00',
+    trainer: 'Olivia Stone',
+    trainerSpecialty: 'Yoga & Mobility',
+    duration: '01:48',
     status: 'Approved',
     uploadedAt: '2 May 2026',
   },
   {
     id: '3',
     title: 'Beginner Yoga Flow',
-    trainer: 'Helen E.',
-    duration: '60:00',
+    trainer: 'Daniel Cruz',
+    trainerSpecialty: 'HIIT & Cardio',
+    duration: '01:20',
     status: 'Pending',
     uploadedAt: '28 Apr 2026',
   },
   {
     id: '4',
     title: 'Advanced Strength Training',
-    trainer: 'Dani K.',
-    duration: '50:00',
-    status: 'Pending',
+    trainer: 'Hana Sato',
+    trainerSpecialty: 'Pilates',
+    duration: '01:50',
+    status: 'Approved',
     uploadedAt: '20 Apr 2026',
   },
   {
     id: '5',
     title: 'Cardio Endurance Session',
-    trainer: 'Sally V.',
-    duration: '40:00',
+    trainer: 'Noah Bennett',
+    trainerSpecialty: 'Endurance Coaching',
+    duration: '-',
     status: 'Missing',
     uploadedAt: '10 Apr 2026',
   },
   {
     id: '6',
     title: 'Mobility & Flexibility',
-    trainer: 'Jade K.',
-    duration: '35:00',
-    status: 'Missing',
+    trainer: 'Aisha Smith',
+    trainerSpecialty: 'Weight Loss & Nutrition',
+    duration: '01:32',
+    status: 'Approved',
     uploadedAt: '1 Apr 2026',
   },
   {
     id: '7',
     title: 'Upper Body Blast',
     trainer: 'Jubril K.',
-    duration: '25:00',
+    trainerSpecialty: 'Strength Training',
+    duration: '01:15',
     status: 'Approved',
     uploadedAt: '15 Mar 2026',
   },
@@ -86,7 +95,8 @@ export const mockVideos: VideoItem[] = [
     id: '8',
     title: 'Lower Body Sculpt',
     trainer: 'Murphy E.',
-    duration: '38:00',
+    trainerSpecialty: 'Functional Fitness',
+    duration: '01:38',
     status: 'Pending',
     uploadedAt: '5 Mar 2026',
   },
@@ -94,12 +104,13 @@ export const mockVideos: VideoItem[] = [
 
 export const mockVideoDetail: VideoDetail = {
   id: '1',
-  title: 'Full Body HIIT Workout',
-  trainer: 'Amara Johnson',
-  trainerEmail: 'amaraj@fitcall.com',
-  duration: '45:00',
+  title: 'Intro - Strength Coaching',
+  trainer: 'Marcus Reed',
+  trainerSpecialty: 'Strength & Conditioning',
+  trainerEmail: 'marcusr@fitcall.com',
+  duration: '01:24',
   status: 'Approved',
-  uploadedAt: '6 May 2026',
+  uploadedAt: 'April 12, 2026',
   description:
     'A high-intensity interval training session designed to target the full body. This workout alternates between strength and cardio bursts to maximise calorie burn and muscle activation.',
 }
