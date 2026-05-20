@@ -7,15 +7,24 @@ import type { WithdrawalRequest } from "./types";
 import { useBodyScrollLock } from "./useBodyScrollLock";
 
 type DeclinePayoutModalProps = {
+  onOpenChange?: (isOpen: boolean) => void;
   request: WithdrawalRequest;
   trigger?: (openModal: () => void) => ReactNode;
 };
 
-const DeclinePayoutModal = ({ request, trigger }: DeclinePayoutModalProps) => {
+const DeclinePayoutModal = ({
+  onOpenChange,
+  request,
+  trigger,
+}: DeclinePayoutModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const openModal = () => setIsOpen(true);
 
   useBodyScrollLock(isOpen);
+
+  useEffect(() => {
+    onOpenChange?.(isOpen);
+  }, [isOpen, onOpenChange]);
 
   useEffect(() => {
     if (!isOpen) {

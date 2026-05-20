@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
 
 import ApprovePayoutModal from "./ApprovePayoutModal";
@@ -19,6 +19,8 @@ const PayoutDetailsSidebar = ({
   request,
   onClose,
 }: PayoutDetailsSidebarProps) => {
+  const [isNestedModalOpen, setIsNestedModalOpen] = useState(false);
+
   useBodyScrollLock(Boolean(request));
 
   useEffect(() => {
@@ -27,7 +29,7 @@ const PayoutDetailsSidebar = ({
     }
 
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && !isNestedModalOpen) {
         onClose();
       }
     };
@@ -37,7 +39,7 @@ const PayoutDetailsSidebar = ({
     return () => {
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [onClose, request]);
+  }, [isNestedModalOpen, onClose, request]);
 
   if (!request) {
     return null;
@@ -141,6 +143,7 @@ const PayoutDetailsSidebar = ({
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <ApprovePayoutModal
+            onOpenChange={setIsNestedModalOpen}
             request={request}
             trigger={(openModal) => (
               <button
@@ -154,6 +157,7 @@ const PayoutDetailsSidebar = ({
             )}
           />
           <DeclinePayoutModal
+            onOpenChange={setIsNestedModalOpen}
             request={request}
             trigger={(openModal) => (
               <button

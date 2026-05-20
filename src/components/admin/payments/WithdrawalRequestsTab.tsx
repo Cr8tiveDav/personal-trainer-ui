@@ -47,7 +47,7 @@ const WithdrawalRequestsTab = ({
     1,
     Math.ceil(filteredRequests.length / ITEMS_PER_PAGE),
   );
-  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const safeCurrentPage = Math.max(1, Math.min(currentPage, totalPages));
 
   const paginatedRequests = useMemo(() => {
     const startIndex = (safeCurrentPage - 1) * ITEMS_PER_PAGE;
