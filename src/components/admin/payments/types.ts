@@ -27,6 +27,8 @@ export type WithdrawalRequest = {
   transactionDate?: string;
   totalFee?: number;
   description?: string;
+  declineNote?: string;
+  declineReason?: string;
   receiverDetails?: {
     accountName: string;
     accountNumber: string;
