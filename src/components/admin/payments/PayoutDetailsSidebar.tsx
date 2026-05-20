@@ -11,11 +11,19 @@ import { useBodyScrollLock } from "./useBodyScrollLock";
 import { formatCurrency } from "./utils";
 
 type PayoutDetailsSidebarProps = {
+  isApprovalSuccess?: boolean;
+  isDeclineSuccess?: boolean;
+  onApprove: (request: WithdrawalRequest) => void;
+  onDecline: (request: WithdrawalRequest, reason: string, note?: string) => void;
   request: WithdrawalRequest | null;
   onClose: () => void;
 };
 
 const PayoutDetailsSidebar = ({
+  isApprovalSuccess = false,
+  isDeclineSuccess = false,
+  onApprove,
+  onDecline,
   request,
   onClose,
 }: PayoutDetailsSidebarProps) => {
@@ -94,6 +102,8 @@ const PayoutDetailsSidebar = ({
     { label: "Account number", value: receiverDetails.accountNumber },
     { label: "Bank name", value: receiverDetails.bankName },
   ];
+  const canActOnPayout =
+    request.status !== "completed" && request.status !== "declined";
 
   return (
     <div className="fixed inset-0 z-50">
@@ -141,36 +151,67 @@ const PayoutDetailsSidebar = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <ApprovePayoutModal
-            onOpenChange={setIsNestedModalOpen}
-            request={request}
-            trigger={(openModal) => (
-              <button
-                type="button"
-                onClick={openModal}
-                className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
-              >
-                <Check className="size-5" />
-                Approve Payout
-              </button>
-            )}
-          />
-          <DeclinePayoutModal
-            onOpenChange={setIsNestedModalOpen}
-            request={request}
-            trigger={(openModal) => (
-              <button
-                type="button"
-                onClick={openModal}
-                className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-[#EAF4FC] px-4 text-sm font-semibold text-primary"
-              >
-                <X className="size-5" />
-                Decline Payout
-              </button>
-            )}
-          />
-        </div>
+        {canActOnPayout ? (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <ApprovePayoutModal
+              onConfirm={onApprove}
+              onOpenChange={setIsNestedModalOpen}
+              request={request}
+              trigger={(openModal) => (
+                <button
+                  type="button"
+                  onClick={openModal}
+                  className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+                >
+                  <Check className="size-5" />
+                  Approve Payout
+                </button>
+              )}
+            />
+            <DeclinePayoutModal
+              onConfirm={onDecline}
+              onOpenChange={setIsNestedModalOpen}
+              request={request}
+              trigger={(openModal) => (
+                <button
+                  type="button"
+                  onClick={openModal}
+                  className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-[#EAF4FC] px-4 text-sm font-semibold text-primary"
+                >
+                  <X className="size-5" />
+                  Decline Payout
+                </button>
+              )}
+            />
+          </div>
+        ) : null}
+
+        {isApprovalSuccess ? (
+          <div
+            role="status"
+            className="mt-4 flex items-center gap-3 rounded-md border border-border bg-card px-4 py-3 text-sm font-medium text-[hsl(var(--success))]"
+          >
+            <Check className="size-5" />
+            This payout has been approved
+          </div>
+        ) : null}
+
+        {isDeclineSuccess ? (
+          <div
+            role="status"
+            className="mt-4 rounded-md border border-border bg-card px-4 py-3 text-sm"
+          >
+            <div className="flex items-center gap-3 font-medium text-[hsl(var(--error))]">
+              <X className="size-5" />
+              This payout was declined
+            </div>
+            {request.declineReason ? (
+              <p className="mt-2 text-xs text-muted">
+                Reason: {request.declineReason}
+              </p>
+            ) : null}
+          </div>
+        ) : null}
 
         <section className="mt-8">
           <h3 className="text-lg font-semibold text-foreground">Transaction</h3>
