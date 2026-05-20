@@ -3,18 +3,14 @@
 import { cookies } from 'next/headers'
 
 const BASE_URL = process.env.API_URL
-
-// Keep it clean: only fetch authorization tokens globally
 async function getAuthHeaderString() {
     const cookieStore = await cookies()
     const token = cookieStore.get('session_token')?.value
     console.log('token:', token)
     return token ? `Bearer ${token}` : ''
 }
-
 export async function createTrainerAction(data: FormData) {
   const authHeader = await getAuthHeaderString()
-
   const newFormData = new FormData()
   newFormData.append('name', data.get('name') as string)
   newFormData.append('email', data.get('email') as string)
@@ -30,9 +26,8 @@ export async function createTrainerAction(data: FormData) {
     headers: {
       'Authorization': authHeader,
     },
-    body: newFormData, // Let fetch automatically configure multipart boundaries
+    body: newFormData, 
   })
-
   const result = await res.json()
   console.log('response:', JSON.stringify(result, null, 2))
 
@@ -44,12 +39,9 @@ export async function createTrainerAction(data: FormData) {
   }
   return result.data
 }
-
 export async function uploadTrainerImageAction(trainerId: string, file: File) {
     const authHeader = await getAuthHeaderString()
     const formData = new FormData()
-    
-    // Change 'image' to 'images' to match your backend's multipart key requirements
     formData.append('images', file)
 
     const res = await fetch(`${BASE_URL}/trainers/${trainerId}/images`, {
@@ -59,7 +51,6 @@ export async function uploadTrainerImageAction(trainerId: string, file: File) {
         },
         body: formData,
     })
-
     const data = await res.json()
     if (!res.ok) throw new Error(data.message || 'Failed to upload image')
     return data
@@ -72,11 +63,9 @@ export async function uploadTrainerVideoAction(trainerId: string, file: File) {
     const res = await fetch(`${BASE_URL}/trainers/${trainerId}/intro-video`, {
         method: 'POST',
         headers: {
-            'Authorization': authHeader, // CRITICAL: Content-Type left blank intentionally here
-        },
+            'Authorization': authHeader, 
         body: formData,
     })
-
     const data = await res.json()
     if (!res.ok) throw new Error(data.message || 'Failed to upload video')
     return data
