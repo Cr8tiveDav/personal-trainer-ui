@@ -7,7 +7,6 @@ const BASE_URL = process.env.API_URL
 async function getAuthHeaderString() {
     const cookieStore = await cookies()
     const token = cookieStore.get('session_token')?.value
-    console.log('token:', token)
     return token ? `Bearer ${token}` : ''
 }
 
@@ -20,6 +19,16 @@ export async function createTrainerAction(data: FormData) {
   newFormData.append('specializations', data.get('specializations') as string)
   newFormData.append('years_of_experience', data.get('years_of_experience') as string)
   newFormData.append('onboarding_status', 'pending')
+
+  const accountSetupMethod = data.get('account_setup_method')
+  if (accountSetupMethod) {
+    newFormData.append('account_setup_method', accountSetupMethod as string)
+  }
+
+  const password = data.get('password')
+  if (password) {
+    newFormData.append('password', password as string)
+  }
   
   const bio = data.get('bio')
   if (bio) newFormData.append('bio', bio as string)
@@ -29,11 +38,10 @@ export async function createTrainerAction(data: FormData) {
     headers: {
       'Authorization': authHeader,
     },
-    body: newFormData, // Let fetch automatically configure multipart boundaries
+    body: newFormData, 
   })
 
   const result = await res.json()
-  console.log('response:', JSON.stringify(result, null, 2))
 
   if (!res.ok) {
     if (result.message?.includes('trainer created but credentials email failed')) {
@@ -62,6 +70,7 @@ export async function uploadTrainerImageAction(trainerId: string, file: File) {
     if (!res.ok) throw new Error(data.message || 'Failed to upload image')
     return data
 }
+
 export async function uploadTrainerVideoAction(trainerId: string, file: File) {
     const authHeader = await getAuthHeaderString()
     const formData = new FormData()
