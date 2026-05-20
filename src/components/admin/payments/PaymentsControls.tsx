@@ -55,9 +55,14 @@ const PaymentsControls = ({
 
         <button
           type="button"
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-medium text-muted transition-colors hover:text-foreground"
+          disabled
+          title="Additional filters will be added when more payment filters are available."
+          className="inline-flex h-12 cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-medium text-muted opacity-70"
         >
           Add filter
+          <span className="rounded bg-secondary px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted">
+            Soon
+          </span>
           <ListFilter className="size-4" />
         </button>
       </div>

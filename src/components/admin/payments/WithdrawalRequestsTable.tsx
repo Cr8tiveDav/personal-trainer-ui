@@ -1,3 +1,5 @@
+import type { KeyboardEvent } from "react";
+
 import WithdrawalRequestMobileCard from "./WithdrawalRequestMobileCard";
 import WithdrawalStatusBadge from "./WithdrawalStatusBadge";
 import type { WithdrawalRequest } from "./types";
@@ -13,6 +15,16 @@ const WithdrawalRequestsTable = ({
   onSelectRequest,
 }: WithdrawalRequestsTableProps) => {
   const hasRequests = requests.length > 0;
+
+  const handleRowKeyDown = (
+    event: KeyboardEvent<HTMLTableRowElement>,
+    request: WithdrawalRequest,
+  ) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onSelectRequest(request);
+    }
+  };
 
   return (
     <>
@@ -33,8 +45,12 @@ const WithdrawalRequestsTable = ({
               requests.map((request) => (
                 <tr
                   key={request.id}
+                  aria-label={`Open payout details for ${request.receiverName}`}
                   onClick={() => onSelectRequest(request)}
-                  className="h-18.5 cursor-pointer border-b border-border transition-colors last:border-b-0 hover:bg-secondary/70"
+                  onKeyDown={(event) => handleRowKeyDown(event, request)}
+                  role="button"
+                  tabIndex={0}
+                  className="h-18.5 cursor-pointer border-b border-border transition-colors last:border-b-0 hover:bg-secondary/70 focus-visible:bg-secondary/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20"
                 >
                   <td className="px-5 py-4 font-medium text-foreground">
                     {request.dueDate}
