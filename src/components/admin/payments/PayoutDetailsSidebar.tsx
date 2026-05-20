@@ -3,8 +3,11 @@
 import { useEffect } from "react";
 import { Check, X } from "lucide-react";
 
+import ApprovePayoutModal from "./ApprovePayoutModal";
+import DeclinePayoutModal from "./DeclinePayoutModal";
 import WithdrawalStatusBadge from "./WithdrawalStatusBadge";
 import type { WithdrawalRequest } from "./types";
+import { useBodyScrollLock } from "./useBodyScrollLock";
 import { formatCurrency } from "./utils";
 
 type PayoutDetailsSidebarProps = {
@@ -16,6 +19,8 @@ const PayoutDetailsSidebar = ({
   request,
   onClose,
 }: PayoutDetailsSidebarProps) => {
+  useBodyScrollLock(Boolean(request));
+
   useEffect(() => {
     if (!request) {
       return;
@@ -27,11 +32,9 @@ const PayoutDetailsSidebar = ({
       }
     };
 
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.body.style.overflow = "";
       window.removeEventListener("keydown", handleEscape);
     };
   }, [onClose, request]);
@@ -137,20 +140,32 @@ const PayoutDetailsSidebar = ({
         </div>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <button
-            type="button"
-            className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
-          >
-            <Check className="size-5" />
-            Approve Payout
-          </button>
-          <button
-            type="button"
-            className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-[#EAF4FC] px-4 text-sm font-semibold text-primary"
-          >
-            <X className="size-5" />
-            Decline Payout
-          </button>
+          <ApprovePayoutModal
+            request={request}
+            trigger={(openModal) => (
+              <button
+                type="button"
+                onClick={openModal}
+                className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+              >
+                <Check className="size-5" />
+                Approve Payout
+              </button>
+            )}
+          />
+          <DeclinePayoutModal
+            request={request}
+            trigger={(openModal) => (
+              <button
+                type="button"
+                onClick={openModal}
+                className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-[#EAF4FC] px-4 text-sm font-semibold text-primary"
+              >
+                <X className="size-5" />
+                Decline Payout
+              </button>
+            )}
+          />
         </div>
 
         <section className="mt-8">

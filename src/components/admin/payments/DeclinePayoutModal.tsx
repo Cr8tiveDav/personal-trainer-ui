@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 
 import type { WithdrawalRequest } from "./types";
+import { useBodyScrollLock } from "./useBodyScrollLock";
 
 type DeclinePayoutModalProps = {
   request: WithdrawalRequest;
+  trigger?: (openModal: () => void) => ReactNode;
 };
 
-const DeclinePayoutModal = ({ request }: DeclinePayoutModalProps) => {
+const DeclinePayoutModal = ({ request, trigger }: DeclinePayoutModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const openModal = () => setIsOpen(true);
+
+  useBodyScrollLock(isOpen);
 
   useEffect(() => {
     if (!isOpen) {
@@ -22,24 +28,26 @@ const DeclinePayoutModal = ({ request }: DeclinePayoutModalProps) => {
       }
     };
 
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.body.style.overflow = "";
       window.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen]);
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground"
-      >
-        Decline
-      </button>
+      {trigger ? (
+        trigger(openModal)
+      ) : (
+        <button
+          type="button"
+          onClick={openModal}
+          className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground"
+        >
+          Decline
+        </button>
+      )}
       {isOpen ? (
         <div
           role="dialog"

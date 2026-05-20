@@ -1,15 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
 
 import type { WithdrawalRequest } from "./types";
+import { useBodyScrollLock } from "./useBodyScrollLock";
 
 type ApprovePayoutModalProps = {
   request: WithdrawalRequest;
+  trigger?: (openModal: () => void) => ReactNode;
 };
 
-const ApprovePayoutModal = ({ request }: ApprovePayoutModalProps) => {
+const ApprovePayoutModal = ({ request, trigger }: ApprovePayoutModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const openModal = () => setIsOpen(true);
+
+  useBodyScrollLock(isOpen);
 
   useEffect(() => {
     if (!isOpen) {
@@ -22,24 +28,26 @@ const ApprovePayoutModal = ({ request }: ApprovePayoutModalProps) => {
       }
     };
 
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", handleEscape);
 
     return () => {
-      document.body.style.overflow = "";
       window.removeEventListener("keydown", handleEscape);
     };
   }, [isOpen]);
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
-      >
-        Approve
-      </button>
+      {trigger ? (
+        trigger(openModal)
+      ) : (
+        <button
+          type="button"
+          onClick={openModal}
+          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+        >
+          Approve
+        </button>
+      )}
       {isOpen ? (
         <div
           role="dialog"

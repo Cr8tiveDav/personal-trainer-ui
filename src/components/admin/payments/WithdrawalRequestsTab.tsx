@@ -11,15 +11,18 @@ import type { WithdrawalRequest } from "./types";
 const ITEMS_PER_PAGE = 5;
 
 type WithdrawalRequestsTabProps = {
+  currentPage: number;
+  onPageChange: (page: number) => void;
   searchValue: string;
   statusValue: string;
 };
 
 const WithdrawalRequestsTab = ({
+  currentPage,
+  onPageChange,
   searchValue,
   statusValue,
 }: WithdrawalRequestsTabProps) => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [selectedRequest, setSelectedRequest] =
     useState<WithdrawalRequest | null>(null);
 
@@ -60,7 +63,7 @@ const WithdrawalRequestsTab = ({
       <WithdrawalPagination
         currentPage={safeCurrentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
+        onPageChange={onPageChange}
       />
       <PayoutDetailsSidebar
         request={selectedRequest}

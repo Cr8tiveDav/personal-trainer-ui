@@ -17,6 +17,17 @@ const PaymentsTabs = () => {
   const [activeTab, setActiveTab] = useState<PaymentTab>("withdrawal_requests");
   const [searchValue, setSearchValue] = useState("");
   const [statusValue, setStatusValue] = useState("all");
+  const [withdrawalPage, setWithdrawalPage] = useState(1);
+
+  const handleSearchChange = (value: string) => {
+    setSearchValue(value);
+    setWithdrawalPage(1);
+  };
+
+  const handleStatusChange = (value: string) => {
+    setStatusValue(value);
+    setWithdrawalPage(1);
+  };
 
   return (
     <div className="space-y-6">
@@ -36,14 +47,15 @@ const PaymentsTabs = () => {
 
       <PaymentsControls
         searchValue={searchValue}
-        onSearchChange={setSearchValue}
+        onSearchChange={handleSearchChange}
         statusValue={statusValue}
-        onStatusChange={setStatusValue}
+        onStatusChange={handleStatusChange}
       />
 
       {activeTab === "withdrawal_requests" ? (
         <WithdrawalRequestsTab
-          key={`${searchValue}-${statusValue}`}
+          currentPage={withdrawalPage}
+          onPageChange={setWithdrawalPage}
           searchValue={searchValue}
           statusValue={statusValue}
         />
