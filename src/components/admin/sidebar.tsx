@@ -75,7 +75,7 @@ function SidebarInner({
 }: SidebarInnerProps) {
   return (
     <>
-      <div className={cn('mb-8 flex items-center border-b border-gray-200 pb-6', collapsed ? 'justify-center' : 'justify-between px-1')}>
+      <div className={cn('mb-8 flex items-center border-b border-gray-200 pb-3 h-12', collapsed ? 'justify-center' : 'justify-between px-1')}>
         {!collapsed && (
           <Image src='/images/trainer/logo.svg' alt='Fitcall' width={100} height={24} />
         )}
@@ -136,7 +136,7 @@ export function Sidebar({ userName, userEmail, userAvatar, mobileOpen, onMobileC
     <>
       <aside
         className={cn(
-          'hidden md:flex shrink-0 flex-col border-r border-gray-100 bg-white px-4 py-6 transition-all duration-300',
+          'hidden md:flex shrink-0 flex-col border border-gray-100 bg-white px-4 py-6 transition-all duration-300',
           collapsed ? 'w-[68px]' : 'w-[280px]'
         )}
       >

@@ -15,7 +15,7 @@ export function AdminShell({ userName, userEmail, userAvatar, children }: AdminS
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className='flex h-screen w-screen overflow-hidden bg-gray-50'>
+    <div className='flex h-screen max-w-[1440px] mx-auto bg-gray-50 overflow-hidden '>
       <Sidebar
         userName={userName}
         userEmail={userEmail}

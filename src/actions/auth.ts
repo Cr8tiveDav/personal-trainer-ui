@@ -39,6 +39,15 @@ export async function loginAction(prevState: any, formData: FormData) {
       path: '/',
     });
 
+  
+    cookieStore.set('user_profile', JSON.stringify(result.data.user), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+      maxAge: result.data.expires_in,
+    });
+
     return {
       success: true,
       redirectTo: type === 'admin' ? '/admin/dashboard' : '/dashboard/trainers',

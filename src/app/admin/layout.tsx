@@ -1,6 +1,5 @@
 import { AdminShell } from '@/components/admin/dashboard/AdminShell'
 import { cookies } from 'next/headers'
- 
 
 export default async function AdminDashboardLayout({
   children,
@@ -8,13 +7,28 @@ export default async function AdminDashboardLayout({
   children: React.ReactNode
 }) {
   const cookieStore = await cookies()
-  const userName = cookieStore.get('user_name')?.value ?? 'Admin'
-  const userEmail = cookieStore.get('user_email')?.value ?? ''
-  const userAvatar = cookieStore.get('user_avatar')?.value
+  const profileCookie = cookieStore.get('user_profile')?.value
+
+  let userName = 'Admin'
+  let userEmail = ''
+  let userAvatar = undefined
+
+  if (profileCookie) {
+    try {
+      const user = JSON.parse(profileCookie)
+      userName = user.name || userName
+      userEmail = user.email || userEmail
+      userAvatar = user.avatar_url || undefined
+    } catch (e) {
+      console.error('Failed to parse user_profile cookie inside layout:', e)
+    }
+  }
 
   return (
     <AdminShell userName={userName} userEmail={userEmail} userAvatar={userAvatar}>
-      {children}
+      <div className="">
+        {children}
+      </div>
     </AdminShell>
   )
 }
