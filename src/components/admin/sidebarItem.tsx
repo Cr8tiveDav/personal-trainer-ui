@@ -14,7 +14,11 @@ interface SidebarItemProps {
 
 export function SidebarItem({ label, href, icon: Icon, collapsed }: SidebarItemProps) {
   const pathname = usePathname()
-  const isActive = pathname === href
+  
+
+  const isActive = 
+    pathname === href || 
+    (href !== '/admin/dashboard' && pathname.startsWith(href))
 
   return (
     <Link
