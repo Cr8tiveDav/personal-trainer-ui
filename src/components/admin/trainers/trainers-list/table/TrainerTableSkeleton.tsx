@@ -1,0 +1,48 @@
+import React from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const TrainerTableSkeleton = () => {
+  return (
+    <>
+      {Array.from({ length: 5 }).map((_, index) => (
+        <tr key={index} className='border-b border-gray-100 last:border-none'>
+          <td className='py-4 px-6 whitespace-nowrap'>
+            <div className='flex items-center gap-3'>
+              <Skeleton className='w-10 h-10 rounded-full' />
+              <div className='flex flex-col gap-2'>
+                <Skeleton className='h-4 w-32' />
+                <Skeleton className='h-3 w-40' />
+              </div>
+            </div>
+          </td>
+          <td className='py-4 px-6 whitespace-nowrap'>
+            <Skeleton className='h-6 w-24 rounded-full' />
+          </td>
+          <td className='py-4 px-6 whitespace-nowrap'>
+            <Skeleton className='h-6 w-20 rounded-full' />
+          </td>
+          <td className='py-4 px-6 whitespace-nowrap'>
+            <Skeleton className='h-4 w-12' />
+          </td>
+          <td className='py-4 px-6 whitespace-nowrap'>
+            <Skeleton className='h-4 w-16' />
+          </td>
+          <td className='py-4 px-6 whitespace-nowrap'>
+            <div className='flex items-center gap-2'>
+              <Skeleton className='h-2 w-2 rounded-full' />
+              <Skeleton className='h-4 w-16' />
+            </div>
+          </td>
+          <td className='py-4 px-6 whitespace-nowrap'>
+            <Skeleton className='h-4 w-24' />
+          </td>
+          <td className='py-4 px-6 whitespace-nowrap text-right'>
+            <Skeleton className='h-8 w-8 rounded-md ml-auto' />
+          </td>
+        </tr>
+      ))}
+    </>
+  );
+};
+
+export default TrainerTableSkeleton;

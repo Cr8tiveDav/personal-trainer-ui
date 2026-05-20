@@ -2,7 +2,6 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
-import { Sparkles } from 'lucide-react'
 
 interface SubscriptionPlan {
     name: string

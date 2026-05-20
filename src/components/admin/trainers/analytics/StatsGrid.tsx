@@ -3,11 +3,18 @@
 import React from 'react';
 import StatCard from './StatCard';
 import { useQuery } from '@tanstack/react-query';
-import { TrainerResponse } from '../trainers-list/TrainersList';
+import { TrainerResponse } from '../types';
 
 const fetchAllTrainers = async (): Promise<TrainerResponse> => {
   const res = await fetch('/api/admin/trainers?status=all');
-  if (!res.ok) throw new Error('Failed to fetch trainers stats');
+  if (!res.ok) {
+    if (res.status === 401) {
+      if (typeof window !== 'undefined') {
+        window.location.href = '/admin/login';
+      }
+    }
+    throw new Error('Failed to fetch trainers stats');
+  }
   return res.json();
 };
 
@@ -32,13 +39,13 @@ const StatsGrid = () => {
     },
     {
       title: 'Sessions delivered',
-      value: '1,949',
+      value: '0',
       icon: '/images/admin-dashboard/icons/check-circle.svg',
       variant: '#ECFDF5',
     },
     {
       title: 'Trainer earnings',
-      value: '$172.5k',
+      value: '$0',
       icon: '/images/admin-dashboard/icons/trend-up.svg',
       variant: '#F7F7F7',
     },
