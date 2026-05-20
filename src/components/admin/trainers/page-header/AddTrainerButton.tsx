@@ -5,13 +5,13 @@ import React from 'react';
 
 const AddTrainerButton = () => {
   return (
-    <Link
-      href='/admin/trainers/new'>
-      <Button
-        size='lg'
-        variant='default'
-        className='w-39.25 text-white text-base font-semibold  rounded-md cursor-pointer'
-      >
+    <Button
+      asChild
+      size='lg'
+      variant='default'
+      className='w-39.25 text-white text-base font-semibold rounded-md cursor-pointer'
+    >
+      <Link href='/admin/trainers/new'>
         <Image
           src='/images/admin-dashboard/icons/plus.svg'
           alt='Add Trainer'
@@ -21,8 +21,8 @@ const AddTrainerButton = () => {
           className='mr-2'
         />
         Add Trainer
-      </Button>
-    </Link>
+      </Link>
+    </Button>
   );
 };
 

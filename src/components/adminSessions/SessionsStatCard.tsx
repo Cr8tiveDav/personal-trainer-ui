@@ -18,19 +18,33 @@ interface SessionStatCardProps {
   label: string
   value: string | number
   subtext: string
+  valueColor?: 'default' | 'amber' | 'red'
   trendColor?: 'green' | 'red'
 }
 
-function SessionStatCard({ label, value, subtext, trendColor }: SessionStatCardProps) {
-  const trendClass = trendColor === 'green' ? 'text-[#0f973d]' : trendColor === 'red' ? 'text-[#d92d20]' : 'text-gray-400'
+function SessionStatCard({ label, value, subtext, valueColor = 'default', trendColor }: SessionStatCardProps) {
+  const valueClass =
+    valueColor === 'amber'
+      ? 'text-[#f59e0b]'
+      : valueColor === 'red'
+      ? 'text-[#d92d20]'
+      : 'text-muted-foreground'
+
   const firstWord = subtext.split(' ')[0]
   const restText = subtext.substring(subtext.indexOf(' '))
 
+  const trendClass =
+    trendColor === 'green'
+      ? 'text-[#0f973d]'
+      : trendColor === 'red'
+      ? 'text-[#d92d20]'
+      : 'text-muted'
+
   return (
-    <div className='rounded-xl border border-gray-100 bg-white p-5 shadow-sm'>
-      <p className='text-[10px] font-bold uppercase tracking-wider text-gray-400'>{label}</p>
-      <h3 className='mt-2 text-2xl font-bold text-gray-900'>{value}</h3>
-      <p className='mt-1 text-xs font-medium text-gray-400'>
+    <div className='bg-white rounded-xl p-5'>
+      <p className='text-[10px] font-bold uppercase  text-muted'>{label}</p>
+      <h3 className={`mt-2 text-2xl font-bold ${valueClass}`}>{value}</h3>
+      <p className='mt-1 text-xs font-medium text-muted'>
         <span className={trendClass}>{firstWord}</span>
         {restText}
       </p>
@@ -63,8 +77,8 @@ export function SessionsStatsSection() {
   }
 
   return (
-    <div className='w-full space-y-6'>
-      <div className='grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5'>
+    <div className='w-full space-y-4'>
+      <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5'>
         <SessionStatCard
           label='Total Sessions (May)'
           value={stats.total_sessions}
@@ -75,12 +89,13 @@ export function SessionsStatsSection() {
           label='Need Confirmation'
           value={stats.need_confirmation}
           subtext='awaiting resolution'
+          valueColor='amber'
         />
         <SessionStatCard
           label='Open Disputes'
           value={stats.open_disputes}
           subtext='awaiting resolution'
-          trendColor='red'
+          valueColor='red'
         />
         <SessionStatCard
           label='Trial → Paid Rate'
@@ -96,7 +111,7 @@ export function SessionsStatsSection() {
         />
       </div>
 
-      <div className='flex items-start gap-3 rounded-xl border border-[#ffeccc] bg-[#fffcf5] p-4 text-[#b25e00]'>
+      <div className='flex items-start gap-3 rounded-lg border border-[#ffeccc] bg-[#fffcf5] p-4'>
         <AlertCircle className='h-5 w-5 shrink-0 text-[#f59e0b]' />
         <div className='text-xs leading-relaxed'>
           <p className='font-bold text-[#944a00]'>4 sessions need your attention</p>

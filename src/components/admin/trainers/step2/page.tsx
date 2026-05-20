@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, ImageIcon, VideoIcon, RotateCcw, X } from 'lucide-react'
+import Image from 'next/image'
 
 
 interface MediaFiles {
@@ -55,7 +56,7 @@ function DropZone({ label, accept, hint, icon, file, onFile, onRemove, isVideo }
             {isVideo ? (
               <video src={preview} className='w-full h-[260px] object-cover rounded-[20px]' controls />
             ) : (
-              <img src={preview} alt='preview' className='w-full h-[260px] object-cover rounded-[20px]' />
+              <Image src={preview} alt='preview' width={700} height={700} className='w-full h-[260px] object-cover rounded-[20px]' />
             )}
             <div className='absolute top-2 right-2 flex gap-1'>
               <button

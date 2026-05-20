@@ -1,16 +1,21 @@
-import { Button } from '@/components/ui/button';
-import React from 'react';
+import { Button } from '@/components/ui/button'
+import React from 'react'
 
-const ExportButton = () => {
+interface ExportButtonProps {
+  onExport?: () => void
+}
+
+const ExportButton = ({ onExport }: ExportButtonProps) => {
   return (
     <Button
       size='lg'
       variant='outline'
-      className='w-32.5 text-base text-muted-foreground font-semibold border border-[#A3A3A3] rounded-md cursor-pointer'
+      onClick={onExport}
+      className='h-12 w-32.5 py-3 px-4.5 text-base text-muted-foreground font-semibold border border-[#A3A3A3] rounded-md cursor-pointer'
     >
       Export CSV
     </Button>
-  );
-};
+  )
+}
 
-export default ExportButton;
+export default ExportButton

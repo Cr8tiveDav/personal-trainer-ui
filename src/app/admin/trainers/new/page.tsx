@@ -13,7 +13,6 @@ import { AddTrainerStepper } from '../../../../components/admin/trainers/addtrai
 import { Step2MediaUpload } from '../../../../components/admin/trainers/step2/page'
 import { Step3AccountSetup } from '../../../../components/admin/trainers/step3/page'
 
-
 interface MediaFiles {
     image: File | null
     video: File | null
@@ -43,13 +42,26 @@ export default function AddTrainerPage() {
 
         try {
             const formData = new FormData()
+            
+           
             Object.entries(basicInfo).forEach(([key, value]) => {
                 if (value !== undefined && value !== null) {
                     formData.append(key, String(value))
                 }
             })
 
+          
+            formData.append('account_setup_method', method)
+            if (method === 'temporary_password' && password) {
+                formData.append('password', password)
+            }
+
+        
             const trainer = await createTrainerAction(formData)
+
+            if (!trainer || !trainer.id) {
+                throw new Error('Trainer was provisioned, but no unique identifier was returned from the server.')
+            }
 
             if (media.image) await uploadTrainerImageAction(trainer.id, media.image)
             if (media.video) await uploadTrainerVideoAction(trainer.id, media.video)
