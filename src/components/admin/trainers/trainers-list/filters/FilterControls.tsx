@@ -5,7 +5,7 @@ import FilterTabs from './FilterTabs';
 import { Search } from 'lucide-react';
 import FilterDropdown from './FilterDropdown';
 import SortDropdown from './SortDropdown';
-import { TabType } from '../TrainersList';
+import { TabType } from '../../types';
 
 interface FilterControlsProps {
   activeTab: TabType;

@@ -13,7 +13,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value }) => {
 
   if (type === 'specialty') {
     badgeStyles =
-      'bg-[#EDF4FD] text-primary border-none px-3 py-1 text-xs font-medium rounded-full';
+      'bg-[#EDF4FD] text-primary border-none px-3 py-1 text-xs font-medium rounded-full capitalize';
   } else if (type === 'status') {
     switch (value.toLowerCase()) {
       case 'active':

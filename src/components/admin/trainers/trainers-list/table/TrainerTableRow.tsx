@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import StatusBadge from './StatusBadge';
-import { Trainer } from './mockData';
+import { Trainer } from '../../types';
 import { MoreVertical } from 'lucide-react';
 import { cn } from '@/utils';
 

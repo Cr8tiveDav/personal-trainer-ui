@@ -1,6 +1,6 @@
 'use client';
 
-type tabs = 'all' | 'active' | 'pending' | 'suspended';
+import { TabType } from '../../types';
 
 interface TrainerCounts {
   all: number;
@@ -11,8 +11,8 @@ interface TrainerCounts {
 
 interface FilterTabsProps {
   counts: TrainerCounts;
-  activeTab: tabs;
-  setActiveTab: (tabId: tabs) => void;
+  activeTab: TabType;
+  setActiveTab: (tabId: TabType) => void;
 }
 
 interface TabItem {
@@ -46,7 +46,7 @@ const FilterTabs = ({ counts, activeTab, setActiveTab }: FilterTabsProps) => {
               aria-selected={isActive}
               aria-controls={`trainer-panel-${tab.id}`}
               id={`trainer-tab-${tab.id}`}
-              onClick={() => setActiveTab(tab.id as tabs)}
+              onClick={() => setActiveTab(tab.id as TabType)}
               className={`
                 relative py-3 px-4 text-sm transition-all duration-300 outline-none
                 border-b
