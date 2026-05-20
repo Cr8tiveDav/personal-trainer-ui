@@ -1,9 +1,19 @@
-import React from 'react'
+'use client'
 
-const page = () => {
+import SessionsList from "@/components/adminSessions/SessionList"
+import { SessionsStatsSection } from "@/components/adminSessions/SessionsStatCard"
+
+
+
+
+const SessionsPage = () => {
   return (
-    <div>page</div>
+    <div className='w-full max-w-350 mx-auto space-y-6 px-4 pb-6'>
+     
+      <SessionsStatsSection />
+      <SessionsList />
+    </div>
   )
 }
 
-export default page
+export default SessionsPage
