@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import TrainerTableRow from './TrainerTableRow';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { TabType } from '../../types';
 import { Trainer } from '../../types';
 import TrainerTableSkeleton from './TrainerTableSkeleton';
 
@@ -11,14 +10,12 @@ interface TrainerTableProps {
   trainers?: Trainer[];
   isLoading: boolean;
   isError: boolean;
-  totalItems: number;
 }
 
 const TrainerTable = ({
   trainers,
   isLoading,
   isError,
-  totalItems,
 }: TrainerTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;

@@ -11,7 +11,7 @@ export const loginAction = async (values: z.infer<typeof LoginSchema>) => {
     return { error: 'Invalid fields! Please check your input.' };
   }
 
-  const { email, password } = validatedFields.data;
+
 
   try {
     // Perform actual login logic here (e.g., connect to database, check credentials)

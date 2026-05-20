@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Trainer, TabType, TrainerResponse } from '../types';
+import { TabType, TrainerResponse } from '../types';
 import FilterControls from './filters/FilterControls';
 import TrainerTable from './table/TrainerTable';
 
@@ -46,7 +46,6 @@ const TrainersList = () => {
         trainers={data?.data}
         isLoading={isLoading}
         isError={isError}
-        totalItems={data?.pagination?.totalItems || 0}
       />
     </div>
   );

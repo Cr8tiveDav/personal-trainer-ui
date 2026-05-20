@@ -125,7 +125,7 @@ export async function GET(request: Request) {
     const { data } = await backendRes.json();
 
     // Map the raw backend data to the frontend Trainer interface
-    const mappedTrainers: Trainer[] = data.map((item: any) =>
+    const mappedTrainers: Trainer[] = data.map((item: BackendTrainerResponse) =>
       mapBackendToFrontend(item)
     );
 

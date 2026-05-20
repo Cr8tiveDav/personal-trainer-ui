@@ -19,7 +19,7 @@ export interface BackendTrainerResponse {
   user_id: string;
   specializations: string[];
   training_styles: string[];
-  benefits: any[];
+  benefits: Record<string, unknown>[];
   bio: string;
   years_of_experience: number;
   intro_video_url: string;
