@@ -1,14 +1,12 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { getRequest, uploadRequest } from "~/lib/http";
 import { displayError, showSuccessToast } from "~/lib/utils";
 import { API_ENDPOINTS } from "./api-endpoints";
 import type {
   BackendTrainerResponse,
   CreateTrainerResponse,
-  CreatedTrainer,
   TrainerDetailResponse,
   TrainersListResponse,
 } from "./types/trainers";

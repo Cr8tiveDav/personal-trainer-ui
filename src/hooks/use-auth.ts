@@ -1,21 +1,24 @@
 "use client";
 
 import Cookies from "universal-cookie";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { siteConfig } from "@/config/site";
 
 const cookies = new Cookies();
 
 export function useAuth() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
-  const token = cookies.get(siteConfig.cookieNames.access_token);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  useLayoutEffect(() => {
-    setIsAuthenticated(!!token);
-    setIsLoading(false);
-  }, [token]);
+  const token = mounted
+    ? cookies.get(siteConfig.cookieNames.access_token)
+    : undefined;
 
-  return { isAuthenticated, isLoading };
+  return {
+    isAuthenticated: !!token,
+    isLoading: !mounted,
+  };
 }

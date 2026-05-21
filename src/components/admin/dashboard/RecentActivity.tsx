@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 import { useRecentActivity } from '@/api/dashboard'
-import type { Activity } from '@/api/types/dashboard'
 import { ActivityRow } from './ActivityRow'
 
 export function RecentActivity() {

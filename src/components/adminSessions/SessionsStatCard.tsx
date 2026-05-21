@@ -1,7 +1,6 @@
 'use client'
 
 import { useSessionStats } from '@/api/sessions'
-import type { SessionStats } from '@/api/types/sessions'
 import { AlertCircle } from 'lucide-react'
 
 interface SessionStatCardProps {
