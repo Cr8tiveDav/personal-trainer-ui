@@ -1,54 +1,63 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { TabType, TrainerResponse } from '../types';
-import FilterControls from './filters/FilterControls';
-import TrainerTable from './table/TrainerTable';
+import React, { useMemo, useState } from 'react'
+import { TabType } from '../types'
+import FilterControls from './filters/FilterControls'
+import TrainerTable from './table/TrainerTable'
+import { useGetTrainers } from '@/api/trainers'
+import { useDebounce } from '@/hooks/use-debounce'
 
-async function fetchTrainers(status: string): Promise<TrainerResponse> {
-  const res = await fetch(`/api/admin/trainers?status=${status}`);
-  if (!res.ok) {
-    if (res.status === 401) {
-      if (typeof window !== 'undefined') {
-        window.location.href = '/admin/login';
-      }
-    }
-    throw new Error('Failed to fetch trainers');
-  }
-  return res.json();
-}
+const defaultCounts = { all: 0, active: 0, pending: 0, suspended: 0 }
 
 const TrainersList = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('all');
+  const [activeTab, setActiveTab] = useState<TabType>('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const debouncedSearch = useDebounce(searchQuery, 500)
+  const { data, isLoading, isError } = useGetTrainers()
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['admin-trainers', activeTab],
-    queryFn: () => fetchTrainers(activeTab),
-  });
+  const counts = data?.counts ?? defaultCounts
 
-  const defaultCounts = { all: 0, active: 0, pending: 0, suspended: 0 };
-  const counts = data?.counts || defaultCounts;
+  const filteredTrainers = useMemo(() => {
+    if (!data?.data) return undefined
+
+    let list =
+      activeTab === 'all'
+        ? data.data
+        : data.data.filter(
+            (trainer) => trainer.status.toLowerCase() === activeTab
+          )
+
+    const query = debouncedSearch.trim().toLowerCase()
+    if (query) {
+      list = list.filter(
+        (trainer) =>
+          trainer.name.toLowerCase().includes(query) ||
+          trainer.email.toLowerCase().includes(query)
+      )
+    }
+
+    return list
+  }, [data?.data, activeTab, debouncedSearch])
 
   return (
     <div className='flex flex-col rounded-3xl border border-[#CBD5E1] bg-white'>
-      {/* Top section: Filters, Search, Tabs */}
       <div className='py-6 px-4'>
         <FilterControls
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           counts={counts}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
         />
       </div>
 
-      {/* Table section */}
       <TrainerTable
-        trainers={data?.data}
+        trainers={filteredTrainers}
         isLoading={isLoading}
         isError={isError}
       />
     </div>
-  );
-};
+  )
+}
 
-export default TrainersList;
+export default TrainersList
