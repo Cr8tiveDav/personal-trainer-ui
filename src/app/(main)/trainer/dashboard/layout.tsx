@@ -1,15 +1,17 @@
 import { Suspense } from 'react'
+import { TrainerShell } from '@/components/trainer/TrainerShell'
 
-export default function TrainerLayout({
+export default function TrainerDashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <main className="">
-      <div className="px-4 py-8">
-        <Suspense>{children}</Suspense>
-      </div>
-    </main>
+    <TrainerShell
+      userName='Alex Morgan'
+      userEmail='alex.morgan@fitcall.com'
+    >
+      <Suspense>{children}</Suspense>
+    </TrainerShell>
   )
 }
