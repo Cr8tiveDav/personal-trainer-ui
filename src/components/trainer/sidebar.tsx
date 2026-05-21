@@ -60,12 +60,13 @@ function SidebarInner({
           <Image src='/images/trainer/logo.svg' alt='Fitcall' width={100} height={24} />
         )}
         {isMobile ? (
-          <button onClick={onMobileClose} className='text-gray-400 hover:text-gray-600'>
+          <button onClick={onMobileClose} aria-label='Close menu' className='text-gray-400 hover:text-gray-600'>
             <X className='h-5 w-5' />
           </button>
         ) : (
           <button
             onClick={onCollapse}
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors'
           >
             {collapsed ? (

@@ -4,6 +4,10 @@ import { cookies } from 'next/headers'
 
 const BASE_URL = process.env.API_URL
 
+if (!BASE_URL) {
+  console.warn('API_URL environment variable is not set')
+}
+
 export interface AvailabilitySlot {
   day_of_week: number
   start_time: string
@@ -15,7 +19,7 @@ export async function getTrainerAvailability(): Promise<AvailabilitySlot[]> {
   const cookieStore = await cookies()
   const token = cookieStore.get('session_token')?.value
 
-  if (!token) return []
+  if (!token || !BASE_URL) return []
 
   try {
     const res = await fetch(`${BASE_URL}/trainers/me/availability`, {
@@ -34,7 +38,7 @@ export async function saveTrainerAvailability(slots: AvailabilitySlot[]) {
   const cookieStore = await cookies()
   const token = cookieStore.get('session_token')?.value
 
-  if (!token) return { success: false, error: 'Not authenticated' }
+  if (!token || !BASE_URL) return { success: false, error: 'Not authenticated' }
 
   try {
     const res = await fetch(`${BASE_URL}/trainers/me/availability`, {

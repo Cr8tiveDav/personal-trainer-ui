@@ -14,7 +14,7 @@ interface TrainerSidebarItemProps {
 
 export function TrainerSidebarItem({ label, href, icon: Icon, collapsed }: TrainerSidebarItemProps) {
   const pathname = usePathname()
-  const isActive = pathname === href || (href !== '/trainer/dashboard' && pathname.startsWith(`${href}`))
+  const isActive = pathname === href || (href !== '/trainer/dashboard' && pathname.startsWith(`${href}/`))
 
   return (
     <Link

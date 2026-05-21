@@ -111,18 +111,12 @@ export function SetAvailability() {
               const isActive = activePlatforms.includes(platform)
               return (
                 <label key={platform} className='flex items-center gap-3 cursor-pointer'>
-                  <div
-                    onClick={() => togglePlatform(platform)}
-                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 transition-colors ${
-                      isActive ? 'border-primary bg-primary' : 'border-gray-300 bg-white'
-                    }`}
-                  >
-                    {isActive && (
-                      <svg className='h-3 w-3 text-white' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={3}>
-                        <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
-                      </svg>
-                    )}
-                  </div>
+                  <input
+                    type='checkbox'
+                    checked={isActive}
+                    onChange={() => togglePlatform(platform)}
+                    className='h-4 w-4 rounded border-gray-300 accent-primary cursor-pointer'
+                  />
                   <span className='text-sm text-gray-700'>{platform}</span>
                 </label>
               )

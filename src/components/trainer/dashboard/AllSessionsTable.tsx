@@ -12,12 +12,12 @@ export function AllSessionsTable({ sessions }: { sessions: TrainerSession[] }) {
         <table className='w-full'>
           <thead>
             <tr className='border-b border-gray-100 bg-gray-50'>
-              <th className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Client</th>
-              <th className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Date</th>
-              <th className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Time</th>
-              <th className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Type</th>
-              <th className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Duration</th>
-              <th className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Status</th>
+              <th scope='col' className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Client</th>
+              <th scope='col' className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Date</th>
+              <th scope='col' className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Time</th>
+              <th scope='col' className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Type</th>
+              <th scope='col' className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Duration</th>
+              <th scope='col' className='px-5 py-3 text-left text-xs font-medium text-gray-500'>Status</th>
             </tr>
           </thead>
           <tbody className='divide-y divide-gray-50'>

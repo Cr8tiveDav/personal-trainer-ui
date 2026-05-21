@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Bell, Search, Menu, LogOut } from 'lucide-react'
 import Image from 'next/image'
+import { logoutAction } from '@/actions/logout'
 
 interface TrainerHeaderProps {
   userName: string
@@ -31,6 +32,7 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
       <div className='w-full flex items-center gap-2'>
         <button
           onClick={onMenuClick}
+          aria-label='Open menu'
           className='flex md:hidden h-12 w-9 items-center justify-center rounded-lg hover:bg-gray-100 transition-colors'
         >
           <Menu className='h-5 w-5 text-gray-500' />
@@ -41,6 +43,7 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
           <input
             type='text'
             placeholder='Search'
+            aria-label='Search'
             className='flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400'
           />
         </div>
@@ -50,6 +53,7 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
         <div ref={notifRef} className='relative'>
           <button
             onClick={() => { setNotifOpen(prev => !prev); setProfileOpen(false) }}
+            aria-label='Notifications'
             className='relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 transition-colors'
           >
             <Bell className='h-5 w-5 text-gray-500' />
@@ -69,6 +73,7 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
         <div ref={profileRef} className='relative'>
           <button
             onClick={() => { setProfileOpen(prev => !prev); setNotifOpen(false) }}
+            aria-label='Profile menu'
             className='flex h-9 w-9 items-center justify-center rounded-full overflow-hidden border-2 border-gray-200 hover:border-primary transition-colors'
           >
             {userAvatar ? (
@@ -83,12 +88,15 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
             <div className='absolute right-0 top-11 z-50 w-[200px] rounded-xl border border-gray-100 bg-white p-4 shadow-lg'>
               <p className='text-sm font-semibold text-gray-900'>{userName}</p>
               <p className='mt-0.5 mb-4 text-xs text-gray-400'>Trainer</p>
-              <button
-                className='flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50'
-              >
-                <LogOut className='h-4 w-4' />
-                Logout
-              </button>
+              <form action={logoutAction}>
+                <button
+                  type='submit'
+                  className='flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50'
+                >
+                  <LogOut className='h-4 w-4' />
+                  Logout
+                </button>
+              </form>
             </div>
           )}
         </div>
