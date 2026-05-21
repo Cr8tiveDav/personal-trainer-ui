@@ -8,6 +8,7 @@ import ProfileHeader from './ProfileHeader';
 import QuickDetails from './QuickDetails';
 import TrainerTabs from './TrainerTabs';
 import OverviewTab from './tabs/OverviewTab';
+import SessionsTab from './tabs/SessionsTab';
 
 import AvailabilityTab from './tabs/AvailabilityTab';
 
@@ -96,11 +97,7 @@ const TrainerDetailsClient = () => {
 
         <div className='mt-6'>
           {activeTab === 'overview' && <OverviewTab trainer={trainer} />}
-          {activeTab === 'sessions' && (
-            <div className='py-8 text-center text-gray-500'>
-              Sessions tab content coming soon.
-            </div>
-          )}
+          {activeTab === 'sessions' && <SessionsTab />}
           {activeTab === 'earnings' && (
             <div className='py-8 text-center text-gray-500'>
               Earnings tab content coming soon.
