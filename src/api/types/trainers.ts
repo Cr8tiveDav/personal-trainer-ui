@@ -67,5 +67,3 @@ export interface ApiEnvelope<T> {
 }
 
 export type BackendTrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>
-
-export type { ApiEnvelope }
