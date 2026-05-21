@@ -11,9 +11,17 @@ interface FilterControlsProps {
   activeTab: TabType;
   setActiveTab: (tab: TabType) => void;
   counts: { all: number; active: number; pending: number; suspended: number };
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
 }
 
-const FilterControls = ({ activeTab, setActiveTab, counts }: FilterControlsProps) => {
+const FilterControls = ({
+  activeTab,
+  setActiveTab,
+  counts,
+  searchQuery,
+  onSearchChange,
+}: FilterControlsProps) => {
   return (
     <section className='w-full flex flex-col items-start gap-6'>
       <FilterTabs
@@ -27,6 +35,8 @@ const FilterControls = ({ activeTab, setActiveTab, counts }: FilterControlsProps
           <Search className='h-4 w-4 shrink-0 text-gray-400' />
           <input
             type='text'
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
             placeholder='Search by name or email'
             className='flex-1 w-full text-sm text-gray-700 outline-none placeholder:text-[#D1D1D1] bg-transparent'
           />

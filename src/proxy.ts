@@ -10,29 +10,34 @@ const SECURITY_HEADERS: Record<string, string> = {
 export const proxy: NextProxy = (request) => {
   // Route Protection & Token Expiration Logic
   const { pathname } = request.nextUrl;
-  const userType = request.cookies.get('user_type')?.value;
-  const sessionToken = request.cookies.get('session_token')?.value;
-  const refreshToken = request.cookies.get('refresh_token')?.value;
+  const userType = request.cookies.get("user_type")?.value;
+  const sessionToken = request.cookies.get("session_token")?.value;
+  const refreshToken = request.cookies.get("refresh_token")?.value;
 
-  const isApiRoute = pathname.startsWith('/api/');
-  const isAdminPage = pathname.startsWith('/admin') && !pathname.startsWith('/admin/login') && !isApiRoute;
-  const isTrainerPage = pathname.startsWith('/trainers') && !pathname.startsWith('/trainers/login') && !isApiRoute;
+  const isApiRoute = pathname.startsWith("/api/");
+  const isAdminPage =
+    pathname.startsWith("/admin") &&
+    !pathname.startsWith("/admin/login") &&
+    !isApiRoute;
+  const isTrainerPage =
+    pathname.startsWith("/trainers") &&
+    !pathname.startsWith("/trainers/login") &&
+    !isApiRoute;
 
   const hasAuthToken = !!sessionToken || !!refreshToken;
 
   if (isAdminPage || isTrainerPage) {
-    if (isAdminPage && (userType !== 'admin' || !hasAuthToken)) {
-      return NextResponse.redirect(new URL('/admin/login', request.url));
+    if (isAdminPage && (userType !== "admin" || !hasAuthToken)) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
     }
 
-    if (isTrainerPage && (userType !== 'trainer' || !hasAuthToken)) {
-      return NextResponse.redirect(new URL('/trainers/login', request.url));
+    if (isTrainerPage && (userType !== "trainer" || !hasAuthToken)) {
+      return NextResponse.redirect(new URL("/trainers/login", request.url));
     }
   }
 
   // Default request headers and security headers
-  const requestId =
-    request.headers.get("x-request-id") ?? crypto.randomUUID();
+  const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-request-id", requestId);
