@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Search, ChevronDown, Plus, X } from 'lucide-react'
+import { Search, ChevronDown, Plus } from 'lucide-react'
 import { SessionsTable } from './SessionsTable'
 import { SessionDetailsDrawer } from './modals/SessionDetails'
 import { RescheduleSessionModal } from './modals/Reschecdule'
@@ -27,7 +27,6 @@ type TabKey = (typeof TABS)[number]['key']
 export default function SessionsList() {
   const [search, setSearch] = useState('')
   const [activeTab, setActiveTab] = useState<TabKey>('all')
-  const [alertDismissed, setAlertDismissed] = useState(false)
   const [selectedSession, setSelectedSession] = useState<Session | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false)

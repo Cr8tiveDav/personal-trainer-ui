@@ -1,21 +1,26 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Sidebar } from '@/components/admin/sidebar'
-import { AdminHeader } from '@/components/admin/header'
+import { useState } from 'react';
+import { Sidebar } from '@/components/admin/sidebar';
+import { AdminHeader } from '@/components/admin/header';
 
 interface AdminShellProps {
-  userName: string
-  userEmail: string
-  userAvatar?: string
-  children: React.ReactNode
+  userName: string;
+  userEmail: string;
+  userAvatar?: string;
+  children: React.ReactNode;
 }
 
-export function AdminShell({ userName, userEmail, userAvatar, children }: AdminShellProps) {
-  const [mobileOpen, setMobileOpen] = useState(false)
+export function AdminShell({
+  userName,
+  userEmail,
+  userAvatar,
+  children,
+}: AdminShellProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className='flex h-screen max-w-[1440px] mx-auto bg-gray-50 overflow-hidden '>
+    <div className='flex h-screen w-full bg-gray-50 overflow-hidden'>
       <Sidebar
         userName={userName}
         userEmail={userEmail}
@@ -29,10 +34,10 @@ export function AdminShell({ userName, userEmail, userAvatar, children }: AdminS
           userAvatar={userAvatar}
           onMenuClick={() => setMobileOpen(true)}
         />
-        <main className='flex-1 overflow-y-auto py-6'>
-          {children}
+        <main className='flex-1 overflow-y-auto py-6 px-4 md:px-6 lg:px-8'>
+          <div className='max-w-[1440px] mx-auto w-full h-full'>{children}</div>
         </main>
       </div>
     </div>
-  )
+  );
 }
