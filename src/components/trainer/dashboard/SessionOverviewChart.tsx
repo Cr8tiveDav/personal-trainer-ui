@@ -3,7 +3,7 @@
 import { ChartData } from './mock-data'
 
 export function SessionOverviewChart({ data }: { data: ChartData[] }) {
-  const maxSessions = Math.max(...data.map((d) => d.sessions))
+  const maxSessions = data.length > 0 ? Math.max(...data.map((d) => d.sessions)) : 0
 
   return (
     <div className='rounded-xl border border-gray-100 bg-white shadow-sm h-full'>

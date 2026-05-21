@@ -14,23 +14,30 @@ const DAYS: { label: string; value: number }[] = [
   { label: 'Sun', value: 0 },
 ]
 
+// Platform field is not yet supported by the availability API.
+// Displayed as read-only until the backend adds a platform field to AvailabilitySlot.
 const PLATFORMS = ['Online (Video Call)', 'In-Person']
 const DEFAULT_START = '09:00'
 const DEFAULT_END = '17:00'
 
 export function SetAvailability() {
   const [activeDays, setActiveDays] = useState<number[]>([1, 2, 3, 4, 5])
-  const [activePlatforms, setActivePlatforms] = useState<string[]>(['Online (Video Call)'])
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getTrainerAvailability().then((slots) => {
-      if (slots.length > 0) {
-        setActiveDays(slots.map((s) => s.day_of_week))
-      }
-      setLoading(false)
-    })
+    getTrainerAvailability()
+      .then((slots) => {
+        if (slots.length > 0) {
+          setActiveDays(slots.map((s) => s.day_of_week))
+        }
+      })
+      .catch(() => {
+        // silently fall back to defaults
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
 
   function toggleDay(day: number) {
@@ -39,32 +46,30 @@ export function SetAvailability() {
     )
   }
 
-  function togglePlatform(platform: string) {
-    setActivePlatforms((prev) =>
-      prev.includes(platform) ? prev.filter((p) => p !== platform) : [...prev, platform]
-    )
-  }
-
   async function handleSave() {
     setSaving(true)
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+    try {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
 
-    const slots: AvailabilitySlot[] = activeDays.map((day) => ({
-      day_of_week: day,
-      start_time: DEFAULT_START,
-      end_time: DEFAULT_END,
-      timezone,
-    }))
+      const slots: AvailabilitySlot[] = activeDays.map((day) => ({
+        day_of_week: day,
+        start_time: DEFAULT_START,
+        end_time: DEFAULT_END,
+        timezone,
+      }))
 
-    const result = await saveTrainerAvailability(slots)
+      const result = await saveTrainerAvailability(slots)
 
-    if (result.success) {
-      toast.success('Availability saved!')
-    } else {
-      toast.error(result.error || 'Failed to save availability')
+      if (result.success) {
+        toast.success('Availability saved!')
+      } else {
+        toast.error(result.error || 'Failed to save availability')
+      }
+    } catch {
+      toast.error('An unexpected error occurred')
+    } finally {
+      setSaving(false)
     }
-
-    setSaving(false)
   }
 
   return (
@@ -107,20 +112,18 @@ export function SetAvailability() {
         <div>
           <p className='text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3'>Platform</p>
           <div className='space-y-2.5'>
-            {PLATFORMS.map((platform) => {
-              const isActive = activePlatforms.includes(platform)
-              return (
-                <label key={platform} className='flex items-center gap-3 cursor-pointer'>
-                  <input
-                    type='checkbox'
-                    checked={isActive}
-                    onChange={() => togglePlatform(platform)}
-                    className='h-4 w-4 rounded border-gray-300 accent-primary cursor-pointer'
-                  />
-                  <span className='text-sm text-gray-700'>{platform}</span>
-                </label>
-              )
-            })}
+            {PLATFORMS.map((platform) => (
+              <label key={platform} className='flex items-center gap-3 cursor-not-allowed'>
+                <input
+                  type='checkbox'
+                  checked={platform === 'Online (Video Call)'}
+                  disabled
+                  readOnly
+                  className='h-4 w-4 rounded border-gray-300 accent-primary'
+                />
+                <span className='text-sm text-gray-500'>{platform}</span>
+              </label>
+            ))}
           </div>
         </div>
 
