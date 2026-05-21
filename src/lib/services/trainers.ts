@@ -5,7 +5,8 @@ import type {
   CreatedTrainer,
 } from '@/api/types/trainers'
 import type { TrainerResponse } from '@/components/admin/trainers/types'
-import { apiGetData, type ApiEnvelope } from '@/lib/http/server'
+import type { ApiEnvelope } from '@/api/types/index'
+import { apiGetData } from '@/lib/http/server'
 import { mapBackendToFrontend } from '@/lib/trainers/map-trainer'
 import { ApiError, UnauthorizedError } from '@/lib/http/errors'
 import { authenticatedFetch, getAccessToken } from '@/lib/services/auth-session'

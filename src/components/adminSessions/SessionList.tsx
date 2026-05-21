@@ -1,19 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
 import { Search, ChevronDown, Plus } from 'lucide-react'
+import { useSessionsList } from '@/api/sessions'
 import { SessionsTable } from './SessionsTable'
 import { SessionDetailsDrawer } from './modals/SessionDetails'
 import { RescheduleSessionModal } from './modals/Reschecdule'
 import { DUMMY_SESSIONS, Session } from './session'
-
-async function fetchSessionsData(): Promise<Session[]> {
-  const res = await fetch('/api/v1/sessions')
-  if (!res.ok) throw new Error('Failed to fetch sessions data')
-  const data = await res.json()
-  return data.data
-}
 
 const TABS = [
   { key: 'all', label: 'All Sessions' },
@@ -31,12 +24,9 @@ export default function SessionsList() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false)
 
-  const { data } = useQuery({
-    queryKey: ['admin-sessions-list'],
-    queryFn: fetchSessionsData,
-  })
+  const { data: response } = useSessionsList()
 
-  const sessions: Session[] = data ?? DUMMY_SESSIONS
+  const sessions: Session[] = (response?.data as Session[] | undefined) ?? DUMMY_SESSIONS
 
   const handleOpenDetails = (id: string) => {
     const target = sessions.find((s) => s.id === id)

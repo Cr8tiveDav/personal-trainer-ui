@@ -1,7 +1,10 @@
-export type AdminLoginPayload = {
+export type LoginPayload = {
   email: string
   password: string
 }
+
+/** @deprecated Use LoginPayload */
+export type AdminLoginPayload = LoginPayload
 
 export type AuthUser = {
   name?: string

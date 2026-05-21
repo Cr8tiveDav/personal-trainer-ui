@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Bell, Search, Menu, LogOut } from 'lucide-react'
 import Image from 'next/image'
-import { logoutAction } from '@/actions/logout'
+import { useLogout } from '@/api/auth'
 
 interface AdminHeaderProps {
   userName: string
@@ -23,6 +23,9 @@ export function AdminHeader({
 
   const notifRef = useRef<HTMLDivElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
+  const logout = useLogout(
+    userType === 'trainer' ? '/trainers/login' : '/admin/login',
+  )
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -106,15 +109,15 @@ export function AdminHeader({
               <p className='mt-0.5 mb-4 text-xs text-gray-400 capitalize'>
                 {userType || '—'}
               </p>
-              <form action={logoutAction}>
-                <button
-                  type='submit'
-                  className='flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50'
-                >
-                  <LogOut className='h-4 w-4' />
-                  Logout
-                </button>
-              </form>
+              <button
+                type='button'
+                onClick={() => logout.mutate()}
+                disabled={logout.isPending}
+                className='flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50'
+              >
+                <LogOut className='h-4 w-4' />
+                Logout
+              </button>
             </div>
           )}
         </div>
