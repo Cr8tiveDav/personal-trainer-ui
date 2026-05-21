@@ -1,6 +1,7 @@
 'use client';
 
 import { TabType } from '../../types';
+import { ReusableTabs, TabItem } from '@/components/ui/ReusableTabs';
 
 interface TrainerCounts {
   all: number;
@@ -15,14 +16,8 @@ interface FilterTabsProps {
   setActiveTab: (tabId: TabType) => void;
 }
 
-interface TabItem {
-  id: string;
-  label: string;
-  count: number;
-}
-
 const FilterTabs = ({ counts, activeTab, setActiveTab }: FilterTabsProps) => {
-  const tabs: TabItem[] = [
+  const tabs: TabItem<TabType>[] = [
     { id: 'all', label: 'All trainers', count: counts.all },
     { id: 'active', label: 'Active', count: counts.active },
     { id: 'pending', label: 'Pending', count: counts.pending },
@@ -30,46 +25,11 @@ const FilterTabs = ({ counts, activeTab, setActiveTab }: FilterTabsProps) => {
   ];
 
   return (
-    <div className='w-full border-b border-[#CBD5E1]'>
-      <div
-        className='flex gap-2.5 w-full overflow-x-auto whitespace-nowrap [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] -mb-[1px]'
-        role='tablist'
-        aria-label='Trainer status filters'
-      >
-        {tabs.map((tab) => {
-          const isActive = activeTab === tab.id;
-
-          return (
-            <button
-              key={tab.id}
-              role='tab'
-              aria-selected={isActive}
-              aria-controls={`trainer-panel-${tab.id}`}
-              id={`trainer-tab-${tab.id}`}
-              onClick={() => setActiveTab(tab.id as TabType)}
-              className={`
-                relative py-3 px-4 text-sm transition-all duration-300 outline-none
-                border-b
-                ${
-                  isActive
-                    ? 'text-primary border-[#2272AD]'
-                    : 'text-[#5C5C5C] border-transparent hover:text-primary/80'
-                }
-              `}
-            >
-              <div
-                className={`flex items-center transition-all duration-300 ${
-                  isActive ? 'font-semibold' : 'font-medium'
-                }`}
-              >
-                <span>{tab.label}</span>
-                <span className='ml-1 text-xs opacity-80'>({tab.count})</span>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-    </div>
+    <ReusableTabs
+      tabs={tabs}
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+    />
   );
 };
 

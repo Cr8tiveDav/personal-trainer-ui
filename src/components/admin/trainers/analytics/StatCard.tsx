@@ -4,28 +4,42 @@ import React from 'react';
 interface StatCardProps {
   title: string;
   value: number | string;
-  icon: string;
-  variant: string;
+  icon: string | React.ReactNode;
+  variant?: string;
+  className?: string;
 }
 
-const StatCard = ({ title, value, icon, variant }: StatCardProps) => {
+const StatCard = ({
+  title,
+  value,
+  icon,
+  variant,
+  className = '',
+}: StatCardProps) => {
   return (
-    <div className='flex flex-col gap-2 rounded-[8px] border border-[#EBEBEB] bg-white p-4'>
+    <div
+      className={`flex flex-col justify-between rounded-xl border border-gray-100 bg-white p-5 ${className}`}
+    >
       <div
-        className='flex h-10 w-10 items-center justify-center rounded-full'
-        style={{ backgroundColor: variant }}
+        className={`flex h-10 w-10 items-center justify-center rounded-full mb-4 ${!variant ? 'bg-gray-50' : ''}`}
+        style={variant ? { backgroundColor: variant } : undefined}
       >
-        <Image
-          src={icon}
-          alt={title}
-          width={20}
-          sizes='20px'
-          height={20}
-          className='h-5 w-5'
-        />
+        {typeof icon === 'string' ? (
+          <Image
+            src={icon}
+            alt={title}
+            width={20}
+            height={20}
+            className='h-5 w-5 object-contain'
+          />
+        ) : (
+          icon
+        )}
       </div>
-      <h3 className='text-2xl font-semibold text-muted-foreground'>{value}</h3>
-      <p className='text-xs leading-relaxed text-muted md:text-base'>{title}</p>
+      <div>
+        <h3 className='text-2xl font-bold text-gray-900'>{value}</h3>
+        <p className='text-xs font-medium text-gray-500'>{title}</p>
+      </div>
     </div>
   );
 };
