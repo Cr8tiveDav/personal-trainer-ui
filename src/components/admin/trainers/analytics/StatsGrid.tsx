@@ -10,13 +10,13 @@ const StatsGrid = () => {
   const stats = [
     {
       title: 'Active Trainers',
-      value: data?.counts?.active ?? '...',
+      value: data?.counts?.active ?? '--',
       icon: '/images/admin-dashboard/icons/users-three.svg',
       variant: '#F7F7F7',
     },
     {
       title: 'Pending Approvals',
-      value: data?.counts?.pending ?? '...',
+      value: data?.counts?.pending ?? '--',
       icon: '/images/admin-dashboard/icons/hourglass-high.svg',
       variant: '#FEF0EF',
     },
