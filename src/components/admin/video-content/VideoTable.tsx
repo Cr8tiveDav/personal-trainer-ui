@@ -41,9 +41,12 @@ function ActionButtons({ video }: { video: VideoItem }) {
       >
         View
       </Link>
-      <button className='rounded-lg border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50'>
+      <Link
+        href='/admin/video-content/upload'
+        className='rounded-lg border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50'
+      >
         Replace
-      </button>
+      </Link>
     </div>
   )
 }
@@ -69,7 +72,7 @@ export function VideoTable({ videos }: VideoTableProps) {
             <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400' />
             <input
               type='text'
-              placeholder='Search by client, trainer, or session ID'
+              placeholder='Search by title or trainer'
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className='w-72 rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20'

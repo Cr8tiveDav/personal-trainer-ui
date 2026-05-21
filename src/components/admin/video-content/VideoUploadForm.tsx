@@ -34,8 +34,12 @@ export function VideoUploadForm() {
     if (selected) setFile(selected)
   }
 
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+  }
+
   return (
-    <div className='max-w-3xl space-y-4'>
+    <form onSubmit={handleSubmit} className='max-w-3xl space-y-4'>
       <Link
         href='/admin/video-content'
         className='inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700'
@@ -64,7 +68,7 @@ export function VideoUploadForm() {
           ) : (
             <>
               <p className='text-base font-semibold text-gray-800'>Drag &amp; drop your video here</p>
-              <p className='text-sm text-gray-400'>Or click to chose file from your computer</p>
+              <p className='text-sm text-gray-400'>Or click to choose file from your computer</p>
             </>
           )}
           <button
@@ -72,7 +76,7 @@ export function VideoUploadForm() {
             onClick={() => inputRef.current?.click()}
             className='mt-1 rounded-lg border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
           >
-            Chose file
+            Choose file
           </button>
           <input
             ref={inputRef}
@@ -133,12 +137,13 @@ export function VideoUploadForm() {
           Cancel
         </Link>
         <button
+          type='submit'
           disabled={!file || !trainer || !title}
           className='rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-white hover:bg-primary/90 disabled:opacity-50'
         >
           Upload Video
         </button>
       </div>
-    </div>
+    </form>
   )
 }
