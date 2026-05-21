@@ -1,15 +1,24 @@
-'use server'
+"use server";
 
-import { createTrainer, getAllTrainers } from '@/lib/services/trainers'
-import type { CreatedTrainer, TrainerResponse } from '@/components/admin/trainers/types'
-import type { CreateTrainerInput } from '@/api/types/trainers'
+import {
+  createTrainerFromFormData,
+  getAllTrainers,
+} from "@/lib/services/trainers";
+import type {
+  CreatedTrainer,
+  TrainerResponse,
+} from "@/components/admin/trainers/types";
 
 export async function getTrainersAction(): Promise<TrainerResponse> {
-  return getAllTrainers()
+  return getAllTrainers();
 }
 
+/**
+ * POST multipart/form-data to https://api.staging.fitcall.me/api/v1/trainers
+ * FormData must include: email, name, specializations (×N), years_of_experience, etc.
+ */
 export async function createTrainerAction(
-  input: CreateTrainerInput
+  formData: FormData,
 ): Promise<CreatedTrainer> {
-  return createTrainer(input)
+  return createTrainerFromFormData(formData);
 }

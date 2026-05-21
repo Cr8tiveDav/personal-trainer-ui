@@ -1,6 +1,6 @@
 export class UnauthorizedError extends Error {
-  constructor() {
-    super('Unauthorized')
+  constructor(message = 'Session expired or invalid. Please log in again.') {
+    super(message)
     this.name = 'UnauthorizedError'
   }
 }

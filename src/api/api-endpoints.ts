@@ -10,7 +10,9 @@ export const API_ENDPOINTS = {
   },
 
   TRAINERS: {
+    /** GET https://api.staging.fitcall.me/api/v1/trainers */
     LIST: '/trainers',
+    /** POST multipart https://api.staging.fitcall.me/api/v1/trainers (admin auth) */
     CREATE: '/trainers',
     RANKINGS: '/trainers/rankings',
   },
