@@ -15,30 +15,34 @@ const TrainersList = () => {
   const debouncedSearch = useDebounce(searchQuery, 500);
   const { data, isLoading, isError } = useGetTrainers();
 
-  const counts = data?.counts ?? defaultCounts;
 
-  const filteredTrainers = useMemo(() => {
-    if (!data?.data) return undefined;
+const trainers = data?.data;
+const counts = data?.counts ?? defaultCounts;
 
-    let list =
-      activeTab === "all"
-        ? data.data
-        : data.data.filter(
-            (trainer) => trainer.status.toLowerCase() === activeTab,
-          );
+const filteredTrainers = useMemo(() => {
+  if (!trainers) return undefined;
 
-    const query = debouncedSearch.trim().toLowerCase();
-    if (query) {
-      list = list.filter(
-        (trainer) =>
-          trainer.name.toLowerCase().includes(query) ||
-          trainer.email.toLowerCase().includes(query),
-      );
-    }
+  let list =
+    activeTab === "all"
+      ? trainers
+      : trainers.filter(
+          (trainer) =>
+            (trainer.status ?? "").toLowerCase() === activeTab,
+        );
 
-    return list;
-  }, [data?.data, activeTab, debouncedSearch]);
+  const query = debouncedSearch.trim().toLowerCase();
 
+  if (query) {
+    list = list.filter((trainer) => {
+      const name = (trainer.name ?? "").toLowerCase();
+      const email = (trainer.email ?? "").toLowerCase();
+
+      return name.includes(query) || email.includes(query);
+    });
+  }
+
+  return list;
+}, [trainers, activeTab, debouncedSearch]);
   return (
     <div className="flex flex-col rounded-3xl border border-[#CBD5E1] bg-white">
       <div className="py-6 px-4">
