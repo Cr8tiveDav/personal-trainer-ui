@@ -56,21 +56,21 @@ const getStatusBadgeStyles = (status: string) => {
 };
 
 const getAvatarImage = (name: string) => {
-    switch (name) {
-        case 'Amara J.':
-            return '/images/about-us/team1.svg';
-        case 'Cara K.':
-            return '/images/about-us/team2.svg';
-        case 'Helen E.':
-            return '/images/about-us/team3.svg';
-        case 'Dani K.':
-            return '/images/about-us/team4.svg';
-        case 'Sally V.':
-            return '/images/about-us/team1.svg';
-        default:
-            return '';
-    }
-}
+  switch (name) {
+    case 'Amara J.':
+      return '/images/about-us/team1.svg';
+    case 'Cara K.':
+      return '/images/about-us/team2.svg';
+    case 'Helen E.':
+      return '/images/about-us/team3.svg';
+    case 'Dani K.':
+      return '/images/about-us/team4.svg';
+    case 'Sally V.':
+      return '/images/about-us/team1.svg';
+    default:
+      return '';
+  }
+};
 
 const SessionsTab = () => {
   return (
@@ -81,9 +81,9 @@ const SessionsTab = () => {
           title='Upcoming'
           value={2}
           icon={'/images/admin-dashboard/icons/users-three.svg'}
-          variant='#EDF4FD'
+          variant='#E8F2FA'
         />
-        
+
         <StatCard
           title='Completed'
           value={40}
@@ -94,8 +94,10 @@ const SessionsTab = () => {
         <StatCard
           title='Rescheduled'
           value={2}
-          icon={'/images/admin-dashboard/icons/arrow-counter-clockwise.svg'}
-          variant='#FEF6E1'
+          icon={
+            '/images/admin-dashboard/icons/arrow-counter-clockwise-yellow.svg'
+          }
+          variant='#FEF9EC'
         />
 
         <StatCard
@@ -109,36 +111,46 @@ const SessionsTab = () => {
       {/* All Sessions Table */}
       <div className='bg-white rounded-xl border border-gray-100 overflow-hidden'>
         <div className='p-6 border-b border-gray-100'>
-          <h3 className='text-lg font-semibold text-gray-900'>All sessions</h3>
+          <h3 className='text-2xl font-medium text-muted-foreground'>
+            All sessions
+          </h3>
         </div>
         <div className='overflow-x-auto min-h-64'>
-          <table className='w-full text-left border-collapse min-w-[700px]'>
+          <table className='w-full text-left border-collapse min-w-175'>
             <thead>
-              <tr className='bg-[#F8FAFC] border-b border-gray-100'>
-                <th className='py-4 px-6 text-[11px] font-semibold text-gray-500 uppercase tracking-wider'>
+              <tr className='bg-[#F5F5F5] h-15 border-[0.5px] border-[#D1D1D1]'>
+                <th className='py-4 px-6 text-xs font-normal text-gray-500 uppercase tracking-wider'>
                   Client
                 </th>
-                <th className='py-4 px-6 text-[11px] font-semibold text-gray-500 uppercase tracking-wider text-center'>
+                <th className='py-4 px-6 text-xs font-normal text-gray-500 uppercase tracking-wider text-center'>
                   Type
                 </th>
-                <th className='py-4 px-6 text-[11px] font-semibold text-gray-500 uppercase tracking-wider text-center'>
+                <th className='py-4 px-6 text-xs font-normal text-gray-500 uppercase tracking-wider text-center'>
                   Date
                 </th>
-                <th className='py-4 px-6 text-[11px] font-semibold text-gray-500 uppercase tracking-wider text-right'>
+                <th className='py-4 px-6 text-xs font-normal text-gray-500 uppercase tracking-wider text-right'>
                   Status
                 </th>
               </tr>
             </thead>
-            <tbody className='divide-y divide-gray-50'>
+            <tbody className='divide-y-[0.5px] divide-[#D1D1D1]'>
               {mockSessions.map((session) => (
-                <tr key={session.id} className='hover:bg-gray-50 transition-colors'>
+                <tr
+                  key={session.id}
+                  className='hover:bg-gray-50 transition-colors'
+                >
                   <td className='py-4 px-6'>
                     <div className='flex items-center gap-3'>
                       <div className='w-8 h-8 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center text-xs font-bold text-gray-500 relative'>
                         {getAvatarImage(session.clientName) ? (
-                            <Image src={getAvatarImage(session.clientName)} alt={session.clientName} layout="fill" objectFit="cover" />
+                          <Image
+                            src={getAvatarImage(session.clientName)}
+                            alt={session.clientName}
+                            layout='fill'
+                            objectFit='cover'
+                          />
                         ) : (
-                            session.clientName.charAt(0)
+                          session.clientName.charAt(0)
                         )}
                       </div>
                       <span className='text-sm font-medium text-gray-900'>
