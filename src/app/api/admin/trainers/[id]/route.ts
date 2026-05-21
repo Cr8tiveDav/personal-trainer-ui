@@ -49,7 +49,13 @@ export async function GET(
   const cookieStore = await cookies();
   let sessionToken = cookieStore.get('session_token')?.value;
   const refreshToken = cookieStore.get('refresh_token')?.value;
-  const baseURL = process.env.NEXT_PUBLIC_API_URL || '';
+  const baseURL = process.env.NEXT_PUBLIC_API_URL;
+  if (!baseURL) {
+    return NextResponse.json(
+      { error: 'Internal Server Error: NEXT_PUBLIC_API_URL is not set' },
+      { status: 500 }
+    );
+  }
 
   const fetchFromBackend = async (token: string) => {
     return fetch(`${baseURL}/api/v1/trainers/${id}`, {
@@ -94,17 +100,23 @@ export async function GET(
       const newTokens = await refreshRes.json();
       sessionToken = newTokens.data?.access_token || newTokens.access_token;
       
-      if (sessionToken) {
-        cookieStore.set('session_token', sessionToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          path: '/',
-          maxAge: newTokens.data?.expires_in || newTokens.expires_in || 600,
-        });
+      if (!sessionToken) {
+        console.error('Refresh token response missing access token');
+        return NextResponse.json(
+          { error: 'Unauthorized: Session refresh failed to provide new token' },
+          { status: 401 }
+        );
       }
 
-      backendRes = await fetchFromBackend(sessionToken!);
+      cookieStore.set('session_token', sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: newTokens.data?.expires_in || newTokens.expires_in || 600,
+      });
+
+      backendRes = await fetchFromBackend(sessionToken);
     }
 
     if (!backendRes || backendRes.status === 401) {

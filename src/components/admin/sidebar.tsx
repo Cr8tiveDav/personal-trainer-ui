@@ -12,6 +12,7 @@ import {
   LineChart,
   X,
   Menu,
+  Video,
 } from 'lucide-react'
 import { SidebarItem } from './sidebarItem'
 import { cn } from '~/utils'
@@ -41,6 +42,7 @@ const NAV_SECTIONS = [
     label: 'PLATFORM',
     items: [
       { label: 'Analytics', href: '/admin/analytics', icon: LineChart },
+      { label: 'Video Content', href: '/admin/video-content', icon: Video },
       { label: 'Settings', href: '/admin/settings', icon: Settings },
     ],
   },

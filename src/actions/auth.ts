@@ -30,16 +30,21 @@ export async function loginAction(prevState: any, formData: FormData) {
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
+      maxAge: 7 * 24 * 60 * 60,
     });
 
-    cookieStore.set('user_type', result.data.user.user_type, {
+    const userType = result.data.user.user_type;
+
+    if (!userType) {
+      throw new Error('User type is missing from API response');
+    }
+
+    cookieStore.set('user_type', userType, {
       httpOnly: false,
       sameSite: 'lax',
       path: '/',
     });
 
-   
     const userProfile = {
       name: result.data.user?.name ?? '',
       email: result.data.user?.email ?? '',
@@ -56,7 +61,7 @@ export async function loginAction(prevState: any, formData: FormData) {
 
     return {
       success: true,
-      redirectTo: type === 'admin' ? '/admin/dashboard' : '/trainer/dashboard',
+      redirectTo: userType === 'trainer' ? '/trainer/dashboard' : '/admin/dashboard',
     };
   } catch (error: any) {
     return {
