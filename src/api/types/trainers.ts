@@ -6,25 +6,16 @@ export const TRAINER_SPECIALIZATIONS = [
   'strength',
 ] as const
 
-export const TRAINER_ONBOARDING_STATUSES = ['pending', 'approved'] as const
-
 export type TrainerSpecialization = (typeof TRAINER_SPECIALIZATIONS)[number]
-export type TrainerOnboardingStatus = (typeof TRAINER_ONBOARDING_STATUSES)[number]
-
-export interface TrainerBenefitInput {
-  title: string
-  subtext: string
-}
 
 export interface CreateTrainerInput {
   email: string
   name: string
+  phone_number: string
+  gender: string
   specializations: TrainerSpecialization[]
-  training_styles?: string[]
-  benefits?: TrainerBenefitInput[]
-  bio?: string
   years_of_experience: number
-  onboarding_status?: TrainerOnboardingStatus
+  bio?: string
   display_picture?: File | null
 }
 

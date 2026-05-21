@@ -37,12 +37,11 @@ export default function AddTrainerPage() {
       {
         email: basicInfo.email,
         name: basicInfo.name,
+        phone_number: basicInfo.phone_number,
+        gender: basicInfo.gender,
         specializations: basicInfo.specializations,
-        training_styles: basicInfo.training_styles,
-        benefits: basicInfo.benefits,
-        bio: basicInfo.bio,
         years_of_experience: basicInfo.years_of_experience,
-        onboarding_status: basicInfo.onboarding_status,
+        bio: basicInfo.bio,
         display_picture: displayPicture,
       },
       {

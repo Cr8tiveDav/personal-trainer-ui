@@ -18,7 +18,6 @@ export interface Trainer {
 }
 
 export type {
-  TrainerBenefitInput,
   CreateTrainerInput,
   CreatedTrainer,
   BackendTrainerResponse,

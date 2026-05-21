@@ -18,14 +18,11 @@ export function Step3ReviewAndCreate({
   isSubmitting,
   onSubmit,
 }: Step3Props) {
-  const benefitCount = basicInfo.benefits?.filter((b) => b.title && b.subtext).length ?? 0
-
   return (
     <div className='rounded-lg bg-white p-6'>
       <h2 className='text-base font-semibold text-gray-900'>Review & create</h2>
       <p className='mt-1 mb-6 text-sm text-gray-500'>
-        Confirm the details below. A 16-character password will be generated and emailed to the
-        trainer — it is never stored on the server.
+        Confirm the details below. Login credentials will be emailed to the trainer automatically.
       </p>
 
       <div className='mb-6 flex items-start gap-4 rounded-xl border border-[#0b4d8d]/20 bg-[#f4f9fd] p-4'>
@@ -35,8 +32,7 @@ export function Step3ReviewAndCreate({
         <div>
           <p className='text-sm font-semibold text-gray-900'>Credentials emailed automatically</p>
           <p className='text-xs text-gray-500 mt-1'>
-            New trainers receive login details at {basicInfo.email}. Re-inviting an existing email
-            rotates the password without creating a duplicate account.
+            Login details will be sent to {basicInfo.email}.
           </p>
         </div>
       </div>
@@ -47,26 +43,16 @@ export function Step3ReviewAndCreate({
           {[
             { label: 'Name', value: basicInfo.name },
             { label: 'Email', value: basicInfo.email },
+            { label: 'Phone', value: basicInfo.phone_number },
+            { label: 'Gender', value: basicInfo.gender },
             {
-              label: 'Specializations',
-              value: basicInfo.specializations.join(', '),
+              label: 'Specialty',
+              value: basicInfo.specializations?.[0],
               capitalize: true,
-            },
-            {
-              label: 'Training styles',
-              value: basicInfo.training_styles?.length
-                ? basicInfo.training_styles.join(', ')
-                : '—',
             },
             { label: 'Years of experience', value: String(basicInfo.years_of_experience) },
-            {
-              label: 'Onboarding',
-              value: basicInfo.onboarding_status,
-              capitalize: true,
-            },
-            { label: 'Benefits', value: benefitCount ? `${benefitCount} listed` : '—' },
             { label: 'Bio', value: basicInfo.bio?.trim() || '—' },
-            { label: 'Profile image', value: hasImage ? 'Will upload on create' : 'None' },
+            { label: 'Profile image', value: hasImage ? 'Included' : 'None' },
           ].map(({ label, value, capitalize }) => (
             <div key={label} className='flex items-center justify-between gap-4'>
               <p className='text-sm text-gray-500 shrink-0'>{label}</p>

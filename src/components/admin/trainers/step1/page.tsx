@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/incompatible-library */
 'use client'
-import { useForm, useFieldArray, type Resolver } from 'react-hook-form'
+import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import {
@@ -14,7 +14,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Select,
   SelectContent,
@@ -22,45 +21,57 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ArrowRight, Plus, X } from 'lucide-react'
-import { useState, KeyboardEvent } from 'react'
-import type { TrainerBenefitInput } from '../types'
+import { ArrowRight } from 'lucide-react'
 import {
-  TRAINER_ONBOARDING_STATUSES,
   TRAINER_SPECIALIZATIONS,
+  type TrainerSpecialization,
 } from '@/api/types/trainers'
 
-const SPECIALIZATIONS = TRAINER_SPECIALIZATIONS
-const ONBOARDING_STATUSES = TRAINER_ONBOARDING_STATUSES
+const GENDERS = ['Male', 'Female', 'Other'] as const
 
-const singleWordTag = z
-  .string()
-  .trim()
-  .min(1, 'Tag is required')
-  .max(32)
-  .regex(/^\S+$/, 'Single word only — no spaces')
+const SPECIALIZATION_OPTIONS: { value: TrainerSpecialization; label: string }[] = [
+  { value: 'yoga', label: 'Yoga' },
+  { value: 'speed', label: 'Speed' },
+  { value: 'cardio', label: 'Cardio' },
+  { value: 'endurance', label: 'Endurance' },
+  { value: 'strength', label: 'Strength & Conditioning' },
+]
 
-const schema = z.object({
-  name: z.string().min(2, 'Display name is required'),
-  email: z.string().email('Valid email is required'),
-  specializations: z
-    .array(z.enum(SPECIALIZATIONS))
-    .min(1, 'Select at least one specialization'),
-  training_styles: z.array(singleWordTag).max(4, 'Up to 4 training styles'),
-  benefits: z
-    .array(
-      z.object({
-        title: z.string().min(1, 'Title is required'),
-        subtext: z.string().min(1, 'Subtext is required'),
-      })
-    )
-    .optional(),
-  years_of_experience: z.coerce.number().min(0, 'Years of experience is required'),
+const step1Schema = z.object({
+  name: z.string().trim().min(2, 'Full name is required'),
+  email: z.string().trim().email('Valid email is required'),
+  phone_number: z.string().trim().min(7, 'Phone number is required'),
+  gender: z.enum(GENDERS, { message: 'Gender is required' }),
+  specialization: z.enum(TRAINER_SPECIALIZATIONS, {
+    message: 'Specialty is required',
+  }),
+  years_of_experience: z
+    .number({ message: 'Years of experience is required' })
+    .min(0, 'Years of experience is required'),
   bio: z.string().max(400).optional(),
-  onboarding_status: z.enum(ONBOARDING_STATUSES).default('pending'),
 })
 
-export type BasicInfoValues = z.infer<typeof schema>
+type Step1FormValues = z.infer<typeof step1Schema>
+
+export type BasicInfoValues = Omit<Step1FormValues, 'specialization'> & {
+  specializations: TrainerSpecialization[]
+}
+
+function toBasicInfoValues(values: Step1FormValues): BasicInfoValues {
+  const { specialization, ...rest } = values
+  return { ...rest, specializations: [specialization] }
+}
+
+function toStep1DefaultValues(
+  values?: Partial<BasicInfoValues>
+): Partial<Step1FormValues> {
+  if (!values) return {}
+  const { specializations, ...rest } = values
+  return {
+    ...rest,
+    specialization: specializations?.[0],
+  }
+}
 
 interface Step1Props {
   defaultValues?: Partial<BasicInfoValues>
@@ -68,70 +79,36 @@ interface Step1Props {
 }
 
 export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
-  const [styleInput, setStyleInput] = useState('')
-
-  const form = useForm<BasicInfoValues>({
-    resolver: zodResolver(schema) as Resolver<BasicInfoValues>,
+  const form = useForm<Step1FormValues>({
+    resolver: zodResolver(step1Schema) as Resolver<Step1FormValues>,
     mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       name: '',
       email: '',
-      specializations: [],
-      training_styles: [],
-      benefits: [],
-      years_of_experience: 0,
+      phone_number: '',
+      years_of_experience: undefined,
       bio: '',
-      onboarding_status: 'pending',
-      ...defaultValues,
+      ...toStep1DefaultValues(defaultValues),
     },
   })
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: 'benefits',
-  })
-
-  const { isValid } = form.formState
-  const bio = form.watch('bio') ?? ''
-  const specializations = form.watch('specializations') ?? []
-  const trainingStyles = form.watch('training_styles') ?? []
-
-  const toggleSpecialization = (value: (typeof SPECIALIZATIONS)[number]) => {
-    const current = form.getValues('specializations')
-    const next = current.includes(value)
-      ? current.filter((s) => s !== value)
-      : [...current, value]
-    form.setValue('specializations', next, { shouldValidate: true })
-  }
-
-  const addTrainingStyle = () => {
-    const tag = styleInput.trim().toLowerCase()
-    if (!tag || /\s/.test(tag)) return
-    if (trainingStyles.length >= 4) return
-    if (trainingStyles.includes(tag)) {
-      setStyleInput('')
-      return
-    }
-    form.setValue('training_styles', [...trainingStyles, tag], { shouldValidate: true })
-    setStyleInput('')
-  }
-
-  const handleStyleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      addTrainingStyle()
-    }
-  }
+  const values = form.watch()
+  const canContinue = step1Schema.safeParse(values).success
+  const bio = values.bio ?? ''
 
   return (
     <div className='rounded-lg bg-white p-6'>
       <h2 className='text-base font-semibold text-gray-900'>Basic information</h2>
       <p className='mt-1 mb-6 text-sm text-muted-foreground'>
-        Profile details for the trainer&apos;s public page. Login credentials are generated and emailed automatically.
+        This is what clients will see on the trainer&apos;s public profile.
       </p>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onNext)} className='space-y-5'>
+        <form
+          onSubmit={form.handleSubmit((data) => onNext(toBasicInfoValues(data)))}
+          className='space-y-5'
+        >
           <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
             <FormField
               control={form.control}
@@ -139,7 +116,7 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>
-                    Display name <span className='text-red-500'>*</span>
+                    Full name <span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -164,11 +141,90 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
                   <FormControl>
                     <Input
                       type='email'
-                      placeholder='e.g. trainer@example.com'
+                      placeholder='e.g joe@example.com'
                       className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='phone_number'
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>
+                    Phone number <span className='text-red-500'>*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type='tel'
+                      placeholder='e.g +234 913 140 4048'
+                      className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='gender'
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>
+                    Gender <span className='text-red-500'>*</span>
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger
+                        className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
+                      >
+                        <SelectValue placeholder='Select gender' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {GENDERS.map((g) => (
+                        <SelectItem key={g} value={g}>
+                          {g}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='specialization'
+              render={({ field, fieldState }) => (
+                <FormItem>
+                  <FormLabel>
+                    Specialty <span className='text-red-500'>*</span>
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger
+                        className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
+                      >
+                        <SelectValue placeholder='Select specialty' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {SPECIALIZATION_OPTIONS.map(({ value, label }) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -180,204 +236,33 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>
-                    Years of experience <span className='text-red-500'>*</span>
+                    Years of Experience <span className='text-red-500'>*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       type='number'
                       min={0}
-                      placeholder='e.g. 5'
+                      placeholder='e.g 1'
                       className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
-                      {...field}
+                      value={field.value ?? ''}
+                      onChange={(e) => {
+                        const raw = e.target.value
+                        if (raw === '') {
+                          field.onChange(undefined)
+                        } else {
+                          const n = Number(raw)
+                          field.onChange(Number.isFinite(n) ? n : undefined)
+                        }
+                      }}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            <FormField
-              control={form.control}
-              name='onboarding_status'
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Onboarding status</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger
-                        className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
-                      >
-                        <SelectValue placeholder='Pending' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {ONBOARDING_STATUSES.map((status) => (
-                        <SelectItem key={status} value={status} className='capitalize'>
-                          {status}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <FormField
-            control={form.control}
-            name='specializations'
-            render={() => (
-              <FormItem>
-                <FormLabel>
-                  Specializations <span className='text-red-500'>*</span>
-                </FormLabel>
-                <div className='flex flex-wrap gap-3'>
-                  {SPECIALIZATIONS.map((spec) => (
-                    <label
-                      key={spec}
-                      className='flex cursor-pointer items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm capitalize hover:border-gray-300'
-                    >
-                      <Checkbox
-                        checked={specializations.includes(spec)}
-                        onCheckedChange={() => toggleSpecialization(spec)}
-                      />
-                      {spec}
-                    </label>
-                  ))}
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='training_styles'
-            render={() => (
-              <FormItem>
-                <FormLabel>Training styles (optional, up to 4)</FormLabel>
-                <p className='text-xs text-muted-foreground mb-2'>
-                  Single-word tags — stored lowercase, no spaces.
-                </p>
-                <div className='flex gap-2'>
-                  <Input
-                    value={styleInput}
-                    onChange={(e) => setStyleInput(e.target.value)}
-                    onKeyDown={handleStyleKeyDown}
-                    placeholder='e.g. hiit'
-                    className='login-input'
-                    disabled={trainingStyles.length >= 4}
-                  />
-                  <Button
-                    type='button'
-                    variant='outline'
-                    onClick={addTrainingStyle}
-                    disabled={trainingStyles.length >= 4 || !styleInput.trim()}
-                  >
-                    Add
-                  </Button>
-                </div>
-                {trainingStyles.length > 0 && (
-                  <div className='mt-2 flex flex-wrap gap-2'>
-                    {trainingStyles.map((tag) => (
-                      <span
-                        key={tag}
-                        className='inline-flex items-center gap-1 rounded-full bg-[#f4f9fd] px-3 py-1 text-sm text-[#0b4d8d]'
-                      >
-                        {tag}
-                        <button
-                          type='button'
-                          onClick={() =>
-                            form.setValue(
-                              'training_styles',
-                              trainingStyles.filter((t) => t !== tag),
-                              { shouldValidate: true }
-                            )
-                          }
-                          className='text-gray-400 hover:text-red-500'
-                        >
-                          <X className='h-3 w-3' />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div>
-            <div className='mb-3 flex items-center justify-between'>
-              <div>
-                <p className='text-sm font-medium text-gray-900'>Benefits (optional)</p>
-                <p className='text-xs text-muted-foreground'>
-                  Marketing copy shown on the public profile. Order is preserved.
-                </p>
-              </div>
-              <Button
-                type='button'
-                variant='outline'
-                size='sm'
-                onClick={() => append({ title: '', subtext: '' } as TrainerBenefitInput)}
-                className='gap-1'
-              >
-                <Plus className='h-4 w-4' /> Add benefit
-              </Button>
-            </div>
-            {fields.length === 0 ? (
-              <p className='text-sm text-muted-foreground'>No benefits added yet.</p>
-            ) : (
-              <div className='space-y-4'>
-                {fields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className='rounded-lg border border-gray-100 p-4 space-y-3'
-                  >
-                    <div className='flex items-center justify-between'>
-                      <p className='text-sm font-medium text-gray-700'>Benefit {index + 1}</p>
-                      <button
-                        type='button'
-                        onClick={() => remove(index)}
-                        className='text-gray-400 hover:text-red-500'
-                      >
-                        <X className='h-4 w-4' />
-                      </button>
-                    </div>
-                    <FormField
-                      control={form.control}
-                      name={`benefits.${index}.title`}
-                      render={({ field: titleField }) => (
-                        <FormItem>
-                          <FormLabel>Title</FormLabel>
-                          <FormControl>
-                            <Input placeholder='e.g. Personalized plans' {...titleField} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`benefits.${index}.subtext`}
-                      render={({ field: subtextField }) => (
-                        <FormItem>
-                          <FormLabel>Subtext</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder='e.g. Tailored to your goals and schedule'
-                              {...subtextField}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
 
           <FormField
@@ -386,12 +271,12 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel className='flex items-center justify-between'>
-                  Bio (optional)
+                  Bio / About
                   <span className='text-xs text-muted-foreground'>{bio.length}/400</span>
                 </FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder='Short introduction for the public profile'
+                    placeholder='Short description & what the client should expect'
                     maxLength={400}
                     className={`login-input min-h-[120px] h-auto resize-none py-3 ${fieldState.error ? 'login-input--error' : ''}`}
                     {...field}
@@ -403,7 +288,11 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
           />
 
           <div className='flex justify-end'>
-            <Button type='submit' disabled={!isValid} className='flex items-center gap-2'>
+            <Button
+              type='submit'
+              disabled={!canContinue}
+              className='flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none'
+            >
               Continue <ArrowRight className='h-4 w-4' />
             </Button>
           </div>
