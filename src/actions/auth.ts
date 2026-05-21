@@ -10,7 +10,7 @@ export async function loginAction(prevState: any, formData: FormData) {
   const type = formData.get('type') as 'admin' | 'trainer';
 
   const endpoint =
-    type === 'admin' ? '/auth/admin/log-in' : '/api/v1/trainers/login';
+    type === 'admin' ? '/auth/admin/log-in' : '/auth/login';
 
   try {
     const result = await authenticateUser({ email, password }, endpoint);
@@ -56,7 +56,7 @@ export async function loginAction(prevState: any, formData: FormData) {
 
     return {
       success: true,
-      redirectTo: type === 'admin' ? '/admin/dashboard' : '/dashboard/trainers',
+      redirectTo: type === 'admin' ? '/admin/dashboard' : '/trainer/dashboard',
     };
   } catch (error: any) {
     return {
