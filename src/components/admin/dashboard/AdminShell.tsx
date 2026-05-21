@@ -8,14 +8,21 @@ interface AdminShellProps {
   userName: string
   userEmail: string
   userAvatar?: string
+  userType?: string
   children: React.ReactNode
 }
 
-export function AdminShell({ userName, userEmail, userAvatar, children }: AdminShellProps) {
+export function AdminShell({
+  userName,
+  userEmail,
+  userAvatar,
+  userType,
+  children,
+}: AdminShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className='flex h-screen w-screen overflow-hidden bg-gray-50'>
+    <div className='flex h-screen w-full bg-gray-50 overflow-hidden'>
       <Sidebar
         userName={userName}
         userEmail={userEmail}
@@ -27,10 +34,11 @@ export function AdminShell({ userName, userEmail, userAvatar, children }: AdminS
         <AdminHeader
           userName={userName}
           userAvatar={userAvatar}
+          userType={userType}
           onMenuClick={() => setMobileOpen(true)}
         />
-        <main className='flex-1 overflow-y-auto py-6'>
-          {children}
+        <main className='flex-1 overflow-y-auto py-6 px-4 md:px-6 lg:px-8'>
+          <div className='max-w-[1440px] mx-auto w-full h-full'>{children}</div>
         </main>
       </div>
     </div>

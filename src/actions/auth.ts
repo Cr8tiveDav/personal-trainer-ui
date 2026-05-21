@@ -1,47 +1,69 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use server';
+"use server";
 
-import { authenticateUser } from '@/lib/services/auth';
-import { cookies } from 'next/headers';
+import { adminLogin, trainerLogin } from "@/lib/services/auth";
+import { cookies } from "next/headers";
 
 export async function loginAction(prevState: any, formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  const type = formData.get('type') as 'admin' | 'trainer';
-
-  const endpoint =
-    type === 'admin' ? '/auth/admin/log-in' : '/api/v1/trainers/login';
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const type = formData.get("type") as "admin" | "trainer";
 
   try {
-    const result = await authenticateUser({ email, password }, endpoint);
+    const result =
+      type === "admin"
+        ? await adminLogin({ email, password })
+        : await trainerLogin({ email, password });
 
     const cookieStore = await cookies();
 
-    cookieStore.set('session_token', result.data.access_token, {
+    cookieStore.set("session_token", result.data.access_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
       maxAge: result.data.expires_in,
     });
 
-    cookieStore.set('refresh_token', result.data.refresh_token, {
+    cookieStore.set("refresh_token", result.data.refresh_token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
       maxAge: 7 * 24 * 60 * 60, // 7 days
     });
 
-    cookieStore.set('user_type', result.data.user.user_type, {
+    const userType = result.data.user.user_type;
+
+    if (!userType) {
+      throw new Error("User type is missing from API response");
+    }
+
+    cookieStore.set("user_type", userType, {
       httpOnly: false,
-      sameSite: 'lax',
-      path: '/',
+      sameSite: "lax",
+      path: "/",
     });
+    const userProfile = {
+      name: result.data.user?.name ?? "",
+      email: result.data.user?.email ?? "",
+      avatar_url: result.data.user?.avatar_url ?? null,
+    };
+
+    cookieStore.set("user_profile", JSON.stringify(userProfile), {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: result.data.expires_in,
+    });
+
+    const apiUserType = result.data.user.user_type;
 
     return {
       success: true,
-      redirectTo: type === 'admin' ? '/admin/dashboard' : '/dashboard/trainers',
+      redirectTo:
+        apiUserType === "trainer" ? "/trainer/dashboard" : "/admin/dashboard",
     };
   } catch (error: any) {
     return {

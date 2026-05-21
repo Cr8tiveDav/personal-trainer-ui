@@ -42,7 +42,7 @@ function SessionStatCard({ label, value, subtext, valueColor = 'default', trendC
 
   return (
     <div className='bg-white rounded-xl p-5'>
-      <p className='text-[10px] font-bold uppercase  text-muted'>{label}</p>
+      <p className='text-sm font-semibold text-muted'>{label}</p>
       <h3 className={`mt-2 text-2xl font-bold ${valueClass}`}>{value}</h3>
       <p className='mt-1 text-xs font-medium text-muted'>
         <span className={trendClass}>{firstWord}</span>

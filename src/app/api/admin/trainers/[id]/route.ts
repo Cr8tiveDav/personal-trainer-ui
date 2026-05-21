@@ -10,14 +10,12 @@ import {
 const mapBackendToFrontend = (
   backendTrainer: BackendTrainerResponse
 ): Trainer => {
-  // Map onboarding_status to TrainerStatus ('active', 'pending', 'suspended')
   let status: TrainerStatus = 'Pending';
   if (backendTrainer.onboarding_status?.toLowerCase() === 'active')
     status = 'Active';
   else if (backendTrainer.onboarding_status?.toLowerCase() === 'suspended')
     status = 'Suspended';
 
-  // Format date
   const date = backendTrainer.created_at
     ? new Date(backendTrainer.created_at)
     : new Date();
@@ -43,15 +41,24 @@ const mapBackendToFrontend = (
   };
 };
 
-export async function GET(request: Request) {
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
   const cookieStore = await cookies();
   let sessionToken = cookieStore.get('session_token')?.value;
   const refreshToken = cookieStore.get('refresh_token')?.value;
-  const baseURL = process.env.NEXT_PUBLIC_API_URL || '';
+  const baseURL = process.env.NEXT_PUBLIC_API_URL;
+  if (!baseURL) {
+    return NextResponse.json(
+      { error: 'Internal Server Error: NEXT_PUBLIC_API_URL is not set' },
+      { status: 500 }
+    );
+  }
 
-  // Helper function to fetch data from backend
   const fetchFromBackend = async (token: string) => {
-    return fetch(`${baseURL}/api/v1/trainers`, {
+    return fetch(`${baseURL}/api/v1/trainers/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -63,12 +70,10 @@ export async function GET(request: Request) {
   try {
     let backendRes;
     
-    // If we have a session token, try it first
     if (sessionToken) {
       backendRes = await fetchFromBackend(sessionToken);
     }
 
-    // If session token is missing or backend returned 401, attempt to refresh
     if (!sessionToken || backendRes?.status === 401) {
       if (!refreshToken) {
         return NextResponse.json(
@@ -77,7 +82,6 @@ export async function GET(request: Request) {
         );
       }
 
-      // Hit the refresh endpoint
       const refreshRes = await fetch(`${baseURL}/api/v1/auth/refresh`, {
         method: 'POST',
         headers: {
@@ -87,7 +91,6 @@ export async function GET(request: Request) {
       });
 
       if (!refreshRes.ok) {
-        // Refresh token is invalid/expired
         return NextResponse.json(
           { error: 'Unauthorized: Session expired and refresh failed' },
           { status: 401 }
@@ -97,18 +100,23 @@ export async function GET(request: Request) {
       const newTokens = await refreshRes.json();
       sessionToken = newTokens.data?.access_token || newTokens.access_token;
       
-      if (sessionToken) {
-        cookieStore.set('session_token', sessionToken, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          path: '/',
-          maxAge: newTokens.data?.expires_in || newTokens.expires_in || 600,
-        });
+      if (!sessionToken) {
+        console.error('Refresh token response missing access token');
+        return NextResponse.json(
+          { error: 'Unauthorized: Session refresh failed to provide new token' },
+          { status: 401 }
+        );
       }
 
-      // Retry the original request with the new session token
-      backendRes = await fetchFromBackend(sessionToken!);
+      cookieStore.set('session_token', sessionToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: newTokens.data?.expires_in || newTokens.expires_in || 600,
+      });
+
+      backendRes = await fetchFromBackend(sessionToken);
     }
 
     if (!backendRes || backendRes.status === 401) {
@@ -119,47 +127,21 @@ export async function GET(request: Request) {
     }
 
     if (!backendRes.ok) {
+      // If 404, we can handle it gracefully
+      if (backendRes.status === 404) {
+        return NextResponse.json({ error: 'Trainer not found' }, { status: 404 });
+      }
       throw new Error(`Backend returned ${backendRes.status}`);
     }
 
     const { data } = await backendRes.json();
-
-    // Map the raw backend data to the frontend Trainer interface
-    const mappedTrainers: Trainer[] = data.map((item: BackendTrainerResponse) =>
-      mapBackendToFrontend(item)
-    );
-
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status') || 'all';
-
-    let filteredData = mappedTrainers;
-    if (status !== 'all') {
-      filteredData = mappedTrainers.filter(
-        (trainer) => trainer.status.toLowerCase() === status.toLowerCase()
-      );
-    }
-    const counts = {
-      all: mappedTrainers.length,
-      active: mappedTrainers.filter(
-        (trainer) => trainer.status.toLowerCase() === 'active'
-      ).length,
-      pending: mappedTrainers.filter(
-        (trainer) => trainer.status.toLowerCase() === 'pending'
-      ).length,
-      suspended: mappedTrainers.filter(
-        (trainer) => trainer.status.toLowerCase() === 'suspended'
-      ).length,
-    };
+    const mappedTrainer = mapBackendToFrontend(data);
 
     return NextResponse.json({
-      data: filteredData,
-      counts,
-      pagination: {
-        totalItems: mappedTrainers.length,
-      },
+      data: mappedTrainer,
     });
   } catch (error) {
-    console.error('Failed to fetch trainers from backend:', error);
+    console.error('Failed to fetch trainer from backend:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
