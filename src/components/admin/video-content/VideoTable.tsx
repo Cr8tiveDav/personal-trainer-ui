@@ -42,7 +42,7 @@ function ActionButtons({ video }: { video: VideoItem }) {
         View
       </Link>
       <Link
-        href='/admin/video-content/upload'
+        href={`/admin/video-content/upload?replace=${video.id}`}
         className='rounded-lg border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50'
       >
         Replace
