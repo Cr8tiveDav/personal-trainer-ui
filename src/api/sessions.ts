@@ -48,18 +48,17 @@ export function useSessionStats() {
   });
 }
 
-/** Sessions for a trainer (admin or trainer owner) — GET /trainers/sessions */
+/** Sessions for a trainer — GET /trainers/{id}/sessions */
 export function useTrainerSessions(trainerId: string) {
   return useQuery({
     queryKey: ["trainer-sessions", trainerId],
     queryFn: async () => {
       const params = new URLSearchParams({
-        trainer_id: trainerId,
         page: String(TRAINER_SESSIONS_PAGE),
         limit: String(TRAINER_SESSIONS_LIMIT),
       });
       const response = await getRequest<SessionsListResponse>({
-        url: `${API_ENDPOINTS.TRAINERS.SESSIONS}?${params}`,
+        url: `${API_ENDPOINTS.TRAINERS.SESSIONS(trainerId)}?${params}`,
       });
       return mapBackendSessionsResponse(response);
     },

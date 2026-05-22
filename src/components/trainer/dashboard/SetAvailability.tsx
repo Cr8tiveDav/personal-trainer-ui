@@ -1,29 +1,40 @@
 'use client'
 
+import { useCurrentTrainerId } from '@/api/trainer-dashboard'
 import {
-  useSetTrainerAvailability,
-  useTrainerAvailability,
-  useUpdateTrainerAvailability,
+  useSetTrainerAvailabilityById,
+  useTrainerAvailabilityById,
+  useUpdateTrainerAvailabilityById,
 } from '@/api/availability'
 import { AvailabilitySetupPanel } from '@/components/availability/AvailabilitySetupPanel'
 import { AvailabilityScheduleView } from '@/components/availability/AvailabilityScheduleView'
 import { AvailabilityTabSkeleton } from '@/components/availability/AvailabilityTabSkeleton'
 
 export function SetAvailability() {
-  const { data: slots = [], isLoading, isSuccess } = useTrainerAvailability()
-  const setAvailability = useSetTrainerAvailability()
-  const updateAvailability = useUpdateTrainerAvailability()
+  const { data: trainerId, isLoading: idLoading } = useCurrentTrainerId()
+  const { data: slots = [], isLoading, isError, isSuccess } =
+    useTrainerAvailabilityById(trainerId ?? '', !!trainerId)
+  const setAvailability = useSetTrainerAvailabilityById(trainerId ?? '')
+  const updateAvailability = useUpdateTrainerAvailabilityById(trainerId ?? '')
 
   const formKey =
     slots.length > 0
       ? slots.map((s) => `${s.day_of_week}-${s.start_time}-${s.end_time}`).join('|')
       : 'empty'
 
-  if (isLoading) {
+  if (idLoading || (isLoading && slots.length === 0)) {
     return <AvailabilityTabSkeleton />
   }
 
-  if (!isSuccess) {
+  if (!trainerId) {
+    return (
+      <div className='rounded-xl border border-gray-100 bg-white p-6 text-sm text-gray-500'>
+        Could not load your trainer profile. Please sign out and log in again.
+      </div>
+    )
+  }
+
+  if (isError || !isSuccess) {
     return (
       <div className='rounded-xl border border-gray-100 bg-white p-6 text-sm text-red-500'>
         Could not load your availability. Please try again.

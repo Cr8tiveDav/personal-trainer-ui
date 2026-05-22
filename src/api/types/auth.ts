@@ -11,6 +11,8 @@ export type AuthUser = {
   email?: string
   avatar_url?: string | null
   user_type?: string
+  id?: string
+  trainer_id?: string
 }
 
 export type LoginResponse = {

@@ -1,4 +1,4 @@
-import { TrainerSession } from './mock-data'
+import type { TrainerSession } from './types'
 import { SessionStatusBadge } from './SessionStatusBadge'
 
 export function AllSessionsTable({ sessions }: { sessions: TrainerSession[] }) {
@@ -21,7 +21,14 @@ export function AllSessionsTable({ sessions }: { sessions: TrainerSession[] }) {
             </tr>
           </thead>
           <tbody className='divide-y divide-gray-50'>
-            {sessions.map((session) => (
+            {sessions.length === 0 ? (
+              <tr>
+                <td colSpan={6} className='px-5 py-12 text-center text-sm text-gray-400'>
+                  No sessions yet
+                </td>
+              </tr>
+            ) : (
+            sessions.map((session) => (
               <tr key={session.id} className='hover:bg-gray-50/50 transition-colors'>
                 <td className='px-5 py-3.5'>
                   <div className='flex items-center gap-2.5'>
@@ -39,7 +46,8 @@ export function AllSessionsTable({ sessions }: { sessions: TrainerSession[] }) {
                   <SessionStatusBadge status={session.status} />
                 </td>
               </tr>
-            ))}
+            ))
+            )}
           </tbody>
         </table>
       </div>

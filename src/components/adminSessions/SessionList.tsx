@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Search, ChevronDown } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useAdminSessions } from '@/api/sessions'
@@ -43,7 +43,6 @@ export default function SessionsList({
   onUpdateSession
 }: SessionsListProps) {
   const [search, setSearch] = useState('')
-  const [debouncedSearch, setDebouncedSearch] = useState('')
   const [selectedTrainer, setSelectedTrainer] = useState('all')
   const [isTrainerMenuOpen, setIsTrainerMenuOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<TabKey>('all')
@@ -54,15 +53,6 @@ export default function SessionsList({
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false)
 
   const { data, isError, isLoading } = useAdminSessions()
-
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      setDebouncedSearch(search)
-      setCurrentPage(1)
-    }, 300)
-
-    return () => window.clearTimeout(timeoutId)
-  }, [search])
 
   const baseSessions: Session[] = data ?? []
   const sessions: Session[] = [...loggedSessions, ...baseSessions].map((session) => ({
@@ -130,7 +120,7 @@ export default function SessionsList({
         .filter((name) => name && name !== 'Unknown Trainer')
     )
   ).sort((a, b) => a.localeCompare(b))
-  const normalizedSearch = normalizeSearchValue(debouncedSearch)
+  const normalizedSearch = normalizeSearchValue(search)
   const isFiltered = Boolean(normalizedSearch) || selectedTrainer !== 'all'
   const filteredSessions = tabSessions.filter(
     (session) =>
@@ -153,7 +143,7 @@ export default function SessionsList({
     count: tabCounts[tab.key],
   }))
 
-  const listKey = `${activeTab}-${debouncedSearch}-${selectedTrainer}`
+  const listKey = `${activeTab}-${search}-${selectedTrainer}`
 
   return (
     <motion.div
@@ -186,6 +176,7 @@ export default function SessionsList({
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value)
+                setCurrentPage(1)
               }}
               placeholder='Search by client, trainer, or session ID'
               className='w-full h-10 pl-9 pr-4 rounded-lg border border-gray-200 text-xs bg-white placeholder-gray-400 focus:outline-none focus:border-[#0b4d8d]'

@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react'
 import { trainerRowVariants } from '@/components/admin/trainers/trainers-list/table/TrainerTableRow'
+import { formatDisplayName, TruncateEmail } from '~/lib/utils'
 import type { Client } from './types'
 import { ClientStatusBadge } from './ClientStatusBadge'
 import { ClientTableActions } from './ClientTableActions'
@@ -34,9 +35,13 @@ export function ClientTableRow({ client, index = 0 }: ClientTableRowProps) {
           <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white'>
             {client.displayInitial}
           </div>
-          <div>
-            <p className='text-sm font-medium text-gray-900'>{client.name}</p>
-            <p className='text-xs text-gray-400'>{client.email}</p>
+          <div className='flex min-w-0 flex-col'>
+            <span className='text-sm font-semibold text-gray-900'>
+              {formatDisplayName(client.name)}
+            </span>
+            <span className='truncate text-xs text-gray-500'>
+              {TruncateEmail(client.email)}
+            </span>
           </div>
         </div>
       </td>
