@@ -163,7 +163,9 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
                             <span className='text-sm font-medium text-gray-900'>
                               {session.client.name}
                             </span>
-                            <p className='text-xs text-gray-400'>{session.client.country}</p>
+                            <p className='text-xs text-gray-400'>
+                              {session.client.email ?? session.client.country}
+                            </p>
                           </div>
                         </div>
                       </td>

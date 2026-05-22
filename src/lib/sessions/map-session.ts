@@ -84,6 +84,11 @@ const readPerson = (session: SessionLike, key: "client" | "trainer") => {
       key === "client" ? "Unknown Client" : "Unknown Trainer",
     );
 
+  const email =
+    readString(person.email, "") ||
+    readString(session[`${key}_email`], "") ||
+    undefined;
+
   return {
     name,
     avatar:
@@ -95,6 +100,7 @@ const readPerson = (session: SessionLike, key: "client" | "trainer") => {
       person.country,
       readString(session[`${key}_country`], timezoneRegion || "N/A"),
     ),
+    ...(email ? { email } : {}),
   };
 };
 

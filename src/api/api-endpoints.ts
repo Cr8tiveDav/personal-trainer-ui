@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
     DETAIL: (id: string) => `/trainers/${id}`,
     RANKINGS: "/trainers/rankings",
     SET_PASSWORD: "/trainers/set-password",
-    ME_SESSIONS: "/trainers/me/sessions",
+    SESSIONS: "/trainers/sessions",
     ME_AVAILABILITY: "/trainers/me/availability",
     AVAILABILITY: (id: string) => `/trainers/${id}/availability`,
     IMAGES: (id: string) => `/trainers/${id}/images`,
