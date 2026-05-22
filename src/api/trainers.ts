@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getRequest, uploadRequest } from "~/lib/http";
+import { getRequest, postRequest, uploadRequest } from "~/lib/http";
 import { displayError, showSuccessToast } from "~/lib/utils";
 import { API_ENDPOINTS } from "./api-endpoints";
 import type {
@@ -93,6 +93,20 @@ export function useCreateTrainer() {
       queryClient.invalidateQueries({ queryKey: trainerQueryKeys.all });
       showSuccessToast("Trainer created — credentials emailed.");
     },
+    onError(error) {
+      displayError(error);
+    },
+  });
+}
+
+export function useSetPassword() {
+  return useMutation({
+    mutationFn: (payload: { token: string; new_password: string }) =>
+      postRequest<{ message: string }, { token: string; new_password: string }>({
+        url: API_ENDPOINTS.TRAINERS.SET_PASSWORD,
+        payload,
+      }),
+    mutationKey: ["set-password"],
     onError(error) {
       displayError(error);
     },

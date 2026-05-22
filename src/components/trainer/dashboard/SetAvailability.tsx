@@ -24,6 +24,7 @@ export function SetAvailability() {
   const [activeDays, setActiveDays] = useState<number[]>([1, 2, 3, 4, 5])
   const [saving, setSaving] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [fetchFailed, setFetchFailed] = useState(false)
 
   useEffect(() => {
     getTrainerAvailability()
@@ -33,7 +34,7 @@ export function SetAvailability() {
         }
       })
       .catch(() => {
-        // silently fall back to defaults
+        setFetchFailed(true)
       })
       .finally(() => {
         setLoading(false)
@@ -127,9 +128,12 @@ export function SetAvailability() {
           </div>
         </div>
 
+        {fetchFailed && (
+          <p className='text-xs text-red-500'>Could not load your availability. Saving is disabled to prevent overwriting existing data.</p>
+        )}
         <button
           onClick={handleSave}
-          disabled={saving || loading}
+          disabled={saving || loading || fetchFailed}
           className='w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed'
         >
           {saving ? 'Saving...' : 'Save Availability'}

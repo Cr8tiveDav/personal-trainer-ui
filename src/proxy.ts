@@ -27,6 +27,7 @@ export const proxy: NextProxy = (request) => {
   const isTrainerPage =
     pathname.startsWith("/trainers") &&
     !pathname.startsWith("/trainers/login") &&
+    !pathname.startsWith("/trainers/set-password") &&
     !isApiRoute;
 
   const hasAuthToken = !!accessToken || !!refreshToken;

@@ -14,6 +14,9 @@ export const API_ENDPOINTS = {
     CREATE: "/trainers",
     DETAIL: (id: string) => `/trainers/${id}`,
     RANKINGS: "/trainers/rankings",
+    SET_PASSWORD: "/trainers/set-password",
+    ME_SESSIONS: "/trainers/me/sessions",
+    ME_AVAILABILITY: "/trainers/me/availability",
   },
 
   WAITLIST: {
