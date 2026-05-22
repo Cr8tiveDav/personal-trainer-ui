@@ -1,14 +1,19 @@
-'use client'
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
+import { adminSessionsQueryKey } from '@/lib/adminSessions/queryKeys'
+import { fetchAdminSessionsFromBackend } from '@/lib/adminSessions/server'
+import { SessionsPageClient } from './SessionsPageClient'
 
-import SessionsList from "@/components/adminSessions/SessionList"
-import { SessionsStatsSection } from "@/components/adminSessions/SessionsStatCard"
-const SessionsPage = () => {
+export default async function SessionsPage() {
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery({
+    queryKey: adminSessionsQueryKey,
+    queryFn: () => fetchAdminSessionsFromBackend(1, 100),
+  })
+
   return (
-    <div className='w-full space-y-6 px-4 lg:px-10 pb-6'>
-     
-      <SessionsStatsSection />
-      <SessionsList />
-    </div>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <SessionsPageClient />
+    </HydrationBoundary>
   )
 }
-export default SessionsPage
