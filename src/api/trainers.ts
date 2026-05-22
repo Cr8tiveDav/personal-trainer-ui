@@ -1,23 +1,35 @@
-"use client";
+'use client';
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getRequest, uploadRequest } from "~/lib/http";
-import { displayError, showSuccessToast } from "~/lib/utils";
-import { API_ENDPOINTS } from "./api-endpoints";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  deleteRequest,
+  getRequest,
+  patchFormRequest,
+  patchRequest,
+  uploadRequest,
+} from '~/lib/http';
+import { displayError, showSuccessToast } from '~/lib/utils';
+import { API_ENDPOINTS } from './api-endpoints';
 import type {
   BackendTrainerResponse,
   CreateTrainerResponse,
   TrainerDetailResponse,
   TrainersListResponse,
-} from "./types/trainers";
-import type { Trainer, TrainerResponse } from "@/components/admin/trainers/types";
-import { buildCreateTrainerFormData } from "@/lib/trainers/build-create-trainer-form-data";
-import type { CreateTrainerFormInput } from "@/lib/trainers/build-create-trainer-form-data";
-import { mapBackendToFrontend } from "@/lib/trainers/map-trainer";
+  UpdateTrainerPayload,
+  UpdateTrainerResponse,
+} from './types/trainers';
+import type { Trainer, TrainerResponse } from '@/components/admin/trainers/types';
+import { buildCreateTrainerFormData } from '@/lib/trainers/build-create-trainer-form-data';
+import type { CreateTrainerFormInput } from '@/lib/trainers/build-create-trainer-form-data';
+import {
+  buildUpdateTrainerFormData,
+  type UpdateTrainerFormInput,
+} from '@/lib/trainers/build-update-trainer-form-data';
+import { mapBackendToFrontend } from '@/lib/trainers/map-trainer';
 
 export const trainerQueryKeys = {
-  all: ["admin-trainers"] as const,
-  detail: (id: string) => ["trainer", id] as const,
+  all: ['admin-trainers'] as const,
+  detail: (id: string) => ['trainer', id] as const,
 };
 
 function buildTrainerListResponse(
@@ -29,13 +41,13 @@ function buildTrainerListResponse(
     data: mappedTrainers,
     counts: {
       all: mappedTrainers.length,
-      active: mappedTrainers.filter((t) => t.status.toLowerCase() === "active")
+      active: mappedTrainers.filter((t) => t.status.toLowerCase() === 'active')
         .length,
       pending: mappedTrainers.filter(
-        (t) => t.status.toLowerCase() === "pending",
+        (t) => t.status.toLowerCase() === 'pending',
       ).length,
       suspended: mappedTrainers.filter(
-        (t) => t.status.toLowerCase() === "suspended",
+        (t) => t.status.toLowerCase() === 'suspended',
       ).length,
     },
     pagination: { totalItems: mappedTrainers.length },
@@ -69,6 +81,63 @@ export function useTrainerById(id: string) {
   });
 }
 
+export function useUpdateTrainer(trainerId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (input: UpdateTrainerFormInput) => {
+      const hasNewPicture =
+        input.display_picture_file && input.display_picture_file.size > 0;
+
+      if (hasNewPicture) {
+        const formData = buildUpdateTrainerFormData(input);
+        const response = await patchFormRequest<UpdateTrainerResponse>({
+          url: API_ENDPOINTS.TRAINERS.DETAIL(trainerId),
+          payload: formData,
+        });
+
+        if (!response.data?.id) {
+          throw new Error(
+            response.message || 'Trainer updated but response was invalid',
+          );
+        }
+
+        return response.data;
+      }
+
+      const { display_picture_file, ...payload } = input;
+      void display_picture_file;
+      const response = await patchRequest<
+        UpdateTrainerResponse,
+        UpdateTrainerPayload
+      >({
+        url: API_ENDPOINTS.TRAINERS.DETAIL(trainerId),
+        payload,
+      });
+
+      const updated = response.data?.data;
+      if (!updated?.id) {
+        throw new Error(
+          response.data?.message || 'Trainer updated but response was invalid',
+        );
+      }
+
+      return updated;
+    },
+    mutationKey: ['update-trainer', trainerId],
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: trainerQueryKeys.all });
+      queryClient.invalidateQueries({
+        queryKey: trainerQueryKeys.detail(trainerId),
+      });
+      showSuccessToast('Trainer updated');
+    },
+    onError(error) {
+      displayError(error);
+    },
+  });
+}
+
 export function useCreateTrainer() {
   const queryClient = useQueryClient();
 
@@ -82,16 +151,35 @@ export function useCreateTrainer() {
 
       if (!response.data?.id) {
         throw new Error(
-          response.message || "Trainer created but response had no id",
+          response.message || 'Trainer created but response had no id',
         );
       }
 
       return response.data;
     },
-    mutationKey: ["create-trainer"],
+    mutationKey: ['create-trainer'],
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: trainerQueryKeys.all });
-      showSuccessToast("Trainer created — credentials emailed.");
+      showSuccessToast('Trainer created — credentials emailed.');
+    },
+    onError(error) {
+      displayError(error);
+    },
+  });
+}
+
+export function useDeleteTrainer() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) =>
+      deleteRequest({
+        url: API_ENDPOINTS.TRAINERS.DETAIL(id),
+      }),
+    mutationKey: ['delete-trainer'],
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: trainerQueryKeys.all });
+      showSuccessToast('Trainer deleted');
     },
     onError(error) {
       displayError(error);

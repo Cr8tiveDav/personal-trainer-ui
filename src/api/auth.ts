@@ -90,7 +90,7 @@ export function useLogin(options: UseLoginOptions) {
     },
 
     onError(error) {
-      displayError(error);
+      displayError(error, "Unable to sign in. Check your email and password.");
     },
   });
 }

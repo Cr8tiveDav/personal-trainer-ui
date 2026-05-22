@@ -20,10 +20,12 @@ export const proxy: NextProxy = (request) => {
   )?.value;
 
   const isApiRoute = pathname.startsWith("/api/");
+  const isPublicAdminAuthPage =
+    pathname.startsWith("/admin/login") ||
+    pathname.startsWith("/admin/forgot-password");
+
   const isAdminPage =
-    pathname.startsWith("/admin") &&
-    !pathname.startsWith("/admin/login") &&
-    !isApiRoute;
+    pathname.startsWith("/admin") && !isPublicAdminAuthPage && !isApiRoute;
   const isTrainerPage =
     pathname.startsWith("/trainers") &&
     !pathname.startsWith("/trainers/login") &&

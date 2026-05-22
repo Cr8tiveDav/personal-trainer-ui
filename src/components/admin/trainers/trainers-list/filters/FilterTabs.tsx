@@ -29,6 +29,7 @@ const FilterTabs = ({ counts, activeTab, setActiveTab }: FilterTabsProps) => {
       tabs={tabs}
       activeTab={activeTab}
       onTabChange={setActiveTab}
+      layoutId='trainers-filter-tabs'
     />
   );
 };

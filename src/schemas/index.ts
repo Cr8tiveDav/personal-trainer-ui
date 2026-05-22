@@ -1,4 +1,5 @@
 import * as z from 'zod'
+import { adminNewPasswordSchema, resetCodeSchema } from './password'
 
 export const LoginSchema = z.object({
   password: z.string().min(8, {
@@ -40,6 +41,30 @@ export const ResetPasswordSchema = z
       .min(8, { message: 'Confirm Password is required' }),
   })
   .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
+
+export const ForgotPasswordEmailSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: 'Email is required' })
+    .email({ message: 'Invalid email address' }),
+})
+
+export const AdminResetPasswordSchema = z
+  .object({
+    email: z
+      .string()
+      .min(1, { message: 'Email is required' })
+      .email({ message: 'Invalid email address' }),
+    code: resetCodeSchema,
+    new_password: adminNewPasswordSchema,
+    confirmPassword: z
+      .string()
+      .min(1, { message: 'Confirm password is required' }),
+  })
+  .refine((data) => data.new_password === data.confirmPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
   })

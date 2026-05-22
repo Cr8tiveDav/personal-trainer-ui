@@ -7,6 +7,12 @@ export interface Trainer {
   email: string;
   avatarUrl?: string;
   specialty: string;
+  specializations: string[];
+  trainingStyles: string[];
+  bio: string;
+  introVideoUrl: string;
+  displayPictureUrl: string;
+  onboardingStatus: string;
   status: TrainerStatus;
   sessions: number | null;
   earnings: number;
