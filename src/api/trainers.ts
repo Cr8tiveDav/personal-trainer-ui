@@ -196,9 +196,6 @@ export function useSetPassword() {
         payload,
       }),
     mutationKey: ['set-password'],
-    onError(error) {
-      displayError(error);
-    },
   });
 }
 
