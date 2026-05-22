@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import StatCard from '../../analytics/StatCard';
 import { useTrainerSessions } from '@/api/sessions';
 import { useTrainerEarnings } from '@/api/finance';
-import { BackendSession } from '@/api/types/sessions';
+import { getTrainerSessionStats } from '@/lib/sessions/trainer-session-stats';
 import { Payout } from '@/api/types/finance';
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -52,30 +52,11 @@ const EarningsTab: React.FC<EarningsTabProps> = ({ trainerId }) => {
     isError: isErrorEarnings,
   } = useTrainerEarnings(trainerId);
 
-  // Empty state if API returns 404 or fails
   const sessions = isErrorSessions || !apiSessions ? [] : apiSessions;
   const earnings =
     isErrorEarnings || !apiEarningsData ? emptyEarningsData : apiEarningsData;
 
-  // Calculate session stats dynamically, identical to SessionsTab
-  const stats = useMemo(() => {
-    const defaultStats = {
-      upcoming: 0,
-      completed: 0,
-      rescheduled: 0,
-      cancelled: 0,
-    };
-    if (!sessions || !Array.isArray(sessions)) return defaultStats;
-
-    return sessions.reduce((acc, session: BackendSession) => {
-      const status = session.status?.toLowerCase() || '';
-      if (status === 'upcoming') acc.upcoming++;
-      if (status === 'completed') acc.completed++;
-      if (status === 'rescheduled') acc.rescheduled++;
-      if (status === 'cancelled') acc.cancelled++;
-      return acc;
-    }, defaultStats);
-  }, [sessions]);
+  const stats = useMemo(() => getTrainerSessionStats(sessions), [sessions]);
 
   const isLoading = isLoadingSessions || isLoadingEarnings;
 

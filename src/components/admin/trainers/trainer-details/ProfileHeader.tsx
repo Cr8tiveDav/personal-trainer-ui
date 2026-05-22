@@ -101,7 +101,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ trainer }) => {
           </div>
         </div>
 
-        <div className='mt-0 md:mt-0 shrink-0 w-full md:w-auto'>
+        {/* <div className='mt-0 md:mt-0 shrink-0 w-full md:w-auto'>
           <button className='flex items-center justify-center gap-2 w-full md:w-34.25 h-12 px-4.5 py-3 bg-[#F5F5F5] border border-[#A3A3A3] rounded-lg text-[13px] font-semibold text-gray-900 hover:bg-gray-50 transition-colors cursor-pointer'>
             <Image
               src='/images/admin-dashboard/icons/messenger-logo.svg'
@@ -111,7 +111,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ trainer }) => {
             />
             Message
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
