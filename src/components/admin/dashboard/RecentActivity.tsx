@@ -2,6 +2,10 @@
 
 import Link from 'next/link'
 import { useRecentActivity } from '@/api/dashboard'
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState'
 import { ActivityRow } from './ActivityRow'
 
 export function RecentActivity() {
@@ -21,9 +25,12 @@ export function RecentActivity() {
       </div>
 
       {list.length === 0 ? (
-        <div className='flex flex-col items-center justify-center py-10 text-center'>
-          <p className='text-sm text-gray-400'>No recent activity yet</p>
-        </div>
+        <EmptyState
+          imageSrc={EMPTY_STATE_IMAGE_PATHS.recentActivity}
+          imageAlt='No recent activity'
+          title='No recent activity yet'
+          description='Session bookings and updates will show up here once clients start training.'
+        />
       ) : (
         <div className='divide-y divide-gray-50'>
           {list.map((activity) => (

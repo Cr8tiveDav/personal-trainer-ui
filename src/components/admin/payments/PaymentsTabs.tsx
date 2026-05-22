@@ -2,10 +2,33 @@
 
 import { useState } from "react";
 
+import { EMPTY_STATE_IMAGE_PATHS } from "@/components/ui/EmptyState";
 import EmptyPaymentState from "./EmptyPaymentState";
 import PaymentsControls from "./PaymentsControls";
 import WithdrawalRequestsTab from "./WithdrawalRequestsTab";
 import type { PaymentTab } from "./types";
+
+const emptyPaymentTabConfig: Partial<
+  Record<
+    PaymentTab,
+    { imageSrc: string; imageAlt: string; title: string; description: string }
+  >
+> = {
+  all_transactions: {
+    imageSrc: EMPTY_STATE_IMAGE_PATHS.allTransactions,
+    imageAlt: "No transactions",
+    title: "No transactions yet",
+    description:
+      "All payment transactions will appear here once clients make purchases.",
+  },
+  income: {
+    imageSrc: EMPTY_STATE_IMAGE_PATHS.income,
+    imageAlt: "No income",
+    title: "No income records yet",
+    description:
+      "Income from subscriptions and sessions will show up here when available.",
+  },
+};
 
 const tabs: { label: string; value: PaymentTab }[] = [
   { label: "All Transactions", value: "all_transactions" },
@@ -59,9 +82,9 @@ const PaymentsTabs = () => {
           searchValue={searchValue}
           statusValue={statusValue}
         />
-      ) : (
-        <EmptyPaymentState title="No payment records yet" />
-      )}
+      ) : emptyPaymentTabConfig[activeTab] ? (
+        <EmptyPaymentState {...emptyPaymentTabConfig[activeTab]!} />
+      ) : null}
     </div>
   );
 };

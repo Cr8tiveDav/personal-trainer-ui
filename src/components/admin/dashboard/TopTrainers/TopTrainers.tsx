@@ -2,6 +2,10 @@
 
 import Link from 'next/link'
 import { useTopTrainers } from '@/api/dashboard'
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState'
 import { TrainerRow } from './TrainerRow'
 
 export function TopTrainers() {
@@ -18,9 +22,12 @@ export function TopTrainers() {
       </div>
 
       {list.length === 0 ? (
-        <div className='flex flex-col items-center justify-center py-10'>
-          <p className='text-sm text-gray-400'>No trainer data yet</p>
-        </div>
+        <EmptyState
+          imageSrc={EMPTY_STATE_IMAGE_PATHS.topTrainer}
+          imageAlt='No top trainers'
+          title='No trainer rankings yet'
+          description='Top performers will appear here once trainers complete sessions this month.'
+        />
       ) : (
         <div className='divide-y divide-gray-50'>
           {list.map((trainer) => (

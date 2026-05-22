@@ -4,6 +4,10 @@ import { useState, useRef, useEffect } from 'react'
 import { Bell, Search, Menu, LogOut } from 'lucide-react'
 import Image from 'next/image'
 import { useLogout } from '@/api/auth'
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState'
 
 interface TrainerHeaderProps {
   userName: string
@@ -58,15 +62,19 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
             className='relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 transition-colors'
           >
             <Bell className='h-5 w-5 text-gray-500' />
-            <span className='absolute right-1.5 top-1.5 flex h-2 w-2 rounded-full bg-red-500' />
           </button>
           {notifOpen && (
-            <div className='absolute right-0 top-11 z-50 w-[300px] rounded-xl border border-gray-100 bg-white p-4 shadow-lg'>
-              <p className='mb-1 text-sm font-semibold text-gray-900'>Notifications</p>
-              <div className='flex flex-col items-center justify-center py-8 text-center'>
-                <Bell className='mb-2 h-8 w-8 text-gray-200' />
-                <p className='text-sm text-gray-400'>No notifications yet</p>
-              </div>
+            <div className='absolute right-0 top-11 z-50 w-[min(400px,calc(100vw-2rem))] rounded-xl border border-gray-100 bg-white shadow-lg overflow-hidden'>
+              <p className='border-b border-gray-100 px-5 py-4 text-base font-semibold text-gray-900'>
+                Notifications
+              </p>
+              <EmptyState
+                imageSrc={EMPTY_STATE_IMAGE_PATHS.notification}
+                imageAlt='No notifications'
+                title='No notifications yet'
+                description='Session reminders and updates will show up here.'
+                className='min-h-[280px] py-10 px-6 [&_img]:max-w-[220px] [&_h3]:text-base [&_p]:max-w-sm'
+              />
             </div>
           )}
         </div>

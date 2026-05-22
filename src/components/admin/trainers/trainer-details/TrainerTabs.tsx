@@ -10,7 +10,7 @@ interface TrainerTabsProps {
 const tabs: TabItem<TabType>[] = [
   { id: "overview", label: "Overview" },
   { id: "sessions", label: "Sessions" },
-  { id: "earnings", label: "Earnings" },
+  // { id: "earnings", label: "Earnings" },
   { id: "media", label: "Media" },
   { id: "availability", label: "Availability" },
 ];

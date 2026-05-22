@@ -4,6 +4,10 @@ import { useTrainerSessions } from '@/api/sessions';
 import { useTrainerEarnings } from '@/api/finance';
 import { getTrainerSessionStats } from '@/lib/sessions/trainer-session-stats';
 import { Payout } from '@/api/types/finance';
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState';
 import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface EarningsTabProps {
@@ -213,8 +217,14 @@ const EarningsTab: React.FC<EarningsTabProps> = ({ trainerId }) => {
             <tbody className='divide-y-[0.5px] divide-[#EBEBEB]'>
               {earnings.recentPayouts.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className='py-8 text-center text-gray-500'>
-                    No recent payouts found.
+                  <td colSpan={5} className='p-0'>
+                    <EmptyState
+                      imageSrc={EMPTY_STATE_IMAGE_PATHS.income}
+                      imageAlt='No payouts'
+                      title='No recent payouts yet'
+                      description='Payout history will show here once this trainer completes paid sessions.'
+                      className='min-h-[280px] py-12'
+                    />
                   </td>
                 </tr>
               ) : (
