@@ -26,7 +26,6 @@ const TrainerDetailsClient = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
 
   const { data, isLoading, isError } = useTrainerById(id);
-  console.log('Trainer data:', data);
 
   if (isLoading) {
     return (

@@ -53,7 +53,6 @@ export function useGetTrainers() {
         url: API_ENDPOINTS.TRAINERS.LIST,
       });
       const trainers = Array.isArray(response.data) ? response.data : [];
-      console.log('Raw trainers data:', trainers);
       return buildTrainerListResponse(trainers);
     },
     staleTime: 60_000,
@@ -67,7 +66,6 @@ export function useTrainerById(id: string) {
       const response = await getRequest<TrainerDetailResponse>({
         url: API_ENDPOINTS.TRAINERS.DETAIL(id),
       });
-      console.log('Trainer detail:', response.data);
       return { data: mapBackendToFrontend(response.data) };
     },
     enabled: !!id,
