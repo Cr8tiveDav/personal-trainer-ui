@@ -15,27 +15,15 @@ interface RowProps {
   session: Session
   onViewDetails: (id: string) => void
   onReschedule?: (id: string) => void
-  onCancel?: (id: string) => void
 }
 
-export function SessionTableRow({ session, onViewDetails, onReschedule, onCancel }: RowProps) {
-  const isCompletedActionLayout = ['Completed', 'Settled', 'Disputed', 'Missed'].includes(session.state)
+const formatSessionId = (id: string) => {
+  if (id.length <= 12) return id
+  return `${id.slice(0, 8)}...${id.slice(-4)}`
+}
 
-  const stateStyles: Record<Session['state'], string> = {
-    Completed: 'bg-[#e7f6ec] text-[#0f973d]',
-    Unconfirmed: 'bg-[#fff4e5] text-[#f59e0b]',
-    Scheduled: 'bg-[#eff8ff] text-[#175cd3]',
-    Settled: 'bg-[#e7f6ec] text-[#0f973d]',
-    Disputed: 'bg-[#fef3f2] text-[#d92d20]',
-    Missed: 'bg-[#f2f4f7] text-[#475467]',
-  }
-
-  const typeStyles: Record<string, string> = {
-    'Free Trial': 'border-[#fde68a] bg-[#fffbeb] text-[#d97706]',
-    'One Time': 'border-gray-200 bg-white text-gray-600',
-    Monthly: 'border-gray-200 bg-white text-gray-600',
-    '4hr': 'border-gray-200 bg-white text-gray-600',
-  }
+export function SessionTableRow({ session, onViewDetails, onReschedule }: RowProps) {
+  const isClientConfirmed = session.clientConf === 'Yes'
 
   const confStyle = (val: string) => {
     if (val === 'Yes') return 'bg-[#e7f6ec] text-[#0f973d]'
@@ -51,7 +39,9 @@ export function SessionTableRow({ session, onViewDetails, onReschedule, onCancel
 
   return (
     <tr className='border-b border-gray-100 hover:bg-gray-50/50 transition-colors text-xs text-[#111111]'>
-      <td className='py-3.5 px-4 text-[11px] font-medium text-gray-400'>#{session.id}</td>
+      <td className='py-3.5 px-4 text-[11px] font-medium text-gray-400'>
+        <span title={`#${session.id}`}>#{formatSessionId(session.id)}</span>
+      </td>
 
       <td className='py-3.5 px-4'>
         <div className='flex items-center gap-2'>
@@ -99,37 +89,19 @@ export function SessionTableRow({ session, onViewDetails, onReschedule, onCancel
         </div>
       </td>
 
-      <td className='py-3.5 px-4'>
-        <span className={`inline-flex items-center justify-center rounded-md border px-2 py-0.5 font-medium text-[11px] ${typeStyles[session.type] ?? 'border-gray-200 bg-white text-gray-600'}`}>
-          {session.type}
-        </span>
+      <td className='py-3.5 px-4 text-[11px] font-medium text-gray-600'>
+        {session.scheduled}
       </td>
-
-      <td className='py-3.5 px-4 text-[11px] font-medium text-gray-600'>{session.scheduled}</td>
-      <td className='py-3.5 px-4 text-[11px] font-medium text-gray-400'>{session.duration}</td>
-      <td className='py-3.5 px-4 text-[11px] font-semibold text-gray-900'>${session.amount}</td>
+      <td className='py-3.5 px-4 text-[11px] font-medium text-gray-400'>
+        {session.duration}
+      </td>
 
       <td className='py-3.5 px-4'>
         <span className={`inline-flex items-center gap-1.5 font-semibold px-2 py-0.5 rounded-full text-[11px] ${confStyle(session.clientConf)}`}>
           {session.clientConf !== 'N/A' && (
             <span className={`h-1.5 w-1.5 rounded-full ${dotStyle(session.clientConf)}`} />
           )}
-          {session.clientConf === 'Yes' ? 'Confirmed' : session.clientConf}
-        </span>
-      </td>
-
-      <td className='py-3.5 px-4'>
-        <span className={`inline-flex items-center gap-1.5 font-semibold px-2 py-0.5 rounded-full text-[11px] ${confStyle(session.trainerConf)}`}>
-          {session.trainerConf !== 'N/A' && (
-            <span className={`h-1.5 w-1.5 rounded-full ${dotStyle(session.trainerConf)}`} />
-          )}
-          {session.trainerConf === 'Yes' ? 'Confirmed' : session.trainerConf}
-        </span>
-      </td>
-
-      <td className='py-3.5 px-4'>
-        <span className={`inline-flex items-center justify-center rounded-lg px-2.5 py-0.5 text-[11px] font-bold ${stateStyles[session.state]}`}>
-          {session.state}
+          {session.clientConf}
         </span>
       </td>
 
@@ -147,7 +119,7 @@ export function SessionTableRow({ session, onViewDetails, onReschedule, onCancel
             align='end'
             className='w-40 rounded-xl p-1.5 border border-gray-100 shadow-xl bg-white z-50'
           >
-            {isCompletedActionLayout ? (
+            {isClientConfirmed ? (
               <DropdownMenuItem
                 onClick={() => onViewDetails(session.id)}
                 className='rounded-lg px-3 py-2 text-xs font-semibold text-white bg-[#0b4d8d] cursor-pointer focus:bg-[#0b4d8d] focus:text-white'
@@ -167,12 +139,6 @@ export function SessionTableRow({ session, onViewDetails, onReschedule, onCancel
                   className='rounded-lg px-3 py-2 text-xs font-semibold text-gray-600 cursor-pointer hover:bg-gray-50 focus:bg-gray-50'
                 >
                   Reschedule
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => onCancel?.(session.id)}
-                  className='rounded-lg px-3 py-2 text-xs font-semibold text-red-600 cursor-pointer hover:bg-red-50 focus:bg-red-50 focus:text-red-700'
-                >
-                  Cancel session
                 </DropdownMenuItem>
               </>
             )}
