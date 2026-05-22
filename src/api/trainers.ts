@@ -6,6 +6,7 @@ import {
   getRequest,
   patchFormRequest,
   patchRequest,
+  postRequest,
   uploadRequest,
 } from '~/lib/http';
 import { displayError, showSuccessToast } from '~/lib/utils';
@@ -184,6 +185,17 @@ export function useDeleteTrainer() {
     onError(error) {
       displayError(error);
     },
+  });
+}
+
+export function useSetPassword() {
+  return useMutation({
+    mutationFn: (payload: { token: string; new_password: string }) =>
+      postRequest<{ message: string }, { token: string; new_password: string }>({
+        url: API_ENDPOINTS.TRAINERS.SET_PASSWORD,
+        payload,
+      }),
+    mutationKey: ['set-password'],
   });
 }
 
