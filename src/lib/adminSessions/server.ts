@@ -44,6 +44,12 @@ const getAdminSessionsUrls = (page: number, limit: number) =>
     return paths.map((path) => buildUrl(baseUrl, path, page, limit))
   })
 
+const sanitizeLogSnippet = (body: string) =>
+  body
+    .slice(0, 300)
+    .replace(/("(?:access|refresh|session)_token"\s*:\s*")[^"]+/gi, '$1[REDACTED]')
+    .replace(/(Bearer\s+)[\w.-]+/gi, '$1[REDACTED]')
+
 const refreshSessionToken = async (refreshToken: string, expiredAccessToken?: string | null) => {
   const refreshUrls = getBaseUrls().flatMap((baseUrl) => {
     if (baseUrl.endsWith('/api/v1')) return [`${baseUrl}/auth/refresh`]
@@ -52,17 +58,24 @@ const refreshSessionToken = async (refreshToken: string, expiredAccessToken?: st
 
   for (const url of refreshUrls) {
     console.debug('[adminSessions] trying refresh URL:', url)
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${refreshToken}`,
-      },
-      body: JSON.stringify({ access_token: expiredAccessToken ?? '' }),
-      cache: 'no-store',
-    })
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${refreshToken}`,
+        },
+        body: JSON.stringify({ access_token: expiredAccessToken ?? '' }),
+        cache: 'no-store',
+      })
 
-    if (res.ok) return res.json()
+      if (res.ok) return res.json()
+    } catch (error) {
+      console.warn('[adminSessions] refresh URL failed', {
+        url,
+        error: error instanceof Error ? error.message : 'Unknown network error',
+      })
+    }
   }
 
   return null
@@ -75,13 +88,6 @@ const storeSessionToken = (
 ) => {
   cookieStore.set('session_token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge,
-  })
-  cookieStore.set('access_token', token, {
-    httpOnly: false,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     path: '/',
@@ -120,17 +126,24 @@ export async function fetchAdminSessionsFromBackend(page = 1, limit = 100): Prom
 
     for (const url of getAdminSessionsUrls(page, limit)) {
       console.debug('[adminSessions] trying sessions URL:', url)
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        cache: 'no-store',
-      })
+      try {
+        const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          cache: 'no-store',
+        })
 
-      lastResponse = response
-      if (response.ok || response.status !== 404) return response
+        lastResponse = response
+        if (response.ok || response.status !== 404) return response
+      } catch (error) {
+        console.warn('[adminSessions] sessions URL failed', {
+          url,
+          error: error instanceof Error ? error.message : 'Unknown network error',
+        })
+      }
     }
 
     return lastResponse
@@ -159,7 +172,7 @@ export async function fetchAdminSessionsFromBackend(page = 1, limit = 100): Prom
       console.error('[adminSessions] fetch failed', {
         status: res?.status,
         url: res?.url,
-        body: bodyText,
+        bodySnippet: sanitizeLogSnippet(bodyText),
       })
     } catch (e) {
       console.error('[adminSessions] failed reading error body', e)
@@ -169,7 +182,7 @@ export async function fetchAdminSessionsFromBackend(page = 1, limit = 100): Prom
       `Failed to fetch admin sessions: ${res?.status ?? 'no response'}`,
       res?.status ?? 500,
       res?.url,
-      res ? await res.clone().text().catch(() => '') : ''
+      res ? sanitizeLogSnippet(await res.clone().text().catch(() => '')) : ''
     )
   }
 

@@ -9,4 +9,10 @@ export interface Session {
   clientConf: 'Yes' | 'Pending' | 'N/A'
   trainerConf: 'Yes' | 'Pending' | 'N/A'
   state: 'Completed' | 'Unconfirmed' | 'Scheduled' | 'Settled' | 'Disputed' | 'Missed'
+  forceConfirmation?: {
+    behalf: 'client' | 'trainer' | 'both'
+    reason: string
+    notes?: string
+    confirmedAt: string
+  }
 }

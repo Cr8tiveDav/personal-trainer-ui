@@ -8,7 +8,6 @@ interface DrawerProps {
   onClose: () => void
   session: Session | null
   onReschedule?: (id: string) => void
-  onCancel?: (id: string) => void
 }
 
 const formatSessionId = (id: string) => {
@@ -16,7 +15,7 @@ const formatSessionId = (id: string) => {
   return `${id.slice(0, 8)}...${id.slice(-4)}`
 }
 
-export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule, onCancel }: DrawerProps) {
+export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }: DrawerProps) {
   if (!isOpen || !session) return null
 
   const isCompletedLayout = ['Completed', 'Settled', 'Disputed', 'Missed'].includes(session.state)
@@ -101,13 +100,6 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule, o
               className='px-4 h-9 rounded-lg border border-orange-200 bg-white text-xs font-semibold text-orange-600 hover:bg-orange-50/50 transition-colors'
             >
               Reschedule
-            </button>
-            <button
-              type='button'
-              onClick={() => onCancel?.(session.id)}
-              className='px-4 h-9 rounded-lg border border-red-200 bg-white text-xs font-semibold text-red-600 hover:bg-red-50/50 transition-colors'
-            >
-              Cancel Session
             </button>
           </div>
         )}

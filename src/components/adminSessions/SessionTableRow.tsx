@@ -15,7 +15,6 @@ interface RowProps {
   session: Session
   onViewDetails: (id: string) => void
   onReschedule?: (id: string) => void
-  onCancel?: (id: string) => void
 }
 
 const formatSessionId = (id: string) => {
@@ -23,7 +22,7 @@ const formatSessionId = (id: string) => {
   return `${id.slice(0, 8)}...${id.slice(-4)}`
 }
 
-export function SessionTableRow({ session, onViewDetails, onReschedule, onCancel }: RowProps) {
+export function SessionTableRow({ session, onViewDetails, onReschedule }: RowProps) {
   const isClientConfirmed = session.clientConf === 'Yes'
 
   const confStyle = (val: string) => {
@@ -140,12 +139,6 @@ export function SessionTableRow({ session, onViewDetails, onReschedule, onCancel
                   className='rounded-lg px-3 py-2 text-xs font-semibold text-gray-600 cursor-pointer hover:bg-gray-50 focus:bg-gray-50'
                 >
                   Reschedule
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => onCancel?.(session.id)}
-                  className='rounded-lg px-3 py-2 text-xs font-semibold text-red-600 cursor-pointer hover:bg-red-50 focus:bg-red-50 focus:text-red-700'
-                >
-                  Cancel session
                 </DropdownMenuItem>
               </>
             )}

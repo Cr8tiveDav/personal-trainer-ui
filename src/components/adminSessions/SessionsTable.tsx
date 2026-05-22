@@ -27,7 +27,6 @@ interface TableProps {
   onMarkMissed?: (id: string) => void
   onSelectDetails: (id: string) => void
   onSelectReschedule: (id: string) => void
-  onSelectCancel: (id: string) => void
 }
 
 const formatSessionId = (id: string) => {
@@ -49,8 +48,7 @@ export function SessionsTable({
   onForceConfirm,
   onMarkMissed,
   onSelectDetails,
-  onSelectReschedule,
-  onSelectCancel
+  onSelectReschedule
 }: TableProps) {
   const emptyMessage = isFiltered
     ? 'No matching sessions found.'
@@ -66,20 +64,19 @@ export function SessionsTable({
     : 'Sessions booked by clients will appear here once they are available.'
   const startResult = totalSessions === 0 ? 0 : (currentPage - 1) * pageSize + 1
   const endResult = Math.min(currentPage * pageSize, totalSessions)
-  const visiblePages = Array.from({ length: Math.min(totalPages, 5) }, (_, index) => index + 1)
+  const maxVisiblePages = 5
+  const halfVisiblePages = Math.floor(maxVisiblePages / 2)
+  const pageWindowStart = Math.max(
+    1,
+    Math.min(currentPage - halfVisiblePages, totalPages - maxVisiblePages + 1)
+  )
+  const visiblePages = Array.from(
+    { length: Math.min(totalPages, maxVisiblePages) },
+    (_, index) => pageWindowStart + index
+  )
   const isConfirmationQueue = variant === 'confirmation'
   const tableColSpan = isConfirmationQueue ? 7 : 7
-
-  const getOverdueLabel = (session: Session, index: number) => {
-    const mockOverdueById: Record<string, string> = {
-      'S-0900': '2h',
-      'S-0899': '26h',
-      'S-0895': '48h',
-      'S-0894': '52h',
-    }
-
-    return mockOverdueById[session.id] ?? `${Math.max(2, (currentPage - 1) * pageSize + index + 1) * 2}h`
-  }
+  const shouldShowLoadingPlaceholder = isLoading && sessions.length === 0
 
   const renderPerson = (person: Session['client'], fallbackClassName: string) => (
     <div className='flex items-center gap-2'>
@@ -149,14 +146,14 @@ export function SessionsTable({
             </tr>
           </thead>
           <tbody className='divide-y divide-gray-100'>
-            {isLoading ? (
+            {shouldShowLoadingPlaceholder ? (
               <tr>
                 <td colSpan={tableColSpan} className='px-4 py-10 text-center text-xs font-medium text-gray-400'>
                   Loading sessions...
                 </td>
               </tr>
             ) : sessions.length > 0 ? (
-              sessions.map((session, index) => (
+              sessions.map((session) => (
                 isConfirmationQueue ? (
                   <tr key={session.id} className='border-b border-gray-100 hover:bg-gray-50/50 transition-colors text-xs text-[#111111]'>
                     <td className='py-5 px-4 text-xs font-medium text-gray-900'>
@@ -173,7 +170,7 @@ export function SessionsTable({
                         {session.clientConf}
                       </span>
                     </td>
-                    <td className='py-5 px-4 text-xs font-medium text-gray-900'>{getOverdueLabel(session, index)}</td>
+                    <td className='py-5 px-4 text-xs font-medium text-gray-400'>-</td>
                     <td className='py-5 px-4 text-right'>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -210,7 +207,6 @@ export function SessionsTable({
                     session={session}
                     onViewDetails={onSelectDetails}
                     onReschedule={onSelectReschedule}
-                    onCancel={onSelectCancel}
                   />
                 )
               ))
@@ -233,7 +229,7 @@ export function SessionsTable({
         </table>
       </div>
 
-      {!isLoading && totalSessions > 0 && (
+      {!shouldShowLoadingPlaceholder && totalSessions > 0 && (
         <div className='flex flex-col items-center gap-3 border-t border-gray-100 px-4 py-6'>
           <div className='flex items-center gap-3'>
             <button

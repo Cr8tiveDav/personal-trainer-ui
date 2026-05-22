@@ -7,7 +7,13 @@ import { Session } from '../session'
 interface ForceConfirmSessionModalProps {
   session: Session | null
   onClose: () => void
-  onConfirm: (sessionId: string) => void
+  onConfirm: (sessionId: string, context: ForceConfirmContext) => void
+}
+
+export interface ForceConfirmContext {
+  behalf: (typeof behalfOptions)[number]['key']
+  reason: string
+  notes?: string
 }
 
 const behalfOptions = [
@@ -47,8 +53,11 @@ export function ForceConfirmSessionModal({ session, onClose, onConfirm }: ForceC
   if (!session) return null
 
   const handleConfirm = () => {
-    void [behalf, reason, notes]
-    onConfirm(session.id)
+    onConfirm(session.id, {
+      behalf,
+      reason,
+      notes: notes.trim() || undefined,
+    })
   }
 
   const typeStyles: Record<string, string> = {

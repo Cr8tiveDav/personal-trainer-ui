@@ -137,7 +137,15 @@ const formatDuration = (session: SessionLike) => {
     'sessionDuration',
   ])
 
-  if (typeof duration === 'string' && duration.trim()) return duration
+  if (typeof duration === 'string' && duration.trim()) {
+    const numericDuration = Number(duration)
+    if (Number.isFinite(numericDuration)) {
+      if (numericDuration % 60 === 0) return `${numericDuration / 60}hr`
+      return `${numericDuration}mins`
+    }
+
+    return duration
+  }
   if (typeof duration === 'number' && Number.isFinite(duration)) {
     if (duration % 60 === 0) return `${duration / 60}hr`
     return `${duration}mins`

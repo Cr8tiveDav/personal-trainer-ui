@@ -48,25 +48,11 @@ interface LogSessionFormProps {
   onSubmit: (session: Session) => void
 }
 
-const uniquePeople = (sessions: Session[], selector: (session: Session) => Session['client']) => {
-  const people = new Map<string, Session['client']>()
-
-  sessions.forEach((session) => {
-    const person = selector(session)
-    if (!people.has(person.name)) people.set(person.name, person)
-  })
-
-  return Array.from(people.values())
-}
-
-const clients = uniquePeople([], (session) => session.client)
-const trainers = uniquePeople([], (session) => session.trainer)
-
 const findClient = (name: string) =>
-  clients.find((client) => client.name === name) ?? { name, country: 'N/A' }
+  ({ name, country: 'N/A' })
 
 const findTrainer = (name: string) =>
-  trainers.find((trainer) => trainer.name === name) ?? { name, country: 'N/A' }
+  ({ name, country: 'N/A' })
 
 const formatScheduled = (dateValue: string, timeValue: string) => {
   const date = new Date(`${dateValue}T00:00:00`)
@@ -135,20 +121,13 @@ export function LogSessionForm({ onCancel, onSubmit }: LogSessionFormProps) {
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Client <span className='text-red-500'>*</span></FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}>
-                        <SelectValue placeholder='Select client' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {clients.map((client) => (
-                        <SelectItem key={client.name} value={client.name}>
-                          {client.name} ({client.country})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input
+                      placeholder='Enter client name'
+                      className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -160,20 +139,13 @@ export function LogSessionForm({ onCancel, onSubmit }: LogSessionFormProps) {
               render={({ field, fieldState }) => (
                 <FormItem>
                   <FormLabel>Trainer <span className='text-red-500'>*</span></FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}>
-                        <SelectValue placeholder='Select trainer' />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {trainers.map((trainer) => (
-                        <SelectItem key={trainer.name} value={trainer.name}>
-                          {trainer.name} ({trainer.country})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <Input
+                      placeholder='Enter trainer name'
+                      className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
+                      {...field}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

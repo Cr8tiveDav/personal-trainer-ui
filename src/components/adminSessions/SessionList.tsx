@@ -5,7 +5,7 @@ import { Search, ChevronDown } from 'lucide-react'
 import { useAdminSessions } from '@/hooks/adminSessions/useAdminSessions'
 import { SessionsTable } from './SessionsTable'
 import { SessionDetailsDrawer } from './modals/SessionDetails'
-import { ForceConfirmSessionModal } from './modals/ForceConfirmSession'
+import { ForceConfirmContext, ForceConfirmSessionModal } from './modals/ForceConfirmSession'
 import { RescheduleSessionModal } from './modals/Reschecdule'
 import { Session } from './session'
 
@@ -88,10 +88,6 @@ export default function SessionsList({
     }
   }
 
-  const handleCancelSession = (_id: string) => {
-    void _id
-  }
-
   const formatRescheduledTime = (newDate: string, newTime: string) => {
     const date = new Date(`${newDate}T00:00:00`)
     const formattedDate = Number.isNaN(date.getTime())
@@ -111,11 +107,15 @@ export default function SessionsList({
     })
   }
 
-  const handleForceConfirmSession = (sessionId: string) => {
+  const handleForceConfirmSession = (sessionId: string, context: ForceConfirmContext) => {
     onUpdateSession(sessionId, {
       state: 'Completed',
       clientConf: 'Yes',
       trainerConf: 'Yes',
+      forceConfirmation: {
+        ...context,
+        confirmedAt: new Date().toISOString(),
+      },
     })
     setForceConfirmSession(null)
   }
@@ -265,7 +265,6 @@ export default function SessionsList({
             onMarkMissed={(id) => onUpdateSession(id, { state: 'Missed' })}
             onSelectDetails={handleOpenDetails}
             onSelectReschedule={handleOpenReschedule}
-            onSelectCancel={handleCancelSession}
           />
         </div>
       </div>
@@ -278,7 +277,6 @@ export default function SessionsList({
           setIsDetailsOpen(false)
           handleOpenReschedule(id)
         }}
-        onCancel={handleCancelSession}
       />
 
       <RescheduleSessionModal
