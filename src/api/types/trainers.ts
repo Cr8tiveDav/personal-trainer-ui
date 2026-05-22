@@ -61,7 +61,6 @@ export type CreateTrainerResponse = ApiEnvelope<BackendTrainerResponse>;
 
 export const TRAINER_ONBOARDING_STATUSES = [
   'pending',
-  'active',
   'approved',
   'suspended',
 ] as const;
