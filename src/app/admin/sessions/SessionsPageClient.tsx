@@ -2,12 +2,17 @@
 
 import { useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
+import { useAdminSessions } from '@/api/sessions'
 import { LogSessionForm } from '@/components/adminSessions/LogSessionForm'
 import SessionsList from '@/components/adminSessions/SessionList'
-import { SessionsStatsSection } from '@/components/adminSessions/SessionsStatCard'
+import { SessionsPageSkeleton } from '@/components/adminSessions/SessionsPageSkeleton'
+// import { SessionsStatsSection } from '@/components/adminSessions/SessionsStatCard'
 import { Session } from '@/components/adminSessions/session'
 
 export function SessionsPageClient() {
+  const { data, isLoading } = useAdminSessions()
+  const showSkeleton = isLoading && !data
+
   const [isLoggingSession, setIsLoggingSession] = useState(false)
   const [loggedSessions, setLoggedSessions] = useState<Session[]>([])
   const [sessionUpdates, setSessionUpdates] = useState<Record<string, Partial<Session>>>({})
@@ -46,20 +51,24 @@ export function SessionsPageClient() {
 
   return (
     <div className='w-full space-y-6 px-4 lg:px-10 pb-6'>
-      <SessionsStatsSection />
-      <SessionsList
-        loggedSessions={loggedSessions}
-        sessionUpdates={sessionUpdates}
-        onUpdateSession={(sessionId, updates) => {
-          setSessionUpdates((current) => ({
-            ...current,
-            [sessionId]: {
-              ...current[sessionId],
-              ...updates,
-            },
-          }))
-        }}
-      />
+      {/* <SessionsStatsSection /> */}
+      {showSkeleton ? (
+        <SessionsPageSkeleton />
+      ) : (
+        <SessionsList
+          loggedSessions={loggedSessions}
+          sessionUpdates={sessionUpdates}
+          onUpdateSession={(sessionId, updates) => {
+            setSessionUpdates((current) => ({
+              ...current,
+              [sessionId]: {
+                ...current[sessionId],
+                ...updates,
+              },
+            }))
+          }}
+        />
+      )}
     </div>
   )
 }

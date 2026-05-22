@@ -1,13 +1,34 @@
-import React from 'react';
-import Image from 'next/image';
+'use client';
+
 import { Trainer } from '../../types';
 import StatCard from '../../analytics/StatCard';
+import { useTrainerSessions } from '@/api/sessions';
 
 interface OverviewTabProps {
   trainer: Trainer;
 }
 
-const OverviewTab: React.FC<OverviewTabProps> = ({ trainer }) => {
+const OverviewTab = ({ trainer }: OverviewTabProps) => {
+  const { data: sessions = [], isLoading: sessionsLoading } = useTrainerSessions(
+    trainer.id,
+  );
+
+  const sessionCount = sessionsLoading
+    ? '—'
+    : sessions.length > 0
+      ? sessions.length
+      : (trainer.sessions ?? 0);
+
+  const earningsDisplay =
+    trainer.earnings > 0
+      ? `$${trainer.earnings.toLocaleString()}`
+      : '$0';
+
+  const ratingDisplay =
+    trainer.averageRating && trainer.averageRating > 0
+      ? trainer.averageRating.toFixed(1)
+      : '0';
+
   return (
     <div className='flex flex-col gap-8'>
       {/* About Section */}
@@ -24,20 +45,20 @@ const OverviewTab: React.FC<OverviewTabProps> = ({ trainer }) => {
       <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
         <StatCard
           title='Sessions'
-          value={0}
-          icon={'/images/admin-dashboard/icons/barbell.svg'}
+          value={sessionCount}
+          icon='/images/admin-dashboard/icons/barbell.svg'
         />
 
         <StatCard
           title='Earnings'
-          value='$0'
-          icon={'/images/admin-dashboard/icons/currency-dollar.svg'}
+          value={earningsDisplay}
+          icon='/images/admin-dashboard/icons/currency-dollar.svg'
         />
 
         <StatCard
           title='Ratings'
-          value='0'
-          icon={'/images/admin-dashboard/icons/star-gray.svg'}
+          value={ratingDisplay}
+          icon='/images/admin-dashboard/icons/star-gray.svg'
         />
 
         <StatCard

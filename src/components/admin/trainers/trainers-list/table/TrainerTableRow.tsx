@@ -6,7 +6,6 @@ import StatusBadge from './StatusBadge';
 import { Trainer } from '../../types';
 import { cn } from '@/utils';
 import { TruncateEmail } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
 import { TrainerTableActions } from './TrainerTableActions';
 
 interface TrainerTableRowProps {
@@ -51,8 +50,6 @@ function formatName(name: string) {
 }
 
 const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
-  const router = useRouter();
-
   let availabilityColor = 'bg-[#D9D9D9]';
   if (trainer.availability === 'Available') availabilityColor = 'bg-[#14561C]';
   if (trainer.availability === 'Busy') availabilityColor = 'bg-[#A86908]';
@@ -64,8 +61,7 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
       animate='visible'
       exit='exit'
       custom={index}
-      onClick={() => router.push(`/admin/trainers/${trainer.id}`)}
-      className='group border-b border-gray-100 cursor-pointer'
+      className='group border-b border-gray-100'
     >
       <td className='py-4 px-6 transition-colors group-hover:bg-gray-50/80'>
         <div className='flex items-center gap-3'>
@@ -127,10 +123,7 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
       <td className='py-4 px-6 transition-colors group-hover:bg-gray-50/80'>
         <span className='text-sm text-gray-500'>{trainer.dateAdded}</span>
       </td>
-      <td
-        className='py-4 px-6 transition-colors group-hover:bg-gray-50/80'
-        onClick={(e) => e.stopPropagation()}
-      >
+      <td className='py-4 px-6 transition-colors group-hover:bg-gray-50/80'>
         <TrainerTableActions trainer={trainer} />
       </td>
     </motion.tr>
