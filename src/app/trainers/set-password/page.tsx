@@ -10,7 +10,7 @@ export default async function SetPasswordPage({ searchParams }: Props) {
 
   // Token must be present — it comes from the invite deep link email
   if (!token) {
-    notFound()
+    return notFound()
   }
 
   return <SetPassword token={token} />

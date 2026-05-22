@@ -195,7 +195,7 @@ export function useSetPassword() {
         url: API_ENDPOINTS.TRAINERS.SET_PASSWORD,
         payload,
       }),
-    mutationKey: ["set-password"],
+    mutationKey: ['set-password'],
     onError(error) {
       displayError(error);
     },
