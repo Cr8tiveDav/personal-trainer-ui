@@ -16,8 +16,14 @@ export const API_ENDPOINTS = {
     CREATE: "/trainers",
     DETAIL: (id: string) => `/trainers/${id}`,
     RANKINGS: "/trainers/rankings",
+    SET_PASSWORD: "/trainers/set-password",
+    SESSIONS: "/trainers/sessions",
     ME_AVAILABILITY: "/trainers/me/availability",
     AVAILABILITY: (id: string) => `/trainers/${id}/availability`,
+    IMAGES: (id: string) => `/trainers/${id}/images`,
+    IMAGE: (id: string, imageId: string) => `/trainers/${id}/images/${imageId}`,
+    INTRO_VIDEO: (id: string) => `/trainers/${id}/intro-video`,
+    INTRO_VIDEO_STREAM: (id: string) => `/trainers/${id}/intro-video/stream`,
   },
 
   WAITLIST: {

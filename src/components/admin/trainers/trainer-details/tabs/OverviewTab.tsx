@@ -3,6 +3,10 @@
 import { Trainer } from '../../types';
 import StatCard from '../../analytics/StatCard';
 import { useTrainerSessions } from '@/api/sessions';
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState';
 
 interface OverviewTabProps {
   trainer: Trainer;
@@ -75,15 +79,15 @@ const OverviewTab = ({ trainer }: OverviewTabProps) => {
             Recent activity
           </h3>
         </div>
-        <table className='w-full text-left'>
-          <tbody className='divide-y divide-[#EBEBEB] border-t border-[#EBEBEB]'>
-            <tr>
-              <td colSpan={2} className='py-8 text-center text-gray-500'>
-                No recent activity found.
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className='border-t border-[#EBEBEB]'>
+          <EmptyState
+            imageSrc={EMPTY_STATE_IMAGE_PATHS.income}
+            imageAlt='No recent activity'
+            title='No recent activity yet'
+            description='Session bookings and updates will show up here once this trainer starts working with clients.'
+            className='min-h-[220px] py-10'
+          />
+        </div>
       </div>
     </div>
   );
