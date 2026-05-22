@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { cn } from '@/utils'
 import type { AvailabilitySlot } from '@/api/availability'
 import { EditAvailabilityDayModal } from '@/components/availability/EditAvailabilityDayModal'
@@ -266,15 +266,6 @@ export function AvailabilityScheduleView({
   const [editOpen, setEditOpen] = useState(false)
   const [editRow, setEditRow] = useState<WeekDayRow | null>(null)
   const [editSlot, setEditSlot] = useState<AvailabilitySlot | undefined>()
-  const [pendingClose, setPendingClose] = useState(false)
-
-  useEffect(() => {
-    if (pendingClose && !isSaving) {
-      setEditOpen(false)
-      setPendingClose(false)
-    }
-  }, [isSaving, pendingClose])
-
   function openDayEditor(row: WeekDayRow, slot?: AvailabilitySlot) {
     setEditRow(row)
     setEditSlot(slot)
@@ -286,8 +277,8 @@ export function AvailabilityScheduleView({
   ) {
     if (!editRow || !onUpdate) return
     const merged = mergeDayIntoSchedule(slots, editRow.dayOfWeek, next, timezone)
-    setPendingClose(true)
     onUpdate(merged)
+    setEditOpen(false)
   }
 
   return (

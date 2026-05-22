@@ -105,7 +105,8 @@ export function useUpdateTrainer(trainerId: string) {
         return response.data;
       }
 
-      const { display_picture_file: _file, ...payload } = input;
+      const { display_picture_file, ...payload } = input;
+      void display_picture_file;
       const response = await patchRequest<
         UpdateTrainerResponse,
         UpdateTrainerPayload

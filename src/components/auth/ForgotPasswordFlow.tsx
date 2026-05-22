@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Asterisk, ArrowLeft, Eye, EyeOff } from 'lucide-react'
@@ -58,14 +58,6 @@ export function ForgotPasswordFlow() {
       confirmPassword: '',
     },
   })
-
-  const watchedPassword = resetForm.watch('new_password')
-  const watchedConfirm = resetForm.watch('confirmPassword')
-
-  useEffect(() => {
-    if (!watchedConfirm) return
-    void resetForm.trigger('confirmPassword')
-  }, [watchedPassword, watchedConfirm])
 
   function onRequestCode(values: z.infer<typeof ForgotPasswordEmailSchema>) {
     forgotPassword.mutate(
@@ -313,6 +305,12 @@ export function ForgotPasswordFlow() {
                                 disabled={resetPassword.isPending}
                                 placeholder='Enter new password'
                                 {...field}
+                                onChange={(e) => {
+                                  field.onChange(e)
+                                  if (resetForm.getValues('confirmPassword')) {
+                                    void resetForm.trigger('confirmPassword')
+                                  }
+                                }}
                                 className={cn(
                                   'login-input h-[44px] pr-10 text-sm sm:text-base',
                                   resetForm.formState.errors.new_password &&

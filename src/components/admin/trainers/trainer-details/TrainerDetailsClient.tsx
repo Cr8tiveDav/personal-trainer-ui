@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { useTrainerById } from "@/api/trainers";
@@ -32,16 +32,14 @@ const TrainerDetailsClient = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = params.id as string;
-  const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const [userTab, setUserTab] = useState<TabType | null>(null);
 
   const { data, isLoading, isError } = useTrainerById(id);
 
-  useEffect(() => {
-    const tabParam = searchParams.get("tab");
-    if (tabParam && TAB_FROM_QUERY[tabParam]) {
-      setActiveTab(TAB_FROM_QUERY[tabParam]);
-    }
-  }, [searchParams]);
+  const tabParam = searchParams.get("tab");
+  const queryTab =
+    tabParam && TAB_FROM_QUERY[tabParam] ? TAB_FROM_QUERY[tabParam] : null;
+  const activeTab = userTab ?? queryTab ?? "overview";
 
   if (isLoading) {
     return <TrainerDetailsSkeleton />;
@@ -84,7 +82,7 @@ const TrainerDetailsClient = () => {
       </div>
 
       <div className="w-full mt-8">
-        <TrainerTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        <TrainerTabs activeTab={activeTab} onTabChange={setUserTab} />
 
         <div className="mt-6">
           {activeTab === "overview" && <OverviewTab trainer={trainer} />}

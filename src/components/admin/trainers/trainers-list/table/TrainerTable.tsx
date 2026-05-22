@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import TrainerTableRow from './TrainerTableRow';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -15,29 +15,21 @@ interface TrainerTableProps {
   listKey?: string;
 }
 
-const TrainerTable = ({
+type TrainerTableBodyProps = Omit<TrainerTableProps, 'listKey'>;
+
+function TrainerTableBody({
   trainers,
   isLoading,
   isError,
-  listKey = 'default',
-}: TrainerTableProps) => {
+}: TrainerTableBodyProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 10;
 
   const totalPages = Math.max(1, Math.ceil((trainers?.length || 0) / limit));
-  const rowsAnimationKey = `${listKey}-page-${currentPage}`;
+  const displayPage = Math.min(currentPage, totalPages);
+  const rowsAnimationKey = `page-${displayPage}`;
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [listKey]);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [currentPage, totalPages]);
-
-  const startIndex = (currentPage - 1) * limit;
+  const startIndex = (displayPage - 1) * limit;
   const endIndex = startIndex + limit;
   const currentTrainers = trainers?.slice(startIndex, endIndex);
 
@@ -45,10 +37,10 @@ const TrainerTable = ({
     if (totalPages <= 5) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
-    if (currentPage <= 3) {
+    if (displayPage <= 3) {
       return [1, 2, 3, 4, 5, '...'];
     }
-    if (currentPage >= totalPages - 2) {
+    if (displayPage >= totalPages - 2) {
       return [
         '...',
         totalPages - 4,
@@ -58,7 +50,7 @@ const TrainerTable = ({
         totalPages,
       ];
     }
-    return ['...', currentPage - 1, currentPage, currentPage + 1, '...'];
+    return ['...', displayPage - 1, displayPage, displayPage + 1, '...'];
   };
 
   const visiblePages = getVisiblePages();
@@ -157,7 +149,7 @@ const TrainerTable = ({
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-            disabled={currentPage === 1}
+            disabled={displayPage === 1}
             className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-50 transition-colors'
           >
             <ChevronLeft className='h-4 w-4' />
@@ -175,7 +167,7 @@ const TrainerTable = ({
               );
             }
             const page = item as number;
-            const isActive = currentPage === page;
+            const isActive = displayPage === page;
             return (
               <motion.button
                 key={item}
@@ -205,7 +197,7 @@ const TrainerTable = ({
             onClick={() =>
               setCurrentPage((prev) => Math.min(totalPages, prev + 1))
             }
-            disabled={currentPage === totalPages}
+            disabled={displayPage === totalPages}
             className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:opacity-50 transition-colors'
           >
             <ChevronRight className='h-4 w-4' />
@@ -227,6 +219,22 @@ const TrainerTable = ({
         </AnimatePresence>
       </motion.div>
     </motion.div>
+  );
+}
+
+const TrainerTable = ({
+  trainers,
+  isLoading,
+  isError,
+  listKey = 'default',
+}: TrainerTableProps) => {
+  return (
+    <TrainerTableBody
+      key={listKey}
+      trainers={trainers}
+      isLoading={isLoading}
+      isError={isError}
+    />
   );
 };
 

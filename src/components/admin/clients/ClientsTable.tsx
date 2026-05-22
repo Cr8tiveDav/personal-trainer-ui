@@ -1,10 +1,9 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useAdminClients, useAdminUserTrainerCount } from '@/api/clients'
-import type { ClientStatus } from './types'
 import { ClientFilterTabs, type ClientTab } from './ClientFilterTabs'
 import { ClientTableRow } from './ClientTableRow'
 import { ClientTableSkeleton } from './ClientTableSkeleton'
@@ -22,8 +21,6 @@ const TABLE_COLUMNS = [
   'STATUS',
   'ACTIONS',
 ] as const
-
-const COL_SPAN = TABLE_COLUMNS.length
 
 function getInactiveCount(allClientsTotal: number, activeTotal: number) {
   return Math.max(0, allClientsTotal - activeTotal)
@@ -95,21 +92,37 @@ export function ClientsTable() {
   const [activeTab, setActiveTab] = useState<Tab>('All')
   const [search, setSearch] = useState('')
   const listFilter = getListFilter(activeTab)
+
+  const { data: allSummary, isLoading: summaryLoading } = useAdminClients(1, 1)
+  const { data: countData } = useAdminUserTrainerCount()
+
+  const allClientsTotal = allSummary?.meta?.total_count ?? 0
+  const activeTotal = countData?.data?.total_clients ?? 0
+  const summaryMetaTotal = allSummary?.meta?.total_count ?? 0
+  const pagerTotalWithoutSearch = getListTotalCount(
+    activeTab,
+    allClientsTotal,
+    activeTotal,
+    summaryMetaTotal,
+    '',
+    0,
+  )
+  const maxPage = getPaginationPages(pagerTotalWithoutSearch, PER_PAGE)
+  const queryPage =
+    search.trim() || maxPage === 0 ? page : Math.min(page, maxPage)
+
   const { data, isLoading, isError, isFetching } = useAdminClients(
-    page,
+    queryPage,
     PER_PAGE,
     listFilter,
   )
-  const { data: allSummary, isLoading: summaryLoading } = useAdminClients(1, 1)
-  const { data: countData } = useAdminUserTrainerCount()
-  const clients = data?.clients ?? []
+
   const hasListData = data !== undefined
   const showSkeleton = isLoading && !hasListData
   const metaTotal = data?.meta?.total_count ?? 0
-  const allClientsTotal = allSummary?.meta?.total_count ?? 0
-  const activeTotal = countData?.data?.total_clients ?? 0
 
   const filtered = useMemo(() => {
+    const clients = data?.clients ?? []
     return clients.filter((c) => {
       if (activeTab === 'Paused' && c.status !== 'Paused') return false
       const matchesSearch =
@@ -118,7 +131,7 @@ export function ClientsTable() {
         c.email.toLowerCase().includes(search.toLowerCase())
       return matchesSearch
     })
-  }, [clients, activeTab, search])
+  }, [data?.clients, activeTab, search])
 
   const listTotalCount = getListTotalCount(
     activeTab,
@@ -129,19 +142,17 @@ export function ClientsTable() {
     filtered.length,
   )
   const totalPages = getPaginationPages(listTotalCount, PER_PAGE)
+  const displayPage =
+    totalPages > 0 ? Math.min(queryPage, totalPages) : queryPage
   const rangeStart =
-    listTotalCount === 0 ? 0 : (page - 1) * PER_PAGE + 1
+    listTotalCount === 0 ? 0 : (displayPage - 1) * PER_PAGE + 1
   const rangeEnd =
-    listTotalCount === 0 ? 0 : Math.min(page * PER_PAGE, listTotalCount)
-  const visiblePages = getVisiblePages(page, Math.max(totalPages, 1))
+    listTotalCount === 0
+      ? 0
+      : Math.min(displayPage * PER_PAGE, listTotalCount)
+  const visiblePages = getVisiblePages(displayPage, Math.max(totalPages, 1))
 
-  useEffect(() => {
-    if (totalPages > 0 && page > totalPages) {
-      setPage(totalPages)
-    }
-  }, [page, totalPages])
-
-  const rowsAnimationKey = `${activeTab}-${search}-page-${page}`
+  const rowsAnimationKey = `${activeTab}-${search}-page-${displayPage}`
   const resultsLabel =
     listTotalCount === 0
       ? 'Showing 0 results'
@@ -175,12 +186,17 @@ export function ClientsTable() {
     filtered.length > 0
 
   function goToPage(next: number) {
-    if (next < 1 || next > totalPages || next === page) return
+    if (next < 1 || next > totalPages || next === displayPage) return
     setPage(next)
   }
 
   function handleTabChange(tab: Tab) {
     setActiveTab(tab)
+    setPage(1)
+  }
+
+  function handleSearchChange(value: string) {
+    setSearch(value)
     setPage(1)
   }
 
@@ -209,7 +225,7 @@ export function ClientsTable() {
             type='text'
             placeholder='Search by name or email'
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className='w-full rounded-lg border border-gray-200 py-2 pl-9 pr-4 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary'
           />
         </div>
@@ -307,8 +323,8 @@ export function ClientsTable() {
               <motion.button
                 type='button'
                 whileTap={{ scale: 0.95 }}
-                onClick={() => goToPage(page - 1)}
-                disabled={page <= 1 || showSkeleton}
+                onClick={() => goToPage(displayPage - 1)}
+                disabled={displayPage <= 1 || showSkeleton}
                 className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                 aria-label='Previous page'
               >
@@ -327,7 +343,7 @@ export function ClientsTable() {
                   )
                 }
                 const pageNumber = item as number
-                const isActive = page === pageNumber
+                const isActive = displayPage === pageNumber
                 return (
                   <motion.button
                     key={pageNumber}
@@ -361,8 +377,8 @@ export function ClientsTable() {
               <motion.button
                 type='button'
                 whileTap={{ scale: 0.95 }}
-                onClick={() => goToPage(page + 1)}
-                disabled={page >= totalPages || showSkeleton}
+                onClick={() => goToPage(displayPage + 1)}
+                disabled={displayPage >= totalPages || showSkeleton}
                 className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                 aria-label='Next page'
               >

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Image from 'next/image'
 import { ImageIcon, RotateCcw, X } from 'lucide-react'
 import {
@@ -106,35 +106,28 @@ function formToUpdateInput(
   }
 }
 
-export function EditTrainerDialog({
+function EditTrainerDialogForm({
   trainer,
-  open,
   onOpenChange,
-}: EditTrainerDialogProps) {
+}: {
+  trainer: Trainer
+  onOpenChange: (open: boolean) => void
+}) {
   const updateTrainer = useUpdateTrainer(trainer.id)
   const inputRef = useRef<HTMLInputElement>(null)
   const [form, setForm] = useState<FormState>(() => trainerToFormState(trainer))
   const [pictureFile, setPictureFile] = useState<File | null>(null)
   const [pictureError, setPictureError] = useState<string | null>(null)
-  const [filePreview, setFilePreview] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (open) {
-      setForm(trainerToFormState(trainer))
-      setPictureFile(null)
-      setPictureError(null)
-    }
-  }, [open, trainer])
-
-  useEffect(() => {
-    if (!pictureFile) {
-      setFilePreview(null)
-      return
-    }
-    const url = URL.createObjectURL(pictureFile)
-    setFilePreview(url)
-    return () => URL.revokeObjectURL(url)
+  const filePreview = useMemo(() => {
+    if (!pictureFile) return null
+    return URL.createObjectURL(pictureFile)
   }, [pictureFile])
+
+  useEffect(() => {
+    if (!filePreview) return
+    return () => URL.revokeObjectURL(filePreview)
+  }, [filePreview])
 
   const currentPictureUrl = getCurrentPictureUrl(trainer)
   const previewSrc = filePreview ?? currentPictureUrl
@@ -159,19 +152,7 @@ export function EditTrainerDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className='bg-white max-h-[90vh] overflow-y-auto sm:max-w-lg'
-        onClick={(e) => e.stopPropagation()}
-      >
-        <DialogHeader>
-          <DialogTitle>Edit trainer</DialogTitle>
-          <DialogDescription>
-            Update profile details for {trainer.name}.
-          </DialogDescription>
-        </DialogHeader>
-
-        <form onSubmit={handleSubmit} className='space-y-4'>
+    <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
             <label className='block text-sm font-medium text-gray-900 mb-1.5'>
               Specialty
@@ -385,7 +366,34 @@ export function EditTrainerDialog({
               {updateTrainer.isPending ? 'Saving…' : 'Save changes'}
             </Button>
           </DialogFooter>
-        </form>
+    </form>
+  )
+}
+
+export function EditTrainerDialog({
+  trainer,
+  open,
+  onOpenChange,
+}: EditTrainerDialogProps) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent
+        className='bg-white max-h-[90vh] overflow-y-auto sm:max-w-lg'
+        onClick={(e) => e.stopPropagation()}
+      >
+        <DialogHeader>
+          <DialogTitle>Edit trainer</DialogTitle>
+          <DialogDescription>
+            Update profile details for {trainer.name}.
+          </DialogDescription>
+        </DialogHeader>
+        {open ? (
+          <EditTrainerDialogForm
+            key={trainer.id}
+            trainer={trainer}
+            onOpenChange={onOpenChange}
+          />
+        ) : null}
       </DialogContent>
     </Dialog>
   )
