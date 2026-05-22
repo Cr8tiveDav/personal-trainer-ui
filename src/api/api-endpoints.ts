@@ -7,6 +7,8 @@ export const API_ENDPOINTS = {
     ADMIN_LOGIN: "/auth/admin/log-in",
     TRAINER_LOGIN: "/trainers/login",
     REFRESH: "/auth/refresh",
+    FORGOT_PASSWORD: "/auth/forgot-password",
+    RESET_PASSWORD: "/auth/reset-password",
   },
 
   TRAINERS: {
@@ -17,6 +19,7 @@ export const API_ENDPOINTS = {
     SET_PASSWORD: "/trainers/set-password",
     ME_SESSIONS: "/trainers/me/sessions",
     ME_AVAILABILITY: "/trainers/me/availability",
+    AVAILABILITY: (id: string) => `/trainers/${id}/availability`,
   },
 
   WAITLIST: {
@@ -50,5 +53,16 @@ export const API_ENDPOINTS = {
 
   PAYMENTS: {
     LATEST: "/payments/latest",
+  },
+
+  DISCOVERY_SLOTS: {
+    LIST: "/discovery-slots",
+    DETAIL: (id: string) => `/discovery-slots/${id}`,
+  },
+
+  ADMIN: {
+    USER_TRAINER_COUNT: "/admin/user/trainer/count",
+    CLIENTS: "/admin/clients",
+    CLIENT_DETAIL: (id: string) => `/admin/clients/${id}`,
   },
 } as const;

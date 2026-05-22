@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
 import { useTrainerById } from '@/api/trainers';
 import ProfileHeader from './ProfileHeader';
@@ -9,7 +9,9 @@ import QuickDetails from './QuickDetails';
 import TrainerTabs from './TrainerTabs';
 import OverviewTab from './tabs/OverviewTab';
 import SessionsTab from './tabs/SessionsTab';
+import EarningsTab from './tabs/EarningsTab';
 import AvailabilityTab from './tabs/AvailabilityTab';
+import { TrainerDetailsSkeleton } from './TrainerDetailsSkeleton';
 
 export type TabType =
   | 'overview'
@@ -18,20 +20,30 @@ export type TabType =
   | 'media'
   | 'availability';
 
+const TAB_FROM_QUERY: Record<string, TabType> = {
+  overview: 'overview',
+  sessions: 'sessions',
+  earnings: 'earnings',
+  media: 'media',
+  availability: 'availability',
+};
+
 const TrainerDetailsClient = () => {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const id = params.id as string;
-  const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [userTab, setUserTab] = useState<TabType | null>(null);
 
   const { data, isLoading, isError } = useTrainerById(id);
 
+  const tabParam = searchParams.get('tab');
+  const queryTab =
+    tabParam && TAB_FROM_QUERY[tabParam] ? TAB_FROM_QUERY[tabParam] : null;
+  const activeTab = userTab ?? queryTab ?? 'overview';
+
   if (isLoading) {
-    return (
-      <div className='w-full h-64 flex items-center justify-center'>
-        <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-primary'></div>
-      </div>
-    );
+    return <TrainerDetailsSkeleton />;
   }
 
   if (isError || !data?.data) {
@@ -71,22 +83,23 @@ const TrainerDetailsClient = () => {
       </div>
 
       <div className='w-full mt-8'>
-        <TrainerTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        <TrainerTabs activeTab={activeTab} onTabChange={setUserTab} />
 
         <div className='mt-6'>
           {activeTab === 'overview' && <OverviewTab trainer={trainer} />}
-          {activeTab === 'sessions' && <SessionsTab />}
-          {activeTab === 'earnings' && (
-            <div className='py-8 text-center text-gray-500'>
-              Earnings tab content coming soon.
-            </div>
-          )}
+          {activeTab === 'sessions' && <SessionsTab trainerId={trainer.id} />}
+          {activeTab === 'earnings' && <EarningsTab trainerId={trainer.id} />}
           {activeTab === 'media' && (
             <div className='py-8 text-center text-gray-500'>
               Media tab content coming soon.
             </div>
           )}
-          {activeTab === 'availability' && <AvailabilityTab />}
+          {activeTab === 'availability' && (
+            <AvailabilityTab
+              trainerId={trainer.id}
+              enabled={activeTab === 'availability'}
+            />
+          )}
         </div>
       </div>
     </div>

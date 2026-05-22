@@ -27,3 +27,19 @@ export function useSessionStats() {
       }),
   });
 }
+
+export function useTrainerSessions(trainerId: string) {
+  return useQuery({
+    queryKey: ["trainer-sessions", trainerId],
+    queryFn: async () => {
+      // Use query params to fetch sessions for this specific trainer
+      const response = await getRequest<SessionsListResponse>({
+        url: `${API_ENDPOINTS.SESSIONS.LIST}?trainer_id=${trainerId}`,
+      });
+      // Fallback in case response is missing data
+      return Array.isArray(response.data) ? response.data : [];
+    },
+    enabled: !!trainerId,
+    retry: false,
+  });
+}

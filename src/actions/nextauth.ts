@@ -53,7 +53,6 @@ export const googleAuth = async (idToken: string) => {
   }
 
   const data: { data: User; access_token: string } = await res.json();
-  console.log(data, 'action');
 
   return {
     data: data.data,
