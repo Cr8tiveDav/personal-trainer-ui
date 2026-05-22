@@ -4,7 +4,8 @@ import Image from 'next/image';
 import { motion, type Variants } from 'motion/react';
 import StatusBadge from './StatusBadge';
 import { Trainer } from '../../types';
-import { cn, TruncateEmail } from '@/utils';
+import { cn } from '@/utils';
+import { TruncateEmail } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { TrainerTableActions } from './TrainerTableActions';
 
