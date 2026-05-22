@@ -11,6 +11,11 @@ interface RescheduleModalProps {
   onConfirmReschedule: (id: string, newDate: string, newTime: string) => void
 }
 
+const formatSessionId = (id: string) => {
+  if (id.length <= 12) return id
+  return `${id.slice(0, 8)}...${id.slice(-4)}`
+}
+
 export function RescheduleSessionModal({
   isOpen,
   onClose,
@@ -43,7 +48,9 @@ export function RescheduleSessionModal({
         <div className='flex items-center justify-between border-b border-gray-100 pb-3.5'>
           <div>
             <h2 className='text-sm font-bold text-gray-900'>Reschedule Session</h2>
-            <p className='text-[11px] text-gray-400 mt-0.5'>Modifying appointment rules for session #{sessionId}</p>
+            <p className='text-[11px] text-gray-400 mt-0.5' title={`#${sessionId}`}>
+              Modifying appointment rules for session #{formatSessionId(sessionId)}
+            </p>
           </div>
           <button 
             type='button' 
