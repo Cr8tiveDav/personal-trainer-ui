@@ -30,11 +30,3 @@ export type AdminClientsListResponse = ApiEnvelope<BackendClientResponse[]> & {
 }
 
 export type AdminClientDetailResponse = ApiEnvelope<BackendClientResponse>
-
-export interface UpdateClientPayload {
-  name?: string
-  email?: string
-  is_active?: boolean
-}
-
-export type UpdateClientResponse = ApiEnvelope<BackendClientResponse>

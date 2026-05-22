@@ -1,6 +1,6 @@
 import React from 'react';
 import AddTrainerButton from './AddTrainerButton';
-import ExportButton from './ExportButton';
+// import ExportButton from './ExportButton';
 
 const TrainersPageHeader = () => {
   return (
@@ -10,7 +10,7 @@ const TrainersPageHeader = () => {
         <p className="text-sm text-[#6B7280]">Onboard, manage and monitor every trainer on FitCall.</p>
       </div>
       <div className="flex items-center gap-3">
-        <ExportButton />
+        {/* <ExportButton /> */}
         <AddTrainerButton />
       </div>
     </div>

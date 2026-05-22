@@ -1,6 +1,6 @@
 'use client'
 
-import { useAdminSessions } from '@/hooks/adminSessions/useAdminSessions'
+import { useSessionStats } from '@/api/sessions'
 
 interface SessionStatCardProps {
   label: string
@@ -31,34 +31,42 @@ function SessionStatCard({ label, value, subtext, valueColor = 'default', isLoad
 }
 
 export function SessionsStatsSection() {
-  const { data: sessions, isError, isLoading } = useAdminSessions()
-
-  const totalSessions = sessions?.length
-  const needsClientConfirmation = sessions?.filter(
-    (session) => session.clientConf === 'Pending' || session.clientConf === 'N/A'
-  ).length
+  const { data: response, isError, isLoading } = useSessionStats()
+  const stats = response?.data
 
   return (
     <div className='w-full space-y-4'>
       <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5'>
         <SessionStatCard
           label='Total Sessions'
-          value={isLoading && !sessions ? 'Loading' : totalSessions}
-          isLoading={isLoading && !sessions}
-          subtext='this month'
+          value={isLoading && !stats ? 'Loading' : stats?.total_sessions}
+          isLoading={isLoading && !stats}
+          subtext={stats?.total_sessions_change ? `${stats.total_sessions_change} this month` : 'this month'}
         />
         <SessionStatCard
           label='Need Confirmation'
-          value={needsClientConfirmation}
+          value={stats?.need_confirmation}
           subtext='awaiting resolution'
           valueColor='amber'
         />
-        <SessionStatCard label='Open Disputes' />
-        <SessionStatCard label='Trial to Paid Rate' />
-        <SessionStatCard label='No-Show Rate' />
+        <SessionStatCard
+          label='Open Disputes'
+          value={stats?.open_disputes}
+          valueColor='red'
+        />
+        <SessionStatCard
+          label='Trial to Paid Rate'
+          value={stats?.trial_paid_rate}
+          subtext={stats?.trial_paid_rate_change}
+        />
+        <SessionStatCard
+          label='No-Show Rate'
+          value={stats?.no_show_rate}
+          subtext={stats?.no_show_rate_change}
+        />
       </div>
 
-      {isError && !sessions && (
+      {isError && !stats && (
         <div className='rounded-lg border border-gray-100 bg-white p-4 text-xs font-medium text-gray-400'>
           Session metrics could not be loaded.
         </div>
