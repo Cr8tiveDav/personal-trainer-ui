@@ -1,9 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Calendar, DollarSign, Dumbbell, User } from 'lucide-react'
+import { useClientSessions } from '@/api/sessions'
 import type { Client } from './types'
 import { ClientStatusBadge } from './ClientStatusBadge'
+import { ClientSessionsTab } from './ClientSessionsTab'
 
 const TABS = ['Overview', 'Trainer', 'Sessions', 'Payment', 'Feedback'] as const
 
@@ -16,13 +18,21 @@ function formatRevenue(amount: number) {
 }
 
 function OverviewTab({ client }: { client: Client }) {
+  const { data: sessions = [], isLoading } = useClientSessions(client.id)
+
+  const sessionCount = isLoading
+    ? '—'
+    : sessions.length > 0
+      ? sessions.length
+      : client.sessions
+
   return (
     <div className='space-y-6'>
       <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
         {[
           {
             icon: <Dumbbell className='h-5 w-5 text-gray-400' />,
-            value: client.sessions,
+            value: sessionCount,
             label: 'Sessions booked',
           },
           {
@@ -53,14 +63,71 @@ function OverviewTab({ client }: { client: Client }) {
       </div>
 
       <div className='rounded-2xl border border-gray-100 bg-white p-6 shadow-sm'>
-        <h4 className='mb-2 text-base font-semibold text-gray-900'>
-          Account
-        </h4>
+        <h4 className='mb-2 text-base font-semibold text-gray-900'>Account</h4>
         <p className='text-sm leading-relaxed text-gray-500'>
-          Client profile for {client.name}. Additional session, trainer, and
-          payment history will appear here when those endpoints are available.
+          Client profile for {client.name}. Open the Sessions tab to see every
+          session with assigned trainers, schedule, and status.
         </p>
       </div>
+    </div>
+  )
+}
+
+function ClientTrainersTab({ clientId }: { clientId: string }) {
+  const { data: sessions = [], isLoading, isError } = useClientSessions(clientId)
+
+  const trainers = useMemo(() => {
+    const seen = new Set<string>()
+    return sessions
+      .filter((session) => {
+        const name = session.trainer.name
+        if (!name || name === 'Unknown Trainer' || seen.has(name)) return false
+        seen.add(name)
+        return true
+      })
+      .map((session) => session.trainer)
+  }, [sessions])
+
+  if (isLoading) {
+    return (
+      <div className='flex min-h-[200px] items-center justify-center rounded-2xl border border-gray-100 bg-white'>
+        <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-primary' />
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className='flex min-h-[200px] items-center justify-center rounded-2xl border border-gray-100 bg-white p-6 text-center text-sm text-red-500'>
+        Failed to load trainer details.
+      </div>
+    )
+  }
+
+  if (trainers.length === 0) {
+    return (
+      <div className='flex min-h-[200px] items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white'>
+        <p className='text-sm text-gray-400'>No trainers linked to sessions yet.</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className='grid gap-4 sm:grid-cols-2'>
+      {trainers.map((trainer) => (
+        <div
+          key={trainer.name}
+          className='flex items-center gap-3 rounded-xl border border-gray-100 bg-white p-4 shadow-sm'
+        >
+          <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-50 text-sm font-bold uppercase text-purple-600'>
+            {trainer.name.charAt(0)}
+          </div>
+          <div>
+            <p className='text-sm font-semibold text-gray-900'>{trainer.name}</p>
+            <p className='text-xs text-gray-400'>{trainer.country}</p>
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
@@ -98,8 +165,8 @@ export function ClientDetailTabs({ client }: { client: Client }) {
       </div>
 
       {active === 'Overview' && <OverviewTab client={client} />}
-      {active === 'Trainer' && <EmptyTab name='Trainer' />}
-      {active === 'Sessions' && <EmptyTab name='Sessions' />}
+      {active === 'Trainer' && <ClientTrainersTab clientId={client.id} />}
+      {active === 'Sessions' && <ClientSessionsTab clientId={client.id} />}
       {active === 'Payment' && <EmptyTab name='Payment' />}
       {active === 'Feedback' && <EmptyTab name='Feedback' />}
     </div>

@@ -2,7 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Search, ChevronDown } from 'lucide-react'
-import { useAdminSessions } from '@/hooks/adminSessions/useAdminSessions'
+import { motion } from 'motion/react'
+import { useAdminSessions } from '@/api/sessions'
+import { ReusableTabs } from '@/components/ui/ReusableTabs'
 import { SessionsTable } from './SessionsTable'
 import { SessionDetailsDrawer } from './modals/SessionDetails'
 import { ForceConfirmContext, ForceConfirmSessionModal } from './modals/ForceConfirmSession'
@@ -145,36 +147,34 @@ export default function SessionsList({
   const pageStartIndex = (activePage - 1) * ROWS_PER_PAGE
   const paginatedSessions = filteredSessions.slice(pageStartIndex, pageStartIndex + ROWS_PER_PAGE)
 
+  const sessionTabs = TABS.map((tab) => ({
+    id: tab.key,
+    label: tab.label,
+    count: tabCounts[tab.key],
+  }))
+
+  const listKey = `${activeTab}-${debouncedSearch}-${selectedTrainer}`
+
   return (
-    <div className='space-y-0 w-full text-xs text-muted-foreground'>
-      <div className='border-b border-gray-200 bg-white'>
-        <nav className='flex items-center gap-0 px-4'>
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              type='button'
-              onClick={() => {
-                setActiveTab(tab.key)
-                setSelectedTrainer('all')
-                setIsTrainerMenuOpen(false)
-                setCurrentPage(1)
-              }}
-              className={`relative flex items-center gap-1.5 px-3 py-3.5 text-xs font-medium transition-colors whitespace-nowrap
-                ${activeTab === tab.key
-                  ? 'text-[#0b4d8d] border-b-2 border-[#0b4d8d] -mb-px'
-                  : 'text-muted hover:text-gray-700 border-b-2 border-transparent -mb-px'
-                }`}
-            >
-              {tab.label}
-              {tabCounts[tab.key] > 0 && (
-                <span className={`inline-flex items-center justify-center rounded-full text-[10px] font-bold h-4 min-w-[16px] px-1
-                  ${activeTab === tab.key ? 'bg-[#0b4d8d]/10 text-[#0b4d8d]' : 'bg-gray-100 text-gray-500'}`}>
-                  {tabCounts[tab.key]}
-                </span>
-              )}
-            </button>
-          ))}
-        </nav>
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className='w-full space-y-0 text-xs text-muted-foreground'
+    >
+      <div className='border-b border-gray-200 bg-white px-4'>
+        <ReusableTabs
+          tabs={sessionTabs}
+          activeTab={activeTab}
+          onTabChange={(tab) => {
+            setActiveTab(tab)
+            setSelectedTrainer('all')
+            setIsTrainerMenuOpen(false)
+            setCurrentPage(1)
+          }}
+          layoutId='sessions-filter-tabs'
+          className='border-gray-200'
+        />
       </div>
 
       <div className='space-y-4 pt-4'>
@@ -241,16 +241,22 @@ export default function SessionsList({
           </div>
         </div>
 
-        <div className='bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden'>
-          <div className='p-4 flex items-center justify-between border-b border-gray-100 bg-white'>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+          className='overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm'
+        >
+          <div className='flex items-center justify-between border-b border-gray-100 bg-white p-4'>
             {activeTab === 'all' ? (
-              <h3 className='font-bold text-gray-900 tracking-tight'>All sessions</h3>
+              <h3 className='font-bold tracking-tight text-gray-900'>All sessions</h3>
             ) : (
               <span aria-hidden='true' />
             )}
           </div>
 
           <SessionsTable
+            listKey={listKey}
             sessions={paginatedSessions}
             variant={activeTab}
             isError={isError}
@@ -266,7 +272,7 @@ export default function SessionsList({
             onSelectDetails={handleOpenDetails}
             onSelectReschedule={handleOpenReschedule}
           />
-        </div>
+        </motion.div>
       </div>
 
       <SessionDetailsDrawer
@@ -292,6 +298,6 @@ export default function SessionsList({
         onClose={() => setForceConfirmSession(null)}
         onConfirm={handleForceConfirmSession}
       />
-    </div>
+    </motion.div>
   )
 }

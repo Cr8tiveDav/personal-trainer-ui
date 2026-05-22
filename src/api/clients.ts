@@ -1,7 +1,7 @@
 'use client'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { deleteRequest, getRequest, patchRequest } from '~/lib/http'
+import { deleteRequest, getRequest } from '~/lib/http'
 import { displayError, showSuccessToast } from '~/lib/utils'
 import { mapBackendToClient } from '@/lib/clients/map-client'
 import { API_ENDPOINTS } from './api-endpoints'
@@ -11,8 +11,6 @@ import type {
   AdminUserTrainerCountResponse,
   BackendClientResponse,
   ClientsListMeta,
-  UpdateClientPayload,
-  UpdateClientResponse,
 } from './types/clients'
 import type { Client } from '@/components/admin/clients/types'
 
@@ -119,46 +117,6 @@ export function useAdminClient(id: string) {
     },
     enabled: !!id,
     staleTime: 60_000,
-  })
-}
-
-export function useUpdateClient() {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: async ({
-      id,
-      payload,
-    }: {
-      id: string
-      payload: UpdateClientPayload
-    }) => {
-      const response = await patchRequest<
-        UpdateClientResponse,
-        UpdateClientPayload
-      >({
-        url: API_ENDPOINTS.ADMIN.CLIENT_DETAIL(id),
-        payload,
-      })
-      const updated = response.data?.data
-      if (!updated?.id) {
-        throw new Error(
-          response.data?.message || 'Client updated but response was invalid',
-        )
-      }
-      return updated
-    },
-    onSuccess: (_data, variables) => {
-      showSuccessToast('Client updated successfully')
-      queryClient.invalidateQueries({ queryKey: ['admin-clients'] })
-      queryClient.invalidateQueries({
-        queryKey: clientsQueryKeys.detail(variables.id),
-      })
-      queryClient.invalidateQueries({ queryKey: clientsQueryKeys.count })
-    },
-    onError: (error) => {
-      displayError(error)
-    },
   })
 }
 

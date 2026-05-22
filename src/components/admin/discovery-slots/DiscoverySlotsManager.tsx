@@ -11,7 +11,6 @@ import {
   type DiscoverySlot,
   type DiscoverySlotPayload,
 } from '@/api/discovery-slots'
-import { AvailabilityScheduleView } from '@/components/availability/AvailabilityScheduleView'
 import { Time12HourSelect } from '@/components/availability/Time12HourSelect'
 import { Button } from '@/components/ui/button'
 import {
@@ -28,6 +27,7 @@ import {
   WEEK_DAYS,
 } from '@/lib/availability/week-days'
 import { normalizeTime24, snapToTimeOption, to12HourLabel } from '@/lib/availability/time-12h'
+import { DiscoverySlotsPageSkeleton } from './DiscoverySlotsPageSkeleton'
 
 const DEFAULT_TIMEZONE = 'Africa/Lagos'
 
@@ -58,7 +58,6 @@ function emptyFormState() {
     startTime: '',
     endTime: '',
     timezone: getDefaultTimezone(),
-    isActive: true,
   }
 }
 
@@ -68,7 +67,6 @@ function slotToFormState(slot: DiscoverySlot) {
     startTime: snapToTimeOption(slot.start_time),
     endTime: snapToTimeOption(slot.end_time),
     timezone: slot.timezone || DEFAULT_TIMEZONE,
-    isActive: slot.is_active,
   }
 }
 
@@ -83,12 +81,12 @@ function buildPayload(form: ReturnType<typeof emptyFormState>): DiscoverySlotPay
     start_time,
     end_time,
     timezone: form.timezone,
-    is_active: form.isActive,
+    is_active: true,
   }
 }
 
 export function DiscoverySlotsManager() {
-  const { data: slots = [], isLoading, isError, isFetching } = useDiscoverySlots()
+  const { data: slots = [], isLoading, isError } = useDiscoverySlots()
   const createSlot = useCreateDiscoverySlot()
   const updateSlot = useUpdateDiscoverySlot()
   const deleteSlot = useDeleteDiscoverySlot()
@@ -99,18 +97,6 @@ export function DiscoverySlotsManager() {
   const [deleteTarget, setDeleteTarget] = useState<DiscoverySlot | null>(null)
 
   const sortedSlots = useMemo(() => sortByWeekOrder(slots), [slots])
-  const activeSlotsForTimeline = useMemo(
-    () =>
-      sortedSlots
-        .filter((s) => s.is_active)
-        .map((s) => ({
-          day_of_week: s.day_of_week,
-          start_time: s.start_time,
-          end_time: s.end_time,
-          timezone: s.timezone,
-        })),
-    [sortedSlots],
-  )
 
   const takenDays = useMemo(() => {
     const set = new Set<number>()
@@ -161,14 +147,8 @@ export function DiscoverySlotsManager() {
     })
   }
 
-  if (isLoading || isFetching) {
-    return (
-      <div className='space-y-6'>
-        <div className='h-10 w-64 rounded-lg bg-gray-100 animate-pulse' />
-        <div className='h-72 rounded-xl border border-gray-100 bg-white animate-pulse' />
-        <div className='h-64 rounded-xl border border-gray-100 bg-white animate-pulse' />
-      </div>
-    )
+  if (isLoading) {
+    return <DiscoverySlotsPageSkeleton />
   }
 
   if (isError) {
@@ -268,34 +248,7 @@ export function DiscoverySlotsManager() {
             <p className='text-xs text-gray-500 mb-6'>Select a day to set hours.</p>
           )}
 
-          <div className='flex flex-col sm:flex-row sm:items-start gap-6 sm:gap-10 mb-6'>
-            <div>
-              <p className='text-sm font-semibold text-gray-900 mb-2'>Active</p>
-              <button
-                type='button'
-                role='switch'
-                aria-checked={form.isActive}
-                onClick={() =>
-                  setForm((prev) => ({ ...prev, isActive: !prev.isActive }))
-                }
-                className={cn(
-                  'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none',
-                  form.isActive ? 'bg-gray-900' : 'bg-gray-200',
-                )}
-              >
-                <span className='sr-only'>Toggle active</span>
-                <span
-                  className={cn(
-                    'inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform',
-                    form.isActive ? 'translate-x-6' : 'translate-x-1',
-                  )}
-                />
-              </button>
-              <p className='text-xs text-gray-500 mt-1'>
-                Inactive slots are hidden from booking.
-              </p>
-            </div>
-
+          <div className='mb-6 max-w-md'>
             <div className='min-w-[200px]'>
               <p className='text-sm font-semibold text-gray-900 mb-2'>Time zone</p>
               {editingTimezone ? (
@@ -370,7 +323,6 @@ export function DiscoverySlotsManager() {
                   <th className='px-6 py-3'>Day</th>
                   <th className='px-6 py-3'>Hours</th>
                   <th className='px-6 py-3'>Timezone</th>
-                  <th className='px-6 py-3'>Status</th>
                   <th className='px-6 py-3 text-right'>Actions</th>
                 </tr>
               </thead>
@@ -391,18 +343,6 @@ export function DiscoverySlotsManager() {
                     </td>
                     <td className='px-6 py-4 text-gray-600'>
                       {formatTimezoneLabel(slot.timezone)}
-                    </td>
-                    <td className='px-6 py-4'>
-                      <span
-                        className={cn(
-                          'inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium',
-                          slot.is_active
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'bg-gray-100 text-gray-500',
-                        )}
-                      >
-                        {slot.is_active ? 'Active' : 'Inactive'}
-                      </span>
                     </td>
                     <td className='px-6 py-4'>
                       <div className='flex justify-end gap-2'>
@@ -431,18 +371,6 @@ export function DiscoverySlotsManager() {
           </div>
         )}
       </div>
-
-      {activeSlotsForTimeline.length > 0 && (
-        <div className='space-y-3'>
-          <div>
-            <h2 className='text-sm font-semibold text-gray-900'>Weekly preview</h2>
-            <p className='text-xs text-gray-500 mt-0.5'>
-              Active discovery slots on the booking window (6 AM – 7 PM grid).
-            </p>
-          </div>
-          <AvailabilityScheduleView slots={activeSlotsForTimeline} />
-        </div>
-      )}
 
       <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <DialogContent className='bg-white'>
