@@ -1,21 +1,34 @@
-import React from 'react'
-import Image from 'next/image'
-import StatusBadge from './StatusBadge'
-import { Trainer } from '../../types'
-import { MoreVertical } from 'lucide-react'
-import { cn } from '@/utils'
-import { useRouter } from 'next/navigation'
+import React from 'react';
+import Image from 'next/image';
+import StatusBadge from './StatusBadge';
+import { Trainer } from '../../types';
+import { MoreVertical } from 'lucide-react';
+import { cn } from '@/utils';
+import { useRouter } from 'next/navigation';
+import { TruncateEmail } from '@/lib/utils';
 
 interface TrainerTableRowProps {
-  trainer: Trainer
+  trainer: Trainer;
 }
 
 const TrainerTableRow: React.FC<TrainerTableRowProps> = ({ trainer }) => {
-  const router = useRouter()
+  const router = useRouter();
 
-  let availabilityColor = 'bg-[#D9D9D9]'
-  if (trainer.availability === 'Available') availabilityColor = 'bg-[#14561C]'
-  if (trainer.availability === 'Busy') availabilityColor = 'bg-[#A86908]'
+  let availabilityColor = 'bg-[#D9D9D9]';
+  if (trainer.availability === 'Available') availabilityColor = 'bg-[#14561C]';
+  if (trainer.availability === 'Busy') availabilityColor = 'bg-[#A86908]';
+
+  const formatName = (name: string) => {
+    if (!name) return '';
+    const parts = name.trim().split(' ');
+    if (parts.length === 1) return parts[0];
+    const firstName = parts[0];
+    const lastName = parts[parts.length - 1];
+    if (lastName.length <= 2 && lastName.endsWith('.')) {
+      return `${firstName} ${lastName}`;
+    }
+    return `${firstName} ${lastName.charAt(0).toUpperCase()}.`;
+  };
 
   return (
     <tr
@@ -40,8 +53,12 @@ const TrainerTableRow: React.FC<TrainerTableRowProps> = ({ trainer }) => {
             )}
           </div>
           <div className='flex flex-col'>
-            <span className='text-sm font-semibold text-gray-900'>{trainer.name}</span>
-            <span className='text-xs text-gray-500'>{trainer.email}</span>
+            <span className='text-sm font-semibold text-gray-900'>
+              {formatName(trainer.name)}
+            </span>
+            <span className='text-xs text-gray-500'>
+              {TruncateEmail(trainer.email)}
+            </span>
           </div>
         </div>
       </td>
@@ -88,7 +105,7 @@ const TrainerTableRow: React.FC<TrainerTableRowProps> = ({ trainer }) => {
         </button>
       </td>
     </tr>
-  )
-}
+  );
+};
 
-export default TrainerTableRow
+export default TrainerTableRow;

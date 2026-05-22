@@ -9,6 +9,7 @@ import QuickDetails from './QuickDetails';
 import TrainerTabs from './TrainerTabs';
 import OverviewTab from './tabs/OverviewTab';
 import SessionsTab from './tabs/SessionsTab';
+import EarningsTab from './tabs/EarningsTab';
 import AvailabilityTab from './tabs/AvailabilityTab';
 
 export type TabType =
@@ -25,6 +26,7 @@ const TrainerDetailsClient = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
 
   const { data, isLoading, isError } = useTrainerById(id);
+  console.log('Trainer data:', data);
 
   if (isLoading) {
     return (
@@ -75,12 +77,8 @@ const TrainerDetailsClient = () => {
 
         <div className='mt-6'>
           {activeTab === 'overview' && <OverviewTab trainer={trainer} />}
-          {activeTab === 'sessions' && <SessionsTab />}
-          {activeTab === 'earnings' && (
-            <div className='py-8 text-center text-gray-500'>
-              Earnings tab content coming soon.
-            </div>
-          )}
+          {activeTab === 'sessions' && <SessionsTab trainerId={trainer.id} />}
+          {activeTab === 'earnings' && <EarningsTab trainerId={trainer.id} />}
           {activeTab === 'media' && (
             <div className='py-8 text-center text-gray-500'>
               Media tab content coming soon.
