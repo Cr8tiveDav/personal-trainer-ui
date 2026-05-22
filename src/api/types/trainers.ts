@@ -34,6 +34,8 @@ export interface TrainerBenefit {
 export interface BackendTrainerResponse {
   id: string
   user_id: string
+  name?: string
+  email?: string
   specializations: string[]
   training_styles: string[]
   benefits?: TrainerBenefit[]
@@ -56,3 +58,25 @@ export type BackendTrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>;
 export type TrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>;
 export type TrainerDetailResponse = ApiEnvelope<BackendTrainerResponse>;
 export type CreateTrainerResponse = ApiEnvelope<BackendTrainerResponse>;
+
+export const TRAINER_ONBOARDING_STATUSES = [
+  'pending',
+  'active',
+  'approved',
+  'suspended',
+] as const
+
+export type TrainerOnboardingStatus = (typeof TRAINER_ONBOARDING_STATUSES)[number]
+
+/** PATCH /trainers/{id} */
+export interface UpdateTrainerPayload {
+  specializations?: string[]
+  training_styles?: string[]
+  bio?: string
+  years_of_experience?: number
+  intro_video_url?: string
+  display_picture?: string
+  onboarding_status?: string
+}
+
+export type UpdateTrainerResponse = ApiEnvelope<BackendTrainerResponse>;

@@ -5,13 +5,16 @@ export type Client = {
   id: string
   name: string
   email: string
+  displayInitial: string
   avatar?: string
-  trainer: string
-  trainerEmail: string
-  plan: PlanType
-  sessions: number | null
-  lastSession: string
+  sessions: number
+  joinedAt: string
+  revenue: number
   status: ClientStatus
+  trainer?: string
+  trainerEmail?: string
+  plan?: PlanType
+  lastSession?: string
 }
 
 export type SessionStatus = 'Completed' | 'Upcoming' | 'Rescheduled' | 'Cancelled'

@@ -21,7 +21,7 @@ function parseAverageRating(
   return 0
 }
 
-function displayName(trainer: BackendTrainerResponse): string {
+function fallbackName(trainer: BackendTrainerResponse): string {
   const bio = trainer.bio?.trim()
   if (bio) {
     const short = bio.length > 40 ? `${bio.slice(0, 40)}…` : bio
@@ -47,14 +47,23 @@ export function mapBackendToFrontend(backendTrainer: BackendTrainerResponse): Tr
 
   const rating = parseAverageRating(backendTrainer.average_rating)
 
+  const displayPicture = backendTrainer.display_picture?.trim() ?? ''
+  const name = backendTrainer.name?.trim() || fallbackName(backendTrainer)
+  const email =
+    backendTrainer.email?.trim() || backendTrainer.user_id || ''
+
   return {
     id: backendTrainer.id,
-    name: displayName(backendTrainer),
-    email: backendTrainer.user_id,
-    avatarUrl:
-      backendTrainer.display_picture ??
-      `https://i.pravatar.cc/150?u=${backendTrainer.id}`,
+    name,
+    email,
+    avatarUrl: displayPicture || undefined,
     specialty: backendTrainer.specializations?.[0] ?? 'General',
+    specializations: backendTrainer.specializations ?? [],
+    trainingStyles: backendTrainer.training_styles ?? [],
+    bio: backendTrainer.bio ?? '',
+    introVideoUrl: backendTrainer.intro_video_url?.trim() ?? '',
+    displayPictureUrl: displayPicture,
+    onboardingStatus: backendTrainer.onboarding_status?.toLowerCase() ?? 'pending',
     status,
     sessions: null,
     earnings: 0,

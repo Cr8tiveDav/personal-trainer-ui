@@ -59,6 +59,7 @@ const filteredTrainers = useMemo(() => {
         trainers={filteredTrainers}
         isLoading={isLoading}
         isError={isError}
+        listKey={`${activeTab}-${debouncedSearch}`}
       />
     </div>
   );
