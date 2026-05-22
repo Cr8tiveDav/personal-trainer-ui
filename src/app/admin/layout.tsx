@@ -32,7 +32,7 @@ export default async function AdminDashboardLayout({
       userAvatar={userAvatar}
       userType={userType}
     >
-      <div className="">{children}</div>
+      {children}
     </AdminShell>
   );
 }
