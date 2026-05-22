@@ -3,12 +3,12 @@
 import Image from 'next/image'
 import { useMemo } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import StatCard from '../../analytics/StatCard'
-import { useTrainerSessions } from '@/api/sessions'
+import { useClientSessions } from '@/api/sessions'
 import type { Session } from '@/components/adminSessions/session'
 import { sessionRowVariants } from '@/components/adminSessions/SessionTableRow'
 import { getTrainerSessionStats } from '@/lib/sessions/trainer-session-stats'
-import { TrainerSessionsTabSkeleton } from './TrainerSessionsTabSkeleton'
+import { TrainerSessionsTabSkeleton } from '@/components/admin/trainers/trainer-details/tabs/TrainerSessionsTabSkeleton'
+import StatCard from '@/components/admin/trainers/analytics/StatCard'
 
 const getStateBadgeStyles = (state: Session['state']) => {
   switch (state) {
@@ -27,12 +27,12 @@ const getStateBadgeStyles = (state: Session['state']) => {
   }
 }
 
-interface SessionsTabProps {
-  trainerId: string
+interface ClientSessionsTabProps {
+  clientId: string
 }
 
-const SessionsTab = ({ trainerId }: SessionsTabProps) => {
-  const { data: sessions = [], isLoading, isError } = useTrainerSessions(trainerId)
+export function ClientSessionsTab({ clientId }: ClientSessionsTabProps) {
+  const { data: sessions = [], isLoading, isError } = useClientSessions(clientId)
 
   const stats = useMemo(() => getTrainerSessionStats(sessions), [sessions])
 
@@ -76,14 +76,19 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
         className='overflow-hidden rounded-xl border border-[#EBEBEB] bg-white'
       >
         <div className='border-b border-gray-100 p-6'>
-          <h3 className='text-2xl font-medium text-muted-foreground'>All sessions</h3>
+          <h3 className='text-2xl font-medium text-muted-foreground'>
+            Sessions with trainers
+          </h3>
+          <p className='mt-1 text-sm text-gray-500'>
+            All booked sessions for this client and their assigned trainers.
+          </p>
         </div>
         <div className='min-h-64 overflow-x-auto'>
-          <table className='w-full min-w-[700px] border-collapse text-left'>
+          <table className='w-full min-w-[760px] border-collapse text-left'>
             <thead>
               <tr className='h-15 border-[0.5px] border-[#D1D1D1] bg-[#F5F5F5]'>
                 <th className='px-6 py-4 text-xs font-normal uppercase tracking-wider text-gray-500'>
-                  Client
+                  Trainer
                 </th>
                 <th className='px-6 py-4 text-center text-xs font-normal uppercase tracking-wider text-gray-500'>
                   Type
@@ -93,6 +98,9 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
                 </th>
                 <th className='px-6 py-4 text-center text-xs font-normal uppercase tracking-wider text-gray-500'>
                   Duration
+                </th>
+                <th className='px-6 py-4 text-center text-xs font-normal uppercase tracking-wider text-gray-500'>
+                  Client conf.
                 </th>
                 <th className='px-6 py-4 text-right text-xs font-normal uppercase tracking-wider text-gray-500'>
                   Status
@@ -108,7 +116,7 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                   >
-                    <td colSpan={5} className='px-6 py-8 text-center text-sm text-red-500'>
+                    <td colSpan={6} className='px-6 py-8 text-center text-sm text-red-500'>
                       Failed to load sessions. Please try again.
                     </td>
                   </motion.tr>
@@ -119,8 +127,8 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                   >
-                    <td colSpan={5} className='px-6 py-8 text-center text-sm text-gray-500'>
-                      No sessions found for this trainer.
+                    <td colSpan={6} className='px-6 py-8 text-center text-sm text-gray-500'>
+                      No sessions found for this client.
                     </td>
                   </motion.tr>
                 ) : (
@@ -136,24 +144,24 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
                     >
                       <td className='px-6 py-4'>
                         <div className='flex items-center gap-3'>
-                          {session.client.avatar ? (
+                          {session.trainer.avatar ? (
                             <Image
-                              src={session.client.avatar}
-                              alt={session.client.name}
+                              src={session.trainer.avatar}
+                              alt={session.trainer.name}
                               width={32}
                               height={32}
                               className='h-8 w-8 shrink-0 rounded-full object-cover bg-gray-100'
                             />
                           ) : (
-                            <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0b4d8d]/10 text-xs font-bold uppercase text-[#0b4d8d]'>
-                              {session.client.name.charAt(0)}
+                            <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-50 text-xs font-bold uppercase text-purple-600'>
+                              {session.trainer.name.charAt(0)}
                             </div>
                           )}
                           <div>
                             <span className='text-sm font-medium text-gray-900'>
-                              {session.client.name}
+                              {session.trainer.name}
                             </span>
-                            <p className='text-xs text-gray-400'>{session.client.country}</p>
+                            <p className='text-xs text-gray-400'>{session.trainer.country}</p>
                           </div>
                         </div>
                       </td>
@@ -165,6 +173,9 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
                       </td>
                       <td className='px-6 py-4 text-center text-sm text-gray-500'>
                         {session.duration}
+                      </td>
+                      <td className='px-6 py-4 text-center text-sm text-gray-500'>
+                        {session.clientConf}
                       </td>
                       <td className='px-6 py-4 text-right'>
                         <span
@@ -184,5 +195,3 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
     </div>
   )
 }
-
-export default SessionsTab

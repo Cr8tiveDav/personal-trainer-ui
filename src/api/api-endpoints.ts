@@ -62,5 +62,7 @@ export const API_ENDPOINTS = {
     USER_TRAINER_COUNT: "/admin/user/trainer/count",
     CLIENTS: "/admin/clients",
     CLIENT_DETAIL: (id: string) => `/admin/clients/${id}`,
+    SESSIONS: "/admin/sessions",
+    SESSIONS_STATS: "/admin/sessions/stats",
   },
 } as const;

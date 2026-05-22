@@ -1,7 +1,5 @@
 'use client'
 
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { motion } from 'motion/react'
 import { trainerRowVariants } from '@/components/admin/trainers/trainers-list/table/TrainerTableRow'
 import type { Client } from './types'
@@ -22,8 +20,6 @@ function formatRevenue(amount: number) {
 }
 
 export function ClientTableRow({ client, index = 0 }: ClientTableRowProps) {
-  const router = useRouter()
-
   return (
     <motion.tr
       variants={trainerRowVariants}
@@ -31,15 +27,10 @@ export function ClientTableRow({ client, index = 0 }: ClientTableRowProps) {
       animate='visible'
       exit='exit'
       custom={index}
-      onClick={() => router.push(`/admin/users/${client.id}`)}
-      className='group border-b border-gray-50 cursor-pointer'
+      className='group border-b border-gray-50'
     >
       <td className='px-6 py-4 transition-colors group-hover:bg-gray-50/80'>
-        <Link
-          href={`/admin/users/${client.id}`}
-          onClick={(e) => e.stopPropagation()}
-          className='flex items-center gap-3 hover:underline'
-        >
+        <div className='flex items-center gap-3'>
           <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white'>
             {client.displayInitial}
           </div>
@@ -47,7 +38,7 @@ export function ClientTableRow({ client, index = 0 }: ClientTableRowProps) {
             <p className='text-sm font-medium text-gray-900'>{client.name}</p>
             <p className='text-xs text-gray-400'>{client.email}</p>
           </div>
-        </Link>
+        </div>
       </td>
       <td className='px-6 py-4 text-sm text-gray-700 transition-colors group-hover:bg-gray-50/80'>
         {client.sessions}
@@ -61,10 +52,7 @@ export function ClientTableRow({ client, index = 0 }: ClientTableRowProps) {
       <td className='px-6 py-4 transition-colors group-hover:bg-gray-50/80'>
         <ClientStatusBadge status={client.status} />
       </td>
-      <td
-        className='px-6 py-4 transition-colors group-hover:bg-gray-50/80'
-        onClick={(e) => e.stopPropagation()}
-      >
+      <td className='px-6 py-4 transition-colors group-hover:bg-gray-50/80'>
         <ClientTableActions client={client} />
       </td>
     </motion.tr>

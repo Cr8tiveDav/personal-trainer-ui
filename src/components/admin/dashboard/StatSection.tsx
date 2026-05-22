@@ -13,8 +13,8 @@ const EMPTY_STATS: StatsData = {
 }
 
 export function StatCardsSection() {
-  const { data, isLoading: dashboardLoading } = useDashboardStats()
-  const { data: countData, isLoading: countLoading } = useAdminUserTrainerCount()
+  const { data } = useDashboardStats()
+  const { data: countData } = useAdminUserTrainerCount()
 
   const stats = data?.data ?? EMPTY_STATS
   const totalClients = countData?.data?.total_clients ?? 0
@@ -22,30 +22,20 @@ export function StatCardsSection() {
 
   return (
     <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
-      <StatCard
-        title='Total Clients'
-        value={totalClients}
-        isLoading={countLoading}
-      />
+      <StatCard title='Total Clients' value={totalClients} />
       <StatCard
         title='Active Subscription'
         value={stats.active_subscriptions.value}
         trend={stats.active_subscriptions.trend}
         isUp={stats.active_subscriptions.is_up}
-        isLoading={dashboardLoading}
       />
       <StatCard
         title='Trial Users'
         value={stats.trial_users.value}
         trend={stats.trial_users.trend}
         isUp={stats.trial_users.is_up}
-        isLoading={dashboardLoading}
       />
-      <StatCard
-        title='Total Trainers'
-        value={totalTrainers}
-        isLoading={countLoading}
-      />
+      <StatCard title='Total Trainers' value={totalTrainers} />
     </div>
   )
 }

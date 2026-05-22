@@ -3,18 +3,35 @@
 import { useQuery } from "@tanstack/react-query";
 import { getRequest } from "~/lib/http";
 import { API_ENDPOINTS } from "./api-endpoints";
+import type { Session } from "@/components/adminSessions/session";
+import { mapBackendSessionsResponse } from "@/lib/sessions/map-session";
 import type {
   SessionsListResponse,
   SessionStatsResponse,
 } from "./types/sessions";
 
-export function useSessionsList() {
+export const adminSessionsQueryKey = ["admin-sessions"] as const;
+
+const ADMIN_SESSIONS_PAGE = 1;
+const ADMIN_SESSIONS_LIMIT = 100;
+
+async function fetchAdminSessions(): Promise<Session[]> {
+  const response = await getRequest<SessionsListResponse>({
+    url: `${API_ENDPOINTS.ADMIN.SESSIONS}?page=${ADMIN_SESSIONS_PAGE}&limit=${ADMIN_SESSIONS_LIMIT}`,
+  });
+  return mapBackendSessionsResponse(response);
+}
+
+/** Admin sessions list — direct backend call via axios (not Next.js BFF). */
+export function useAdminSessions() {
   return useQuery({
-    queryKey: ["admin-sessions-list"],
-    queryFn: () =>
-      getRequest<SessionsListResponse>({
-        url: API_ENDPOINTS.SESSIONS.LIST,
-      }),
+    queryKey: adminSessionsQueryKey,
+    queryFn: fetchAdminSessions,
+    refetchInterval: 30_000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+    staleTime: 15_000,
   });
 }
 
@@ -23,8 +40,9 @@ export function useSessionStats() {
     queryKey: ["session-stats"],
     queryFn: () =>
       getRequest<SessionStatsResponse>({
-        url: API_ENDPOINTS.SESSIONS.STATS,
+        url: API_ENDPOINTS.ADMIN.SESSIONS_STATS,
       }),
+    staleTime: 60_000,
   });
 }
 
@@ -32,14 +50,26 @@ export function useTrainerSessions(trainerId: string) {
   return useQuery({
     queryKey: ["trainer-sessions", trainerId],
     queryFn: async () => {
-      // Use query params to fetch sessions for this specific trainer
       const response = await getRequest<SessionsListResponse>({
-        url: `${API_ENDPOINTS.SESSIONS.LIST}?trainer_id=${trainerId}`,
+        url: `${API_ENDPOINTS.ADMIN.SESSIONS}?trainer_id=${trainerId}&page=1&limit=100`,
       });
-      // Fallback in case response is missing data
-      return Array.isArray(response.data) ? response.data : [];
+      return mapBackendSessionsResponse(response);
     },
     enabled: !!trainerId,
-    retry: false,
+    staleTime: 30_000,
+  });
+}
+
+export function useClientSessions(clientId: string) {
+  return useQuery({
+    queryKey: ["client-sessions", clientId],
+    queryFn: async () => {
+      const response = await getRequest<SessionsListResponse>({
+        url: `${API_ENDPOINTS.ADMIN.SESSIONS}?client_id=${clientId}&page=1&limit=100`,
+      });
+      return mapBackendSessionsResponse(response);
+    },
+    enabled: !!clientId,
+    staleTime: 30_000,
   });
 }
