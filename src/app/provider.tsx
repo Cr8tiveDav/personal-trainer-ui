@@ -51,7 +51,21 @@ export function Providers({ children }: { children: React.ReactNode }) {
       />
        {children}
       <ReactQueryDevtools initialIsOpen={false} />
-      <Sonner richColors expand={true} position="top-right" />
+      <Sonner
+        richColors
+        expand
+        closeButton
+        position="top-right"
+        visibleToasts={4}
+        style={{ zIndex: 99999 }}
+        toastOptions={{
+          duration: 5000,
+          classNames: {
+            error: "!bg-red-600 !text-white !border-red-700",
+            success: "!bg-emerald-600 !text-white !border-emerald-700",
+          },
+        }}
+      />
     </QueryClientProvider>
 
   )

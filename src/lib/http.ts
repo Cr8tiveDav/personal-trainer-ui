@@ -33,12 +33,13 @@ function getApi(): AxiosInstance {
     (response) => response,
     (error) => {
       const status = error.response?.status || error.status;
-      const message = error.response?.data?.message;
+      const requestUrl = String(error.config?.url ?? "");
+      const isLoginRequest =
+        requestUrl.includes("/auth/admin/log-in") ||
+        requestUrl.includes("/trainers/login");
 
-      if (
-        (message === "Invalid Authorization" && status === 401) ||
-        status === 401
-      ) {
+      // Do not redirect on failed login — that reloads the page and hides the toast.
+      if (status === 401 && !isLoginRequest && getToken()) {
         logoutUser();
       }
       return Promise.reject(error);
@@ -72,6 +73,15 @@ export const patchRequest = async <T, P>(params: {
   payload: P;
 }) => {
   return getApi().patch<T>(params.url, params.payload);
+};
+
+export const patchFormRequest = async <T>(params: {
+  url: string;
+  payload: FormData;
+}) => {
+  const { data } = await getApi().patch<T>(params.url, params.payload);
+
+  return data;
 };
 
 export const putRequest = async <T, P>(params: { url: string; payload: P }) => {

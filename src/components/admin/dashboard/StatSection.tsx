@@ -1,5 +1,6 @@
 'use client'
 
+import { useAdminUserTrainerCount } from '@/api/clients'
 import { useDashboardStats } from '@/api/dashboard'
 import type { StatsData } from '@/api/types/dashboard'
 import { StatCard } from './StatCard'
@@ -12,35 +13,38 @@ const EMPTY_STATS: StatsData = {
 }
 
 export function StatCardsSection() {
-  const { data } = useDashboardStats()
+  const { data, isLoading: dashboardLoading } = useDashboardStats()
+  const { data: countData, isLoading: countLoading } = useAdminUserTrainerCount()
 
   const stats = data?.data ?? EMPTY_STATS
+  const totalClients = countData?.data?.total_clients ?? 0
+  const totalTrainers = countData?.data?.total_approved_trainers ?? 0
 
   return (
     <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
       <StatCard
         title='Total Clients'
-        value={stats.total_clients.value}
-        trend={stats.total_clients.trend}
-        isUp={stats.total_clients.is_up}
+        value={totalClients}
+        isLoading={countLoading}
       />
       <StatCard
         title='Active Subscription'
         value={stats.active_subscriptions.value}
         trend={stats.active_subscriptions.trend}
         isUp={stats.active_subscriptions.is_up}
+        isLoading={dashboardLoading}
       />
       <StatCard
         title='Trial Users'
         value={stats.trial_users.value}
         trend={stats.trial_users.trend}
         isUp={stats.trial_users.is_up}
+        isLoading={dashboardLoading}
       />
       <StatCard
         title='Total Trainers'
-        value={stats.total_trainers.value}
-        trend={stats.total_trainers.trend}
-        isUp={stats.total_trainers.is_up}
+        value={totalTrainers}
+        isLoading={countLoading}
       />
     </div>
   )

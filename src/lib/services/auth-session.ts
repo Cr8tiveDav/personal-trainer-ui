@@ -97,29 +97,35 @@ export async function authenticatedFetch(
   path: string,
   init: RequestInit = {},
 ): Promise<Response> {
-  let token = await getAccessToken();
+  const cookieStore = await cookies()
+
+  console.log("ALL COOKIES:", cookieStore.getAll())
+
+  let token = await getAccessToken()
 
   const doFetch = () => {
-    const headers = new Headers(init.headers);
-    if (token) headers.set("Authorization", `Bearer ${token}`);
-    if (!(init.body instanceof FormData) && !headers.has("Content-Type")) {
-      headers.set("Content-Type", "application/json");
-    }
-    return fetch(apiUrl(path), { ...init, headers });
-  };
+    const headers = new Headers(init.headers)
 
-  let res = await doFetch();
+    if (token) headers.set("Authorization", `Bearer ${token}`)
+
+    if (!(init.body instanceof FormData) && !headers.has("Content-Type")) {
+      headers.set("Content-Type", "application/json")
+    }
+
+    return fetch(apiUrl(path), { ...init, headers })
+  }
+
+  let res = await doFetch()
 
   if (res.status === 401) {
-    const cookieStore = await cookies();
-    const refreshToken = cookieStore.get("refresh_token")?.value;
-    const expiredAccessToken = token;
+    const refreshToken = cookieStore.get("refresh_token")?.value
+    const expiredAccessToken = token
 
     if (refreshToken) {
-      token = await refreshAccessToken(refreshToken, expiredAccessToken);
-      if (token) res = await doFetch();
+      token = await refreshAccessToken(refreshToken, expiredAccessToken)
+      if (token) res = await doFetch()
     }
   }
 
-  return res;
+  return res
 }

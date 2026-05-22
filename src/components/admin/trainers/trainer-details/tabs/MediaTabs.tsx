@@ -5,22 +5,24 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ImageEmptyState, ImageGallery } from './media/ImageGallerry'
 import { VideoDetailView, VideoEmptyState, VideoTableView } from './media/VideoSection.tsx'
+import { Loader2 } from 'lucide-react'
 
 export function TrainerMediaTab({ trainerId, trainerName, trainerSpecialty }: any) {
   const [subTab, setSubTab] = useState<'image' | 'video'>('image')
   const [videoView, setVideoView] = useState<'table' | 'detail'>('table')
   const [, setImageProcessing] = useState(false)
-  const [videoProcessing, setVideoProcessing] = useState(false)
+  const [, setVideoProcessing] = useState(false)
   const [openUploadModal, setOpenUploadModal] = useState(false)
 
   const queryClient = useQueryClient()
 
   const { data: images = [] } = useQuery({
     queryKey: ['trainer-images', trainerId],
-    queryFn: () =>
-      fetch(`/api/admin/media-trainers/${trainerId}?type=image`)
-        .then((r) => r.json())
-        .then((r) => r.data ?? []),
+    queryFn: async () => {
+      const res = await fetch(`/api/admin/media-trainers/${trainerId}?type=image`)
+      const json = await res.json()
+      return json?.data ?? []
+    },
   })
 
   const { data: video } = useQuery({
@@ -28,7 +30,6 @@ export function TrainerMediaTab({ trainerId, trainerName, trainerSpecialty }: an
     queryFn: async () => {
       const res = await fetch(`/api/admin/media-trainers/${trainerId}?type=video`)
       if (!res.ok) return null
-
       return {
         url: `/api/admin/media-trainers/${trainerId}?type=video`,
         status: 'Approved',
@@ -49,13 +50,9 @@ export function TrainerMediaTab({ trainerId, trainerName, trainerSpecialty }: an
     onSuccess: async () => {
       setVideoProcessing(true)
       setOpenUploadModal(false)
-
       await queryClient.invalidateQueries({ queryKey: ['trainer-video', trainerId] })
-
-      setTimeout(async () => {
-        await queryClient.refetchQueries({ queryKey: ['trainer-video', trainerId] })
-        setVideoProcessing(false)
-      }, 3000)
+      await queryClient.refetchQueries({ queryKey: ['trainer-video', trainerId] })
+      setVideoProcessing(false)
     },
   })
 
@@ -84,6 +81,17 @@ export function TrainerMediaTab({ trainerId, trainerName, trainerSpecialty }: an
 
   return (
     <div className='space-y-5'>
+      {(uploadImagesMutation.isPending || uploadVideoMutation.isPending) && (
+        <div className='fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 shadow-lg'>
+          <Loader2 className='h-4 w-4 animate-spin text-amber-500 shrink-0' />
+          <p className='text-xs font-medium text-amber-700'>
+            {uploadVideoMutation.isPending
+              ? 'Video uploading & transcoding — this may take a few minutes.'
+              : 'Images uploading — this may take a few seconds.'}
+          </p>
+        </div>
+      )}
+
       <div className='flex gap-0 border-b border-gray-200'>
         {SUB_TABS.map((tab) => (
           <button
@@ -119,19 +127,7 @@ export function TrainerMediaTab({ trainerId, trainerName, trainerSpecialty }: an
 
       {subTab === 'video' && (
         <>
-          {videoProcessing ? (
-            <div className='flex min-h-75 flex-col items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 p-6 text-center'>
-              <div className='h-10 w-10 animate-spin rounded-full border-4 border-[#0b4d8d] border-t-transparent' />
-
-              <h3 className='mt-4 text-sm font-semibold text-gray-900'>
-                Uploading video...
-              </h3>
-
-              <p className='mt-2 max-w-sm text-xs text-gray-500'>
-                Video may take a few seconds to upload and process. Please wait.
-              </p>
-            </div>
-          ) : videoView === 'detail' && video ? (
+          {videoView === 'detail' && video ? (
             <VideoDetailView
               video={video}
               trainerName={trainerName}
@@ -165,11 +161,6 @@ export function TrainerMediaTab({ trainerId, trainerName, trainerSpecialty }: an
                   loading={uploadVideoMutation.isPending}
                   onFileSelect={(files: File[]) => uploadVideoMutation.mutate(files[0])}
                 />
-
-                <p className='mt-3 text-center text-xs text-gray-500'>
-                  Video may take a few seconds to upload and process.
-                </p>
-
                 <button
                   onClick={() => setOpenUploadModal(false)}
                   className='mt-3 w-full rounded-lg border border-gray-200 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50'

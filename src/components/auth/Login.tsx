@@ -165,7 +165,7 @@ const Login = ({ type }: LoginProps) => {
 
                 <div className="!mt-2 flex justify-end">
                   <Link
-                    href="/forgot-password"
+                    href="/admin/forgot-password"
                     className="cursor-pointer text-xs font-semibold text-red-800 sm:text-sm"
                   >
                     Forgot Password?
