@@ -84,6 +84,7 @@ export function useAdminClients(
 
   return useQuery({
     queryKey: clientsQueryKeys.list(page, perPage, isActive),
+    placeholderData: (previousData) => previousData,
     queryFn: async () => {
       const params = new URLSearchParams({
         page: String(page),
