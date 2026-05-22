@@ -1,14 +1,8 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useAnalyticsSummary } from '@/api/analytics'
+import type { AnalyticsStats } from '@/api/types/analytics'
 import { AnalyticsStatCard } from './AnalyticsStatCard'
-
-interface AnalyticsStats {
-  revenue_generated: { value: string; trend: string }
-  avg_sessions_per_user: { value: number }
-  session_completion_rate: { value: string }
-  consultation_conversion: { value: string }
-}
 
 const EMPTY_STATS: AnalyticsStats = {
   revenue_generated: { value: '$0', trend: '+0% vs last month' },
@@ -17,20 +11,9 @@ const EMPTY_STATS: AnalyticsStats = {
   consultation_conversion: { value: '0%' },
 }
 
-async function fetchAnalyticsStats(): Promise<AnalyticsStats> {
-  const res = await fetch('/api/v1/analytics/summary')
-  if (!res.ok) throw new Error('Failed to fetch analytics stats')
-  const data = await res.json()
-  return data.data
-}
-
 export function AnalyticsStatsSection() {
-  const { data } = useQuery({
-    queryKey: ['analytics-stats'],
-    queryFn: fetchAnalyticsStats,
-  })
-
-  const stats = data ?? EMPTY_STATS
+  const { data: response } = useAnalyticsSummary()
+  const stats = response?.data ?? EMPTY_STATS
 
   return (
     <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>

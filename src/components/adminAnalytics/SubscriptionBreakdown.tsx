@@ -1,20 +1,8 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useSubscriptionBreakdown } from '@/api/analytics'
+import type { SubscriptionData } from '@/api/types/analytics'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts'
-
-interface SubscriptionPlan {
-    name: string
-    users: number
-    percentage: number
-    color: string
-}
-
-interface SubscriptionData {
-    total: number
-    plans: SubscriptionPlan[]
-    note: string
-}
 
 const EMPTY_DATA: SubscriptionData = {
     total: 0,
@@ -23,77 +11,64 @@ const EMPTY_DATA: SubscriptionData = {
         { name: 'Committed', users: 1, percentage: 0, color: '#4f8ef7' },
         { name: 'Consistent', users: 1, percentage: 0, color: '#a855f7' },
     ],
-    
     note: 'No subscription data yet.',
 }
 
-async function fetchSubscriptionData(): Promise<SubscriptionData> {
-    const res = await fetch('/api/v1/analytics/subscriptions')
-    if (!res.ok) throw new Error('Failed to fetch subscription data')
-    const data = await res.json()
-    return data.data
-}
-
 export function SubscriptionBreakdown() {
-    const { data } = useQuery({
-        queryKey: ['subscription-breakdown'],
-        queryFn: fetchSubscriptionData,
-    })
-
-    const stats = data ?? EMPTY_DATA
+    const { data: response } = useSubscriptionBreakdown()
+    const subscriptionData = response?.data ?? EMPTY_DATA
 
     return (
-        <div className='flex-1 rounded-xl border border-gray-100 bg-white p-6 shadow-sm'>
-            <h2 className='text-xl font-bold text-foreground'>Subscription Breakdown</h2>
-            <p className='mt-1 text-sm text-muted'>Distribution across subscription plans.</p>
+        <div className='rounded-xl border border-gray-100 bg-white p-5 shadow-sm'>
+            <h2 className='mb-1 text-base font-semibold text-gray-900'>Subscription Breakdown</h2>
+            <p className='mb-6 text-sm text-gray-400'>{subscriptionData.total} active subscribers</p>
 
-            <div className='mt-6 flex items-center gap-6'>
-                <div className='relative flex shrink-0 items-center justify-center'>
-                    <ResponsiveContainer width={160} height={160}>
+            <div className='flex flex-col items-center gap-6 md:flex-row'>
+                <div className='h-[200px] w-[200px]'>
+                    <ResponsiveContainer width='100%' height='100%'>
                         <PieChart>
                             <Pie
-                                data={stats.plans}
+                                data={subscriptionData.plans}
                                 cx='50%'
                                 cy='50%'
-                                innerRadius={50}
-                                outerRadius={75}
+                                innerRadius={60}
+                                outerRadius={90}
+                                paddingAngle={2}
                                 dataKey='users'
-                                strokeWidth={2}
                             >
-                                {stats.plans.map((plan, index) => (
-                                    <Cell key={index} fill={plan.color} />
+                                {subscriptionData.plans.map((plan) => (
+                                    <Cell key={plan.name} fill={plan.color} />
                                 ))}
                             </Pie>
-                            <Tooltip
-                                contentStyle={{ borderRadius: '8px', border: '1px solid #f0f0f0', fontSize: '12px' }}
-                                formatter={(value) => [`${value} users`]}
-                            />
+                            <Tooltip />
                         </PieChart>
                     </ResponsiveContainer>
-                    <div className='absolute flex flex-col items-center'>
-                        <p className='text-xl font-bold text-foreground'>{stats.total}</p>
-                        <p className='text-xs text-muted'>Total</p>
-                    </div>
                 </div>
 
                 <div className='flex-1 space-y-3'>
-                    {stats.plans.map((plan) => (
+                    {subscriptionData.plans.map((plan) => (
                         <div key={plan.name} className='flex items-center justify-between'>
                             <div className='flex items-center gap-2'>
-                                <span className='h-2.5 w-2.5 rounded-full' style={{ backgroundColor: plan.color }} />
-                                <p className='text-sm text-muted-foreground'>{plan.name}</p>
+                                <span
+                                    className='h-3 w-3 rounded-full'
+                                    style={{ backgroundColor: plan.color }}
+                                />
+                                <span className='text-sm text-gray-600'>{plan.name}</span>
                             </div>
-                            <p className='text-sm font-medium text-foreground'>
-                                {plan.users} users ({plan.percentage}%)
-                            </p>
+                            <div className='text-right'>
+                                <span className='text-sm font-semibold text-gray-900'>
+                                    {plan.users} users
+                                </span>
+                                <span className='ml-2 text-xs text-gray-400'>
+                                    {plan.percentage}%
+                                </span>
+                            </div>
                         </div>
                     ))}
                 </div>
             </div>
 
-            <div className='mt-6 flex items-center gap-2 rounded-lg bg-gray-50 px-4 py-3'>
-                <p className='text-xs text-muted-foreground'>{stats.note}</p>
-            </div>
+            <p className='mt-4 text-xs text-gray-400'>{subscriptionData.note}</p>
         </div>
     )
 }

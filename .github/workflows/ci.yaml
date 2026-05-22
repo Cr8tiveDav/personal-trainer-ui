@@ -39,6 +39,8 @@ jobs:
         run: pnpm lint
 
       - name: Build project
+        env:
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.staging.fitcall.me' }}
         run: pnpm build
 
       - name: Run Trivy vulnerability scan

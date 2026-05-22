@@ -1,18 +1,7 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useSessionStats } from '@/api/sessions'
 import { AlertCircle } from 'lucide-react'
-
-interface SessionStats {
-  total_sessions: number
-  total_sessions_change: string
-  need_confirmation: number
-  open_disputes: number
-  trial_paid_rate: string
-  trial_paid_rate_change: string
-  no_show_rate: string
-  no_show_rate_change: string
-}
 
 interface SessionStatCardProps {
   label: string
@@ -52,20 +41,10 @@ function SessionStatCard({ label, value, subtext, valueColor = 'default', trendC
   )
 }
 
-async function fetchSessionStats(): Promise<SessionStats> {
-  const res = await fetch('/api/v1/sessions/stats')
-  if (!res.ok) throw new Error('Failed to fetch session stats')
-  const data = await res.json()
-  return data.data
-}
-
 export function SessionsStatsSection() {
-  const { data } = useQuery({
-    queryKey: ['session-stats'],
-    queryFn: fetchSessionStats,
-  })
+  const { data: response } = useSessionStats()
 
-  const stats = data ?? {
+  const stats = response?.data ?? {
     total_sessions: 342,
     total_sessions_change: '+12% vs April',
     need_confirmation: 11,

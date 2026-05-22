@@ -50,11 +50,9 @@ export interface BackendTrainerResponse {
 
 export type CreatedTrainer = BackendTrainerResponse
 
-export interface ApiEnvelope<T> {
-  status: string
-  code: string
-  message: string
-  data: T
-}
+import type { ApiEnvelope } from "./index";
 
-export type BackendTrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>
+export type BackendTrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>;
+export type TrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>;
+export type TrainerDetailResponse = ApiEnvelope<BackendTrainerResponse>;
+export type CreateTrainerResponse = ApiEnvelope<BackendTrainerResponse>;

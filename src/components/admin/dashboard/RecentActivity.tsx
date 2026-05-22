@@ -1,24 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useQuery } from '@tanstack/react-query'
-import { Activity, ActivityRow } from './ActivityRow'
-
-
-async function fetchRecentActivity(): Promise<Activity[]> {
-  const res = await fetch('/api/v1/sessions/recent')
-  if (!res.ok) throw new Error('Failed to fetch activity')
-  const data = await res.json()
-  return data.data
-}
+import { useRecentActivity } from '@/api/dashboard'
+import { ActivityRow } from './ActivityRow'
 
 export function RecentActivity() {
-  const { data: activities } = useQuery({
-    queryKey: ['recent-activity'],
-    queryFn: fetchRecentActivity,
-  })
-
-  const list = activities ?? []
+  const { data: response } = useRecentActivity()
+  const list = response?.data ?? []
 
   return (
     <div className='flex-1 rounded-xl border border-gray-100 bg-white p-5 shadow-sm h-full'>

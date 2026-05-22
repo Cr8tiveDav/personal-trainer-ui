@@ -1,15 +1,8 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useConsultationConversion } from '@/api/analytics'
+import type { ConversionData } from '@/api/types/analytics'
 import { FunnelChart, Funnel, LabelList, ResponsiveContainer, Tooltip } from 'recharts'
-
-interface ConversionData {
-  consultations: number
-  subscriptions: number
-  drop_off: number
-  conversion_rate: number
-  trend: string
-}
 
 const EMPTY_DATA: ConversionData = {
   consultations: 100,
@@ -19,20 +12,9 @@ const EMPTY_DATA: ConversionData = {
   trend: '0% from last month',
 }
 
-async function fetchConversionData(): Promise<ConversionData> {
-  const res = await fetch('/api/v1/analytics/conversion')
-  if (!res.ok) throw new Error('Failed to fetch conversion data')
-  const data = await res.json()
-  return data.data
-}
-
 export function ConsultationConversion() {
-  const { data } = useQuery({
-    queryKey: ['consultation-conversion'],
-    queryFn: fetchConversionData,
-  })
-
-  const stats = data ?? EMPTY_DATA
+  const { data: response } = useConsultationConversion()
+  const stats = response?.data ?? EMPTY_DATA
 
   const funnelData = [
     { value: stats.consultations, name: 'Consultations', fill: '#4f8ef7' },

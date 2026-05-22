@@ -50,6 +50,14 @@ async function refreshAccessToken(
     maxAge,
   });
 
+  cookieStore.set("access_token", sessionToken, {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge,
+  });
+
   if (newRefreshToken) {
     cookieStore.set("refresh_token", newRefreshToken, {
       httpOnly: true,
@@ -61,6 +69,14 @@ async function refreshAccessToken(
   }
 
   return sessionToken;
+}
+
+export async function refreshSessionToken(): Promise<string | null> {
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get("refresh_token")?.value;
+  const expiredAccessToken = cookieStore.get("session_token")?.value ?? null;
+  if (!refreshToken) return null;
+  return refreshAccessToken(refreshToken, expiredAccessToken);
 }
 
 export async function getAccessToken(): Promise<string | null> {
