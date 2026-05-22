@@ -99,7 +99,6 @@ export async function authenticatedFetch(
 ): Promise<Response> {
   const cookieStore = await cookies()
 
-  console.log("ALL COOKIES:", cookieStore.getAll())
 
   let token = await getAccessToken()
 

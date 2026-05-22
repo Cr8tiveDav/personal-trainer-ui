@@ -5,7 +5,6 @@ const BASE_URL = process.env.API_URL
 
 async function getToken() {
   const cookieStore = await cookies()
-  // Change 'auth_token' to 'access_token'
   return cookieStore.get('access_token')?.value 
 }
 
@@ -21,10 +20,6 @@ export async function GET(
     ? `${BASE_URL}/trainers/${id}/intro-video/stream`
     : `${BASE_URL}/trainers/${id}/images`
 
-  console.log('--- GET ROUTE ---')
-  console.log('Endpoint:', endpoint)
-  console.log('Token present:', !!token)
-
   try {
     if (type === 'video') {
       const range = req.headers.get('range')
@@ -39,16 +34,25 @@ export async function GET(
       if (!res.ok) {
         const errorText = await res.text()
         console.log('Video Error Body:', errorText)
-        return NextResponse.json({ error: 'Video stream failed', details: errorText }, { status: res.status })
+        return NextResponse.json(
+          { error: 'Video stream failed', details: errorText },
+          { status: res.status }
+        )
       }
+
+      const headers = new Headers()
+
+      const contentType = res.headers.get('Content-Type')
+      const contentRange = res.headers.get('Content-Range')
+
+      if (contentType) headers.set('Content-Type', contentType)
+      if (contentRange) headers.set('Content-Range', contentRange)
+
+      headers.set('Accept-Ranges', 'bytes')
 
       return new NextResponse(res.body, {
         status: res.status,
-        headers: {
-          'Content-Type': res.headers.get('Content-Type') ?? 'video/mp4',
-          'Content-Range': res.headers.get('Content-Range') ?? '',
-          'Accept-Ranges': 'bytes',
-        },
+        headers,
       })
     }
 
@@ -81,16 +85,31 @@ export async function POST(
   console.log('--- POST ROUTE ---')
   console.log('Endpoint:', endpoint)
 
-  const res = await fetch(endpoint, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
-    body: formData,
-  })
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData,
+    })
 
-  const data = await res.json()
-  console.log('POST Response:', data)
-  
-  return NextResponse.json(data, { status: res.status })
+    let data
+    try {
+      data = await res.json()
+    } catch {
+      const text = await res.text()
+      data = { error: 'Invalid JSON response', raw: text }
+    }
+
+    console.log('POST Response:', data)
+
+    return NextResponse.json(data, { status: res.status })
+  } catch (err) {
+    console.error('POST Fetch Error:', err)
+    return NextResponse.json(
+      { error: 'Upload failed', details: String(err) },
+      { status: 500 }
+    )
+  }
 }
 
 export async function DELETE(
