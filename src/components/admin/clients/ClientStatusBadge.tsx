@@ -1,5 +1,5 @@
 import { cn } from '~/utils'
-import type { ClientStatus } from './mock-data'
+import type { ClientStatus } from './types'
 
 const STATUS_STYLES: Record<ClientStatus, string> = {
   Active: 'bg-green-50 text-green-600',

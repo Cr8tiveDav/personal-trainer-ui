@@ -13,6 +13,7 @@ import {
   X,
   Menu,
   Video,
+  PhoneCall,
 } from 'lucide-react'
 import { SidebarItem } from './sidebarItem'
 import { cn } from '~/utils'
@@ -30,6 +31,11 @@ const NAV_SECTIONS = [
       { label: 'Trainers', href: '/admin/trainers', icon: Dumbbell },
       { label: 'Clients', href: '/admin/users', icon: Users },
       { label: 'Sessions', href: '/admin/sessions', icon: Hourglass },
+      {
+        label: 'Discovery slots',
+        href: '/admin/discovery-slots',
+        icon: PhoneCall,
+      },
     ],
   },
   {

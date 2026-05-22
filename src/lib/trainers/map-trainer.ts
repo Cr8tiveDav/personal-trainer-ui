@@ -9,7 +9,7 @@ import type {
 type NullableString = { String: string; Valid: boolean };
 
 function parseAverageRating(
-  rating: BackendTrainerResponse['average_rating']
+  rating: BackendTrainerResponse['average_rating'],
 ): number {
   if (rating == null) return 0;
   if (typeof rating === 'number') return rating;
@@ -21,7 +21,7 @@ function parseAverageRating(
   return 0;
 }
 
-function displayName(trainer: BackendTrainerResponse): string {
+function fallbackName(trainer: BackendTrainerResponse): string {
   const bio = trainer.bio?.trim();
   if (bio) {
     const short = bio.length > 40 ? `${bio.slice(0, 40)}…` : bio;
@@ -31,22 +31,18 @@ function displayName(trainer: BackendTrainerResponse): string {
 }
 
 function formatList(items: string[]) {
-  //  Return empty string if the array has no items
   if (!items || items.length === 0) return '';
 
-  // If there's only 1 item, no joining is needed
   if (items.length === 1) return items[0];
 
-  // Separate the very last item from the rest of the array
   const lastItem = items[items.length - 1];
   const remainingItems = items.slice(0, -1);
 
-  // Join the first items with a comma, then snap the "&" onto the last one
   return remainingItems.join(', ') + ' & ' + lastItem;
 }
 
 export function mapBackendToFrontend(
-  backendTrainer: BackendTrainerResponse
+  backendTrainer: BackendTrainerResponse,
 ): Trainer {
   let status: TrainerStatus = 'Pending';
   const onboarding = backendTrainer.onboarding_status?.toLowerCase();
@@ -64,15 +60,26 @@ export function mapBackendToFrontend(
 
   const rating = parseAverageRating(backendTrainer.average_rating);
 
+  const displayPicture = backendTrainer.display_picture?.trim() ?? '';
+  const name = backendTrainer.name?.trim() || fallbackName(backendTrainer);
+  const email =
+    backendTrainer.email?.trim() || backendTrainer.user_id || '';
+
+  const specializations = backendTrainer.specializations ?? [];
+
   return {
     id: backendTrainer.id,
-    name: backendTrainer.name,
-    email: backendTrainer.email ?? 'N/A',
-    bio: backendTrainer.bio ?? 'No bio available.',
-    avatarUrl:
-      backendTrainer.display_picture ??
-      `https://i.pravatar.cc/150?u=${backendTrainer.id}`,
-    specialty: formatList(backendTrainer.specializations) ?? 'General',
+    name,
+    email,
+    avatarUrl: displayPicture || undefined,
+    specialty: formatList(specializations) || specializations[0] || 'General',
+    specializations,
+    trainingStyles: backendTrainer.training_styles ?? [],
+    bio: backendTrainer.bio ?? '',
+    introVideoUrl: backendTrainer.intro_video_url?.trim() ?? '',
+    displayPictureUrl: displayPicture,
+    onboardingStatus:
+      backendTrainer.onboarding_status?.toLowerCase() ?? 'pending',
     status,
     sessions: null,
     earnings: 0,

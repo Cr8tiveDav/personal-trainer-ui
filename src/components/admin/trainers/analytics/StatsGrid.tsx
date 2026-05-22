@@ -3,20 +3,22 @@
 import React from 'react'
 import StatCard from './StatCard'
 import { useGetTrainers } from '@/api/trainers'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const StatsGrid = () => {
-  const { data } = useGetTrainers()
+  const { data, isLoading } = useGetTrainers()
+  const showSkeleton = isLoading && !data
 
   const stats = [
     {
       title: 'Active Trainers',
-      value: data?.counts?.active ?? '--',
+      value: showSkeleton ? '' : (data?.counts?.active ?? 0),
       icon: '/images/admin-dashboard/icons/users-three.svg',
       variant: '#F7F7F7',
     },
     {
       title: 'Pending Approvals',
-      value: data?.counts?.pending ?? '--',
+      value: showSkeleton ? '' : (data?.counts?.pending ?? 0),
       icon: '/images/admin-dashboard/icons/hourglass-high.svg',
       variant: '#FEF0EF',
     },
@@ -36,15 +38,26 @@ const StatsGrid = () => {
 
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-      {stats.map((stat, index) => (
-        <StatCard
-          key={index}
-          title={stat.title}
-          value={stat.value}
-          icon={stat.icon}
-          variant={stat.variant}
-        />
-      ))}
+      {stats.map((stat, index) =>
+        showSkeleton ? (
+          <div
+            key={index}
+            className='flex flex-col justify-between gap-2 rounded-xl border border-[#EBEBEB] bg-white p-5'
+          >
+            <Skeleton className='h-10 w-10 rounded-full' />
+            <Skeleton className='h-9 w-20' />
+            <Skeleton className='h-3 w-28' />
+          </div>
+        ) : (
+          <StatCard
+            key={index}
+            title={stat.title}
+            value={stat.value}
+            icon={stat.icon}
+            variant={stat.variant}
+          />
+        ),
+      )}
     </div>
   )
 }

@@ -1,173 +1,330 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Filter, ArrowUpDown, MoreVertical } from 'lucide-react'
-import Link from 'next/link'
-import { mockClients } from './mock-data'
-import type { ClientStatus } from './mock-data'
-import { ClientStatusBadge } from './ClientStatusBadge'
+import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
+import type { Client } from './types'
+import { ClientTableRow } from './ClientTableRow'
+import { ClientTableSkeleton } from './ClientTableSkeleton'
+import { ClientsEmptyState } from './ClientsEmptyState'
+import type { ClientTab } from './ClientFilterTabs'
 
-type Tab = 'All' | ClientStatus
+const PER_PAGE = 10
 
-const TABS: { label: string; tab: Tab }[] = [
-  { label: 'All clients', tab: 'All' },
-  { label: 'Active', tab: 'Active' },
-  { label: 'Paused', tab: 'Paused' },
-  { label: 'Inactive', tab: 'Inactive' },
-]
+const TABLE_COLUMNS = [
+  'CLIENT',
+  'SESSIONS',
+  'JOINED',
+  'REVENUE',
+  'STATUS',
+  'ACTIONS',
+] as const
 
-function getTabCount(tab: Tab) {
-  if (tab === 'All') return mockClients.length
-  return mockClients.filter((c) => c.status === tab).length
+function getPaginationPages(itemCount: number, pageSize: number) {
+  if (itemCount <= 0 || pageSize <= 0) return 0
+  return Math.ceil(itemCount / pageSize)
 }
 
-export function ClientsTable() {
-  const [activeTab, setActiveTab] = useState<Tab>('All')
-  const [search, setSearch] = useState('')
+function getVisiblePages(current: number, total: number) {
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+  if (current <= 3) {
+    return [1, 2, 3, 4, 5, '...'] as const
+  }
+  if (current >= total - 2) {
+    return [
+      '...',
+      total - 4,
+      total - 3,
+      total - 2,
+      total - 1,
+      total,
+    ] as const
+  }
+  return ['...', current - 1, current, current + 1, '...'] as const
+}
 
-  const filtered = mockClients.filter((c) => {
-    const matchesTab = activeTab === 'All' || c.status === activeTab
-    const matchesSearch =
-      search === '' ||
-      c.name.toLowerCase().includes(search.toLowerCase()) ||
-      c.email.toLowerCase().includes(search.toLowerCase())
-    return matchesTab && matchesSearch
-  })
+type ClientsTableProps = {
+  clients?: Client[]
+  activeTab: ClientTab
+  searchQuery: string
+  onSearchChange: (value: string) => void
+  isLoading: boolean
+  isError: boolean
+  listKey?: string
+  listTotalCount: number
+}
+
+type ClientsTableBodyProps = Omit<
+  ClientsTableProps,
+  'searchQuery' | 'onSearchChange' | 'activeTab'
+>
+
+function ClientsTableBody({
+  clients,
+  isLoading,
+  isError,
+  listTotalCount,
+}: ClientsTableBodyProps) {
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const totalPages = Math.max(1, getPaginationPages(listTotalCount, PER_PAGE))
+  const displayPage = Math.min(currentPage, totalPages)
+  const rowsAnimationKey = `page-${displayPage}`
+
+  const startIndex = (displayPage - 1) * PER_PAGE
+  const endIndex = startIndex + PER_PAGE
+  const pageClients = clients?.slice(startIndex, endIndex)
+
+  const rangeStart =
+    listTotalCount === 0 ? 0 : (displayPage - 1) * PER_PAGE + 1
+  const rangeEnd =
+    listTotalCount === 0
+      ? 0
+      : Math.min(displayPage * PER_PAGE, listTotalCount)
+  const visiblePages = getVisiblePages(displayPage, Math.max(totalPages, 1))
+
+  const resultsLabel =
+    listTotalCount === 0
+      ? 'Showing 0 results'
+      : `Showing ${rangeStart}–${rangeEnd} of ${listTotalCount} results`
+
+  const isEmptyList =
+    !isLoading && !isError && listTotalCount === 0 && (clients?.length ?? 0) === 0
+
+  const showPagination =
+    !isLoading && !isError && !isEmptyList && listTotalCount > PER_PAGE
+
+  function goToPage(next: number) {
+    if (next < 1 || next > totalPages || next === displayPage) return
+    setCurrentPage(next)
+  }
+
+  const emptyTitle =
+    listTotalCount === 0 && clients?.length === 0
+      ? 'No clients yet'
+      : 'No clients found'
 
   return (
-    <div className='rounded-2xl border-2 border-dashed border-blue-200 bg-white'>
-      <div className='border-b border-gray-100 px-6 pt-5'>
-        <div className='flex gap-6 overflow-x-auto'>
-          {TABS.map(({ label, tab }) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`whitespace-nowrap border-b-2 pb-3 text-sm font-medium transition-colors ${
-                activeTab === tab
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              {label} ({getTabCount(tab)})
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className='flex items-center gap-3 border-b border-gray-100 px-6 py-4'>
-        <div className='relative flex-1'>
-          <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400' />
-          <input
-            type='text'
-            placeholder='Search by name or email'
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className='w-full rounded-lg border border-gray-200 py-2 pl-9 pr-4 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary'
-          />
-        </div>
-        <button className='flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'>
-          <Filter className='h-4 w-4' />
-          Filter
-        </button>
-        <button className='flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'>
-          <ArrowUpDown className='h-4 w-4' />
-          Sort
-        </button>
-      </div>
-
-      <div className='overflow-x-auto'>
-        <table className='w-full'>
-          <thead>
-            <tr className='border-b border-gray-100'>
-              {['CLIENT', 'TRAINER', 'PLAN', 'SESSIONS', 'LAST SESSION', 'STATUS', 'ACTIONS'].map(
-                (col) => (
+    <>
+      {isLoading ? (
+        <div className='min-h-50 overflow-x-auto'>
+          <table className='w-full border-collapse text-left'>
+            <thead>
+              <tr className='border-b border-gray-100'>
+                {TABLE_COLUMNS.map((col) => (
                   <th
                     key={col}
                     className='px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-gray-400'
                   >
                     {col}
                   </th>
-                )
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 ? (
-              <tr>
-                <td colSpan={7} className='px-6 py-16 text-center text-sm text-gray-400'>
-                  No clients found.
-                </td>
+                ))}
               </tr>
-            ) : (
-              filtered.map((client) => (
-                <tr key={client.id} className='border-b border-gray-50 hover:bg-gray-50'>
-                  <td className='px-6 py-4'>
-                    <Link href={`/admin/users/${client.id}`} className='flex items-center gap-3 hover:underline'>
-                      <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white'>
-                        {client.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className='text-sm font-medium text-gray-900'>{client.name}</p>
-                        <p className='text-xs text-gray-400'>{client.email}</p>
-                      </div>
-                    </Link>
-                  </td>
-                  <td className='px-6 py-4'>
-                    <div className='flex items-center gap-3'>
-                      <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600'>
-                        {client.trainer.charAt(0)}
-                      </div>
-                      <div>
-                        <p className='text-sm font-medium text-gray-900'>{client.trainer}</p>
-                        <p className='text-xs text-gray-400'>{client.trainerEmail}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className='px-6 py-4'>
-                    <span className='rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-600'>
-                      {client.plan}
-                    </span>
-                  </td>
-                  <td className='px-6 py-4 text-sm text-gray-700'>
-                    {client.sessions === null ? '—' : client.sessions}
-                  </td>
-                  <td className='px-6 py-4 text-sm text-gray-500'>{client.lastSession}</td>
-                  <td className='px-6 py-4'>
-                    <ClientStatusBadge status={client.status} />
-                  </td>
-                  <td className='px-6 py-4'>
-                    <button className='rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600'>
-                      <MoreVertical className='h-4 w-4' />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              <ClientTableSkeleton />
+            </tbody>
+          </table>
+        </div>
+      ) : isError ? (
+        <div className='px-6 py-16 text-center text-sm text-red-500'>
+          Failed to load clients. Please try again.
+        </div>
+      ) : isEmptyList ? (
+        <ClientsEmptyState
+          title={emptyTitle}
+          description='Clients will appear here once they register on the platform.'
+        />
+      ) : (
+        <div className='min-h-50 overflow-x-auto'>
+          <table className='w-full border-collapse text-left'>
+            <thead>
+              <tr className='border-b border-gray-100'>
+                {TABLE_COLUMNS.map((col) => (
+                  <th
+                    key={col}
+                    className='px-6 py-3 text-left text-[11px] font-semibold uppercase tracking-wide text-gray-400'
+                  >
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <AnimatePresence key={rowsAnimationKey} initial mode='sync'>
+                {pageClients?.map((client, index) => (
+                  <ClientTableRow
+                    key={client.id}
+                    client={client}
+                    index={index}
+                  />
+                ))}
+              </AnimatePresence>
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className='flex flex-col items-center justify-center gap-4 border-t border-gray-100 px-6 py-4 sm:flex-row sm:justify-between'>
+        <p className='text-sm text-gray-400'>
+          {isLoading ? 'Loading clients…' : resultsLabel}
+        </p>
+
+        {showPagination && (
+          <div className='flex items-center gap-1'>
+            <motion.button
+              type='button'
+              whileTap={{ scale: 0.95 }}
+              onClick={() => goToPage(displayPage - 1)}
+              disabled={displayPage <= 1}
+              className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
+              aria-label='Previous page'
+            >
+              <ChevronLeft className='h-4 w-4' />
+            </motion.button>
+
+            {visiblePages.map((item, index) => {
+              if (item === '...') {
+                return (
+                  <span
+                    key={`ellipsis-${index}`}
+                    className='flex h-9 w-9 items-center justify-center text-gray-500'
+                  >
+                    …
+                  </span>
+                )
+              }
+              const pageNumber = item as number
+              const isActive = displayPage === pageNumber
+              return (
+                <motion.button
+                  key={pageNumber}
+                  type='button'
+                  layout
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => goToPage(pageNumber)}
+                  className={`relative flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'text-white'
+                      : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId='client-table-page'
+                      className='absolute inset-0 rounded-md bg-primary'
+                      transition={{
+                        type: 'spring',
+                        stiffness: 380,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                  <span className='relative z-10'>{pageNumber}</span>
+                </motion.button>
+              )
+            })}
+
+            <motion.button
+              type='button'
+              whileTap={{ scale: 0.95 }}
+              onClick={() => goToPage(displayPage + 1)}
+              disabled={displayPage >= totalPages}
+              className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
+              aria-label='Next page'
+            >
+              <ChevronRight className='h-4 w-4' />
+            </motion.button>
+          </div>
+        )}
+      </div>
+    </>
+  )
+}
+
+export function ClientsTable({
+  clients,
+  activeTab,
+  searchQuery,
+  onSearchChange,
+  isLoading,
+  isError,
+  listKey = 'default',
+  listTotalCount,
+}: ClientsTableProps) {
+  const emptyTitle =
+    searchQuery.trim() !== ''
+      ? 'No clients match your search'
+      : activeTab === 'Inactive'
+        ? 'No inactive clients'
+        : activeTab === 'Active'
+          ? 'No active clients'
+          : activeTab === 'Paused'
+            ? 'No paused clients'
+            : 'No clients yet'
+
+  const emptyDescription =
+    searchQuery.trim() !== ''
+      ? 'Try a different name or email, or clear the search.'
+      : activeTab !== 'All'
+        ? 'Switch tabs or check back when client activity changes.'
+        : 'Clients will appear here once they register on the platform.'
+
+  const showEmpty =
+    !isLoading && !isError && (clients?.length ?? 0) === 0
+
+  return (
+    <>
+      <div className='flex items-center gap-3 border-b border-gray-100 px-6 py-4'>
+        <div className='relative flex-1'>
+          <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400' />
+          <input
+            type='text'
+            placeholder='Search by name or email'
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className='w-full rounded-lg border border-gray-200 py-2 pl-9 pr-4 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary'
+          />
+        </div>
+        <button
+          type='button'
+          className='flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
+        >
+          <Filter className='h-4 w-4' />
+          Filter
+        </button>
+        <button
+          type='button'
+          className='flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
+        >
+          <ArrowUpDown className='h-4 w-4' />
+          Sort
+        </button>
       </div>
 
-      <div className='flex items-center justify-between border-t border-gray-100 px-6 py-4'>
-        <p className='text-sm text-gray-400'>Showing 1–{filtered.length} of {mockClients.length} results</p>
-        <div className='flex items-center gap-1'>
-          {[1, 2, 3, 4, 5].map((page) => (
-            <button
-              key={page}
-              className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm ${
-                page === 1
-                  ? 'bg-primary text-white'
-                  : 'text-gray-500 hover:bg-gray-100'
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-          <span className='px-1 text-gray-400'>...</span>
-          <button className='flex h-8 w-8 items-center justify-center rounded-lg text-sm text-gray-500 hover:bg-gray-100'>
-            ›
-          </button>
-        </div>
-      </div>
-    </div>
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        className='w-full'
+      >
+        {showEmpty ? (
+          <ClientsEmptyState
+            title={emptyTitle}
+            description={emptyDescription}
+          />
+        ) : (
+          <ClientsTableBody
+            key={listKey}
+            clients={clients}
+            isLoading={isLoading}
+            isError={isError}
+            listTotalCount={listTotalCount}
+          />
+        )}
+      </motion.div>
+    </>
   )
 }
