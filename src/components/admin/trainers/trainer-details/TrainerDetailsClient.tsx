@@ -10,6 +10,9 @@ import TrainerTabs from './TrainerTabs';
 import OverviewTab from './tabs/OverviewTab';
 import SessionsTab from './tabs/SessionsTab';
 import AvailabilityTab from './tabs/AvailabilityTab';
+import { TrainerMediaTab } from './tabs/MediaTabs';
+
+
 
 export type TabType =
   | 'overview'
@@ -82,9 +85,11 @@ const TrainerDetailsClient = () => {
             </div>
           )}
           {activeTab === 'media' && (
-            <div className='py-8 text-center text-gray-500'>
-              Media tab content coming soon.
-            </div>
+            <TrainerMediaTab
+              trainerId={trainer.id}
+              trainerName={trainer.name}
+              trainerSpecialty={trainer.specialty}
+            />
           )}
           {activeTab === 'availability' && <AvailabilityTab />}
         </div>
