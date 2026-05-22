@@ -79,11 +79,13 @@ export function useAdminClients(
   page: number,
   perPage = 10,
   filters?: AdminClientsFilters,
+  options?: { enabled?: boolean },
 ) {
   const isActive = filters?.isActive
 
   return useQuery({
     queryKey: clientsQueryKeys.list(page, perPage, isActive),
+    enabled: options?.enabled ?? true,
     placeholderData: (previousData) => previousData,
     queryFn: async () => {
       const params = new URLSearchParams({

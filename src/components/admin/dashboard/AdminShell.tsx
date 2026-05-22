@@ -22,7 +22,7 @@ export function AdminShell({
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className='flex h-screen w-full bg-gray-50 overflow-hidden'>
+    <div className='flex h-dvh w-full overflow-hidden bg-gray-50'>
       <Sidebar
         userName={userName}
         userEmail={userEmail}
@@ -30,15 +30,15 @@ export function AdminShell({
         mobileOpen={mobileOpen}
         onMobileClose={() => setMobileOpen(false)}
       />
-      <div className='flex flex-1 flex-col h-full min-w-0 overflow-hidden'>
+      <div className='flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden'>
         <AdminHeader
           userName={userName}
           userAvatar={userAvatar}
           userType={userType}
           onMenuClick={() => setMobileOpen(true)}
         />
-        <main className='flex-1 overflow-y-auto py-6 px-4 md:px-6 lg:px-8'>
-          <div className=' w-full h-full'>{children}</div>
+        <main className='min-h-0 flex-1 overflow-y-auto overscroll-y-contain py-6 px-4 md:px-6 lg:px-8'>
+          <div className='w-full'>{children}</div>
         </main>
       </div>
     </div>

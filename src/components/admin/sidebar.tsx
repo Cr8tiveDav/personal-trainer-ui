@@ -144,7 +144,7 @@ export function Sidebar({ userName, userEmail, userAvatar, mobileOpen, onMobileC
     <>
       <aside
         className={cn(
-          'hidden md:flex shrink-0 flex-col border border-gray-100 bg-white px-4 py-6 transition-all duration-300',
+          'hidden md:flex h-full shrink-0 flex-col overflow-hidden border border-gray-100 bg-white px-4 py-6 transition-all duration-300',
           collapsed ? 'w-[68px]' : 'w-[280px]'
         )}
       >
