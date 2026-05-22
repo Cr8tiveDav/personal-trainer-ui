@@ -1,55 +1,80 @@
-import { clsx, type ClassValue } from "clsx"
-import { isAxiosError } from "axios"
-import { twMerge } from "tailwind-merge"
-import { toast } from "sonner"
+import { clsx, type ClassValue } from 'clsx';
+import { isAxiosError } from 'axios';
+import { twMerge } from 'tailwind-merge';
+import { toast } from 'sonner';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 function extractApiErrorMessage(data: unknown): string | undefined {
-  if (!data || typeof data !== "object") return undefined
+  if (!data || typeof data !== 'object') return undefined;
 
-  const record = data as Record<string, unknown>
+  const record = data as Record<string, unknown>;
 
-  if (typeof record.message === "string" && record.message.trim()) {
-    return record.message.trim()
+  if (typeof record.message === 'string' && record.message.trim()) {
+    return record.message.trim();
   }
 
-  if (typeof record.error === "string" && record.error.trim()) {
-    return record.error.trim()
+  if (typeof record.error === 'string' && record.error.trim()) {
+    return record.error.trim();
   }
 
-  if (typeof record.detail === "string" && record.detail.trim()) {
-    return record.detail.trim()
+  if (typeof record.detail === 'string' && record.detail.trim()) {
+    return record.detail.trim();
   }
 
-  return undefined
+  return undefined;
 }
 
-export function getErrorMessage(error: unknown, fallback = "Something went wrong") {
+export function getErrorMessage(error: unknown, fallback = 'Something went wrong') {
   if (isAxiosError(error)) {
-    const fromBody = extractApiErrorMessage(error.response?.data)
-    if (fromBody) return fromBody
+    const fromBody = extractApiErrorMessage(error.response?.data);
+    if (fromBody) return fromBody;
 
     if (error.response?.status === 401) {
-      return "Invalid email or password"
+      return 'Invalid email or password';
     }
 
-    if (error.message && !error.message.startsWith("Request failed")) {
-      return error.message
+    if (error.message && !error.message.startsWith('Request failed')) {
+      return error.message;
     }
   } else if (error instanceof Error && error.message) {
-    return error.message
+    return error.message;
   }
 
-  return fallback
+  return fallback;
 }
 
 export function displayError(error: unknown, fallback?: string) {
-  toast.error(getErrorMessage(error, fallback))
+  toast.error(getErrorMessage(error, fallback));
 }
 
 export function showSuccessToast(message: string) {
-  toast.success(message)
+  toast.success(message);
 }
+
+export const TruncateEmail = (
+  email: string,
+  options: { maxUsernameChars?: number; minUsernameChars?: number } = {},
+): string => {
+  const { maxUsernameChars = 6, minUsernameChars = 3 } = options;
+
+  if (!email || !email?.includes('@')) {
+    return email || '';
+  }
+
+  const [username, domain] = email.split('@');
+
+  if (username.length <= maxUsernameChars) {
+    return email;
+  }
+
+  const visibleUsername = Math.max(
+    minUsernameChars,
+    Math.min(maxUsernameChars, username.length),
+  );
+  const truncate = username.slice(0, visibleUsername) + '...';
+
+  return `${truncate}@${domain}`;
+};

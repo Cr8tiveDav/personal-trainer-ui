@@ -1,6 +1,6 @@
 'use client'
 
-import { X, Check } from 'lucide-react'
+import { X } from 'lucide-react'
 import { Session } from '../session'
 
 interface DrawerProps {
@@ -8,21 +8,27 @@ interface DrawerProps {
   onClose: () => void
   session: Session | null
   onReschedule?: (id: string) => void
-  onCancel?: (id: string) => void
 }
 
-export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule, onCancel }: DrawerProps) {
+const formatSessionId = (id: string) => {
+  if (id.length <= 12) return id
+  return `${id.slice(0, 8)}...${id.slice(-4)}`
+}
+
+export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }: DrawerProps) {
   if (!isOpen || !session) return null
 
   const isCompletedLayout = ['Completed', 'Settled', 'Disputed', 'Missed'].includes(session.state)
+  const confStyle = (val: string) => {
+    if (val === 'Yes') return 'bg-[#e7f6ec] text-[#0f973d]'
+    if (val === 'Pending') return 'bg-[#fff4e5] text-[#f59e0b]'
+    return 'bg-[#f2f4f7] text-[#aaa]'
+  }
 
-  const stateBadgeStyles: Record<Session['state'], string> = {
-    Completed: 'bg-[#e7f6ec] text-[#0f973d]',
-    Unconfirmed: 'bg-[#fff4e5] text-[#f59e0b]',
-    Scheduled: 'bg-[#eff8ff] text-[#175cd3]',
-    Settled: 'bg-[#e7f6ec] text-[#0f973d]',
-    Disputed: 'bg-[#fef3f2] text-[#d92d20]',
-    Missed: 'bg-[#f2f4f7] text-[#475467]',
+  const dotStyle = (val: string) => {
+    if (val === 'Yes') return 'bg-[#0f973d]'
+    if (val === 'Pending') return 'bg-[#f59e0b]'
+    return ''
   }
 
   return (
@@ -32,7 +38,7 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule, o
         {/* Header Section */}
         <div className='flex items-center justify-between border-b border-gray-100 pb-4'>
           <h2 className='text-xs font-bold text-gray-900'>
-            #{session.id} — {session.client.name} / {session.trainer.name}
+            <span title={`#${session.id}`}>#{formatSessionId(session.id)}</span> - {session.client.name} / {session.trainer.name}
           </h2>
           <button type='button' onClick={onClose} className='rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors'>
             <X className='h-4 w-4' />
@@ -45,38 +51,24 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule, o
             { label: 'Session ID', value: `#${session.id}`, isBold: true },
             { label: 'Client', value: `${session.client.name} (${session.client.country})` },
             { label: 'Trainer', value: session.trainer.name },
-            { label: 'Type of Subscription', value: session.type, isBadge: true },
             { label: 'Scheduled', value: session.scheduled, isBold: true },
             { label: 'Duration', value: session.duration, isBold: true },
-            { label: 'Amount', value: `$${session.amount}`, isBold: true },
           ].map((item, idx) => (
             <div key={idx} className='flex justify-between items-center'>
               <span className='text-muted font-medium'>{item.label}</span>
-              {item.isBadge ? (
-                <span className='rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-semibold text-blue-600 uppercase'>{item.value}</span>
-              ) : (
-                <span className={item.isBold ? 'font-bold text-gray-900' : 'font-medium text-muted-foreground'}>{item.value}</span>
-              )}
+              <span className={item.isBold ? 'font-bold text-gray-900' : 'font-medium text-muted-foreground'}>{item.value}</span>
             </div>
           ))}
 
-          {/* Context Styles Matrix for Core Action Layout Fields */}
           <div className='flex justify-between items-center'>
-            <span className='text-gray-muted font-medium'>State</span>
-            <span className={`rounded px-1.5 py-0.5 text-[10px] font-bold ${stateBadgeStyles[session.state]}`}>{session.state}</span>
+            <span className='text-gray-muted font-medium'>Client Confirmation</span>
+            <span className={`inline-flex items-center gap-1.5 font-semibold px-2 py-0.5 rounded-full text-[11px] ${confStyle(session.clientConf)}`}>
+              {session.clientConf !== 'N/A' && (
+                <span className={`h-1.5 w-1.5 rounded-full ${dotStyle(session.clientConf)}`} />
+              )}
+              {session.clientConf}
+            </span>
           </div>
-
-          {['Client Confirmation', 'Trainer Confirmation'].map((label, index) => {
-            const confValue = index === 0 ? session.clientConf : session.trainerConf
-            return (
-              <div key={label} className='flex justify-between items-center'>
-                <span className='text-gray-muted font-medium'>{label}</span>
-                <span className={`inline-flex items-center gap-1 text-[11px] font-semibold ${confValue === 'Yes' ? 'text-[#0f973d]' : 'text-gray-400'}`}>
-                  {confValue === 'Yes' && <Check className='h-3.5 w-3.5' />} {confValue === 'Yes' ? 'Confirmed' : confValue}
-                </span>
-              </div>
-            )
-          })}
         </div>
 
         {/* Timeline Historical Activity Logger Block */}
@@ -108,13 +100,6 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule, o
               className='px-4 h-9 rounded-lg border border-orange-200 bg-white text-xs font-semibold text-orange-600 hover:bg-orange-50/50 transition-colors'
             >
               Reschedule
-            </button>
-            <button
-              type='button'
-              onClick={() => onCancel?.(session.id)}
-              className='px-4 h-9 rounded-lg border border-red-200 bg-white text-xs font-semibold text-red-600 hover:bg-red-50/50 transition-colors'
-            >
-              Cancel Session
             </button>
           </div>
         )}
