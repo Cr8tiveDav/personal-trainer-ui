@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Eye, MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { useDeleteClient } from '@/api/clients'
-import type { Client } from './mock-data'
+import type { Client } from './types'
 import { EditClientDialog } from './EditClientDialog'
 import { Button } from '@/components/ui/button'
 import {

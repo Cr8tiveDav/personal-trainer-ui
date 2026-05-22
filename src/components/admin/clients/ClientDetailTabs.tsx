@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Calendar, DollarSign, Dumbbell, User } from 'lucide-react'
-import type { Client } from './mock-data'
+import type { Client } from './types'
 import { ClientStatusBadge } from './ClientStatusBadge'
 
 const TABS = ['Overview', 'Trainer', 'Sessions', 'Payment', 'Feedback'] as const

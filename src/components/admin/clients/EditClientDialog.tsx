@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useUpdateClient } from '@/api/clients'
-import type { Client } from './mock-data'
+import type { Client } from './types'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,

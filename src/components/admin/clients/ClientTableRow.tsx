@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { motion } from 'motion/react'
 import { trainerRowVariants } from '@/components/admin/trainers/trainers-list/table/TrainerTableRow'
-import type { Client } from './mock-data'
+import type { Client } from './types'
 import { ClientStatusBadge } from './ClientStatusBadge'
 import { ClientTableActions } from './ClientTableActions'
 

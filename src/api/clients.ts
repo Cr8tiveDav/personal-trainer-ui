@@ -14,7 +14,7 @@ import type {
   UpdateClientPayload,
   UpdateClientResponse,
 } from './types/clients'
-import type { Client } from '@/components/admin/clients/mock-data'
+import type { Client } from '@/components/admin/clients/types'
 
 export type AdminClientsFilters = {
   isActive?: boolean

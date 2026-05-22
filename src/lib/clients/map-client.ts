@@ -1,5 +1,5 @@
 import type { BackendClientResponse } from '@/api/types/clients'
-import type { Client, ClientStatus } from '@/components/admin/clients/mock-data'
+import type { Client, ClientStatus } from '@/components/admin/clients/types'
 
 function formatDate(value: string): string {
   const parsed = new Date(value)

@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { Mail } from 'lucide-react'
-import type { Client } from './mock-data'
+import type { Client } from './types'
 import { ClientStatusBadge } from './ClientStatusBadge'
 
 function formatRevenue(amount: number) {
