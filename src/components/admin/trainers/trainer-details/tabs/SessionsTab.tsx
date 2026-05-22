@@ -8,6 +8,10 @@ import { useTrainerSessions } from '@/api/sessions'
 import type { Session } from '@/components/adminSessions/session'
 import { sessionRowVariants } from '@/components/adminSessions/SessionTableRow'
 import { getTrainerSessionStats } from '@/lib/sessions/trainer-session-stats'
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState'
 import { TrainerSessionsTabSkeleton } from './TrainerSessionsTabSkeleton'
 
 const getStateBadgeStyles = (state: Session['state']) => {
@@ -119,8 +123,14 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0 }}
                   >
-                    <td colSpan={5} className='px-6 py-8 text-center text-sm text-gray-500'>
-                      No sessions found for this trainer.
+                    <td colSpan={5} className='p-0'>
+                      <EmptyState
+                        imageSrc={EMPTY_STATE_IMAGE_PATHS.trainer}
+                        imageAlt='No sessions'
+                        title='No sessions found for this trainer'
+                        description='Sessions will appear here once this trainer starts booking with clients.'
+                        className='min-h-[280px] py-12'
+                      />
                     </td>
                   </motion.tr>
                 ) : (
@@ -153,7 +163,9 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
                             <span className='text-sm font-medium text-gray-900'>
                               {session.client.name}
                             </span>
-                            <p className='text-xs text-gray-400'>{session.client.country}</p>
+                            <p className='text-xs text-gray-400'>
+                              {session.client.email ?? session.client.country}
+                            </p>
                           </div>
                         </div>
                       </td>

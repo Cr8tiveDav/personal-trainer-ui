@@ -1,13 +1,103 @@
-import axios, { type AxiosInstance, type AxiosProgressEvent } from "axios";
+import axios, {
+  type AxiosError,
+  type AxiosInstance,
+  type AxiosProgressEvent,
+  type InternalAxiosRequestConfig,
+} from "axios";
+import { API_ENDPOINTS } from "@/api/api-endpoints";
 import { getApiBaseUrl } from "@/lib/api-base-url";
-import { getToken, logoutUser } from "./get-token";
+import {
+  getRefreshToken,
+  getToken,
+  invalidateAccessTokenCache,
+  isAccessTokenExpired,
+  logoutUser,
+} from "./get-token";
+import { refreshAccessTokenClient } from "./refresh-access-token";
 
 export type ErrorData = {
   message: string;
   validationErrors?: string | [string] | [{ description: string }];
 };
 
+type RetryableRequestConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+};
+
 let apiInstance: AxiosInstance | null = null;
+let isRefreshing = false;
+let refreshQueue: Array<{
+  resolve: (token: string) => void;
+  reject: (error: unknown) => void;
+}> = [];
+
+function isLoginRequest(url: string) {
+  return (
+    url.includes(API_ENDPOINTS.AUTH.ADMIN_LOGIN) ||
+    url.includes(API_ENDPOINTS.AUTH.TRAINER_LOGIN)
+  );
+}
+
+function isAuthEndpoint(url: string) {
+  return isLoginRequest(url) || url.includes(API_ENDPOINTS.AUTH.REFRESH);
+}
+
+function setAuthHeader(config: InternalAxiosRequestConfig, token: string) {
+  if (typeof config.headers?.set === "function") {
+    config.headers.set("Authorization", `Bearer ${token}`);
+  } else {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+}
+
+function processRefreshQueue(error: unknown | null, token: string | null) {
+  refreshQueue.forEach(({ resolve, reject }) => {
+    if (error || !token) reject(error ?? new Error("Token refresh failed"));
+    else resolve(token);
+  });
+  refreshQueue = [];
+}
+
+async function refreshSession(): Promise<string | null> {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) return null;
+
+  invalidateAccessTokenCache();
+  const expiredAccessToken = getToken();
+
+  return refreshAccessTokenClient(refreshToken, expiredAccessToken);
+}
+
+/** Returns a valid access token, refreshing silently when expired. */
+export async function ensureValidAccessToken(): Promise<string | null> {
+  const refreshToken = getRefreshToken();
+  const accessToken = getToken();
+
+  if (!refreshToken) return accessToken;
+
+  const shouldRefresh = !accessToken || isAccessTokenExpired();
+
+  if (!shouldRefresh) return accessToken;
+
+  if (isRefreshing) {
+    return new Promise<string>((resolve, reject) => {
+      refreshQueue.push({ resolve, reject });
+    });
+  }
+
+  isRefreshing = true;
+
+  try {
+    const newToken = await refreshSession();
+    processRefreshQueue(null, newToken);
+    return newToken ?? accessToken;
+  } catch (error) {
+    processRefreshQueue(error, null);
+    throw error;
+  } finally {
+    isRefreshing = false;
+  }
+}
 
 function getApi(): AxiosInstance {
   if (apiInstance) return apiInstance;
@@ -17,11 +107,12 @@ function getApi(): AxiosInstance {
   });
 
   apiInstance.interceptors.request.use(
-    (config) => {
-      const token = getToken();
+    async (config) => {
+      const requestUrl = String(config.url ?? "");
 
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      if (!isAuthEndpoint(requestUrl)) {
+        const token = await ensureValidAccessToken();
+        if (token) setAuthHeader(config, token);
       }
 
       return config;
@@ -31,18 +122,64 @@ function getApi(): AxiosInstance {
 
   apiInstance.interceptors.response.use(
     (response) => response,
-    (error) => {
-      const status = error.response?.status || error.status;
-      const requestUrl = String(error.config?.url ?? "");
-      const isLoginRequest =
-        requestUrl.includes("/auth/admin/log-in") ||
-        requestUrl.includes("/trainers/login");
+    async (error: AxiosError) => {
+      const status = error.response?.status;
+      const originalRequest = error.config as
+        | RetryableRequestConfig
+        | undefined;
+      const requestUrl = String(originalRequest?.url ?? "");
 
-      // Do not redirect on failed login — that reloads the page and hides the toast.
-      if (status === 401 && !isLoginRequest && getToken()) {
-        logoutUser();
+      if (
+        status !== 401 ||
+        !originalRequest ||
+        originalRequest._retry ||
+        isAuthEndpoint(requestUrl)
+      ) {
+        return Promise.reject(error);
       }
-      return Promise.reject(error);
+
+      const refreshToken = getRefreshToken();
+      if (!refreshToken) {
+        if (getToken()) logoutUser();
+        return Promise.reject(error);
+      }
+
+      originalRequest._retry = true;
+      invalidateAccessTokenCache();
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          refreshQueue.push({
+            resolve: (token) => {
+              setAuthHeader(originalRequest, token);
+              resolve(getApi()(originalRequest));
+            },
+            reject,
+          });
+        });
+      }
+
+      isRefreshing = true;
+
+      try {
+        const newToken = await refreshSession();
+
+        if (!newToken) {
+          processRefreshQueue(error, null);
+          logoutUser();
+          return Promise.reject(error);
+        }
+
+        processRefreshQueue(null, newToken);
+        setAuthHeader(originalRequest, newToken);
+        return getApi()(originalRequest);
+      } catch (refreshError) {
+        processRefreshQueue(refreshError, null);
+        logoutUser();
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
     },
   );
 
@@ -54,6 +191,18 @@ export const getRequest = async <T>(params: {
   signal?: AbortSignal;
 }) => {
   const { data } = await getApi().get<T>(params.url, { signal: params.signal });
+
+  return data;
+};
+
+export const getBlobRequest = async (params: {
+  url: string;
+  signal?: AbortSignal;
+}) => {
+  const { data } = await getApi().get<Blob>(params.url, {
+    responseType: "blob",
+    signal: params.signal,
+  });
 
   return data;
 };

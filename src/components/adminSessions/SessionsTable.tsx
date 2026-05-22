@@ -13,6 +13,10 @@ import {
 import { Session } from './session'
 import { SessionTableRow, sessionRowVariants } from './SessionTableRow'
 import { SessionTableSkeleton } from './SessionTableSkeleton'
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState'
 
 interface TableProps {
   sessions: Session[]
@@ -263,16 +267,26 @@ function SessionsTableBody({
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <td colSpan={tableColSpan} className='px-4 py-10 text-center text-xs font-medium text-gray-400'>
-                      <div className='mx-auto flex max-w-sm flex-col items-center justify-center py-8 text-center'>
-                        <span className='flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-gray-400'>
-                          <CalendarX className='h-5 w-5' />
-                        </span>
-                        <p className='mt-3 text-sm font-bold text-gray-900'>{emptyMessage}</p>
-                        <p className='mt-1 text-xs font-medium leading-relaxed text-gray-400'>
-                          {emptyDescription}
-                        </p>
-                      </div>
+                    <td colSpan={tableColSpan} className='p-0'>
+                      {variant === 'manual' && !isFiltered ? (
+                        <EmptyState
+                          imageSrc={EMPTY_STATE_IMAGE_PATHS.manualEntry}
+                          imageAlt='No manual sessions'
+                          title={emptyMessage}
+                          description={emptyDescription}
+                          className='min-h-[280px] py-12'
+                        />
+                      ) : (
+                        <div className='mx-auto flex max-w-sm flex-col items-center justify-center px-4 py-10 text-center text-xs font-medium text-gray-400'>
+                          <span className='flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-gray-400'>
+                            <CalendarX className='h-5 w-5' />
+                          </span>
+                          <p className='mt-3 text-sm font-bold text-gray-900'>{emptyMessage}</p>
+                          <p className='mt-1 text-xs font-medium leading-relaxed text-gray-400'>
+                            {emptyDescription}
+                          </p>
+                        </div>
+                      )}
                     </td>
                   </motion.tr>
                 )}

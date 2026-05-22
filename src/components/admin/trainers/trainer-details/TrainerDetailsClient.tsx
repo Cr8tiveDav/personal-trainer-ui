@@ -9,7 +9,7 @@ import QuickDetails from './QuickDetails';
 import TrainerTabs from './TrainerTabs';
 import OverviewTab from './tabs/OverviewTab';
 import SessionsTab from './tabs/SessionsTab';
-import EarningsTab from './tabs/EarningsTab';
+// import EarningsTab from './tabs/EarningsTab';
 import AvailabilityTab from './tabs/AvailabilityTab';
 import { TrainerMediaTab } from './tabs/MediaTabs';
 import { TrainerDetailsSkeleton } from './TrainerDetailsSkeleton';
@@ -24,7 +24,7 @@ export type TabType =
 const TAB_FROM_QUERY: Record<string, TabType> = {
   overview: 'overview',
   sessions: 'sessions',
-  earnings: 'earnings',
+  // earnings: 'earnings',
   media: 'media',
   availability: 'availability',
 };
@@ -89,7 +89,7 @@ const TrainerDetailsClient = () => {
         <div className='mt-6'>
           {activeTab === 'overview' && <OverviewTab trainer={trainer} />}
           {activeTab === 'sessions' && <SessionsTab trainerId={trainer.id} />}
-          {activeTab === 'earnings' && <EarningsTab trainerId={trainer.id} />}
+          {/* {activeTab === 'earnings' && <EarningsTab trainerId={trainer.id} />} */}
           {activeTab === 'media' && (
             <TrainerMediaTab
               trainerId={trainer.id}

@@ -6,6 +6,10 @@ import TrainerTableRow from './TrainerTableRow';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Trainer } from '../../types';
 import TrainerTableSkeleton from './TrainerTableSkeleton';
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState';
 
 interface TrainerTableProps {
   trainers?: Trainer[];
@@ -120,11 +124,14 @@ function TrainerTableBody({
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <td
-                      colSpan={8}
-                      className='py-12 text-center text-sm text-gray-500'
-                    >
-                      No trainers found.
+                    <td colSpan={8} className='p-0'>
+                      <EmptyState
+                        imageSrc={EMPTY_STATE_IMAGE_PATHS.trainer}
+                        imageAlt='No trainers'
+                        title='No trainers found'
+                        description='Trainers will appear here once they are added to the platform.'
+                        className='min-h-[280px] py-12'
+                      />
                     </td>
                   </motion.tr>
                 ) : (
