@@ -8,9 +8,9 @@ interface Step {
 }
 
 const STEPS: Step[] = [
-  { number: 1, title: 'Basic Information', subtitle: 'Personal & professional details' },
-  { number: 2, title: 'Media upload', subtitle: 'Profile image & intro video' },
-  { number: 3, title: 'Account setup', subtitle: 'Invite or set credentials' },
+  { number: 1, title: 'Basic Information', subtitle: 'Profile, specializations & benefits' },
+  { number: 2, title: 'Profile image', subtitle: 'Optional display picture' },
+  { number: 3, title: 'Review & create', subtitle: 'Confirm and provision account' },
 ]
 
 interface StepperProps {

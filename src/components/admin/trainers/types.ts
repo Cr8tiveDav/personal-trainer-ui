@@ -5,31 +5,26 @@ export interface Trainer {
   id: string;
   name: string;
   email: string;
-  avatarUrl?: string; // Optional if we don't have images
+  avatarUrl?: string;
   specialty: string;
   status: TrainerStatus;
   sessions: number | null;
   earnings: number;
   availability: TrainerAvailability;
   dateAdded: string;
+  averageRating?: number;
+  totalReviews?: number;
+  yearsOfExperience?: number;
 }
 
-export interface BackendTrainerResponse {
-  id: string;
-  user_id: string;
-  specializations: string[];
-  training_styles: string[];
-  benefits: Record<string, unknown>[];
-  bio: string;
-  years_of_experience: number;
-  intro_video_url: string;
-  display_picture: string;
-  onboarding_status: string;
-  average_rating: number;
-  total_reviews: number;
-  created_at: string;
-  updated_at: string;
-}
+export type {
+  CreateTrainerInput,
+  CreatedTrainer,
+  BackendTrainerResponse,
+  BackendTrainersListResponse,
+  ApiNullableString,
+  TrainerBenefit,
+} from '@/api/types/trainers';
 
 export type TabType = 'all' | 'active' | 'pending' | 'suspended';
 

@@ -1,15 +1,7 @@
-import { Suspense } from 'react'
-
-export default function TrainerLayout({
+export default function TrainerDashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return (
-    <main className="">
-      <div className="px-4 py-8">
-        <Suspense>{children}</Suspense>
-      </div>
-    </main>
-  )
+  return <>{children}</>
 }

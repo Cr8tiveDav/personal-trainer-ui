@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { usePlatformPerformance } from '@/api/analytics'
+import type { ChartDataPoint } from '@/api/types/analytics'
 import {
     LineChart,
     Line,
@@ -16,13 +17,6 @@ import { ChevronDown } from 'lucide-react'
 
 type Period = 'Weekly' | 'Monthly' | 'Yearly'
 
-interface ChartDataPoint {
-    label: string
-    subscriptions: number
-    sessions_booked: number
-    sessions_completed: number
-}
-
 const EMPTY_DATA: ChartDataPoint[] = [
     { label: 'Week 1', subscriptions: 0, sessions_booked: 0, sessions_completed: 0 },
     { label: 'Week 2', subscriptions: 0, sessions_booked: 0, sessions_completed: 0 },
@@ -30,23 +24,13 @@ const EMPTY_DATA: ChartDataPoint[] = [
     { label: 'Week 4', subscriptions: 0, sessions_booked: 0, sessions_completed: 0 },
 ]
 
-async function fetchChartData(period: Period): Promise<ChartDataPoint[]> {
-    const res = await fetch(`/api/v1/analytics/performance?period=${period.toLowerCase()}`)
-    if (!res.ok) throw new Error('Failed to fetch chart data')
-    const data = await res.json()
-    return data.data
-}
-
 export function PlatformPerformance() {
     const [period, setPeriod] = useState<Period>('Monthly')
     const [dropdownOpen, setDropdownOpen] = useState(false)
 
-    const { data } = useQuery({
-        queryKey: ['platform-performance', period],
-        queryFn: () => fetchChartData(period),
-    })
+    const { data: response } = usePlatformPerformance(period)
 
-    const chartData = data ?? EMPTY_DATA
+    const chartData = response?.data ?? EMPTY_DATA
 
     return (
         <div className='rounded-xl border border-gray-100 bg-white p-6 shadow-sm'>

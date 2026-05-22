@@ -7,9 +7,9 @@ import StatsGrid from '@/components/admin/trainers/analytics/StatsGrid';
 
 const page = () => {
   return (
-    <div className='w-full space-y-6 px-4 lg:px-10 pb-6'>
-      <TrainersPageHeader/>
-      <StatsGrid/>
+    <div className='w-full mx-auto space-y-6 px-4 lg:px-10 pb-6'>
+      <TrainersPageHeader />
+      <StatsGrid />
       <TrainersList />
     </div>
   );

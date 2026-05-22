@@ -1,26 +1,10 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-
-interface Payment {
-  client_name: string
-  plan: string
-  amount: number
-  duration: string
-}
-
-async function fetchLatestPayment(): Promise<Payment | null> {
-  const res = await fetch('/api/v1/payments/latest')
-  if (!res.ok) throw new Error('Failed to fetch latest payment')
-  const data = await res.json()
-  return data.data
-}
+import { useLatestPayment } from '@/api/dashboard'
 
 export function LatestPayment() {
-  const { data: payment } = useQuery({
-    queryKey: ['latest-payment'],
-    queryFn: fetchLatestPayment,
-  })
+  const { data: response } = useLatestPayment()
+  const payment = response?.data
 
   return (
     <div className='mt-4 rounded-xl border border-[#E4E2E9] p-5'>
