@@ -11,5 +11,14 @@ export interface SessionStats {
   no_show_rate_change: string;
 }
 
-export type SessionsListResponse = ApiEnvelope<unknown[]>;
+export interface BackendSession {
+  id: string;
+  clientName?: string;
+  client_name?: string;
+  type: string;
+  date: string;
+  status: string;
+}
+
+export type SessionsListResponse = ApiEnvelope<BackendSession[]>;
 export type SessionStatsResponse = ApiEnvelope<SessionStats>;
