@@ -23,8 +23,8 @@ function SessionStatCard({ label, value, subtext, valueColor = 'default', isLoad
 
   return (
     <div className='bg-white rounded-xl p-5'>
-      <p className='text-sm font-bold uppercase text-muted'>{label}</p>
-      <h3 className={`mt-2 font-bold ${valueSizeClass} ${valueClass}`}>{value ?? '-'}</h3>
+      <p className='whitespace-nowrap text-xs font-bold uppercase text-muted'>{label}</p>
+      <h3 className={`mt-2 flex h-8 items-center font-bold ${valueSizeClass} ${valueClass}`}>{value ?? '-'}</h3>
       {subtext && <p className='mt-1 text-xs font-medium text-muted'>{subtext}</p>}
     </div>
   )

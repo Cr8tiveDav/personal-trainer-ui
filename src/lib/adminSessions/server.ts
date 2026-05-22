@@ -44,7 +44,7 @@ const getAdminSessionsUrls = (page: number, limit: number) =>
     return paths.map((path) => buildUrl(baseUrl, path, page, limit))
   })
 
-const refreshSessionToken = async (refreshToken: string) => {
+const refreshSessionToken = async (refreshToken: string, expiredAccessToken?: string | null) => {
   const refreshUrls = getBaseUrls().flatMap((baseUrl) => {
     if (baseUrl.endsWith('/api/v1')) return [`${baseUrl}/auth/refresh`]
     return [`${baseUrl}/auth/refresh`, `${baseUrl}/api/v1/auth/refresh`]
@@ -56,8 +56,9 @@ const refreshSessionToken = async (refreshToken: string) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${refreshToken}`,
       },
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({ access_token: expiredAccessToken ?? '' }),
       cache: 'no-store',
     })
 
@@ -79,15 +80,22 @@ const storeSessionToken = (
     path: '/',
     maxAge,
   })
+  cookieStore.set('access_token', token, {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+    maxAge,
+  })
 }
 
 const getAuthorizedSessionToken = async () => {
   const cookieStore = await cookies()
-  let sessionToken = cookieStore.get('session_token')?.value
+  let sessionToken = cookieStore.get('session_token')?.value ?? cookieStore.get('access_token')?.value
   const refreshToken = cookieStore.get('refresh_token')?.value
 
   if (!sessionToken && refreshToken) {
-    const refreshed = await refreshSessionToken(refreshToken)
+    const refreshed = await refreshSessionToken(refreshToken, null)
     sessionToken = refreshed?.data?.access_token || refreshed?.access_token
 
     if (sessionToken) {
@@ -131,7 +139,7 @@ export async function fetchAdminSessionsFromBackend(page = 1, limit = 100): Prom
   let res = await fetchSessions(sessionToken)
 
   if (res?.status === 401 && refreshToken) {
-    const refreshed = await refreshSessionToken(refreshToken)
+    const refreshed = await refreshSessionToken(refreshToken, sessionToken)
 
     if (refreshed) {
       sessionToken = refreshed.data?.access_token || refreshed.access_token
