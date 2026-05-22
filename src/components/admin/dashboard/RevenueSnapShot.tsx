@@ -1,23 +1,9 @@
 'use client'
 
 import Link from 'next/link'
-import { useQuery } from '@tanstack/react-query'
+import { useRevenueSnapshot } from '@/api/dashboard'
+import type { RevenueData } from '@/api/types/dashboard'
 import { CreditCard } from 'lucide-react'
-
-interface RevenueBreakdownItem {
-  amount: number
-  percentage: number
-}
-
-interface RevenueData {
-  total_revenue: number
-  breakdown: {
-    subscriptions: RevenueBreakdownItem
-    one_time: RevenueBreakdownItem
-    trials: RevenueBreakdownItem
-  }
-  payouts_due: number
-}
 
 const EMPTY_REVENUE: RevenueData = {
   total_revenue: 0,
@@ -27,13 +13,6 @@ const EMPTY_REVENUE: RevenueData = {
     trials: { amount: 0, percentage: 0 },
   },
   payouts_due: 0,
-}
-
-async function fetchRevenue(): Promise<RevenueData> {
-  const res = await fetch('/api/v1/finance/summary')
-  if (!res.ok) throw new Error('Failed to fetch revenue')
-  const data = await res.json()
-  return data.data
 }
 
 interface ProgressRowProps {
@@ -60,12 +39,8 @@ function ProgressRow({ label, amount, percentage }: ProgressRowProps) {
 }
 
 export function RevenueSnapshot() {
-  const { data } = useQuery({
-    queryKey: ['revenue-snapshot'],
-    queryFn: fetchRevenue,
-  })
-
-  const revenue = data ?? EMPTY_REVENUE
+  const { data: response } = useRevenueSnapshot()
+  const revenue = response?.data ?? EMPTY_REVENUE
 
   return (
     <div className='rounded-xl border border-gray-100 bg-white p-5 shadow-sm'>

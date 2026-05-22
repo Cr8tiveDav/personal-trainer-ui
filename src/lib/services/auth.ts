@@ -1,9 +1,9 @@
 import { API_ENDPOINTS } from '@/api/api-endpoints'
-import type { AdminLoginPayload, LoginResponse } from '@/api/types/auth'
+import type { LoginPayload, LoginResponse } from '@/api/types/auth'
 import { apiUrl, getApiBaseUrl } from '@/lib/api/config'
 
 export async function authenticateUser(
-  data: AdminLoginPayload,
+  data: LoginPayload,
   endpoint: string
 ): Promise<LoginResponse> {
   const res = await fetch(apiUrl(endpoint), {
@@ -20,12 +20,12 @@ export async function authenticateUser(
   return res.json()
 }
 
-export async function adminLogin(data: AdminLoginPayload) {
+export async function adminLogin(data: LoginPayload) {
   getApiBaseUrl()
   return authenticateUser(data, API_ENDPOINTS.AUTH.ADMIN_LOGIN)
 }
 
-export async function trainerLogin(data: AdminLoginPayload) {
+export async function trainerLogin(data: LoginPayload) {
   getApiBaseUrl()
   return authenticateUser(data, API_ENDPOINTS.AUTH.TRAINER_LOGIN)
 }

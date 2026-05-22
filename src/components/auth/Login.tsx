@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useTransition } from "react";
+import React, { useState } from "react";
+import { useLogin, type LoginType } from "@/api/auth";
 import {
   Form,
   FormControl,
@@ -19,19 +20,12 @@ import Link from "next/link";
 import { Eye, EyeOff, Asterisk } from "lucide-react";
 import { Input } from "../ui/input";
 import { cn } from "~/utils";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { loginAction } from "@/actions/auth";
-
-type LoginType = "admin" | "trainer";
-
 interface LoginProps {
   type: LoginType;
 }
 
 const Login = ({ type }: LoginProps) => {
-  const router = useRouter();
-  const [isLoading, startTransition] = useTransition();
+  const login = useLogin({ type });
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -42,21 +36,10 @@ const Login = ({ type }: LoginProps) => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    const formData = new FormData();
-    formData.append("email", values.email);
-    formData.append("password", values.password);
-    formData.append("type", type);
-
-    startTransition(async () => {
-      const result = await loginAction(null, formData);
-
-      if (result?.success && result.redirectTo) {
-        toast.success("Login successful!");
-        router.push(result.redirectTo);
-      } else {
-        toast.error(result?.error || "Authentication failed");
-      }
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    login.mutate({
+      email: values.email,
+      password: values.password,
     });
   };
 
@@ -106,7 +89,7 @@ const Login = ({ type }: LoginProps) => {
 
                       <FormControl>
                         <Input
-                          disabled={isLoading}
+                          disabled={login.isPending}
                           placeholder="johndoe@example.com"
                           {...field}
                           className={cn(
@@ -137,7 +120,7 @@ const Login = ({ type }: LoginProps) => {
                       <div className="relative">
                         <FormControl>
                           <Input
-                            disabled={isLoading}
+                            disabled={login.isPending}
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter Password"
                             {...field}
@@ -174,8 +157,8 @@ const Login = ({ type }: LoginProps) => {
                 />
 
                 <FramerButton
-                  isLoading={isLoading}
-                  disabled={isLoading}
+                  isLoading={login.isPending}
+                  disabled={login.isPending}
                   text="Login"
                   className="bg-primary text-sm sm:text-base"
                 />

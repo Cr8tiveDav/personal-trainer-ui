@@ -1,14 +1,9 @@
+import type { ApiEnvelope } from "@/api/types/index";
 import { authenticatedFetch } from "@/lib/services/auth-session";
 import { ApiError, UnauthorizedError } from "./errors";
 
 export { ApiError, UnauthorizedError };
-
-export interface ApiEnvelope<T> {
-  status: string;
-  code: string;
-  message: string;
-  data: T;
-}
+export type { ApiEnvelope };
 
 export async function apiRequest<T>(
   path: string,

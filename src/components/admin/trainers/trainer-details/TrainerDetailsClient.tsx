@@ -1,15 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
 import { ChevronLeft } from 'lucide-react';
+import { useTrainerById } from '@/api/trainers';
 import ProfileHeader from './ProfileHeader';
 import QuickDetails from './QuickDetails';
 import TrainerTabs from './TrainerTabs';
 import OverviewTab from './tabs/OverviewTab';
 import SessionsTab from './tabs/SessionsTab';
-
 import AvailabilityTab from './tabs/AvailabilityTab';
 
 export type TabType =
@@ -19,29 +18,13 @@ export type TabType =
   | 'media'
   | 'availability';
 
-const fetchTrainer = async (id: string) => {
-  const response = await fetch(`/api/admin/trainers/${id}`);
-  if (!response.ok) {
-    if (response.status === 401) {
-      if (typeof window !== 'undefined') {
-        window.location.href = '/admin/login';
-      }
-    }
-    throw new Error('Failed to fetch trainer');
-  }
-  return response.json();
-};
-
 const TrainerDetailsClient = () => {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
   const [activeTab, setActiveTab] = useState<TabType>('overview');
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['trainer', id],
-    queryFn: () => fetchTrainer(id),
-  });
+  const { data, isLoading, isError } = useTrainerById(id);
 
   if (isLoading) {
     return (
@@ -69,7 +52,6 @@ const TrainerDetailsClient = () => {
 
   return (
     <div className='w-full mx-auto space-y-6 px-4 pb-12'>
-      {/* Breadcrumb / Back button */}
       <button
         onClick={() => router.push('/admin/trainers')}
         className='flex items-center text-sm text-gray-500 hover:text-gray-900 transition-colors'
@@ -78,20 +60,16 @@ const TrainerDetailsClient = () => {
         Back to Trainers
       </button>
 
-      {/* Top Section: Profile and Details */}
       <div className='flex flex-col lg:flex-row gap-6 w-full'>
-        {/* Profile Header takes up approx 2/3 */}
         <div className='flex-1 lg:w-2/3'>
           <ProfileHeader trainer={trainer} />
         </div>
 
-        {/* Quick Details takes up approx 1/3 */}
         <div className='w-full lg:w-1/3'>
           <QuickDetails trainer={trainer} />
         </div>
       </div>
 
-      {/* Tabs Section */}
       <div className='w-full mt-8'>
         <TrainerTabs activeTab={activeTab} onTabChange={setActiveTab} />
 

@@ -1,24 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { useQuery } from '@tanstack/react-query'
-import { Trainer, TrainerRow } from './TrainerRow'
-
-
-async function fetchTopTrainers(): Promise<Trainer[]> {
-  const res = await fetch('/api/v1/trainers/rankings')
-  if (!res.ok) throw new Error('Failed to fetch trainers')
-  const data = await res.json()
-  return data.data
-}
+import { useTopTrainers } from '@/api/dashboard'
+import { TrainerRow } from './TrainerRow'
 
 export function TopTrainers() {
-  const { data: trainers } = useQuery({
-    queryKey: ['top-trainers'],
-    queryFn: fetchTopTrainers,
-  })
-
-  const list = trainers ?? []
+  const { data: response } = useTopTrainers()
+  const list = response?.data ?? []
 
   return (
     <div className='flex-1 rounded-xl border border-gray-100 bg-white p-5 shadow-sm h-full'>

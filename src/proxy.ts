@@ -1,4 +1,5 @@
 import { NextResponse, type NextProxy } from "next/server";
+import { siteConfig } from "@/config/site";
 
 const SECURITY_HEADERS: Record<string, string> = {
   "X-Frame-Options": "DENY",
@@ -11,8 +12,12 @@ export const proxy: NextProxy = (request) => {
   // Route Protection & Token Expiration Logic
   const { pathname } = request.nextUrl;
   const userType = request.cookies.get("user_type")?.value;
-  const sessionToken = request.cookies.get("session_token")?.value;
-  const refreshToken = request.cookies.get("refresh_token")?.value;
+  const accessToken = request.cookies.get(
+    siteConfig.cookieNames.access_token,
+  )?.value;
+  const refreshToken = request.cookies.get(
+    siteConfig.cookieNames.refresh_token,
+  )?.value;
 
   const isApiRoute = pathname.startsWith("/api/");
   const isAdminPage =
@@ -24,7 +29,7 @@ export const proxy: NextProxy = (request) => {
     !pathname.startsWith("/trainers/login") &&
     !isApiRoute;
 
-  const hasAuthToken = !!sessionToken || !!refreshToken;
+  const hasAuthToken = !!accessToken || !!refreshToken;
 
   if (isAdminPage || isTrainerPage) {
     if (isAdminPage && (userType !== "admin" || !hasAuthToken)) {

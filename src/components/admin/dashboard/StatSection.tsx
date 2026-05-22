@@ -1,14 +1,8 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-import { StatCard } from './StatCard';
-
-interface StatsData {
-  total_clients: { value: number; trend: number; is_up: boolean }
-  active_subscriptions: { value: number; trend: number; is_up: boolean }
-  trial_users: { value: number; trend: number; is_up: boolean }
-  total_trainers: { value: number; trend: number; is_up: boolean }
-}
+import { useDashboardStats } from '@/api/dashboard'
+import type { StatsData } from '@/api/types/dashboard'
+import { StatCard } from './StatCard'
 
 const EMPTY_STATS: StatsData = {
   total_clients: { value: 0, trend: 0, is_up: true },
@@ -17,20 +11,10 @@ const EMPTY_STATS: StatsData = {
   total_trainers: { value: 0, trend: 0, is_up: true },
 }
 
-async function fetchStats(): Promise<StatsData> {
-  const res = await fetch('/api/v1/dashboard/stats')
-  if (!res.ok) throw new Error('Failed to fetch stats')
-  const data = await res.json()
-  return data.data
-}
-
 export function StatCardsSection() {
-  const { data } = useQuery({
-    queryKey: ['dashboard-stats'],
-    queryFn: fetchStats,
-  })
+  const { data } = useDashboardStats()
 
-  const stats = data ?? EMPTY_STATS
+  const stats = data?.data ?? EMPTY_STATS
 
   return (
     <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
