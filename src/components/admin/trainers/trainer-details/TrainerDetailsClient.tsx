@@ -11,6 +11,7 @@ import OverviewTab from './tabs/OverviewTab';
 import SessionsTab from './tabs/SessionsTab';
 import EarningsTab from './tabs/EarningsTab';
 import AvailabilityTab from './tabs/AvailabilityTab';
+import { TrainerMediaTab } from './tabs/MediaTabs';
 import { TrainerDetailsSkeleton } from './TrainerDetailsSkeleton';
 
 export type TabType =
@@ -90,9 +91,11 @@ const TrainerDetailsClient = () => {
           {activeTab === 'sessions' && <SessionsTab trainerId={trainer.id} />}
           {activeTab === 'earnings' && <EarningsTab trainerId={trainer.id} />}
           {activeTab === 'media' && (
-            <div className='py-8 text-center text-gray-500'>
-              Media tab content coming soon.
-            </div>
+            <TrainerMediaTab
+              trainerId={trainer.id}
+              trainerName={trainer.name}
+              trainerSpecialty={trainer.specialty}
+            />
           )}
           {activeTab === 'availability' && (
             <AvailabilityTab
