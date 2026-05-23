@@ -20,7 +20,10 @@ import { Input } from '~/components/ui/input'
 import { cn } from '~/utils'
 import FramerButton from '../ui/framer-button'
 import { ResetPasswordSchema } from '~/schemas'
+import { PASSWORD_HINT } from '~/schemas/password'
+import { PasswordRequirements } from './PasswordRequirements'
 import { useSetPassword } from '@/api/trainers'
+import { displayError } from '~/lib/utils'
 
 interface SetPasswordProps {
   token: string
@@ -34,6 +37,8 @@ export function SetPassword({ token }: SetPasswordProps) {
 
   const form = useForm<z.infer<typeof ResetPasswordSchema>>({
     resolver: zodResolver(ResetPasswordSchema),
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       password: '',
       confirmPassword: '',
@@ -48,8 +53,11 @@ export function SetPassword({ token }: SetPasswordProps) {
           toast.success('Password set successfully! Please log in.')
           router.push('/trainer/mysecureloginkey')
         },
-        onError() {
-          toast.error('Invalid or expired setup token. Please contact your admin.')
+        onError(error) {
+          displayError(
+            error,
+            'Invalid or expired setup token. Please contact your admin.',
+          )
         },
       }
     )
@@ -96,13 +104,21 @@ export function SetPassword({ token }: SetPasswordProps) {
                           className='relative -top-1 h-2.5 w-2.5 text-red-800 sm:h-3 sm:w-3'
                         />
                       </FormLabel>
+                      <p className='-mt-1 text-xs text-gray-500'>{PASSWORD_HINT}</p>
                       <div className='relative'>
                         <FormControl>
                           <Input
                             disabled={isPending}
                             type={showPassword ? 'text' : 'password'}
+                            autoComplete='new-password'
                             placeholder='Enter new password'
                             {...field}
+                            onChange={(e) => {
+                              field.onChange(e)
+                              if (form.getValues('confirmPassword')) {
+                                void form.trigger('confirmPassword')
+                              }
+                            }}
                             className={cn(
                               'login-input pr-10 h-[44px] text-sm sm:text-base',
                               form.formState.errors.password && 'login-input--error'
@@ -122,6 +138,7 @@ export function SetPassword({ token }: SetPasswordProps) {
                           )}
                         </button>
                       </div>
+                      <PasswordRequirements password={field.value} />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -144,6 +161,7 @@ export function SetPassword({ token }: SetPasswordProps) {
                           <Input
                             disabled={isPending}
                             type={showConfirm ? 'text' : 'password'}
+                            autoComplete='new-password'
                             placeholder='Confirm your password'
                             {...field}
                             className={cn(
@@ -172,7 +190,7 @@ export function SetPassword({ token }: SetPasswordProps) {
 
                 <FramerButton
                   isLoading={isPending}
-                  disabled={isPending}
+                  disabled={isPending || !form.formState.isValid}
                   text='Set Password'
                   className='bg-primary text-sm sm:text-base'
                 />

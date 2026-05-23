@@ -15,7 +15,7 @@ export const adminSessionsQueryKey = ["admin-sessions"] as const;
 const ADMIN_SESSIONS_PAGE = 1;
 const ADMIN_SESSIONS_LIMIT = 100;
 const TRAINER_SESSIONS_PAGE = 1;
-const TRAINER_SESSIONS_LIMIT = 100;
+const TRAINER_SESSIONS_LIMIT = 10;
 
 async function fetchAdminSessions(): Promise<Session[]> {
   const response = await getRequest<SessionsListResponse>({
@@ -48,17 +48,18 @@ export function useSessionStats() {
   });
 }
 
-/** Sessions for a trainer — GET /trainers/{id}/sessions */
+/** Sessions for a trainer — GET /trainers/sessions?trainer_id=&page=&limit= */
 export function useTrainerSessions(trainerId: string) {
   return useQuery({
     queryKey: ["trainer-sessions", trainerId],
     queryFn: async () => {
       const params = new URLSearchParams({
+        trainer_id: trainerId,
         page: String(TRAINER_SESSIONS_PAGE),
         limit: String(TRAINER_SESSIONS_LIMIT),
       });
       const response = await getRequest<SessionsListResponse>({
-        url: `${API_ENDPOINTS.TRAINERS.SESSIONS(trainerId)}?${params}`,
+        url: `${API_ENDPOINTS.TRAINERS.TRAINER_SESSIONS}?${params}`,
       });
       return mapBackendSessionsResponse(response);
     },

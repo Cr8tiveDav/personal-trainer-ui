@@ -1,7 +1,20 @@
 import type { Session } from '@/components/adminSessions/session'
-import type { ChartData } from '@/components/trainer/dashboard/types'
+import type { MonthlyChartPoint } from '@/components/trainer/dashboard/types'
 
-const WEEKDAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
+const MONTH_LABELS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+] as const
 
 function parseScheduledDate(scheduled: string): Date | null {
   if (!scheduled || scheduled === '-') return null
@@ -9,28 +22,33 @@ function parseScheduledDate(scheduled: string): Date | null {
   return Number.isNaN(parsed.getTime()) ? null : parsed
 }
 
-/** Sessions per weekday for the current calendar week (from API session list). */
-export function buildWeeklySessionChart(sessions: Session[]): ChartData[] {
-  const now = new Date()
-  const startOfWeek = new Date(now)
-  startOfWeek.setHours(0, 0, 0, 0)
-  startOfWeek.setDate(now.getDate() - now.getDay())
+function isCompletedState(state: Session['state']): boolean {
+  const normalized = state.toLowerCase()
+  return normalized === 'completed' || normalized === 'settled'
+}
 
-  const counts = Array.from({ length: 7 }, () => 0)
+/** Monthly session counts for the current year (completed or upcoming). */
+export function buildMonthlySessionChart(
+  sessions: Session[],
+  mode: 'completed' | 'upcoming',
+): MonthlyChartPoint[] {
+  const year = new Date().getFullYear()
+  const counts = Array.from({ length: 12 }, () => 0)
 
   for (const session of sessions) {
     const date = parseScheduledDate(session.scheduled)
-    if (!date) continue
-    if (date < startOfWeek) continue
-    const endOfWeek = new Date(startOfWeek)
-    endOfWeek.setDate(startOfWeek.getDate() + 7)
-    if (date >= endOfWeek) continue
-    counts[date.getDay()]++
+    if (!date || date.getFullYear() !== year) continue
+
+    const completed = isCompletedState(session.state)
+    if (mode === 'completed' && !completed) continue
+    if (mode === 'upcoming' && completed) continue
+
+    counts[date.getMonth()]++
   }
 
-  return WEEKDAY_LABELS.map((day, index) => ({
-    day,
-    sessions: counts[index],
+  return MONTH_LABELS.map((month, index) => ({
+    month,
+    value: counts[index],
   }))
 }
 
@@ -41,4 +59,23 @@ export function countUniqueClients(sessions: Session[]): number {
       .filter(Boolean),
   )
   return names.size
+}
+
+export function countCompletedSessions(sessions: Session[]): number {
+  return sessions.filter((s) => isCompletedState(s.state)).length
+}
+
+export function countUpcomingSessions(sessions: Session[]): number {
+  return sessions.filter((s) => !isCompletedState(s.state)).length
+}
+
+export function averageRating(
+  ratings: number[],
+): { value: string; count: number } {
+  if (ratings.length === 0) return { value: '0', count: 0 }
+  const sum = ratings.reduce((a, b) => a + b, 0)
+  return {
+    value: (sum / ratings.length).toFixed(1),
+    count: ratings.length,
+  }
 }

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { API_ENDPOINTS } from '@/api/api-endpoints'
 import { getApiBaseUrl } from '@/lib/api-base-url'
 import { siteConfig } from '@/config/site'
-import { getToken, setAccessTokenExpiry, setToken } from './get-token'
+import { setAccessTokenExpiry, setToken } from './get-token'
 
 type RefreshResponse = {
   data?: {

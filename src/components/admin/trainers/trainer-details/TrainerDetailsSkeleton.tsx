@@ -20,7 +20,6 @@ function ProfileHeaderSkeleton() {
         <div className='flex flex-col gap-3.5'>
           <Skeleton className='h-4 w-56' />
           <Skeleton className='h-4 w-40' />
-          <Skeleton className='h-4 w-28' />
         </div>
         <Skeleton className='h-12 w-full md:w-34.25 rounded-lg shrink-0' />
       </div>
@@ -57,8 +56,8 @@ function TabContentSkeleton() {
         </div>
       </div>
 
-      <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-        {Array.from({ length: 4 }).map((_, i) => (
+      <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+        {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
             className='bg-white rounded-xl border border-[#EBEBEB] p-5 flex flex-col gap-3'

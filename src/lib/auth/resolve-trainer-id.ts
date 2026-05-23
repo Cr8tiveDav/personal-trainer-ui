@@ -6,9 +6,10 @@ import { setToken } from '@/lib/get-token'
 import {
   getStoredTrainerId,
   getTrainerProfileFromCookie,
+  persistTrainerId,
 } from '@/lib/auth/trainer-profile'
 
-/** Resolve trainer UUID for the logged-in trainer (cookie, JWT, or list by email). */
+/** Resolve trainer UUID for the logged-in trainer (`trainer_id` from login, or list by email). */
 export async function resolveTrainerId(): Promise<string | null> {
   const stored = getStoredTrainerId()
   if (stored) return stored
@@ -28,6 +29,7 @@ export async function resolveTrainerId(): Promise<string | null> {
     const trainerId = match?.id ?? null
 
     if (trainerId) {
+      persistTrainerId(trainerId)
       setToken(
         siteConfig.cookieNames.user_profile,
         JSON.stringify({

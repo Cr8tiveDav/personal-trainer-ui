@@ -10,5 +10,6 @@ export const siteConfig = {
     user_type: "user_type",
     email: "user_email",
     user_profile: "user_profile",
+    trainer_id: "trainer_id",
   },
 } as const;

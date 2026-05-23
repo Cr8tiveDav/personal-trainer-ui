@@ -15,6 +15,7 @@ import type {
   BackendTrainerResponse,
   CreateTrainerResponse,
   TrainerDetailResponse,
+  TrainersListMeta,
   TrainersListResponse,
   UpdateTrainerPayload,
   UpdateTrainerResponse,
@@ -28,45 +29,138 @@ import {
 } from '@/lib/trainers/build-update-trainer-form-data';
 import { mapBackendToFrontend } from '@/lib/trainers/map-trainer';
 
+export type AdminTrainersFilters = {
+  onboardingStatus?: string;
+};
+
+const DEFAULT_META: TrainersListMeta = {
+  page: 1,
+  per_page: 10,
+  total_pages: 1,
+  total_count: 0,
+};
+
 export const trainerQueryKeys = {
   all: ['admin-trainers'] as const,
+  list: (page: number, perPage: number, onboardingStatus?: string) =>
+    ['admin-trainers', page, perPage, onboardingStatus] as const,
+  summary: (onboardingStatus?: string) =>
+    ['admin-trainers', 'summary', onboardingStatus] as const,
   detail: (id: string) => ['trainer', id] as const,
 };
 
-function buildTrainerListResponse(
-  trainers: BackendTrainerResponse[],
-): TrainerResponse {
-  const mappedTrainers: Trainer[] = trainers.map(mapBackendToFrontend);
+function isBackendTrainer(value: unknown): value is BackendTrainerResponse {
+  if (!value || typeof value !== 'object') return false;
+  const row = value as BackendTrainerResponse;
+  return typeof row.id === 'string';
+}
+
+function normalizeTrainersList(response: TrainersListResponse): {
+  trainers: Trainer[];
+  meta: TrainersListMeta;
+} {
+  const rows = Array.isArray(response.data) ? response.data : [];
+  const meta = response.meta ?? DEFAULT_META;
+
+  const perPage = meta.per_page ?? 10;
+  const totalCount = meta.total_count ?? rows.length;
+  const totalPages =
+    meta.total_pages ??
+    (totalCount > 0 ? Math.max(1, Math.ceil(totalCount / perPage)) : 0);
 
   return {
-    data: mappedTrainers,
-    counts: {
-      all: mappedTrainers.length,
-      active: mappedTrainers.filter((t) => t.status.toLowerCase() === 'active')
-        .length,
-      pending: mappedTrainers.filter(
-        (t) => t.status.toLowerCase() === 'pending',
-      ).length,
-      suspended: mappedTrainers.filter(
-        (t) => t.status.toLowerCase() === 'suspended',
-      ).length,
+    trainers: rows.filter(isBackendTrainer).map(mapBackendToFrontend),
+    meta: {
+      page: meta.page ?? 1,
+      per_page: perPage,
+      total_pages: totalPages,
+      total_count: totalCount,
+      next: meta.next,
     },
-    pagination: { totalItems: mappedTrainers.length },
   };
 }
 
-export function useGetTrainers() {
+export function useAdminTrainers(
+  page: number,
+  perPage = 10,
+  filters?: AdminTrainersFilters,
+  options?: { enabled?: boolean },
+) {
+  const onboardingStatus = filters?.onboardingStatus;
+
   return useQuery({
-    queryKey: trainerQueryKeys.all,
+    queryKey: trainerQueryKeys.list(page, perPage, onboardingStatus),
+    enabled: options?.enabled ?? true,
+    placeholderData: (previousData) => previousData,
     queryFn: async () => {
-      const response = await getRequest<TrainersListResponse>({
-        url: API_ENDPOINTS.TRAINERS.LIST,
+      const params = new URLSearchParams({
+        page: String(page),
+        per_page: String(perPage),
       });
-      const trainers = Array.isArray(response.data) ? response.data : [];
-      return buildTrainerListResponse(trainers);
+      if (onboardingStatus) {
+        params.set('onboarding_status', onboardingStatus);
+      }
+      const response = await getRequest<TrainersListResponse>({
+        url: `${API_ENDPOINTS.TRAINERS.LIST}?${params.toString()}`,
+      });
+      return normalizeTrainersList(response);
     },
     staleTime: 60_000,
   });
+}
+
+export function useAdminTrainersSummary(onboardingStatus?: string) {
+  return useQuery({
+    queryKey: trainerQueryKeys.summary(onboardingStatus),
+    queryFn: async () => {
+      const params = new URLSearchParams({ page: '1', per_page: '1' });
+      if (onboardingStatus) {
+        params.set('onboarding_status', onboardingStatus);
+      }
+      const response = await getRequest<TrainersListResponse>({
+        url: `${API_ENDPOINTS.TRAINERS.LIST}?${params.toString()}`,
+      });
+      return response.meta?.total_count ?? 0;
+    },
+    staleTime: 60_000,
+  });
+}
+
+export function useTrainerStatusCounts() {
+  const all = useAdminTrainersSummary();
+  const approved = useAdminTrainersSummary('approved');
+  const pending = useAdminTrainersSummary('pending');
+  const suspended = useAdminTrainersSummary('suspended');
+
+  const isLoading =
+    all.isLoading ||
+    approved.isLoading ||
+    pending.isLoading ||
+    suspended.isLoading;
+
+  const counts = {
+    all: all.data ?? 0,
+    active: approved.data ?? 0,
+    pending: pending.data ?? 0,
+    suspended: suspended.data ?? 0,
+  };
+
+  return { counts, isLoading };
+}
+
+/** @deprecated Prefer useAdminTrainers for lists and useTrainerStatusCounts for tab/stats counts. */
+export function useGetTrainers() {
+  const { counts, isLoading } = useTrainerStatusCounts();
+
+  const data: TrainerResponse | undefined = isLoading
+    ? undefined
+    : {
+        data: [],
+        counts,
+        pagination: { totalItems: counts.all },
+      };
+
+  return { data, isLoading, isError: false, isFetching: isLoading };
 }
 
 export function useTrainerById(id: string) {
@@ -162,6 +256,29 @@ export function useCreateTrainer() {
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: trainerQueryKeys.all });
       showSuccessToast('Trainer created — credentials emailed.');
+    },
+    onError(error) {
+      displayError(error);
+    },
+  });
+}
+
+export function useResendTrainerSetup() {
+  return useMutation({
+    mutationFn: async (email: string) => {
+      const { data } = await postRequest<{ message?: string }, { email: string }>(
+        {
+          url: API_ENDPOINTS.TRAINERS.RESEND_SETUP,
+          payload: { email },
+        },
+      );
+      return data;
+    },
+    mutationKey: ['resend-trainer-setup'],
+    onSuccess(data) {
+      showSuccessToast(
+        data?.message ?? 'Account setup link resent to the trainer.',
+      );
     },
     onError(error) {
       displayError(error);

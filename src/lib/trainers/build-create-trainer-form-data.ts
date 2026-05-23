@@ -4,6 +4,8 @@ import type { TrainerSpecialization } from '@/api/types/trainers'
 export type CreateTrainerFormInput = {
   email: string
   name: string
+  phone_number: string
+  gender: string
   specializations: TrainerSpecialization[]
   years_of_experience: number
   bio?: string
@@ -18,8 +20,10 @@ export type CreateTrainerFormInput = {
 export function buildCreateTrainerFormData(input: CreateTrainerFormInput): FormData {
   const body = new FormData()
 
-  body.append('email', input.email)
-  body.append('name', input.name)
+  body.append('email', input.email.trim())
+  body.append('name', input.name.trim())
+  body.append('phone_number', input.phone_number.trim())
+  body.append('gender', input.gender.trim())
 
   input.specializations.forEach((spec) => {
     body.append('specializations', spec)
