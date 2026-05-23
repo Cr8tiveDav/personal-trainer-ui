@@ -25,7 +25,7 @@ function displayInitial(name: string, email: string): string {
 
 function parseIsActive(row: BackendClientResponse): boolean {
   const record = row as BackendClientResponse & Record<string, unknown>;
-  const value =
+  const value: unknown =
     record.is_active ??
     record.isActive ??
     record.active ??
