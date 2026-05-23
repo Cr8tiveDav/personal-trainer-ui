@@ -1,12 +1,15 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
+import { getRequest } from '~/lib/http'
 import { getStoredTrainerId } from '@/lib/auth/trainer-profile'
 import { resolveTrainerId } from '@/lib/auth/resolve-trainer-id'
+import { mapBackendToFrontend } from '@/lib/trainers/map-trainer'
+import { API_ENDPOINTS } from './api-endpoints'
 import { useTrainerSessions } from './sessions'
-import { useTrainerById } from './trainers'
 import { useTrainerReviews, useTrainerReviewsInfinite } from './trainer-reviews'
 import { useMyTrainerClients } from './trainer-clients'
+import type { TrainerDetailResponse } from './types/trainers'
 
 export { useMyTrainerClients }
 
@@ -22,8 +25,17 @@ export function useCurrentTrainerId() {
 }
 
 export function useMyTrainerProfile() {
-  const { data: trainerId } = useCurrentTrainerId()
-  return useTrainerById(trainerId ?? '')
+  return useQuery({
+    queryKey: ['trainer-me-profile'],
+    queryFn: async () => {
+      const response = await getRequest<TrainerDetailResponse>({
+        url: API_ENDPOINTS.TRAINERS.ME,
+      })
+      return { data: mapBackendToFrontend(response.data) }
+    },
+    staleTime: 60_000,
+    retry: false,
+  })
 }
 
 export function useMyTrainerSessions() {

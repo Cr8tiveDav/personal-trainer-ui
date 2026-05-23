@@ -39,6 +39,13 @@ let rejectedRefreshToken: string | null = null;
 /** Single in-flight refresh shared by concurrent 401s and proactive refresh. */
 let refreshPromise: Promise<string | null> | null = null;
 
+/** Call after a successful login so a prior failed refresh does not block the new session. */
+export function resetAuthRefreshState() {
+  rejectedRefreshToken = null;
+  refreshPromise = null;
+  invalidateAccessTokenCache();
+}
+
 function isLoginRequest(url: string) {
   return (
     url.includes(API_ENDPOINTS.AUTH.ADMIN_LOGIN) ||
@@ -323,13 +330,16 @@ export const uploadRequest = async <T, P>(params: {
   payload: P;
   onUploadProgress?: (event: AxiosProgressEvent) => void;
   signal?: AbortSignal;
+  /** Milliseconds; 0 = no timeout (recommended for large uploads). */
+  timeout?: number;
 }) => {
   const { data } = await getApi().post<T>(params.url, params.payload, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
     onUploadProgress: params.onUploadProgress,
     signal: params.signal,
+    timeout: params.timeout ?? 0,
+    maxBodyLength: Infinity,
+    maxContentLength: Infinity,
+    // Let axios set multipart boundary — a manual Content-Type breaks uploads.
   });
 
   return data;

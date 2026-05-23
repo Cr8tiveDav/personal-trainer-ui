@@ -28,6 +28,10 @@ export const API_ENDPOINTS = {
     INTRO_VIDEO_STREAM: (id: string) => `/trainers/${id}/intro-video/stream`,
     /** GET /trainers/me/clients?page=&limit= */
     ME_CLIENTS: "/trainers/me/clients",
+    /** GET|POST /trainers/me/availability */
+    ME_AVAILABILITY: "/trainers/me/availability",
+    /** GET authenticated trainer profile */
+    ME: "/trainers/me",
   },
 
   WAITLIST: {

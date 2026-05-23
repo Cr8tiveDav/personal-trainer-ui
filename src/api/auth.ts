@@ -11,6 +11,7 @@ import { siteConfig } from "@/config/site";
 import { persistTrainerId } from "@/lib/auth/trainer-profile";
 import { TRAINER_LOGIN_PATH } from "@/lib/auth/trainer-routes";
 import { getCookie, logoutUser, setToken } from "@/lib/get-token";
+import { resetAuthRefreshState } from "@/lib/http";
 
 export type LoginType = "admin" | "trainer";
 
@@ -30,6 +31,7 @@ function resolveRedirectPath(
 }
 
 function persistAuthSession(body: LoginResponse["data"]) {
+  resetAuthRefreshState();
   setToken(
     siteConfig.cookieNames.access_token,
     body.access_token,
