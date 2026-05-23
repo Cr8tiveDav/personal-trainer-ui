@@ -2,23 +2,23 @@
 
 import React from 'react'
 import StatCard from './StatCard'
-import { useGetTrainers } from '@/api/trainers'
+import { useTrainerStatusCounts } from '@/api/trainers'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const StatsGrid = () => {
-  const { data, isLoading } = useGetTrainers()
-  const showSkeleton = isLoading && !data
+  const { counts, isLoading } = useTrainerStatusCounts()
+  const showSkeleton = isLoading
 
   const stats = [
     {
       title: 'Active Trainers',
-      value: showSkeleton ? '' : (data?.counts?.active ?? 0),
+      value: showSkeleton ? '' : (counts.active ?? 0),
       icon: '/images/admin-dashboard/icons/users-three.svg',
       variant: '#F7F7F7',
     },
     {
       title: 'Pending Approvals',
-      value: showSkeleton ? '' : (data?.counts?.pending ?? 0),
+      value: showSkeleton ? '' : (counts.pending ?? 0),
       icon: '/images/admin-dashboard/icons/hourglass-high.svg',
       variant: '#FEF0EF',
     },

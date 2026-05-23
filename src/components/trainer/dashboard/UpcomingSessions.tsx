@@ -1,39 +1,95 @@
+import Link from 'next/link'
 import type { UpcomingSession } from './types'
-import { CalendarDays, Clock } from 'lucide-react'
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState'
+import { cn } from '@/utils'
 
-export function UpcomingSessions({ sessions }: { sessions: UpcomingSession[] }) {
+function PlatformIcon({ platform }: { platform: UpcomingSession['platform'] }) {
+  const colors: Record<UpcomingSession['platform'], string> = {
+    zoom: 'bg-blue-500',
+    whatsapp: 'bg-emerald-500',
+    meet: 'bg-green-600',
+    'in-app': 'bg-gray-900',
+  }
+
   return (
-    <div className='rounded-xl border border-gray-100 bg-white shadow-sm'>
-      <div className='flex items-center justify-between border-b border-gray-100 px-5 py-4'>
-        <h3 className='text-sm font-semibold text-gray-900'>Upcoming Sessions</h3>
-        <button className='text-xs font-medium text-primary hover:underline'>View all</button>
+    <span
+      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded text-[9px] font-bold text-white ${colors[platform]}`}
+    >
+      {platform === 'zoom' ? 'Z' : platform === 'whatsapp' ? 'W' : platform === 'meet' ? 'G' : '▶'}
+    </span>
+  )
+}
+
+export function UpcomingSessions({
+  sessions,
+  className,
+}: {
+  sessions: UpcomingSession[]
+  className?: string
+}) {
+  return (
+    <div
+      className={cn(
+        "flex h-full min-h-0 flex-col pb-20 rounded-xl border border-gray-100 bg-white shadow-sm",
+        className,
+      )}
+    >
+      <div className="flex shrink-0 items-center justify-between border-b border-gray-100 px-5 py-4">
+        <h3 className="text-sm font-semibold text-gray-900">
+          Upcoming sessions
+        </h3>
+        <Link
+          href="/trainer/sessions"
+          className="text-xs font-medium text-primary hover:underline"
+        >
+          View Schedule →
+        </Link>
       </div>
-      <div className='divide-y divide-gray-50'>
-        {sessions.map((session) => (
-          <div key={session.id} className='flex items-center gap-3 px-5 py-3.5'>
-            <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white'>
-              {session.clientName.charAt(0)}
-            </div>
-            <div className='min-w-0 flex-1'>
-              <p className='text-sm font-medium text-gray-900 truncate'>{session.clientName}</p>
-              <p className='text-xs text-gray-400 truncate'>{session.type}</p>
-            </div>
-            <div className='shrink-0 text-right'>
-              <div className='flex items-center gap-1 text-xs text-gray-500'>
-                <CalendarDays className='h-3 w-3' />
-                {session.date}
+
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+        {sessions.length === 0 ? (
+          <EmptyState
+            imageSrc={EMPTY_STATE_IMAGE_PATHS.sessions}
+            imageAlt="No upcoming sessions"
+            title="No upcoming sessions"
+            description="Scheduled sessions that are coming up will be listed here."
+            className="flex-1 py-6"
+          />
+        ) : (
+          <div className="divide-y divide-gray-50">
+            {sessions.map((session) => (
+              <div
+                key={session.id}
+                className="flex items-center gap-3 px-5 py-3.5"
+              >
+                <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-gray-50 text-center">
+                  <span className="text-[10px] font-semibold uppercase text-gray-400">
+                    {session.monthLabel}
+                  </span>
+                  <span className="text-lg font-bold leading-none text-gray-900">
+                    {session.dateLabel}
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-gray-900">
+                    {session.clientName}
+                  </p>
+                  <p className="text-xs text-gray-500">{session.timeRange}</p>
+                </div>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <PlatformIcon platform={session.platform} />
+                  <span className="text-xs text-gray-500">
+                    {session.platformLabel}
+                  </span>
+                </div>
               </div>
-              <div className='flex items-center justify-end gap-1 text-xs text-gray-400 mt-0.5'>
-                <Clock className='h-3 w-3' />
-                {session.time}
-              </div>
-            </div>
+            ))}
           </div>
-        ))}
-        {sessions.length === 0 && (
-          <div className='px-5 py-8 text-center text-sm text-gray-400'>No upcoming sessions</div>
         )}
       </div>
     </div>
-  )
+  );
 }

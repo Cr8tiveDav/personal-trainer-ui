@@ -30,6 +30,12 @@ function fallbackName(trainer: BackendTrainerResponse): string {
   return `Trainer ${trainer.id.slice(0, 8)}`;
 }
 
+function formatGender(value: string | null | undefined): string | undefined {
+  const raw = value?.trim();
+  if (!raw) return undefined;
+  return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+}
+
 function formatList(items: string[]) {
   if (!items || items.length === 0) return '';
 
@@ -71,6 +77,8 @@ export function mapBackendToFrontend(
     id: backendTrainer.id,
     name,
     email,
+    phoneNumber: backendTrainer.phone_number?.trim() || undefined,
+    gender: formatGender(backendTrainer.gender),
     avatarUrl: displayPicture || undefined,
     specialty: formatList(specializations) || specializations[0] || 'General',
     specializations,

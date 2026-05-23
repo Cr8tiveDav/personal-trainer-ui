@@ -87,17 +87,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ trainer }) => {
               width={16}
               height={16}
             />
-            <span>N/A</span>
-          </div>
-
-          <div className='flex items-center mt-1 gap-2.5'>
-            <Image
-              src='/images/admin-dashboard/icons/star.svg'
-              alt='Star'
-              width={16}
-              height={16}
-            />
-            <span className='text-[13px] font-medium text-gray-500'>N/A</span>
+            <span>{trainer.phoneNumber ?? '—'}</span>
           </div>
         </div>
 

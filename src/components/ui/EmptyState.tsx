@@ -9,6 +9,9 @@ export const EMPTY_STATE_IMAGE_PATHS = {
   income: '/images/empty-state/income.svg',
   allTransactions: '/images/empty-state/all-transactions.svg',
   notification: '/images/empty-state/notification.svg',
+  sessions: '/images/empty-state/manual-entry.svg',
+  reviews: '/images/empty-state/notification.svg',
+  availability: '/images/empty-state/client.svg',
 } as const
 
 type EmptyStateProps = {
