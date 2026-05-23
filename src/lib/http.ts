@@ -39,6 +39,13 @@ let rejectedRefreshToken: string | null = null;
 /** Single in-flight refresh shared by concurrent 401s and proactive refresh. */
 let refreshPromise: Promise<string | null> | null = null;
 
+/** Call after a successful login so a prior failed refresh does not block the new session. */
+export function resetAuthRefreshState() {
+  rejectedRefreshToken = null;
+  refreshPromise = null;
+  invalidateAccessTokenCache();
+}
+
 function isLoginRequest(url: string) {
   return (
     url.includes(API_ENDPOINTS.AUTH.ADMIN_LOGIN) ||
