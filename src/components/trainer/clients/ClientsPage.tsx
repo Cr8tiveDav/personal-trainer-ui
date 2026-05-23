@@ -1,9 +1,13 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import Image from 'next/image'
+import { useQueryClient } from '@tanstack/react-query'
 import { ChevronLeft, ChevronRight, Search } from 'lucide-react'
-import { useMyTrainerClients } from '@/api/trainer-clients'
+import {
+  trainerClientsQueryKeys,
+  useMyTrainerClients,
+} from '@/api/trainer-clients'
 import {
   EMPTY_STATE_IMAGE_PATHS,
   EmptyState,
@@ -56,9 +60,12 @@ function ClientRow({ client }: { client: TrainerClient }) {
 export function ClientsPage() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
+  const knownTotalPagesRef = useRef(1)
+
+  const queryPage = Math.min(page, knownTotalPagesRef.current)
 
   const { data, isLoading, isError, isFetching } = useMyTrainerClients(
-    page,
+    queryPage,
     PER_PAGE,
   )
 
@@ -68,11 +75,9 @@ export function ClientsPage() {
   const totalPages = Math.max(1, meta?.total_pages ?? 1)
   const displayPage = totalCount === 0 ? 1 : Math.min(page, totalPages)
 
-  useEffect(() => {
-    if (page > totalPages && totalPages > 0) {
-      setPage(totalPages)
-    }
-  }, [page, totalPages])
+  if (meta?.total_pages) {
+    knownTotalPagesRef.current = totalPages
+  }
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
@@ -184,7 +189,7 @@ export function ClientsPage() {
             <div className='flex items-center gap-2'>
               <button
                 type='button'
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => setPage((p) => Math.max(1, Math.min(p - 1, totalPages)))}
                 disabled={displayPage <= 1 || isFetching}
                 className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                 aria-label='Previous page'
@@ -196,7 +201,9 @@ export function ClientsPage() {
               </span>
               <button
                 type='button'
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() =>
+                  setPage((p) => Math.min(totalPages, Math.max(1, p + 1)))
+                }
                 disabled={displayPage >= totalPages || isFetching}
                 className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                 aria-label='Next page'
