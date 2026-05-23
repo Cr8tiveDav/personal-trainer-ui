@@ -56,8 +56,8 @@ function TabContentSkeleton() {
         </div>
       </div>
 
-      <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
-        {Array.from({ length: 4 }).map((_, i) => (
+      <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+        {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
             className='bg-white rounded-xl border border-[#EBEBEB] p-5 flex flex-col gap-3'
