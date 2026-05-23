@@ -7,7 +7,7 @@ import {
 import SectionHeader from '../ui/SectionHeader'
 import { cn } from '@/lib/utils'
 
-interface FAQItem {
+export interface FAQItem {
   value: string
   question: string
   answer: string

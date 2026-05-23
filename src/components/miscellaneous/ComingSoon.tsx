@@ -10,7 +10,6 @@ const ComingSoon = () => {
           alt='Coming soon'
           width={420}
           height={300}
-          priority
           className='mb-8 h-auto w-full max-w-48 object-contain sm:max-w-56 md:max-w-72'
         />
 
@@ -26,7 +25,7 @@ const ComingSoon = () => {
         </h1>
 
         <p className='mb-10 max-w-md text-base leading-relaxed text-muted'>
-          we remain dedicated to give you the ultimate online gym experience
+          We remain dedicated to giving you the ultimate online gym experience
         </p>
 
         <Link
