@@ -59,8 +59,6 @@ export function ForgotPasswordFlow() {
     },
   })
 
-  const newPasswordValue = resetForm.watch('new_password')
-
   function onRequestCode(values: z.infer<typeof ForgotPasswordEmailSchema>) {
     forgotPassword.mutate(
       { email: values.email },
@@ -332,7 +330,7 @@ export function ForgotPasswordFlow() {
                               )}
                             </button>
                           </div>
-                          <PasswordRequirements password={newPasswordValue} />
+                          <PasswordRequirements password={field.value} />
                           <FormMessage />
                         </FormItem>
                       )}

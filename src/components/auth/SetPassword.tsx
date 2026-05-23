@@ -45,8 +45,6 @@ export function SetPassword({ token }: SetPasswordProps) {
     },
   })
 
-  const passwordValue = form.watch('password')
-
   const onSubmit = (values: z.infer<typeof ResetPasswordSchema>) => {
     setPassword(
       { token, new_password: values.password },
@@ -140,7 +138,7 @@ export function SetPassword({ token }: SetPasswordProps) {
                           )}
                         </button>
                       </div>
-                      <PasswordRequirements password={passwordValue} />
+                      <PasswordRequirements password={field.value} />
                       <FormMessage />
                     </FormItem>
                   )}

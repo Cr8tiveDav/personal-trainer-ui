@@ -57,27 +57,43 @@ function ClientRow({ client }: { client: TrainerClient }) {
   )
 }
 
+type TrainerClientsQueryData = {
+  meta?: { total_pages?: number }
+}
+
+function getCachedTotalPages(
+  queryClient: ReturnType<typeof useQueryClient>,
+  page: number,
+): number {
+  const cached =
+    queryClient.getQueryData<TrainerClientsQueryData>(
+      trainerClientsQueryKeys.list(page, PER_PAGE),
+    ) ??
+    queryClient.getQueryData<TrainerClientsQueryData>(
+      trainerClientsQueryKeys.list(1, PER_PAGE),
+    )
+
+  return Math.max(1, cached?.meta?.total_pages ?? 1)
+}
+
 export function ClientsPage() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
-  const knownTotalPagesRef = useRef(1)
+  const queryClient = useQueryClient()
 
-  const queryPage = Math.min(page, knownTotalPagesRef.current)
+  const cachedTotalPages = getCachedTotalPages(queryClient, page)
+  const queryPage = Math.min(page, cachedTotalPages)
 
   const { data, isLoading, isError, isFetching } = useMyTrainerClients(
     queryPage,
     PER_PAGE,
   )
 
-  const clients = data?.clients ?? []
+  const clients = useMemo(() => data?.clients ?? [], [data?.clients])
   const meta = data?.meta
   const totalCount = meta?.total_count ?? 0
   const totalPages = Math.max(1, meta?.total_pages ?? 1)
   const displayPage = totalCount === 0 ? 1 : Math.min(page, totalPages)
-
-  if (meta?.total_pages) {
-    knownTotalPagesRef.current = totalPages
-  }
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
