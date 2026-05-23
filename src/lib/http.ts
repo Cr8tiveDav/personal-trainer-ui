@@ -330,13 +330,16 @@ export const uploadRequest = async <T, P>(params: {
   payload: P;
   onUploadProgress?: (event: AxiosProgressEvent) => void;
   signal?: AbortSignal;
+  /** Milliseconds; 0 = no timeout (recommended for large uploads). */
+  timeout?: number;
 }) => {
   const { data } = await getApi().post<T>(params.url, params.payload, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
     onUploadProgress: params.onUploadProgress,
     signal: params.signal,
+    timeout: params.timeout ?? 0,
+    maxBodyLength: Infinity,
+    maxContentLength: Infinity,
+    // Let axios set multipart boundary — a manual Content-Type breaks uploads.
   });
 
   return data;

@@ -2,13 +2,18 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
 import {
+  trainerMediaQueryKeys,
   useDeleteTrainerVideo,
   useTrainerImages,
   useTrainerVideo,
   useUploadTrainerImages,
   useUploadTrainerVideo,
 } from '@/api/trainer-media'
+import { validateVideoFile } from '@/lib/media/validate-video-file'
+import { displayError, getErrorMessage } from '@/lib/utils'
 import { ImageEmptyState, ImageGallery } from './media/ImageGallerry'
 import { MediaUploadOverlay } from './media/MediaUploadOverlay'
 import { TrainerMediaTabSkeleton } from './media/TrainerMediaTabSkeleton'
