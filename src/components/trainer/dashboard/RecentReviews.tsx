@@ -37,7 +37,7 @@ export function RecentReviews({
   return (
     <div
       className={cn(
-        'flex h-full min-h-0 flex-col rounded-xl border border-gray-100 bg-white shadow-sm',
+        'flex h-full  flex-col rounded-xl border border-gray-100 bg-white shadow-sm',
         className,
       )}
     >
@@ -51,7 +51,7 @@ export function RecentReviews({
         </Link>
       </div>
 
-      <div className='flex min-h-0 flex-1 flex-col overflow-y-auto'>
+      <div className='flex pb-24 min-h-0 flex-1 flex-col overflow-y-auto'>
       {isLoading ? (
         <div className='flex flex-1 flex-col justify-center space-y-2 px-5 py-4'>
           <Skeleton className='h-4 w-32' />

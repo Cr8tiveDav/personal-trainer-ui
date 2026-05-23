@@ -7,6 +7,7 @@ import {
   useMyTrainerReviewsInfinite,
 } from "@/api/trainer-dashboard";
 import { TrainerReviewsList } from "@/components/trainer/reviews/TrainerReviewsList";
+import { TrainerReviewsPageSkeleton } from "@/components/trainer/reviews/TrainerReviewsPageSkeleton";
 
 export default function TrainerReviewsPage() {
   const { data: trainerId, isLoading: idLoading } = useCurrentTrainerId();
@@ -25,11 +26,7 @@ export default function TrainerReviewsPage() {
   );
 
   if (idLoading) {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center text-sm text-gray-500">
-        Loading…
-      </div>
-    );
+    return <TrainerReviewsPageSkeleton />;
   }
 
   if (!trainerId) {

@@ -27,10 +27,9 @@ import {
 import FramerButton from '../ui/framer-button'
 import { Input } from '../ui/input'
 import { VerificationCodeInput } from './VerificationCodeInput'
+import { PASSWORD_HINT } from '~/schemas/password'
+import { PasswordRequirements } from './PasswordRequirements'
 import { cn } from '~/utils'
-
-const PASSWORD_HINT =
-  'At least 8 characters with uppercase, lowercase, and a number.'
 
 type Step = 'request' | 'reset' | 'sent'
 
@@ -51,6 +50,7 @@ export function ForgotPasswordFlow() {
   const resetForm = useForm<z.infer<typeof AdminResetPasswordSchema>>({
     resolver: zodResolver(AdminResetPasswordSchema),
     mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       code: '',
@@ -58,6 +58,8 @@ export function ForgotPasswordFlow() {
       confirmPassword: '',
     },
   })
+
+  const newPasswordValue = resetForm.watch('new_password')
 
   function onRequestCode(values: z.infer<typeof ForgotPasswordEmailSchema>) {
     forgotPassword.mutate(
@@ -330,6 +332,7 @@ export function ForgotPasswordFlow() {
                               )}
                             </button>
                           </div>
+                          <PasswordRequirements password={newPasswordValue} />
                           <FormMessage />
                         </FormItem>
                       )}

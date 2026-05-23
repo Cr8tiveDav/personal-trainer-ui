@@ -6,6 +6,7 @@ import {
   useMyTrainerSessions,
 } from '@/api/trainer-dashboard'
 import { AllSessionsTable } from '@/components/trainer/dashboard/AllSessionsTable'
+import { TrainerSessionsPageSkeleton } from '@/components/trainer/dashboard/TrainerSessionsPageSkeleton'
 import { mapToTrainerSession } from '@/lib/trainer-dashboard/map-dashboard-session'
 
 function TrainerSessionsContent() {
@@ -19,11 +20,7 @@ function TrainerSessionsContent() {
   const tableSessions = sessions.map(mapToTrainerSession)
 
   if (idLoading) {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center text-sm text-gray-500">
-        Loading…
-      </div>
-    )
+    return <TrainerSessionsPageSkeleton />
   }
 
   if (!trainerId) {

@@ -6,6 +6,7 @@ import {
   EmptyState,
 } from '@/components/ui/EmptyState'
 import { cn } from '@/utils'
+import { SessionsTableBodySkeleton } from './dashboard-skeleton-parts'
 
 const GOAL_STYLES: Record<TrainerSession['goalVariant'], string> = {
   green: 'bg-emerald-50 text-emerald-700',
@@ -46,9 +47,7 @@ export function AllSessionsTable({
 
       <div className='flex min-h-0 flex-1 flex-col overflow-y-auto'>
       {isLoading ? (
-        <div className='flex flex-1 items-center justify-center px-5 py-12 text-center text-sm text-gray-400'>
-          Loading sessions…
-        </div>
+        <SessionsTableBodySkeleton rows={5} />
       ) : isError ? (
         <div className='flex flex-1 items-center justify-center px-5 py-8 text-center text-sm text-red-500'>
           Could not load sessions. Please try again.

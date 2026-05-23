@@ -43,7 +43,7 @@ export function TrainerShell({
         <main
           className={
             isDashboard
-              ? "flex-1 overflow-y-auto px-4 py-6 md:px-8 md:py-8"
+              ? "flex-1 overflow-y-auto px-4 pt-6 pb-10 md:px-8 md:pt-8 md:pb-14"
               : "flex-1 overflow-y-auto py-6"
           }
         >

@@ -6,6 +6,9 @@ import { resolveTrainerId } from '@/lib/auth/resolve-trainer-id'
 import { useTrainerSessions } from './sessions'
 import { useTrainerById } from './trainers'
 import { useTrainerReviews, useTrainerReviewsInfinite } from './trainer-reviews'
+import { useMyTrainerClients } from './trainer-clients'
+
+export { useMyTrainerClients }
 
 export function useCurrentTrainerId() {
   const cachedId = typeof window !== 'undefined' ? getStoredTrainerId() : null

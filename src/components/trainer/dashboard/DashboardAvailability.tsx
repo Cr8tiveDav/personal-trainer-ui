@@ -6,7 +6,7 @@ import { Video } from 'lucide-react'
 import { useCurrentTrainerId } from '@/api/trainer-dashboard'
 import { useTrainerAvailabilityById } from '@/api/availability'
 import type { AvailabilitySlot } from '@/api/types/availability'
-import { AvailabilityTabSkeleton } from '@/components/availability/AvailabilityTabSkeleton'
+import { DashboardAvailabilitySidebarSkeleton } from './dashboard-skeleton-parts'
 import {
   EMPTY_STATE_IMAGE_PATHS,
   EmptyState,
@@ -86,9 +86,9 @@ export function DashboardAvailability({ className }: { className?: string }) {
 
   if (idLoading || (isLoading && !hasSlots)) {
     return (
-      <div className={cn('h-full min-h-0 flex-1', className)}>
-        <AvailabilityTabSkeleton />
-      </div>
+      <DashboardAvailabilitySidebarSkeleton
+        className={cn('h-full min-h-0 flex-1', className)}
+      />
     )
   }
 

@@ -26,6 +26,8 @@ export const API_ENDPOINTS = {
     IMAGE: (id: string, imageId: string) => `/trainers/${id}/images/${imageId}`,
     INTRO_VIDEO: (id: string) => `/trainers/${id}/intro-video`,
     INTRO_VIDEO_STREAM: (id: string) => `/trainers/${id}/intro-video/stream`,
+    /** GET /trainers/me/clients?page=&limit= */
+    ME_CLIENTS: "/trainers/me/clients",
   },
 
   WAITLIST: {
