@@ -65,6 +65,7 @@ export function useTrainerSessions(trainerId: string) {
     },
     enabled: !!trainerId,
     staleTime: 30_000,
+    retry: false,
   });
 }
 
