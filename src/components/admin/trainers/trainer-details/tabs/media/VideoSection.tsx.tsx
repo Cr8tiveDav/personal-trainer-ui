@@ -66,13 +66,29 @@ export function VideoTableView({ video, trainerName, trainerSpecialty, onView, o
         <tbody>
           <tr className='border-b border-gray-50 hover:bg-gray-50/60 transition-colors'>
             <td className='px-5 py-4'>
-              <div className='relative h-12 w-20 overflow-hidden rounded-lg bg-gray-900 cursor-pointer' onClick={onView}>
-                <video src={video.url} className='h-full w-full object-cover opacity-80' muted playsInline />
-                <div className='absolute inset-0 flex items-center justify-center bg-black/30'>
-                  <div className='flex h-6 w-6 items-center justify-center rounded-full bg-black/50'>
-                    <Play className='h-3 w-3 fill-white text-white' />
-                  </div>
-                </div>
+              <div
+                className='relative flex h-12 w-20 items-center justify-center overflow-hidden rounded-lg bg-gray-900 cursor-pointer'
+                onClick={video.url ? onView : undefined}
+              >
+                {video.url ? (
+                  <>
+                    <video
+                      src={video.url}
+                      className='h-full w-full object-cover opacity-80'
+                      muted
+                      playsInline
+                    />
+                    <div className='absolute inset-0 flex items-center justify-center bg-black/30'>
+                      <div className='flex h-6 w-6 items-center justify-center rounded-full bg-black/50'>
+                        <Play className='h-3 w-3 fill-white text-white' />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <span className='px-1 text-center text-[9px] font-medium text-white/80'>
+                    Processing
+                  </span>
+                )}
               </div>
             </td>
             <td className='px-5 py-4'>
@@ -112,7 +128,13 @@ export function VideoDetailView({ video, onBack, onReplace, onRemove, uploading 
         <ArrowLeft className='h-4 w-4' /> Back
       </button>
 
-      <video src={video.url} controls className='w-full rounded-xl' />
+      {video.url ? (
+        <video src={video.url} controls className='w-full rounded-xl' />
+      ) : (
+        <div className='flex min-h-[200px] items-center justify-center rounded-xl border border-dashed border-gray-200 bg-gray-50 text-sm text-gray-500'>
+          Video is processing. Check back in a few minutes.
+        </div>
+      )}
 
       <div className='flex gap-2'>
         <button onClick={onRemove} className='text-red-600 text-sm'>Remove</button>
