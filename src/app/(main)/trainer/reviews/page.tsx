@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useMemo } from 'react';
+import Link from "next/link";
+import { useMemo } from "react";
 import {
   useCurrentTrainerId,
   useMyTrainerReviewsInfinite,
-} from '@/api/trainer-dashboard';
-import { TrainerReviewsList } from '@/components/trainer/reviews/TrainerReviewsList';
+} from "@/api/trainer-dashboard";
+import { TrainerReviewsList } from "@/components/trainer/reviews/TrainerReviewsList";
 
 export default function TrainerReviewsPage() {
   const { data: trainerId, isLoading: idLoading } = useCurrentTrainerId();
@@ -35,10 +35,10 @@ export default function TrainerReviewsPage() {
   if (!trainerId) {
     return (
       <div className="rounded-xl border border-gray-100 bg-white p-8 text-center text-sm text-gray-500">
-        Please{' '}
+        Please{" "}
         <Link href="/trainers/login" className="text-primary hover:underline">
           sign in
-        </Link>{' '}
+        </Link>{" "}
         to view reviews.
       </div>
     );

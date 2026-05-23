@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, Download, Files } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -103,22 +103,6 @@ const PaymentsSummaryCards = () => {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-
-        {/* <button
-          type="button"
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground shadow-sm"
-        >
-          <Download className="size-4" />
-          Download Report
-        </button>
-
-        <button
-          type="button"
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground shadow-sm"
-        >
-          <Files className="size-4" />
-          Process All Pending
-        </button> */}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

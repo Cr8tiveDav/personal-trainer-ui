@@ -10,7 +10,7 @@ import type { LoginPayload, LoginResponse } from "./types/auth";
 import { siteConfig } from "@/config/site";
 import { persistTrainerId } from "@/lib/auth/trainer-profile";
 import { TRAINER_LOGIN_PATH } from "@/lib/auth/trainer-routes";
-import { clearAuthCookies, getCookie, logoutUser, setToken } from "@/lib/get-token";
+import { getCookie, logoutUser, setToken } from "@/lib/get-token";
 
 export type LoginType = "admin" | "trainer";
 
