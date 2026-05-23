@@ -7,6 +7,11 @@ import axios, {
 import { API_ENDPOINTS } from "@/api/api-endpoints";
 import { getApiBaseUrl } from "@/lib/api-base-url";
 import {
+  getJwtType,
+  hasJwtExp,
+  isJwtExpired,
+} from "@/lib/jwt";
+import {
   getRefreshToken,
   getToken,
   invalidateAccessTokenCache,
@@ -20,16 +25,19 @@ export type ErrorData = {
   validationErrors?: string | [string] | [{ description: string }];
 };
 
-type RetryableRequestConfig = InternalAxiosRequestConfig & {
+export type RetryableRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
+  /** When true, a 401 will not trigger token refresh (logout, refresh endpoint, etc.). */
+  _skipAuthRefresh?: boolean;
 };
 
 let apiInstance: AxiosInstance | null = null;
-let isRefreshing = false;
-let refreshQueue: Array<{
-  resolve: (token: string) => void;
-  reject: (error: unknown) => void;
-}> = [];
+
+/** Refresh token that already failed — avoid reusing after server rotation. */
+let rejectedRefreshToken: string | null = null;
+
+/** Single in-flight refresh shared by concurrent 401s and proactive refresh. */
+let refreshPromise: Promise<string | null> | null = null;
 
 function isLoginRequest(url: string) {
   return (
@@ -50,22 +58,83 @@ function setAuthHeader(config: InternalAxiosRequestConfig, token: string) {
   }
 }
 
-function processRefreshQueue(error: unknown | null, token: string | null) {
-  refreshQueue.forEach(({ resolve, reject }) => {
-    if (error || !token) reject(error ?? new Error("Token refresh failed"));
-    else resolve(token);
-  });
-  refreshQueue = [];
+function isRefreshTokenUsable(refreshToken: string): boolean {
+  if (!refreshToken.trim()) return false;
+  if (refreshToken === rejectedRefreshToken) return false;
+
+  if (hasJwtExp(refreshToken)) {
+    const typ = getJwtType(refreshToken);
+    if (typ && typ !== "refresh") return false;
+    if (isJwtExpired(refreshToken)) return false;
+  }
+
+  return true;
 }
 
-async function refreshSession(): Promise<string | null> {
-  const refreshToken = getRefreshToken();
-  if (!refreshToken) return null;
+function shouldProactivelyRefresh(accessToken: string | null): boolean {
+  if (!accessToken) return true;
+  if (isAccessTokenExpired()) return true;
+  if (hasJwtExp(accessToken) && isJwtExpired(accessToken, 30_000)) return true;
+  return false;
+}
+
+function coalescedRefresh(
+  refreshToken: string,
+  accessToken: string | null,
+): Promise<string | null> {
+  refreshPromise ??= refreshAccessTokenClient(refreshToken, accessToken)
+    .then((token) => {
+      if (token) rejectedRefreshToken = null;
+      return token;
+    })
+    .finally(() => {
+      refreshPromise = null;
+    });
+
+  return refreshPromise;
+}
+
+/**
+ * If another request refreshed while we were queued, retry with the latest tokens
+ * instead of refreshing again with a stale refresh token.
+ */
+function retryWithLatestTokens(
+  originalRequest: RetryableRequestConfig,
+  capturedRefreshToken: string,
+): Promise<unknown> | null {
+  const currentRefreshToken = getRefreshToken();
+  if (
+    !currentRefreshToken ||
+    currentRefreshToken === capturedRefreshToken ||
+    !isRefreshTokenUsable(currentRefreshToken)
+  ) {
+    return null;
+  }
 
   invalidateAccessTokenCache();
-  const expiredAccessToken = getToken();
+  const currentAccessToken = getToken();
+  if (!currentAccessToken) return null;
 
-  return refreshAccessTokenClient(refreshToken, expiredAccessToken);
+  setAuthHeader(originalRequest, currentAccessToken);
+  return getApi()(originalRequest);
+}
+
+async function refreshSession(
+  refreshToken: string,
+  accessToken: string | null,
+): Promise<string | null> {
+  const currentRefreshToken = getRefreshToken();
+  if (
+    currentRefreshToken &&
+    currentRefreshToken !== refreshToken &&
+    isRefreshTokenUsable(currentRefreshToken)
+  ) {
+    invalidateAccessTokenCache();
+    const currentAccessToken = getToken();
+    if (currentAccessToken) return currentAccessToken;
+  }
+
+  return coalescedRefresh(refreshToken, accessToken);
 }
 
 /** Returns a valid access token, refreshing silently when expired. */
@@ -74,28 +143,71 @@ export async function ensureValidAccessToken(): Promise<string | null> {
   const accessToken = getToken();
 
   if (!refreshToken) return accessToken;
-
-  const shouldRefresh = !accessToken || isAccessTokenExpired();
-
-  if (!shouldRefresh) return accessToken;
-
-  if (isRefreshing) {
-    return new Promise<string>((resolve, reject) => {
-      refreshQueue.push({ resolve, reject });
-    });
-  }
-
-  isRefreshing = true;
+  if (!shouldProactivelyRefresh(accessToken)) return accessToken;
+  if (!isRefreshTokenUsable(refreshToken)) return accessToken;
 
   try {
-    const newToken = await refreshSession();
-    processRefreshQueue(null, newToken);
-    return newToken ?? accessToken;
-  } catch (error) {
-    processRefreshQueue(error, null);
-    throw error;
-  } finally {
-    isRefreshing = false;
+    if (refreshPromise) return refreshPromise;
+    return await refreshSession(refreshToken, accessToken);
+  } catch {
+    return accessToken;
+  }
+}
+
+async function handleUnauthorized(
+  error: AxiosError,
+  originalRequest: RetryableRequestConfig,
+): Promise<unknown> {
+  const refreshToken = getRefreshToken();
+  const accessToken = getToken();
+
+  if (!refreshToken) {
+    if (accessToken) logoutUser();
+    return Promise.reject(error);
+  }
+
+  if (!isRefreshTokenUsable(refreshToken)) {
+    rejectedRefreshToken = refreshToken;
+    logoutUser();
+    return Promise.reject(error);
+  }
+
+  originalRequest._retry = true;
+  invalidateAccessTokenCache();
+
+  const retried = retryWithLatestTokens(originalRequest, refreshToken);
+  if (retried) return retried;
+
+  if (refreshPromise) {
+    try {
+      const newToken = await refreshPromise;
+      if (!newToken) {
+        rejectedRefreshToken = refreshToken;
+        logoutUser();
+        return Promise.reject(error);
+      }
+      setAuthHeader(originalRequest, newToken);
+      return getApi()(originalRequest);
+    } catch {
+      rejectedRefreshToken = refreshToken;
+      logoutUser();
+      return Promise.reject(error);
+    }
+  }
+
+  try {
+    const newToken = await refreshSession(refreshToken, accessToken);
+    if (!newToken) {
+      rejectedRefreshToken = refreshToken;
+      logoutUser();
+      return Promise.reject(error);
+    }
+    setAuthHeader(originalRequest, newToken);
+    return getApi()(originalRequest);
+  } catch {
+    rejectedRefreshToken = refreshToken;
+    logoutUser();
+    return Promise.reject(error);
   }
 }
 
@@ -124,10 +236,12 @@ function getApi(): AxiosInstance {
     (response) => response,
     async (error: AxiosError) => {
       const status = error.response?.status;
-      const originalRequest = error.config as
-        | RetryableRequestConfig
-        | undefined;
+      const originalRequest = error.config as RetryableRequestConfig | undefined;
       const requestUrl = String(originalRequest?.url ?? "");
+
+      if (originalRequest?._skipAuthRefresh) {
+        return Promise.reject(error);
+      }
 
       if (
         status !== 401 ||
@@ -138,48 +252,7 @@ function getApi(): AxiosInstance {
         return Promise.reject(error);
       }
 
-      const refreshToken = getRefreshToken();
-      if (!refreshToken) {
-        if (getToken()) logoutUser();
-        return Promise.reject(error);
-      }
-
-      originalRequest._retry = true;
-      invalidateAccessTokenCache();
-
-      if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          refreshQueue.push({
-            resolve: (token) => {
-              setAuthHeader(originalRequest, token);
-              resolve(getApi()(originalRequest));
-            },
-            reject,
-          });
-        });
-      }
-
-      isRefreshing = true;
-
-      try {
-        const newToken = await refreshSession();
-
-        if (!newToken) {
-          processRefreshQueue(error, null);
-          logoutUser();
-          return Promise.reject(error);
-        }
-
-        processRefreshQueue(null, newToken);
-        setAuthHeader(originalRequest, newToken);
-        return getApi()(originalRequest);
-      } catch (refreshError) {
-        processRefreshQueue(refreshError, null);
-        logoutUser();
-        return Promise.reject(refreshError);
-      } finally {
-        isRefreshing = false;
-      }
+      return handleUnauthorized(error, originalRequest);
     },
   );
 

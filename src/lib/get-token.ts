@@ -1,5 +1,6 @@
 import Cookies from "universal-cookie";
 import { siteConfig } from "@/config/site";
+import { TRAINER_LOGIN_PATH } from "@/lib/auth/trainer-routes";
 
 const cookies = new Cookies();
 
@@ -80,17 +81,17 @@ export function clearAuthCookies() {
   removeToken(siteConfig.cookieNames.user_type);
   removeToken(siteConfig.cookieNames.email);
   removeToken(siteConfig.cookieNames.user_profile);
+  removeToken(siteConfig.cookieNames.trainer_id);
   if (typeof window !== "undefined") {
     sessionStorage.removeItem(ACCESS_TOKEN_EXPIRY_KEY);
   }
 }
 
 export function logoutUser(loginPath?: string) {
+  const userType = getCookie(siteConfig.cookieNames.user_type);
   const resolvedPath =
     loginPath ??
-    (getCookie(siteConfig.cookieNames.user_type) === "trainer"
-      ? "/trainers/login"
-      : "/admin/login");
+    (userType === "trainer" ? TRAINER_LOGIN_PATH : "/admin/login");
 
   clearAuthCookies();
   if (typeof window === "undefined") return;

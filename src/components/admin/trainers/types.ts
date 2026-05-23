@@ -5,6 +5,8 @@ export interface Trainer {
   id: string;
   name: string;
   email: string;
+  phoneNumber?: string;
+  gender?: string;
   avatarUrl?: string;
   specialty: string;
   specializations: string[];
@@ -39,3 +41,5 @@ export interface TrainerResponse {
   counts: { all: number; active: number; pending: number; suspended: number };
   pagination: { totalItems: number };
 }
+
+export type { TrainersListMeta } from '@/api/types/trainers';

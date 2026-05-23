@@ -1,16 +1,29 @@
 import * as z from 'zod'
 
+export const PASSWORD_REQUIREMENTS_MESSAGE =
+  'Password must contain upper case, lower case, and a digit'
+
+export const PASSWORD_HINT = `At least 8 characters. ${PASSWORD_REQUIREMENTS_MESSAGE}.`
+
+export function passwordMeetsMinLength(password: string): boolean {
+  return password.length >= 8
+}
+
+export function passwordMeetsCharacterRules(password: string): boolean {
+  return /[a-z]/.test(password) && /[A-Z]/.test(password) && /[0-9]/.test(password)
+}
+
+export function passwordMeetsAllRequirements(password: string): boolean {
+  return passwordMeetsMinLength(password) && passwordMeetsCharacterRules(password)
+}
+
 export const adminNewPasswordSchema = z
   .string()
   .min(1, { message: 'Password is required' })
   .min(8, { message: 'Password must be at least 8 characters' })
-  .regex(/[a-z]/, {
-    message: 'Password must include at least one lowercase letter',
+  .refine(passwordMeetsCharacterRules, {
+    message: PASSWORD_REQUIREMENTS_MESSAGE,
   })
-  .regex(/[A-Z]/, {
-    message: 'Password must include at least one uppercase letter',
-  })
-  .regex(/[0-9]/, { message: 'Password must include at least one number' })
 
 export const resetCodeSchema = z
   .string()

@@ -56,11 +56,16 @@ const EarningsTab: React.FC<EarningsTabProps> = ({ trainerId }) => {
     isError: isErrorEarnings,
   } = useTrainerEarnings(trainerId);
 
-  const sessions = isErrorSessions || !apiSessions ? [] : apiSessions;
   const earnings =
     isErrorEarnings || !apiEarningsData ? emptyEarningsData : apiEarningsData;
 
-  const stats = useMemo(() => getTrainerSessionStats(sessions), [sessions]);
+  const stats = useMemo(
+    () =>
+      getTrainerSessionStats(
+        isErrorSessions || !apiSessions ? [] : apiSessions,
+      ),
+    [apiSessions, isErrorSessions],
+  );
 
   const isLoading = isLoadingSessions || isLoadingEarnings;
 

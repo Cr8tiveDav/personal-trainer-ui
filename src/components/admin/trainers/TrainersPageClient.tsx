@@ -1,13 +1,13 @@
 'use client'
 
-import { useGetTrainers } from '@/api/trainers'
+import { useAdminTrainers } from '@/api/trainers'
 import TrainersPageHeader from './page-header/TrainersPageHeader'
 import StatsGrid from './analytics/StatsGrid'
 import TrainersList from './trainers-list/TrainersList'
 import { TrainersPageSkeleton } from './TrainersPageSkeleton'
 
 export function TrainersPageClient() {
-  const { data, isLoading } = useGetTrainers()
+  const { data, isLoading } = useAdminTrainers(1, 10)
   const showSkeleton = isLoading && !data
 
   return (

@@ -1,35 +1,42 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { cn } from '~/utils'
-import { LucideIcon } from 'lucide-react'
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "~/utils";
+import { LucideIcon } from "lucide-react";
 
 interface TrainerSidebarItemProps {
-  label: string
-  href: string
-  icon: LucideIcon
-  collapsed?: boolean
+  label: string;
+  href: string;
+  icon: LucideIcon;
+  collapsed?: boolean;
 }
 
-export function TrainerSidebarItem({ label, href, icon: Icon, collapsed }: TrainerSidebarItemProps) {
-  const pathname = usePathname()
-  const isActive = pathname === href || (href !== '/trainer/dashboard' && pathname.startsWith(`${href}/`))
+export function TrainerSidebarItem({
+  label,
+  href,
+  icon: Icon,
+  collapsed,
+}: TrainerSidebarItemProps) {
+  const pathname = usePathname();
+  const isActive =
+    pathname === href ||
+    (href !== "/trainer/dashboard" && pathname.startsWith(`${href}/`));
 
   return (
     <Link
       href={href}
       title={collapsed ? label : undefined}
       className={cn(
-        'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-        collapsed && 'justify-center px-2',
+        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+        collapsed && "justify-center px-2",
         isActive
-          ? 'bg-primary text-white'
-          : 'text-muted-foreground hover:bg-gray-100 hover:text-gray-900'
+          ? "bg-primary text-white"
+          : "text-muted-foreground hover:bg-gray-100 hover:text-gray-900",
       )}
     >
-      <Icon className='h-4 w-4 shrink-0' />
+      <Icon className="h-4 w-4 shrink-0" />
       {!collapsed && <span>{label}</span>}
     </Link>
-  )
+  );
 }

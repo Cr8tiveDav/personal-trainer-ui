@@ -28,11 +28,6 @@ const OverviewTab = ({ trainer }: OverviewTabProps) => {
       ? `$${trainer.earnings.toLocaleString()}`
       : '$0';
 
-  const ratingDisplay =
-    trainer.averageRating && trainer.averageRating > 0
-      ? trainer.averageRating.toFixed(1)
-      : '0';
-
   return (
     <div className='flex flex-col gap-8'>
       {/* About Section */}
@@ -46,7 +41,7 @@ const OverviewTab = ({ trainer }: OverviewTabProps) => {
       </div>
 
       {/* Stats Grid */}
-      <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+      <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
         <StatCard
           title='Sessions'
           value={sessionCount}
@@ -57,12 +52,6 @@ const OverviewTab = ({ trainer }: OverviewTabProps) => {
           title='Earnings'
           value={earningsDisplay}
           icon='/images/admin-dashboard/icons/currency-dollar.svg'
-        />
-
-        <StatCard
-          title='Ratings'
-          value={ratingDisplay}
-          icon='/images/admin-dashboard/icons/star-gray.svg'
         />
 
         <StatCard

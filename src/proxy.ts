@@ -1,5 +1,10 @@
 import { NextResponse, type NextProxy } from "next/server";
 import { siteConfig } from "@/config/site";
+import {
+  isTrainerAppRoute,
+  isTrainerSecretLoginRoute,
+  TRAINER_LOGIN_PATH,
+} from "@/lib/auth/trainer-routes";
 
 const SECURITY_HEADERS: Record<string, string> = {
   "X-Frame-Options": "DENY",
@@ -9,7 +14,6 @@ const SECURITY_HEADERS: Record<string, string> = {
 };
 
 export const proxy: NextProxy = (request) => {
-  // Route Protection & Token Expiration Logic
   const { pathname } = request.nextUrl;
   const userType = request.cookies.get("user_type")?.value;
   const accessToken = request.cookies.get(
@@ -26,25 +30,36 @@ export const proxy: NextProxy = (request) => {
 
   const isAdminPage =
     pathname.startsWith("/admin") && !isPublicAdminAuthPage && !isApiRoute;
-  const isTrainerPage =
-    pathname.startsWith("/trainers") &&
-    !pathname.startsWith("/trainers/login") &&
-    !pathname.startsWith("/trainers/set-password") &&
-    !isApiRoute;
+
+  const isPublicTrainerAuth =
+    pathname.startsWith(TRAINER_LOGIN_PATH) ||
+    pathname.startsWith("/trainers/set-password") ||
+    isTrainerSecretLoginRoute(pathname);
+
+  const isTrainerProtected = isTrainerAppRoute(pathname);
 
   const hasAuthToken = !!accessToken || !!refreshToken;
+  const isTrainer = userType === "trainer";
 
-  if (isAdminPage || isTrainerPage) {
-    if (isAdminPage && (userType !== "admin" || !hasAuthToken)) {
-      return NextResponse.redirect(new URL("/admin/login", request.url));
-    }
-
-    if (isTrainerPage && (userType !== "trainer" || !hasAuthToken)) {
-      return NextResponse.redirect(new URL("/trainers/login", request.url));
-    }
+  if (isAdminPage && (userType !== "admin" || !hasAuthToken)) {
+    return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
-  // Default request headers and security headers
+  if (isTrainerProtected && (!isTrainer || !hasAuthToken)) {
+    const loginUrl = new URL(TRAINER_LOGIN_PATH, request.url);
+    loginUrl.searchParams.set("from", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  if (
+    isPublicTrainerAuth &&
+    isTrainer &&
+    hasAuthToken &&
+    pathname.startsWith(TRAINER_LOGIN_PATH)
+  ) {
+    return NextResponse.redirect(new URL("/trainer/dashboard", request.url));
+  }
+
   const requestId = request.headers.get("x-request-id") ?? crypto.randomUUID();
 
   const requestHeaders = new Headers(request.headers);

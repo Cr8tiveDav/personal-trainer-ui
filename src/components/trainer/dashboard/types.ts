@@ -15,6 +15,10 @@ export interface TrainerSession {
   id: string
   clientName: string
   clientAvatar?: string
+  location: string
+  nextSession: string
+  goal: string
+  goalVariant: 'green' | 'purple' | 'orange' | 'gray'
   date: string
   time: string
   type: string
@@ -26,9 +30,11 @@ export interface UpcomingSession {
   id: string
   clientName: string
   clientAvatar?: string
-  date: string
-  time: string
-  type: string
+  dateLabel: string
+  monthLabel: string
+  timeRange: string
+  platform: 'zoom' | 'whatsapp' | 'meet' | 'in-app'
+  platformLabel: string
 }
 
 export interface Review {
@@ -40,7 +46,7 @@ export interface Review {
   date: string
 }
 
-export interface ChartData {
-  day: string
-  sessions: number
+export interface MonthlyChartPoint {
+  month: string
+  value: number
 }

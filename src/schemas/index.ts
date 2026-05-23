@@ -33,12 +33,10 @@ export const RegisterSchema = z.object({
 
 export const ResetPasswordSchema = z
   .object({
-    password: z.string().min(8, {
-      message: 'Password is required',
-    }),
+    password: adminNewPasswordSchema,
     confirmPassword: z
       .string()
-      .min(8, { message: 'Confirm Password is required' }),
+      .min(1, { message: 'Confirm password is required' }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',

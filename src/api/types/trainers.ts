@@ -36,6 +36,8 @@ export interface BackendTrainerResponse {
   user_id: string;
   name?: string;
   email?: string | null;
+  phone_number?: string | null;
+  gender?: string | null;
   specializations: string[];
   training_styles: string[];
   benefits?: TrainerBenefit[];
@@ -54,8 +56,20 @@ export type CreatedTrainer = BackendTrainerResponse;
 
 import type { ApiEnvelope } from './index';
 
-export type BackendTrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>;
-export type TrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>;
+export interface TrainersListMeta {
+  page: number;
+  per_page: number;
+  total_pages: number;
+  total_count: number;
+  next?: string | null;
+}
+
+export type BackendTrainersListResponse = ApiEnvelope<
+  BackendTrainerResponse[]
+> & {
+  meta?: TrainersListMeta;
+};
+export type TrainersListResponse = BackendTrainersListResponse;
 export type TrainerDetailResponse = ApiEnvelope<BackendTrainerResponse>;
 export type CreateTrainerResponse = ApiEnvelope<BackendTrainerResponse>;
 
