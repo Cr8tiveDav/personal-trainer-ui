@@ -2,15 +2,15 @@
 
 import { format } from 'date-fns'
 import { useAdminSessions } from '@/api/sessions'
-import { useGetTrainers } from '@/api/trainers'
+import { useTrainerStatusCounts } from '@/api/trainers'
 
 export function DashboardGreeting() {
   const today = format(new Date(), 'EEEE, MMMM d')
   const { data: sessions } = useAdminSessions()
-  const { data: trainers } = useGetTrainers()
+  const { counts } = useTrainerStatusCounts()
 
   const sessionCount = sessions?.length ?? 0
-  const awaitingCount = trainers?.counts?.pending ?? 0
+  const awaitingCount = counts.pending ?? 0
 
   const sessionLabel = sessionCount === 1 ? 'session' : 'sessions'
   const trainerLabel = awaitingCount === 1 ? 'trainer' : 'trainers'

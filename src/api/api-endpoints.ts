@@ -14,10 +14,12 @@ export const API_ENDPOINTS = {
   TRAINERS: {
     LIST: "/trainers",
     CREATE: "/trainers",
+    RESEND_SETUP: "/trainers/resend-setup",
     DETAIL: (id: string) => `/trainers/${id}`,
     RANKINGS: "/trainers/rankings",
     SET_PASSWORD: "/trainers/set-password",
-    SESSIONS: (id: string) => `/trainers/${id}/sessions`,
+    /** GET /trainers/sessions?trainer_id=&page=&limit= */
+    TRAINER_SESSIONS: "/trainers/sessions",
     REVIEWS: (id: string) => `/trainers/${id}/reviews`,
     AVAILABILITY: (id: string) => `/trainers/${id}/availability`,
     IMAGES: (id: string) => `/trainers/${id}/images`,

@@ -54,8 +54,20 @@ export type CreatedTrainer = BackendTrainerResponse;
 
 import type { ApiEnvelope } from './index';
 
-export type BackendTrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>;
-export type TrainersListResponse = ApiEnvelope<BackendTrainerResponse[]>;
+export interface TrainersListMeta {
+  page: number;
+  per_page: number;
+  total_pages: number;
+  total_count: number;
+  next?: string | null;
+}
+
+export type BackendTrainersListResponse = ApiEnvelope<
+  BackendTrainerResponse[]
+> & {
+  meta?: TrainersListMeta;
+};
+export type TrainersListResponse = BackendTrainersListResponse;
 export type TrainerDetailResponse = ApiEnvelope<BackendTrainerResponse>;
 export type CreateTrainerResponse = ApiEnvelope<BackendTrainerResponse>;
 

@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { Bell, Search, Menu, LogOut } from 'lucide-react'
 import Image from 'next/image'
 import { useLogout } from '@/api/auth'
+import { TRAINER_LOGIN_PATH } from '@/lib/auth/trainer-routes'
 import {
   EMPTY_STATE_IMAGE_PATHS,
   EmptyState,
@@ -21,7 +22,7 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
 
   const notifRef = useRef<HTMLDivElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
-  const logout = useLogout('/trainers/login')
+  const logout = useLogout(TRAINER_LOGIN_PATH)
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {

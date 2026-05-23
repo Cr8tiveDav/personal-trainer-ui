@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, MoreVertical, Pencil, Trash2 } from "lucide-react";
-import { useDeleteTrainer } from "@/api/trainers";
+import { Eye, Mail, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { useDeleteTrainer, useResendTrainerSetup } from "@/api/trainers";
 import type { Trainer } from "@/components/admin/trainers/types";
 import { EditTrainerDialog } from "./EditTrainerDialog";
 import { Button } from "@/components/ui/button";
@@ -30,8 +30,14 @@ type TrainerTableActionsProps = {
 export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
   const router = useRouter();
   const deleteTrainer = useDeleteTrainer();
+  const resendSetup = useResendTrainerSetup();
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+
+  function handleResendSetup() {
+    if (!trainer.email?.trim()) return;
+    resendSetup.mutate(trainer.email.trim());
+  }
 
   function goToDetail() {
     router.push(`/admin/trainers/${trainer.id}`);
@@ -75,6 +81,14 @@ export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
           >
             <Pencil className="h-3.5 w-3.5" />
             Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={handleResendSetup}
+            disabled={resendSetup.isPending || !trainer.email?.trim()}
+            className="rounded-lg px-3 py-2 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 disabled:opacity-50 disabled:pointer-events-none"
+          >
+            <Mail className="h-3.5 w-3.5" />
+            {resendSetup.isPending ? "Sending…" : "Resend email"}
           </DropdownMenuItem>
           <DropdownMenuSeparator className="my-1 border-gray-100" />
           <DropdownMenuItem

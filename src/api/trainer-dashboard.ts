@@ -1,16 +1,19 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
+import { getStoredTrainerId } from '@/lib/auth/trainer-profile'
 import { resolveTrainerId } from '@/lib/auth/resolve-trainer-id'
 import { useTrainerSessions } from './sessions'
 import { useTrainerById } from './trainers'
-import { useTrainerEarnings } from './finance'
-import { useTrainerReviews } from './trainer-reviews'
+import { useTrainerReviews, useTrainerReviewsInfinite } from './trainer-reviews'
 
 export function useCurrentTrainerId() {
+  const cachedId = typeof window !== 'undefined' ? getStoredTrainerId() : null
+
   return useQuery({
     queryKey: ['current-trainer-id'],
     queryFn: resolveTrainerId,
+    initialData: cachedId ?? undefined,
     staleTime: 60_000,
   })
 }
@@ -25,12 +28,12 @@ export function useMyTrainerSessions() {
   return useTrainerSessions(trainerId ?? '')
 }
 
-export function useMyTrainerEarnings() {
+export function useMyTrainerReviews(options?: { limit?: number }) {
   const { data: trainerId } = useCurrentTrainerId()
-  return useTrainerEarnings(trainerId ?? '')
+  return useTrainerReviews(trainerId ?? '', options)
 }
 
-export function useMyTrainerReviews() {
+export function useMyTrainerReviewsInfinite(limit = 20) {
   const { data: trainerId } = useCurrentTrainerId()
-  return useTrainerReviews(trainerId ?? '')
+  return useTrainerReviewsInfinite(trainerId ?? '', limit)
 }

@@ -39,3 +39,5 @@ export interface TrainerResponse {
   counts: { all: number; active: number; pending: number; suspended: number };
   pagination: { totalItems: number };
 }
+
+export type { TrainersListMeta } from '@/api/types/trainers';

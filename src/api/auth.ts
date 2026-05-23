@@ -8,7 +8,9 @@ import { displayError, showSuccessToast } from "~/lib/utils";
 import { API_ENDPOINTS } from "./api-endpoints";
 import type { LoginPayload, LoginResponse } from "./types/auth";
 import { siteConfig } from "@/config/site";
-import { clearAuthCookies, logoutUser, setToken } from "@/lib/get-token";
+import { persistTrainerId } from "@/lib/auth/trainer-profile";
+import { TRAINER_LOGIN_PATH } from "@/lib/auth/trainer-routes";
+import { clearAuthCookies, getCookie, logoutUser, setToken } from "@/lib/get-token";
 
 export type LoginType = "admin" | "trainer";
 
@@ -48,10 +50,14 @@ function persistAuthSession(body: LoginResponse["data"]) {
 
   const user = body.user as {
     trainer_id?: string
-    id?: string
     trainer?: { id?: string }
   }
-  const trainerId = user.trainer_id ?? user.trainer?.id ?? user.id
+  const trainerId = user.trainer_id ?? user.trainer?.id
+
+  if (trainerId) {
+    persistTrainerId(trainerId, 7 * 24 * 60 * 60)
+  }
+
   setToken(
     siteConfig.cookieNames.user_profile,
     JSON.stringify({
@@ -106,8 +112,11 @@ export function useLogout(loginPath?: string) {
     mutationKey: ["logout"],
 
     onSuccess() {
-      clearAuthCookies();
-      logoutUser(loginPath ?? "/admin/login");
+      const fallback =
+        getCookie(siteConfig.cookieNames.user_type) === "trainer"
+          ? TRAINER_LOGIN_PATH
+          : "/admin/login";
+      logoutUser(loginPath ?? fallback);
     },
 
     onError(error) {

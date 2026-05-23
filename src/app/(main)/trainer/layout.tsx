@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { cookies } from 'next/headers'
 import { TrainerShell } from '@/components/trainer/TrainerShell'
+import { TrainerAuthGuard } from '@/components/trainer/TrainerAuthGuard'
 
 export default async function TrainerLayout({
   children,
@@ -24,8 +25,10 @@ export default async function TrainerLayout({
   }
 
   return (
-    <TrainerShell userName={userName} userEmail={userEmail}>
-      <Suspense>{children}</Suspense>
-    </TrainerShell>
+    <TrainerAuthGuard>
+      <TrainerShell userName={userName} userEmail={userEmail}>
+        <Suspense>{children}</Suspense>
+      </TrainerShell>
+    </TrainerAuthGuard>
   )
 }
