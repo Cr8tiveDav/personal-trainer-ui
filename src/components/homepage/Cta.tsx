@@ -48,7 +48,7 @@ const CTASection = ({ className }: { className?: string }) => {
 
             <Button
               onClick={handleDownloadRedirect}
-              className='mt-10 min-w-75 bg-white font-bold text-primary transition-transform hover:scale-105 hover:bg-blue-50 hover:text-blue-900 active:scale-95'
+              className='mt-10 h-auto min-h-11 w-full max-w-75 bg-white px-6 py-3 font-bold text-primary transition-transform hover:scale-105 hover:bg-blue-50 hover:text-blue-900 active:scale-95 sm:w-auto sm:min-w-75'
             >
               Download FitCall
             </Button>
