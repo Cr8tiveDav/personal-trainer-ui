@@ -4,8 +4,8 @@ import React from 'react';
 
 const HowItWorksPage = () => {
   return (
-    <main className="w-full bg-secondary pt-28 md:pt-48">
-      <HowItWorks />
+    <main className="w-full bg-secondary pt-24 md:pt-28">
+      <HowItWorks className="pt-8 md:pt-10" />
       <CTASection/>
     </main>
   );

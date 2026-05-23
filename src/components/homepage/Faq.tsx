@@ -5,8 +5,15 @@ import {
   AccordionTrigger,
 } from '../ui/accordion'
 import SectionHeader from '../ui/SectionHeader'
+import { cn } from '@/lib/utils'
 
-const faqs = [
+export interface FAQItem {
+  value: string
+  question: string
+  answer: string
+}
+
+const defaultFaqs: FAQItem[] = [
   {
     value: 'item-1',
     question: 'What is FitCall and how does it work?',
@@ -27,16 +34,31 @@ const faqs = [
   },
 ]
 
-const FAQSection = () => {
+interface FAQSectionProps {
+  badge?: string
+  title?: string
+  description?: string
+  faqs?: FAQItem[]
+  listClassName?: string
+}
+
+const FAQSection = ({
+  badge = 'FAQ',
+  title = 'Frequently Asked Questions',
+  description,
+  faqs = defaultFaqs,
+  listClassName,
+}: FAQSectionProps) => {
   return (
     <section className="mt-12 pb-14 md:mt-24">
       <div className="container">
         <SectionHeader
-          badge="FAQ"
-          title="Frequently Asked Questions"
+          badge={badge}
+          title={title}
+          description={description}
           align="center"
         />
-        <div className="mt-12 px-2">
+        <div className={cn('mt-8 px-2 md:mt-10', listClassName)}>
           <Accordion
             type="single"
             collapsible
