@@ -36,6 +36,8 @@ export interface BackendTrainerResponse {
   user_id: string;
   name?: string;
   email?: string | null;
+  phone_number?: string | null;
+  gender?: string | null;
   specializations: string[];
   training_styles: string[];
   benefits?: TrainerBenefit[];

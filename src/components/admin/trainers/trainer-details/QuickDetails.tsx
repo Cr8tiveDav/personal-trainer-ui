@@ -30,7 +30,9 @@ const QuickDetails: React.FC<QuickDetailsProps> = ({ trainer }) => {
 
         <div className='flex items-center justify-between'>
           <span className='text-[15px] text-gray-500'>Gender</span>
-          <span className='text-[15px] font-medium text-gray-900'>N/A</span>
+          <span className='text-[15px] capitalize font-medium text-gray-900'>
+            {trainer.gender ?? '—'}
+          </span>
         </div>
 
         <div className='flex items-center justify-between'>
