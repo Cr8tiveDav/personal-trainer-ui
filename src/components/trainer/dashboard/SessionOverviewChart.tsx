@@ -1,6 +1,6 @@
 'use client'
 
-import { ChartData } from './mock-data'
+import type { ChartData } from './types'
 
 export function SessionOverviewChart({ data }: { data: ChartData[] }) {
   const maxSessions = data.length > 0 ? Math.max(...data.map((d) => d.sessions)) : 0

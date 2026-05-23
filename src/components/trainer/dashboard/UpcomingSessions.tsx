@@ -1,4 +1,4 @@
-import { UpcomingSession } from './mock-data'
+import type { UpcomingSession } from './types'
 import { CalendarDays, Clock } from 'lucide-react'
 
 export function UpcomingSessions({ sessions }: { sessions: UpcomingSession[] }) {

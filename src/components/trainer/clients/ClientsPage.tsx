@@ -66,7 +66,7 @@ export function ClientsPage() {
   })
 
   return (
-    <div className='px-4 pb-6 lg:px-8'>
+    <div className='pb-6'>
       <div className='mb-6'>
         <h1 className='text-xl font-bold text-gray-900'>Clients</h1>
         <p className='text-sm text-gray-500 mt-0.5'>Manage and view all your clients.</p>

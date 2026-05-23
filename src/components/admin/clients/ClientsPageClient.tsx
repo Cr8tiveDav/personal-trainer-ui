@@ -15,7 +15,7 @@ export function ClientsPageClient() {
     (summaryLoading && allSummary === undefined)
 
   return (
-    <div className='mx-auto w-full max-w-[1400px] space-y-6 px-4 pb-6'>
+    <div className='w-full  space-y-6 pb-6 px-10'>
       <ClientsPageHeader />
       {showSkeleton ? (
         <ClientsPageSkeleton />

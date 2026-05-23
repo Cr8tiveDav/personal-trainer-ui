@@ -46,16 +46,21 @@ function persistAuthSession(body: LoginResponse["data"]) {
     setToken(siteConfig.cookieNames.email, body.user.email);
   }
 
-  if (body.user.name || body.user.avatar_url) {
-    setToken(
-      siteConfig.cookieNames.user_profile,
-      JSON.stringify({
-        name: body.user.name ?? "",
-        email: body.user.email ?? "",
-        avatar_url: body.user.avatar_url ?? null,
-      }),
-    );
+  const user = body.user as {
+    trainer_id?: string
+    id?: string
+    trainer?: { id?: string }
   }
+  const trainerId = user.trainer_id ?? user.trainer?.id ?? user.id
+  setToken(
+    siteConfig.cookieNames.user_profile,
+    JSON.stringify({
+      name: body.user.name ?? "",
+      email: body.user.email ?? "",
+      avatar_url: body.user.avatar_url ?? null,
+      ...(trainerId ? { trainer_id: trainerId } : {}),
+    }),
+  );
 }
 
 export function useLogin(options: UseLoginOptions) {

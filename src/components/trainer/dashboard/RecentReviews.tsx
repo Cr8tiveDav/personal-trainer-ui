@@ -1,5 +1,6 @@
-import { Review } from './mock-data'
+import type { Review } from './types'
 import { Star } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -14,15 +15,27 @@ function StarRating({ rating }: { rating: number }) {
   )
 }
 
-export function RecentReviews({ reviews }: { reviews: Review[] }) {
+export function RecentReviews({
+  reviews,
+  isLoading = false,
+}: {
+  reviews: Review[]
+  isLoading?: boolean
+}) {
   return (
     <div className='rounded-xl border border-gray-100 bg-white shadow-sm'>
       <div className='flex items-center justify-between border-b border-gray-100 px-5 py-4'>
         <h3 className='text-sm font-semibold text-gray-900'>Recent Reviews</h3>
-        <button className='text-xs font-medium text-primary hover:underline'>View all</button>
       </div>
       <div className='divide-y divide-gray-50'>
-        {reviews.map((review) => (
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className='space-y-2 px-5 py-4'>
+              <Skeleton className='h-4 w-32' />
+              <Skeleton className='h-3 w-full' />
+            </div>
+          ))
+        ) : reviews.map((review) => (
           <div key={review.id} className='px-5 py-4'>
             <div className='flex items-start justify-between gap-3 mb-2'>
               <div className='flex items-center gap-2.5'>

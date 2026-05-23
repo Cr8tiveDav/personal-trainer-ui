@@ -5,7 +5,7 @@
 export const API_ENDPOINTS = {
   AUTH: {
     ADMIN_LOGIN: "/auth/admin/log-in",
-    TRAINER_LOGIN: "/trainers/login",
+    TRAINER_LOGIN: "/auth/login",
     REFRESH: "/auth/refresh",
     FORGOT_PASSWORD: "/auth/forgot-password",
     RESET_PASSWORD: "/auth/reset-password",
@@ -17,8 +17,8 @@ export const API_ENDPOINTS = {
     DETAIL: (id: string) => `/trainers/${id}`,
     RANKINGS: "/trainers/rankings",
     SET_PASSWORD: "/trainers/set-password",
-    SESSIONS: "/trainers/sessions",
-    ME_AVAILABILITY: "/trainers/me/availability",
+    SESSIONS: (id: string) => `/trainers/${id}/sessions`,
+    REVIEWS: (id: string) => `/trainers/${id}/reviews`,
     AVAILABILITY: (id: string) => `/trainers/${id}/availability`,
     IMAGES: (id: string) => `/trainers/${id}/images`,
     IMAGE: (id: string, imageId: string) => `/trainers/${id}/images/${imageId}`,
