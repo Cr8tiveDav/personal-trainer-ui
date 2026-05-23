@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import SectionHeader from '../ui/SectionHeader'
+import { cn } from '@/lib/utils'
 
 const CountdownTimer = () => {
   const [time, setTime] = useState({ days: 2, hrs: 14, mins: 22 })
@@ -91,11 +92,15 @@ const steps = [
   },
 ]
 
-const HowItWorks = () => {
+interface HowItWorksProps {
+  className?: string
+}
+
+const HowItWorks = ({ className }: HowItWorksProps) => {
   const [activeCategory, setActiveCategory] = useState(0)
 
   return (
-    <section className="w-full py-20">
+    <section className={cn("w-full py-20", className)}>
       <div className="container flex flex-col">
         <SectionHeader
           badge='HOW IT WORKS'
