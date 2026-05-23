@@ -46,12 +46,20 @@ export function TrainerMediaTab({
     null,
   )
 
+  const queryClient = useQueryClient()
+
   const { data: images = [], isLoading: imagesLoading } =
     useTrainerImages(trainerId)
-  const { data: video, isLoading: videoLoading } = useTrainerVideo(trainerId)
   const uploadImagesMutation = useUploadTrainerImages(trainerId)
   const uploadVideoMutation = useUploadTrainerVideo(trainerId)
   const removeVideoMutation = useDeleteTrainerVideo(trainerId)
+
+  const isVideoUploading =
+    uploadOverlay?.type === 'video' || uploadVideoMutation.isPending
+
+  const { data: video, isLoading: videoLoading } = useTrainerVideo(trainerId, {
+    enabled: !isVideoUploading,
+  })
 
   const isUploading =
     uploadOverlay !== null ||
@@ -88,8 +96,20 @@ export function TrainerMediaTab({
     )
   }
 
-  function handleUploadVideo(file: File) {
+  async function handleUploadVideo(file: File) {
+    if (isUploading) return
+
+    const validationError = await validateVideoFile(file)
+    if (validationError) {
+      toast.error(validationError)
+      return
+    }
+
     setOpenUploadModal(false)
+    void queryClient.cancelQueries({
+      queryKey: trainerMediaQueryKeys.video(trainerId),
+    })
+
     setUploadOverlay({
       type: 'video',
       progress: 0,
@@ -106,6 +126,12 @@ export function TrainerMediaTab({
         },
       },
       {
+        onError: (error) => {
+          displayError(
+            error,
+            getErrorMessage(error, 'Video upload failed. Please try again.'),
+          )
+        },
         onSettled: () => setUploadOverlay(null),
       },
     )
