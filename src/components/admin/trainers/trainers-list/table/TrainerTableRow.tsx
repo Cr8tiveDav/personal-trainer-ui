@@ -5,7 +5,7 @@ import { motion, type Variants } from 'motion/react';
 import StatusBadge from './StatusBadge';
 import { Trainer } from '../../types';
 import { cn } from '@/utils';
-import { TruncateEmail } from '@/lib/utils';
+import { formatDisplayName, TruncateEmail } from '@/lib/utils';
 import { TrainerTableActions } from './TrainerTableActions';
 
 interface TrainerTableRowProps {
@@ -36,18 +36,6 @@ export const trainerRowVariants: Variants = {
     },
   },
 };
-
-function formatName(name: string) {
-  if (!name) return '';
-  const parts = name.trim().split(' ');
-  if (parts.length === 1) return parts[0];
-  const firstName = parts[0];
-  const lastName = parts[parts.length - 1];
-  if (lastName.length <= 2 && lastName.endsWith('.')) {
-    return `${firstName} ${lastName}`;
-  }
-  return `${firstName} ${lastName.charAt(0).toUpperCase()}.`;
-}
 
 const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
   let availabilityColor = 'bg-[#D9D9D9]';
@@ -80,9 +68,9 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
               </div>
             )}
           </div>
-          <div className='flex flex-col'>
+          <div className='flex min-w-0 flex-col'>
             <span className='text-sm font-semibold text-gray-900'>
-              {formatName(trainer.name)}
+              {formatDisplayName(trainer.name)}
             </span>
             <span className='text-xs text-gray-500'>
               {TruncateEmail(trainer.email)}

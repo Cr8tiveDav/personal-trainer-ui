@@ -54,6 +54,19 @@ export function showSuccessToast(message: string) {
   toast.success(message);
 }
 
+/** Short display name: first name + last initial (matches trainer table). */
+export function formatDisplayName(name: string) {
+  if (!name) return '';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0];
+  const firstName = parts[0];
+  const lastName = parts[parts.length - 1];
+  if (lastName.length <= 2 && lastName.endsWith('.')) {
+    return `${firstName} ${lastName}`;
+  }
+  return `${firstName} ${lastName.charAt(0).toUpperCase()}.`;
+}
+
 export const TruncateEmail = (
   email: string,
   options: { maxUsernameChars?: number; minUsernameChars?: number } = {},

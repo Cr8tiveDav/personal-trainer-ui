@@ -1,4 +1,4 @@
-import { SessionStatus } from './mock-data'
+import type { SessionStatus } from './types'
 
 const STYLES: Record<SessionStatus, { dot: string; text: string; bg: string }> = {
   Completed: { dot: 'bg-green-500', text: 'text-green-700', bg: 'bg-green-50' },
