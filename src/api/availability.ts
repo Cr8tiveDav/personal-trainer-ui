@@ -12,6 +12,7 @@ import type {
 
 export const availabilityQueryKeys = {
   byTrainer: (trainerId: string) => ["trainer-availability", trainerId] as const,
+  me: ["trainer-availability", "me"] as const,
 };
 
 function normalizeAvailability(
@@ -35,7 +36,79 @@ function normalizeAvailability(
   return [];
 }
 
-/** GET /trainers/{id}/availability */
+/** GET /trainers/me/availability — authenticated trainer */
+export function useMyTrainerAvailability(enabled = true) {
+  return useQuery({
+    queryKey: availabilityQueryKeys.me,
+    queryFn: async () => {
+      const response = await getRequest<TrainerAvailabilityResponse>({
+        url: API_ENDPOINTS.TRAINERS.ME_AVAILABILITY,
+      });
+      return normalizeAvailability(response);
+    },
+    enabled,
+    staleTime: 60_000,
+    retry: false,
+  });
+}
+
+/** POST /trainers/me/availability — update own schedule */
+export function useUpdateMyTrainerAvailability() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (availability: AvailabilitySlot[]) => {
+      const { data } = await postRequest<
+        TrainerAvailabilityResponse,
+        SetAvailabilityPayload
+      >({
+        url: API_ENDPOINTS.TRAINERS.ME_AVAILABILITY,
+        payload: { availability },
+      });
+      return data;
+    },
+    mutationKey: ["update-my-trainer-availability"],
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: availabilityQueryKeys.me,
+      });
+      showSuccessToast("Availability updated");
+    },
+    onError(error) {
+      displayError(error);
+    },
+  });
+}
+
+/** POST /trainers/me/availability — initial save for own schedule */
+export function useSetMyTrainerAvailability() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (availability: AvailabilitySlot[]) => {
+      const { data } = await postRequest<
+        TrainerAvailabilityResponse,
+        SetAvailabilityPayload
+      >({
+        url: API_ENDPOINTS.TRAINERS.ME_AVAILABILITY,
+        payload: { availability },
+      });
+      return data;
+    },
+    mutationKey: ["set-my-trainer-availability"],
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: availabilityQueryKeys.me,
+      });
+      showSuccessToast("Availability saved!");
+    },
+    onError(error) {
+      displayError(error);
+    },
+  });
+}
+
+/** GET /trainers/{id}/availability — admin / by id */
 export function useTrainerAvailabilityById(trainerId: string, enabled = true) {
   return useQuery({
     queryKey: availabilityQueryKeys.byTrainer(trainerId),

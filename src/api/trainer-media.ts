@@ -50,6 +50,7 @@ export async function uploadTrainerImages(
     url: API_ENDPOINTS.TRAINERS.IMAGES(trainerId),
     payload: formData,
     onUploadProgress,
+    timeout: 0,
   });
 }
 
@@ -71,6 +72,7 @@ export async function uploadTrainerVideo(
     url: API_ENDPOINTS.TRAINERS.INTRO_VIDEO(trainerId),
     payload: formData,
     onUploadProgress,
+    timeout: 0,
   });
 }
 
@@ -112,12 +114,14 @@ export function useTrainerImages(trainerId: string) {
   });
 }
 
-export function useTrainerVideo(trainerId: string) {
+export function useTrainerVideo(trainerId: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: trainerMediaQueryKeys.video(trainerId),
     queryFn: () => fetchTrainerVideoMeta(trainerId),
-    enabled: !!trainerId,
+    enabled: (options?.enabled ?? true) && !!trainerId,
     staleTime: 30_000,
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -177,13 +181,15 @@ export function useUploadTrainerVideo(trainerId: string) {
       uploadTrainerVideo(trainerId, file, (event) => {
         onProgress?.(progressFromEvent(event));
       }),
-    onSuccess: async () => {
-      showSuccessToast("Video uploaded successfully");
-      await queryClient.invalidateQueries({
-        queryKey: trainerMediaQueryKeys.video(trainerId),
-      });
+    onSuccess: () => {
+      showSuccessToast(
+        "Video uploaded. Processing may take a few minutes before it is ready to preview.",
+      );
+      queryClient.setQueryData<TrainerVideoMeta | null>(
+        trainerMediaQueryKeys.video(trainerId),
+        { url: "", status: "Pending" },
+      );
     },
-    onError: (error) => displayError(error, "Failed to upload video"),
   });
 }
 

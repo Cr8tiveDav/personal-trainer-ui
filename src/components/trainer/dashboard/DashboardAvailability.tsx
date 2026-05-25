@@ -3,8 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { Video } from 'lucide-react'
-import { useCurrentTrainerId } from '@/api/trainer-dashboard'
-import { useTrainerAvailabilityById } from '@/api/availability'
+import { useMyTrainerAvailability } from '@/api/availability'
 import type { AvailabilitySlot } from '@/api/types/availability'
 import { DashboardAvailabilitySidebarSkeleton } from './dashboard-skeleton-parts'
 import {
@@ -70,9 +69,8 @@ function Toggle({
 }
 
 export function DashboardAvailability({ className }: { className?: string }) {
-  const { data: trainerId, isLoading: idLoading } = useCurrentTrainerId()
   const { data: slots = [], isLoading, isError, isSuccess } =
-    useTrainerAvailabilityById(trainerId ?? '', !!trainerId)
+    useMyTrainerAvailability()
 
   const [platforms, setPlatforms] = useState<Record<string, boolean>>({
     whatsapp: true,
@@ -84,16 +82,12 @@ export function DashboardAvailability({ className }: { className?: string }) {
   const dayMap = useMemo(() => slotByDay(slots), [slots])
   const hasSlots = slots.length > 0
 
-  if (idLoading || (isLoading && !hasSlots)) {
+  if (isLoading && !hasSlots) {
     return (
       <DashboardAvailabilitySidebarSkeleton
         className={cn('h-full min-h-0 flex-1', className)}
       />
     )
-  }
-
-  if (!trainerId) {
-    return null
   }
 
   if (isError || !isSuccess || !hasSlots) {
