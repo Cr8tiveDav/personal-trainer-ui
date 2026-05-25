@@ -15,7 +15,7 @@ function ActionButtons({ video }: { video: VideoItem }) {
     return (
       <Link
         href='/admin/video-content/upload'
-        className='rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-white hover:bg-primary/90'
+        className='rounded-[8px] bg-primary px-4 py-1.5 text-sm font-medium text-white hover:bg-primary/90'
       >
         Upload
       </Link>
@@ -26,7 +26,7 @@ function ActionButtons({ video }: { video: VideoItem }) {
     return (
       <Link
         href={`/admin/video-content/${video.id}`}
-        className='rounded-lg border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50'
+        className='rounded-[8px] border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50'
       >
         View
       </Link>
@@ -37,13 +37,13 @@ function ActionButtons({ video }: { video: VideoItem }) {
     <div className='flex items-center gap-2'>
       <Link
         href={`/admin/video-content/${video.id}`}
-        className='rounded-lg border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50'
+        className='rounded-[8px] border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50'
       >
         View
       </Link>
       <Link
         href={`/admin/video-content/upload?replace=${video.id}`}
-        className='rounded-lg border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50'
+        className='rounded-[8px] border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50'
       >
         Replace
       </Link>
@@ -75,12 +75,12 @@ export function VideoTable({ videos }: VideoTableProps) {
               placeholder='Search by title or trainer'
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className='w-72 rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20'
+              className='w-72 rounded-[8px] border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20'
             />
           </div>
           <Link
             href='/admin/video-content/upload'
-            className='flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90'
+            className='flex items-center gap-2 rounded-[8px] bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90'
           >
             <Plus className='h-4 w-4' />
             Upload Video
@@ -88,7 +88,7 @@ export function VideoTable({ videos }: VideoTableProps) {
         </div>
       </div>
 
-      <div className='rounded-2xl border border-gray-100 bg-white shadow-sm'>
+      <div className='rounded-[16px] border border-gray-100 bg-white shadow-sm'>
         {filtered.length === 0 ? (
           <div className='flex min-h-[200px] items-center justify-center'>
             <p className='text-sm text-gray-400'>No videos found.</p>
@@ -109,7 +109,7 @@ export function VideoTable({ videos }: VideoTableProps) {
                 {filtered.map((video) => (
                   <tr key={video.id} className='hover:bg-gray-50'>
                     <td className='px-6 py-4'>
-                      <div className='relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100'>
+                      <div className='relative h-14 w-24 shrink-0 overflow-hidden rounded-[8px] bg-gray-100'>
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src='/images/admin/video-content/video-placeholder.png'
@@ -117,7 +117,7 @@ export function VideoTable({ videos }: VideoTableProps) {
                           className='h-full w-full object-cover'
                         />
                         <div className='absolute inset-0 flex items-center justify-center'>
-                          <div className='flex h-7 w-7 items-center justify-center rounded-full bg-black/40'>
+                          <div className='flex h-7 w-7 items-center justify-center rounded-[9999px] bg-black/40'>
                             <Play className='h-3 w-3 fill-white text-white' />
                           </div>
                         </div>

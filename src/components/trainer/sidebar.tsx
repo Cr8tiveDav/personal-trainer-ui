@@ -81,7 +81,7 @@ function SidebarInner({
           <button
             onClick={onCollapse}
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] border border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors"
           >
             {collapsed ? (
               <ChevronRight className="h-4 w-4" />
@@ -107,7 +107,7 @@ function SidebarInner({
 
       <div
         className={cn(
-          "flex items-center gap-3 rounded-lg border border-gray-100 p-3",
+          "flex items-center gap-3 rounded-[8px] border border-gray-100 p-3",
           collapsed && "justify-center",
         )}
       >
@@ -118,10 +118,10 @@ function SidebarInner({
             alt={userName}
             width={36}
             height={36}
-            className="rounded-full object-cover shrink-0 h-9 w-9"
+            className="rounded-[9999px] object-cover shrink-0 h-9 w-9"
           />
         ) : (
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9999px] bg-primary text-sm font-semibold text-white">
             {userName.charAt(0).toUpperCase()}
           </div>
         )}

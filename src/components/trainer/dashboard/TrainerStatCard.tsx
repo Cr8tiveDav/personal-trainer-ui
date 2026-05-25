@@ -16,7 +16,7 @@ export function TrainerStatCard({
   reviewCount,
 }: TrainerStatCardProps) {
   return (
-    <div className='rounded-xl border border-gray-100 bg-white px-5 py-4 shadow-sm'>
+    <div className='rounded-[12px] border border-gray-100 bg-white px-5 py-4 shadow-sm'>
       <p className='text-xs font-medium uppercase tracking-wide text-gray-500'>
         {title}
       </p>

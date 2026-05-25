@@ -4,16 +4,16 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 function ProfileHeaderSkeleton() {
   return (
-    <div className='w-full min-h-88 md:h-88 pb-6 md:pb-0 bg-white rounded-2xl border border-gray-100 overflow-hidden flex flex-col relative'>
+    <div className='w-full min-h-88 md:h-88 pb-6 md:pb-0 bg-white rounded-[16px] border border-gray-100 overflow-hidden flex flex-col relative'>
       <div className='h-44 w-full bg-[#1a2b3c]/80 relative flex items-end pb-4 pl-32.5 md:pl-55'>
         <div className='flex items-center gap-3 z-10 pr-4'>
           <Skeleton className='h-8 w-48 max-w-[60%] bg-white/20' />
-          <Skeleton className='h-7 w-24 rounded-md bg-white/20' />
+          <Skeleton className='h-7 w-24 rounded-[6px] bg-white/20' />
         </div>
       </div>
 
       <div className='absolute top-28.75 left-4 md:left-8 z-20'>
-        <Skeleton className='h-25 w-25 md:h-42.5 md:w-42.5 rounded-full border-[3px] border-[#EBEBEB]' />
+        <Skeleton className='h-25 w-25 md:h-42.5 md:w-42.5 rounded-[9999px] border-[3px] border-[#EBEBEB]' />
       </div>
 
       <div className='pl-4 md:pl-55 pr-4 md:pr-8 pt-12 md:pt-6 flex flex-col md:flex-row md:items-start justify-between gap-6'>
@@ -21,7 +21,7 @@ function ProfileHeaderSkeleton() {
           <Skeleton className='h-4 w-56' />
           <Skeleton className='h-4 w-40' />
         </div>
-        <Skeleton className='h-12 w-full md:w-34.25 rounded-lg shrink-0' />
+        <Skeleton className='h-12 w-full md:w-34.25 rounded-[8px] shrink-0' />
       </div>
     </div>
   )
@@ -29,7 +29,7 @@ function ProfileHeaderSkeleton() {
 
 function QuickDetailsSkeleton() {
   return (
-    <div className='w-full h-full bg-white rounded-2xl border border-[#EBEBEB] py-6 px-4 flex flex-col min-h-[320px]'>
+    <div className='w-full h-full bg-white rounded-[16px] border border-[#EBEBEB] py-6 px-4 flex flex-col min-h-[320px]'>
       <Skeleton className='h-7 w-24 mb-4' />
       <Skeleton className='h-px w-full mb-8' />
       <div className='flex flex-col gap-6.5 flex-1'>
@@ -47,7 +47,7 @@ function QuickDetailsSkeleton() {
 function TabContentSkeleton() {
   return (
     <div className='flex flex-col gap-8'>
-      <div className='bg-white rounded-xl border border-[#EBEBEB] py-8 px-8 md:px-12'>
+      <div className='bg-white rounded-[12px] border border-[#EBEBEB] py-8 px-8 md:px-12'>
         <Skeleton className='h-7 w-24 mb-4' />
         <div className='space-y-2'>
           <Skeleton className='h-4 w-full max-w-3xl' />
@@ -60,16 +60,16 @@ function TabContentSkeleton() {
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className='bg-white rounded-xl border border-[#EBEBEB] p-5 flex flex-col gap-3'
+            className='bg-white rounded-[12px] border border-[#EBEBEB] p-5 flex flex-col gap-3'
           >
-            <Skeleton className='h-10 w-10 rounded-lg' />
+            <Skeleton className='h-10 w-10 rounded-[8px]' />
             <Skeleton className='h-3 w-16' />
             <Skeleton className='h-7 w-20' />
           </div>
         ))}
       </div>
 
-      <div className='bg-white rounded-2xl border border-[#EBEBEB] overflow-hidden'>
+      <div className='bg-white rounded-[16px] border border-[#EBEBEB] overflow-hidden'>
         <div className='p-6 pb-5'>
           <Skeleton className='h-7 w-36' />
         </div>
@@ -77,7 +77,7 @@ function TabContentSkeleton() {
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className='flex items-center justify-between px-6 py-4'>
               <div className='flex items-center gap-3'>
-                <Skeleton className='h-8 w-8 rounded-full' />
+                <Skeleton className='h-8 w-8 rounded-[9999px]' />
                 <Skeleton className='h-4 w-64 max-w-[50vw]' />
               </div>
               <Skeleton className='h-4 w-20' />

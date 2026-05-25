@@ -108,7 +108,7 @@ export function LogSessionForm({ onCancel, onSubmit }: LogSessionFormProps) {
   }
 
   return (
-    <div className='rounded-lg bg-white p-6'>
+    <div className='rounded-[8px] bg-white p-6'>
       <h2 className='text-base font-semibold text-gray-900'>Session information</h2>
       <p className='mt-1 mb-6 text-sm text-muted-foreground'>Record the client, trainer, schedule, confirmations, and current session state.</p>
 

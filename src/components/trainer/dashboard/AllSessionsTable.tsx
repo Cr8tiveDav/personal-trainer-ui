@@ -31,7 +31,7 @@ export function AllSessionsTable({
   return (
     <div
       className={cn(
-        'flex h-full min-h-0 flex-col rounded-xl border border-gray-100 bg-white shadow-sm',
+        'flex h-full min-h-0 flex-col rounded-[12px] border border-gray-100 bg-white shadow-sm',
         className,
       )}
     >
@@ -68,7 +68,7 @@ export function AllSessionsTable({
               className='grid grid-cols-[1fr_auto_auto_auto] items-center gap-4 px-5 py-4 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0.8fr)_auto]'
             >
               <div className='flex min-w-0 items-center gap-3'>
-                <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white'>
+                <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-[9999px] bg-primary text-xs font-semibold text-white'>
                   {session.clientName.charAt(0)}
                 </div>
                 <div className='min-w-0'>
@@ -92,7 +92,7 @@ export function AllSessionsTable({
                 </p>
                 <span
                   className={cn(
-                    'mt-1 inline-block rounded-full px-2.5 py-0.5 text-xs font-medium capitalize',
+                    'mt-1 inline-block rounded-[9999px] px-2.5 py-0.5 text-xs font-medium capitalize',
                     GOAL_STYLES[session.goalVariant],
                   )}
                 >
@@ -102,7 +102,7 @@ export function AllSessionsTable({
 
               <button
                 type='button'
-                className='flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-50'
+                className='flex h-8 w-8 items-center justify-center rounded-[8px] text-gray-400 hover:bg-gray-50'
                 aria-label='Session options'
               >
                 <MoreVertical className='h-4 w-4' />

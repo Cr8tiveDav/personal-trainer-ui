@@ -39,12 +39,12 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
         <button
           onClick={onMenuClick}
           aria-label='Open menu'
-          className='flex md:hidden h-12 w-9 items-center justify-center rounded-lg hover:bg-gray-100 transition-colors'
+          className='flex md:hidden h-12 w-9 items-center justify-center rounded-[8px] hover:bg-gray-100 transition-colors'
         >
           <Menu className='h-5 w-5 text-gray-500' />
         </button>
 
-        <div className='flex flex-1 items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 max-w-4xl'>
+        <div className='flex flex-1 items-center gap-2 rounded-[8px] border border-gray-200 bg-gray-50 px-3 py-2 max-w-4xl'>
           <Search className='h-4 w-4 shrink-0 text-gray-400' />
           <input
             type='text'
@@ -60,12 +60,12 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
           <button
             onClick={() => { setNotifOpen(prev => !prev); setProfileOpen(false) }}
             aria-label='Notifications'
-            className='relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100 transition-colors'
+            className='relative flex h-9 w-9 items-center justify-center rounded-[9999px] hover:bg-gray-100 transition-colors'
           >
             <Bell className='h-5 w-5 text-gray-500' />
           </button>
           {notifOpen && (
-            <div className='absolute right-0 top-11 z-50 w-[min(400px,calc(100vw-2rem))] rounded-xl border border-gray-100 bg-white shadow-lg overflow-hidden'>
+            <div className='absolute right-0 top-11 z-50 w-[min(400px,calc(100vw-2rem))] rounded-[12px] border border-gray-100 bg-white shadow-lg overflow-hidden'>
               <p className='border-b border-gray-100 px-5 py-4 text-base font-semibold text-gray-900'>
                 Notifications
               </p>
@@ -84,7 +84,7 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
           <button
             onClick={() => { setProfileOpen(prev => !prev); setNotifOpen(false) }}
             aria-label='Profile menu'
-            className='flex h-9 w-9 items-center justify-center rounded-full overflow-hidden border-2 border-gray-200 hover:border-primary transition-colors'
+            className='flex h-9 w-9 items-center justify-center rounded-[9999px] overflow-hidden border-2 border-gray-200 hover:border-primary transition-colors'
           >
             {userAvatar ? (
               <Image src={userAvatar} alt={userName} width={36} height={36} className='object-cover' />
@@ -95,14 +95,14 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
             )}
           </button>
           {profileOpen && (
-            <div className='absolute right-0 top-11 z-50 w-[200px] rounded-xl border border-gray-100 bg-white p-4 shadow-lg'>
+            <div className='absolute right-0 top-11 z-50 w-[200px] rounded-[12px] border border-gray-100 bg-white p-4 shadow-lg'>
               <p className='text-sm font-semibold text-gray-900'>{userName}</p>
               <p className='mt-0.5 mb-4 text-xs text-gray-400'>Trainer</p>
               <button
                 type='button'
                 onClick={() => logout.mutate()}
                 disabled={logout.isPending}
-                className='flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50'
+                className='flex w-full items-center gap-2 rounded-[8px] px-3 py-2 text-sm font-medium text-red-500 transition-colors hover:bg-red-50'
               >
                 <LogOut className='h-4 w-4' />
                 Logout

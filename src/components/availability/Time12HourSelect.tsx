@@ -60,7 +60,7 @@ export function Time12HourSelect({
       <SelectTrigger
         id={id}
         className={cn(
-          'h-11 w-full gap-2 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-900 shadow-none focus:border-[#0b4d8d] focus:ring-2 focus:ring-[rgba(11,77,141,0.1)] disabled:cursor-not-allowed disabled:opacity-70 [&>span]:line-clamp-1',
+          'h-11 w-full gap-2 rounded-[8px] border border-gray-200 bg-white px-3 text-sm text-gray-900 shadow-none focus:border-[#0b4d8d] focus:ring-2 focus:ring-[rgba(11,77,141,0.1)] disabled:cursor-not-allowed disabled:opacity-70 [&>span]:line-clamp-1',
           className,
         )}
       >

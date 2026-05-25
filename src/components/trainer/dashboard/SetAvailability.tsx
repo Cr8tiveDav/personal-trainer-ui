@@ -35,7 +35,7 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
 
   if (isError || !isSuccess) {
     return (
-      <div className='rounded-xl border border-gray-100 bg-white shadow-sm'>
+      <div className='rounded-[12px] border border-gray-100 bg-white shadow-sm'>
         <EmptyState
           imageSrc={EMPTY_STATE_IMAGE_PATHS.availability}
           imageAlt='Availability unavailable'
@@ -49,7 +49,7 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
 
   if (slots.length === 0) {
     return (
-      <div className='rounded-xl border border-gray-100 bg-white shadow-sm overflow-hidden'>
+      <div className='rounded-[12px] border border-gray-100 bg-white shadow-sm overflow-hidden'>
         <EmptyState
           imageSrc={EMPTY_STATE_IMAGE_PATHS.availability}
           imageAlt='No availability set'

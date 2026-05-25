@@ -36,7 +36,7 @@ const FramerButton = forwardRef<HTMLButtonElement, Props>(
         type="submit"
         disabled={isLoading || disabled}
         className={cn(
-          'bg-primary relative flex w-full justify-center rounded-md px-4 sm:px-6 py-2.5 sm:py-3 text-white',
+          'bg-primary relative flex w-full justify-center rounded-[6px] px-4 sm:px-6 py-2.5 sm:py-3 text-white',
           className
         )}
         ref={ref}

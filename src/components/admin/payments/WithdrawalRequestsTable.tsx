@@ -28,7 +28,7 @@ const WithdrawalRequestsTable = ({
 
   return (
     <>
-      <div className="hidden overflow-hidden rounded-lg border border-border bg-card shadow-sm lg:block">
+      <div className="hidden overflow-hidden rounded-[8px] border border-border bg-card shadow-sm lg:block">
         <table className="w-full border-collapse text-left text-sm">
           <thead className="border-b border-border bg-card text-xs font-semibold uppercase text-muted">
             <tr>
@@ -103,7 +103,7 @@ const WithdrawalRequestsTable = ({
             />
           ))
         ) : (
-          <div className="rounded-lg border border-dashed border-border bg-card p-8 text-center">
+          <div className="rounded-[8px] border border-dashed border-border bg-card p-8 text-center">
             <p className="font-medium text-foreground">
               No withdrawal requests found
             </p>

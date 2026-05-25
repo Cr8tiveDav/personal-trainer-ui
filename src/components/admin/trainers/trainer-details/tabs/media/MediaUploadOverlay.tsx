@@ -49,12 +49,12 @@ export function MediaUploadOverlay({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 8 }}
             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-            className='w-full max-w-md rounded-2xl border border-gray-100 bg-white p-8 shadow-2xl'
+            className='w-full max-w-md rounded-[16px] border border-gray-100 bg-white p-8 shadow-2xl'
           >
             <div className='mb-6 flex flex-col items-center text-center'>
               <div
                 className={cn(
-                  'mb-4 flex h-14 w-14 items-center justify-center rounded-2xl',
+                  'mb-4 flex h-14 w-14 items-center justify-center rounded-[16px]',
                   isVideo ? 'bg-[#E8F2FA]' : 'bg-[#ECFDF5]',
                 )}
               >
@@ -85,10 +85,10 @@ export function MediaUploadOverlay({
                   {isFinishing && clampedProgress >= 100 ? '100%' : `${clampedProgress}%`}
                 </span>
               </div>
-              <div className='h-3 overflow-hidden rounded-full bg-gray-100'>
+              <div className='h-3 overflow-hidden rounded-[9999px] bg-gray-100'>
                 <motion.div
                   className={cn(
-                    'h-full rounded-full bg-[#0b4d8d]',
+                    'h-full rounded-[9999px] bg-[#0b4d8d]',
                     isFinishing && 'animate-pulse',
                   )}
                   initial={{ width: 0 }}

@@ -9,7 +9,7 @@ const AddTrainerButton = () => {
       asChild
       size='lg'
       variant='default'
-      className='w-39.25 text-white text-base font-semibold rounded-md cursor-pointer'
+      className='w-39.25 text-white text-base font-semibold rounded-[6px] cursor-pointer'
     >
       <Link href='/admin/trainers/new'>
         <Image

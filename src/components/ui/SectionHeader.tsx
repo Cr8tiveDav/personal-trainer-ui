@@ -31,7 +31,7 @@ const SectionHeader = ({
       {badge && (
         <span
           className={cn(
-            'mb-4 inline-flex items-center rounded-full bg-primarybadge px-4 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#063660]',
+            'mb-4 inline-flex items-center rounded-[9999px] bg-primarybadge px-4 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-[#063660]',
             'border border-blue-100/50 shadow-sm'
           )}
         >

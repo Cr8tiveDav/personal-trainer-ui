@@ -24,7 +24,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
   return (
     <span
       className={cn(
-        'rounded-full px-3 py-1 text-xs font-medium',
+        'rounded-[9999px] px-3 py-1 text-xs font-medium',
         STATUS_STYLES[status]
       )}
     >

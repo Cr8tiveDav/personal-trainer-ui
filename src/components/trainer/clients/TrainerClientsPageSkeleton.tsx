@@ -10,7 +10,7 @@ export function TrainerClientsPageSkeleton() {
         <Skeleton className='mt-2 h-4 w-64' />
       </div>
 
-      <div className='rounded-xl border border-gray-100 bg-white shadow-sm'>
+      <div className='rounded-[12px] border border-gray-100 bg-white shadow-sm'>
         <div className='flex flex-col gap-4 border-b border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between'>
           <Skeleton className='h-10 w-full max-w-md' />
           <Skeleton className='h-10 w-48' />
@@ -23,7 +23,7 @@ export function TrainerClientsPageSkeleton() {
               className='grid grid-cols-2 gap-4 px-5 py-4 md:grid-cols-5'
             >
               <div className='col-span-2 flex items-center gap-3'>
-                <Skeleton className='h-9 w-9 rounded-full' />
+                <Skeleton className='h-9 w-9 rounded-[9999px]' />
                 <div className='space-y-2'>
                   <Skeleton className='h-4 w-32' />
                   <Skeleton className='h-3 w-40' />

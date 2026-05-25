@@ -33,7 +33,7 @@ export function VideoDetailView({ video }: VideoDetailViewProps) {
         <VideoStatusBadge status={status} />
       </div>
 
-      <div className='overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm'>
+      <div className='overflow-hidden rounded-[16px] border border-gray-100 bg-white shadow-sm'>
         <div className='relative bg-gray-900' style={{ aspectRatio: '16/9' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -42,13 +42,13 @@ export function VideoDetailView({ video }: VideoDetailViewProps) {
             className='h-full w-full object-cover opacity-60'
           />
           <div className='absolute inset-0 flex items-center justify-center'>
-            <button className='flex h-16 w-16 items-center justify-center rounded-full bg-white/20 text-white transition hover:bg-white/30'>
+            <button className='flex h-16 w-16 items-center justify-center rounded-[9999px] bg-white/20 text-white transition hover:bg-white/30'>
               <Play className='h-7 w-7 fill-white' />
             </button>
           </div>
           <div className='absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 px-4 pb-3 pt-8'>
-            <div className='mb-2 h-1 w-full overflow-hidden rounded-full bg-white/30'>
-              <div className='h-full w-0 rounded-full bg-white' />
+            <div className='mb-2 h-1 w-full overflow-hidden rounded-[9999px] bg-white/30'>
+              <div className='h-full w-0 rounded-[9999px] bg-white' />
             </div>
             <div className='flex items-center justify-between text-white'>
               <div className='flex items-center gap-3'>
@@ -91,15 +91,15 @@ export function VideoDetailView({ video }: VideoDetailViewProps) {
           {status !== 'Approved' && (
             <button
               onClick={() => setStatus('Approved')}
-              className='rounded-lg bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90'
+              className='rounded-[8px] bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90'
             >
               Approve Video
             </button>
           )}
-          <button className='rounded-lg border border-gray-200 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'>
+          <button className='rounded-[8px] border border-gray-200 px-5 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'>
             Remove Video
           </button>
-          <button className='rounded-lg bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90'>
+          <button className='rounded-[8px] bg-primary px-5 py-2 text-sm font-medium text-white hover:bg-primary/90'>
             Replace Video
           </button>
         </div>

@@ -23,7 +23,7 @@ export function ConsultationConversion() {
   ]
 
   return (
-    <div className='flex-1 rounded-xl border border-gray-100 bg-white p-6 shadow-sm'>
+    <div className='flex-1 rounded-[12px] border border-gray-100 bg-white p-6 shadow-sm'>
       <h2 className='text-xl font-bold text-foreground'>Consultation Conversion</h2>
       <p className='mt-1 text-sm text-muted'>Track how consultations turn into paid users.</p>
 
@@ -48,7 +48,7 @@ export function ConsultationConversion() {
           </ResponsiveContainer>
         </div>
 
-        <div className='bg-gray-100 md:max-w-[200px] rounded-md flex flex-col gap-10 p-3'>
+        <div className='bg-gray-100 md:max-w-[200px] rounded-[6px] flex flex-col gap-10 p-3'>
           <div>
             <p className='text-3xl font-bold text-foreground'>{stats.conversion_rate}%</p>
             <p className='text-sm  text-muted-foreground'>Conversation rate</p>

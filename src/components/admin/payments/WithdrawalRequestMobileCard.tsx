@@ -16,7 +16,7 @@ const WithdrawalRequestMobileCard = ({
     <button
       type="button"
       onClick={onClick}
-      className="w-full rounded-lg border border-border bg-card p-4 text-left shadow-sm transition-colors hover:bg-secondary/70"
+      className="w-full rounded-[8px] border border-border bg-card p-4 text-left shadow-sm transition-colors hover:bg-secondary/70"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">

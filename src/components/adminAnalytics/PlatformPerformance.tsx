@@ -33,7 +33,7 @@ export function PlatformPerformance() {
     const chartData = response?.data ?? EMPTY_DATA
 
     return (
-        <div className='rounded-xl border border-gray-100 bg-white p-6 shadow-sm'>
+        <div className='rounded-[12px] border border-gray-100 bg-white p-6 shadow-sm'>
             <div className='mb-6 flex items-start justify-between'>
                 <div>
                     <h2 className='text-xl font-bold text-foreground'>Platform Performance</h2>
@@ -45,13 +45,13 @@ export function PlatformPerformance() {
                 <div className='relative'>
                     <button
                         onClick={() => setDropdownOpen(prev => !prev)}
-                        className='flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-gray-50 transition-colors'
+                        className='flex items-center gap-2 rounded-[8px] border border-gray-200 px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-gray-50 transition-colors'
                     >
                         {period}
                         <ChevronDown className='h-4 w-4' />
                     </button>
                     {dropdownOpen && (
-                        <div className='absolute right-0 top-10 z-10 w-[130px] rounded-lg border border-gray-100 bg-white shadow-lg'>
+                        <div className='absolute right-0 top-10 z-10 w-[130px] rounded-[8px] border border-gray-100 bg-white shadow-lg'>
                             {(['Weekly', 'Monthly', 'Yearly'] as Period[]).map((p) => (
                                 <button
                                     key={p}

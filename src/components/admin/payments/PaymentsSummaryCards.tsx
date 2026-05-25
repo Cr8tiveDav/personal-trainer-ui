@@ -42,7 +42,7 @@ function CurrencyFlag({ code }: { code: DisplayCurrency }) {
   if (code === "USD") {
     return (
       <span
-        className="inline-flex h-4 w-6 overflow-hidden rounded-sm ring-1 ring-border"
+        className="inline-flex h-4 w-6 overflow-hidden rounded-[4px] ring-1 ring-border"
         aria-hidden
       >
         <span className="flex-1 bg-[#B22234]" />
@@ -52,7 +52,7 @@ function CurrencyFlag({ code }: { code: DisplayCurrency }) {
   }
   return (
     <span
-      className="inline-flex h-4 w-6 flex-col overflow-hidden rounded-sm ring-1 ring-border"
+      className="inline-flex h-4 w-6 flex-col overflow-hidden rounded-[4px] ring-1 ring-border"
       aria-hidden
     >
       <span className="h-1.5 bg-[#012169]" />
@@ -83,7 +83,7 @@ const PaymentsSummaryCards = () => {
           <DropdownMenuTrigger asChild>
             <button
               type="button"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground shadow-sm"
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-[8px] border border-border bg-card px-4 text-sm font-medium text-foreground shadow-sm"
             >
               <CurrencyFlag code={currency} />
               {currency}
@@ -109,7 +109,7 @@ const PaymentsSummaryCards = () => {
         {paymentSummaries.map((summary) => (
           <article
             key={summary.id}
-            className="min-h-35.5 rounded-lg border border-border bg-card p-5 text-card-foreground shadow-sm"
+            className="min-h-35.5 rounded-[8px] border border-border bg-card p-5 text-card-foreground shadow-sm"
           >
             <p className="text-sm font-medium text-foreground">
               {summary.label}

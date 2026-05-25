@@ -29,7 +29,7 @@ export function TrainerRow({ trainer }: TrainerRowProps) {
         #{rank}
       </span>
       {trend === 'up' && <TrendingUp className='h-3 w-3 shrink-0 text-green-500' />}
-      <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600'>
+      <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-[9999px] bg-gray-100 text-xs font-semibold text-gray-600'>
         {initial}
       </div>
       <p className='flex-1 text-sm font-medium text-gray-900'>{name}</p>
