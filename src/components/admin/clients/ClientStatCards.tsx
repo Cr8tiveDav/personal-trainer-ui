@@ -54,7 +54,7 @@ export function ClientStatCards() {
         return (
           <div
             key={stat.label}
-            className='rounded-[12px] border border-gray-100 bg-white p-5 shadow-sm'
+            className='rounded-[12px] border border-gray-100 bg-white p-5'
           >
             <div
               className={`mb-3 inline-flex h-9 w-9 items-center justify-center rounded-[8px] ${stat.iconBg}`}

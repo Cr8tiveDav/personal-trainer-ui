@@ -199,7 +199,7 @@ export function ClientsTable({
         )}
 
         {showTableContent && (
-          <div className='flex flex-col items-center justify-center gap-4 border-t border-gray-100 px-6 py-4 sm:flex-row sm:justify-between'>
+          <div className='flex flex-col-reverse items-center justify-center gap-4 border-t border-gray-100 px-6 py-4'>
             <AnimatePresence mode='wait'>
               <motion.p
                 key={resultsLabel}
