@@ -30,7 +30,7 @@ export default function Error({
 
         {error.digest ? (
           <p className="mb-6">
-            <code className="text-muted-foreground bg-muted rounded px-2 py-1 text-xs">
+            <code className="text-muted-foreground bg-muted rounded-[4px] px-2 py-1 text-xs">
               ref: {error.digest}
             </code>
           </p>
@@ -39,7 +39,7 @@ export default function Error({
         <button
           type="button"
           onClick={() => unstable_retry()}
-          className="inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          className="inline-block rounded-[9999px] bg-primary px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
         >
           Try again
         </button>

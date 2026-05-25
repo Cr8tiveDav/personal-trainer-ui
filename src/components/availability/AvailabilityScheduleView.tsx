@@ -59,7 +59,7 @@ function TimelineDayTooltip({
         className='pointer-events-none absolute top-full left-1/2 z-30 mt-1.5 hidden -translate-x-1/2 group-hover/tip:block'
       >
         <div className='absolute left-1/2 bottom-full h-0 w-0 -translate-x-1/2 border-x-[6px] border-x-transparent border-b-[6px] border-b-gray-900' />
-        <div className='rounded-lg border border-gray-700 bg-gray-900 px-3 py-2.5 text-left shadow-lg min-w-[180px]'>
+        <div className='rounded-[8px] border border-gray-700 bg-gray-900 px-3 py-2.5 text-left shadow-lg min-w-[180px]'>
           <p className='text-[11px] font-semibold text-white leading-snug'>
             {lines[0]}
           </p>
@@ -156,7 +156,7 @@ function TimelineDayRow({
   const track = (
     <div
       className={cn(
-        'relative flex-1 h-10 min-w-0 rounded-md overflow-visible bg-gray-50/80',
+        'relative flex-1 h-10 min-w-0 rounded-[6px] overflow-visible bg-gray-50/80',
         editable && 'cursor-pointer',
       )}
       onClick={
@@ -188,7 +188,7 @@ function TimelineDayRow({
       }
     >
       <div
-        className='absolute inset-0 grid pointer-events-none overflow-hidden rounded-md'
+        className='absolute inset-0 grid pointer-events-none overflow-hidden rounded-[6px]'
         style={{
           gridTemplateColumns: `repeat(${hours.length}, minmax(0, 1fr))`,
         }}
@@ -212,7 +212,7 @@ function TimelineDayRow({
             width: `${bar.width}%`,
           }}
         >
-          <div className='flex h-full w-full items-center justify-center rounded-md bg-[#0b4d8d] px-2 shadow-sm'>
+          <div className='flex h-full w-full items-center justify-center rounded-[6px] bg-[#0b4d8d] px-2 shadow-sm'>
             <span className='text-[10px] font-medium text-white whitespace-nowrap truncate'>
               {to12HourLabel(slot!.start_time)} – {to12HourLabel(slot!.end_time)}
             </span>
@@ -283,7 +283,7 @@ export function AvailabilityScheduleView({
 
   return (
     <>
-      <div className='bg-white rounded-xl border border-gray-100 p-6'>
+      <div className='bg-white rounded-[12px] border border-gray-100 p-6'>
         <div className='flex items-center justify-between mb-6'>
           <div>
             <h3 className='text-sm font-semibold text-gray-900 mb-1'>Weekly availability</h3>
@@ -294,13 +294,13 @@ export function AvailabilityScheduleView({
             </p>
           </div>
           <div className='flex items-center gap-2'>
-            <span className='w-2 h-2 rounded-full bg-[#0b4d8d]' />
+            <span className='w-2 h-2 rounded-[9999px] bg-[#0b4d8d]' />
             <span className='text-xs text-gray-600'>Available days = {activeDayCount}</span>
           </div>
         </div>
 
         <div className='flex flex-col lg:flex-row gap-6'>
-          <div className='flex-1 border border-gray-100 rounded-xl p-4 sm:p-6'>
+          <div className='flex-1 border border-gray-100 rounded-[12px] p-4 sm:p-6'>
             <AvailabilityTimelineGrid
               slots={slots}
               editable={editable}
@@ -309,12 +309,12 @@ export function AvailabilityScheduleView({
           </div>
 
           <div className='w-full lg:w-64 flex flex-col gap-4'>
-            <div className='border border-gray-100 rounded-xl p-5'>
+            <div className='border border-gray-100 rounded-[12px] p-5'>
               <div className='flex items-center justify-between mb-4'>
                 <h4 className='text-sm font-semibold text-gray-900'>Today</h4>
                 <div
                   className={cn(
-                    'flex items-center gap-1.5 px-2 py-0.5 rounded-full border',
+                    'flex items-center gap-1.5 px-2 py-0.5 rounded-[9999px] border',
                     todaySlot
                       ? 'bg-[#14561C]/10 border-[#14561C]/20'
                       : 'bg-gray-100 border-gray-200',
@@ -322,7 +322,7 @@ export function AvailabilityScheduleView({
                 >
                   <div
                     className={cn(
-                      'w-1 h-1 rounded-full',
+                      'w-1 h-1 rounded-[9999px]',
                       todaySlot ? 'bg-[#14561C]' : 'bg-gray-400',
                     )}
                   />
@@ -356,7 +356,7 @@ export function AvailabilityScheduleView({
               )}
             </div>
 
-            <div className='border border-gray-100 rounded-xl p-5'>
+            <div className='border border-gray-100 rounded-[12px] p-5'>
               <h4 className='text-sm font-semibold text-gray-900 mb-4'>Schedule details</h4>
               <div className='flex flex-col gap-3'>
                 <div className='flex items-center justify-between'>

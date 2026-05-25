@@ -22,7 +22,7 @@ function SessionStatCard({ label, value, subtext, valueColor = 'default', isLoad
   const valueSizeClass = isLoading ? 'text-sm' : 'text-2xl'
 
   return (
-    <div className='bg-white rounded-xl p-5'>
+    <div className='bg-white rounded-[12px] p-5'>
       <p className='whitespace-nowrap text-xs font-bold uppercase text-muted'>{label}</p>
       <h3 className={`mt-2 flex h-8 items-center font-bold ${valueSizeClass} ${valueClass}`}>{value ?? '-'}</h3>
       {subtext && <p className='mt-1 text-xs font-medium text-muted'>{subtext}</p>}
@@ -67,7 +67,7 @@ export function SessionsStatsSection() {
       </div>
 
       {isError && !stats && (
-        <div className='rounded-lg border border-gray-100 bg-white p-4 text-xs font-medium text-gray-400'>
+        <div className='rounded-[8px] border border-gray-100 bg-white p-4 text-xs font-medium text-gray-400'>
           Session metrics could not be loaded.
         </div>
       )}

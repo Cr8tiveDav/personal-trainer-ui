@@ -86,7 +86,7 @@ const TrainersList = () => {
   }
 
   return (
-    <div className="flex flex-col rounded-3xl border border-[#CBD5E1] bg-white">
+    <div className="flex flex-col rounded-[24px] border border-[#CBD5E1] bg-white">
       <div className="py-6 px-4">
         <FilterControls
           activeTab={activeTab}

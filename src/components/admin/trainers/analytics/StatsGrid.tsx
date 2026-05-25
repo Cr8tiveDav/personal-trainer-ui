@@ -42,9 +42,9 @@ const StatsGrid = () => {
         showSkeleton ? (
           <div
             key={index}
-            className='flex flex-col justify-between gap-2 rounded-xl border border-[#EBEBEB] bg-white p-5'
+            className='flex flex-col justify-between gap-2 rounded-[12px] border border-[#EBEBEB] bg-white p-5'
           >
-            <Skeleton className='h-10 w-10 rounded-full' />
+            <Skeleton className='h-10 w-10 rounded-[9999px]' />
             <Skeleton className='h-9 w-20' />
             <Skeleton className='h-3 w-28' />
           </div>

@@ -38,12 +38,12 @@ const PricingCard = ({ plan }: PricingCardProps) => {
 
   return (
     <div
-      className={`relative flex h-fit flex-col rounded-2xl border bg-white p-8 transition-all ${
+      className={`relative flex h-fit flex-col rounded-[16px] border bg-white p-8 transition-all ${
         isHighlighted ? 'border-[#2272AD] shadow-lg' : 'border-[#D1D1D1]'
       }`}
     >
       {isHighlighted && (
-        <div className="absolute left-6 top-6 inline-flex items-center gap-1.5 rounded-full bg-[#ECFDF3] px-3 py-1 text-xs font-medium text-[#027A48]">
+        <div className="absolute left-6 top-6 inline-flex items-center gap-1.5 rounded-[9999px] bg-[#ECFDF3] px-3 py-1 text-xs font-medium text-[#027A48]">
           <CheckCircleIcon className="h-4 w-4 text-[#12B76A]" />
           {plan.highlight}
         </div>
@@ -80,7 +80,7 @@ const PricingCard = ({ plan }: PricingCardProps) => {
 
       <div className="mt-8">
         <Button
-          className={`h-11 w-full rounded-lg text-sm font-semibold transition-colors ${
+          className={`h-11 w-full rounded-[8px] text-sm font-semibold transition-colors ${
             isHighlighted
               ? 'bg-primary text-white hover:bg-[#083D70]'
               : 'border border-[#EAECF0] bg-[#F9FAFB] text-muted-foreground hover:bg-[#F2F4F7]'

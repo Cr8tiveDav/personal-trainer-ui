@@ -18,11 +18,11 @@ function SessionsListSkeleton() {
 
       <div className='space-y-4 pt-4'>
         <div className='flex flex-wrap items-center justify-between gap-3'>
-          <Skeleton className='h-10 w-full max-w-md rounded-lg' />
-          <Skeleton className='h-10 w-32 rounded-lg' />
+          <Skeleton className='h-10 w-full max-w-md rounded-[8px]' />
+          <Skeleton className='h-10 w-32 rounded-[8px]' />
         </div>
 
-        <div className='overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm'>
+        <div className='overflow-hidden rounded-[12px] border border-gray-100 bg-white shadow-sm'>
           <div className='flex items-center justify-between border-b border-gray-100 bg-white p-4'>
             <Skeleton className='h-5 w-28' />
           </div>
@@ -47,7 +47,7 @@ function SessionsListSkeleton() {
           <div className='flex flex-col items-center gap-3 border-t border-gray-100 px-4 py-6'>
             <div className='flex items-center gap-3'>
               {Array.from({ length: 7 }).map((_, i) => (
-                <Skeleton key={i} className='h-9 w-9 rounded-md' />
+                <Skeleton key={i} className='h-9 w-9 rounded-[6px]' />
               ))}
             </div>
             <Skeleton className='h-4 w-44' />

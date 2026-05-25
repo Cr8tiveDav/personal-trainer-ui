@@ -40,9 +40,9 @@ const Experience = () => {
           {experience.map((item, index) => (
             <div
               key={index}
-              className='rounded-2xl border border-[#EBEBEB] bg-white p-6'
+              className='rounded-[16px] border border-[#EBEBEB] bg-white p-6'
             >
-              <div className='mb-6 flex h-12 w-12 items-center justify-center rounded-xl bg-primarybadge'>
+              <div className='mb-6 flex h-12 w-12 items-center justify-center rounded-[12px] bg-primarybadge'>
                 <Image
                   src={item.icon}
                   alt={item.title}
@@ -63,7 +63,7 @@ const Experience = () => {
         </div>
 
         <div className='container mx-auto max-w-5xl px-0! grid grid-cols-1 md:grid-cols-2 md:py-8 gap-6 lg:gap-8 items-stretch'>
-          <div className='w-full rounded-lg overflow-hidden h-81 md:h-140.5'>
+          <div className='w-full rounded-[8px] overflow-hidden h-81 md:h-140.5'>
             <Image
               src='/images/features/woman-planking.png'
               alt='Woman Planking'
@@ -73,7 +73,7 @@ const Experience = () => {
             />
           </div>
 
-          <div className='w-full flex flex-col justify-center h-full bg-white px-4 py-6 md:p-8 border border-[#EBEBEB] md:border-none rounded-xl'>
+          <div className='w-full flex flex-col justify-center h-full bg-white px-4 py-6 md:p-8 border border-[#EBEBEB] md:border-none rounded-[12px]'>
             <h2 className='text-2xl lg:text-3xl font-bold tracking-tight text-muted-foreground mb-6'>
               Built around real life, 
               <span className='text-primary'>not perfect schedules.</span>

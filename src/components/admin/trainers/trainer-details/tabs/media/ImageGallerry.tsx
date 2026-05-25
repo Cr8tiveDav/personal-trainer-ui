@@ -22,8 +22,8 @@ export function ImageEmptyState({
   const isImage = type === "image";
 
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 py-14 transition-colors hover:border-[#0b4d8d]/30 hover:bg-blue-50/20">
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gray-200 bg-white shadow-sm">
+    <div className="flex flex-col items-center justify-center gap-3 rounded-[12px] border-2 border-dashed border-gray-200 bg-gray-50 py-14 transition-colors hover:border-[#0b4d8d]/30 hover:bg-blue-50/20">
+      <div className="flex h-12 w-12 items-center justify-center rounded-[12px] border border-gray-200 bg-white shadow-sm">
         {isImage ? (
           <ImageIcon className="h-5 w-5 text-gray-400" />
         ) : (
@@ -44,7 +44,7 @@ export function ImageEmptyState({
         type="button"
         disabled={loading}
         onClick={() => inputRef.current?.click()}
-        className="flex items-center gap-2 rounded-lg bg-[#0b4d8d] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#093e71] disabled:opacity-60"
+        className="flex items-center gap-2 rounded-[8px] bg-[#0b4d8d] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#093e71] disabled:opacity-60"
       >
         <UploadCloud className="h-4 w-4" />
         {loading ? "Uploading…" : "Choose file"}
@@ -78,7 +78,7 @@ export function ImageGallery({ trainerId, images, uploading, onUpload }: any) {
         {images.map((img: GalleryImage) => (
           <div
             key={img.id}
-            className="group relative h-48 w-48 shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-gray-100 sm:h-52 sm:w-52"
+            className="group relative h-48 w-48 shrink-0 overflow-hidden rounded-[12px] border border-gray-200 bg-gray-100 sm:h-52 sm:w-52"
           >
             <img
               src={img.image_url}
@@ -90,7 +90,7 @@ export function ImageGallery({ trainerId, images, uploading, onUpload }: any) {
                 type="button"
                 onClick={() => deleteMutation.mutate(img.id)}
                 disabled={deleteMutation.isPending}
-                className="flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
+                className="flex items-center gap-1.5 rounded-[8px] bg-white px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50"
               >
                 <X className="h-3.5 w-3.5" /> Remove
               </button>
@@ -102,7 +102,7 @@ export function ImageGallery({ trainerId, images, uploading, onUpload }: any) {
             type="button"
             disabled={uploading}
             onClick={() => inputRef.current?.click()}
-            className="flex h-48 w-48 shrink-0 flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 transition-colors hover:border-[#0b4d8d]/40 hover:bg-blue-50/20 disabled:opacity-60 sm:h-52 sm:w-52"
+            className="flex h-48 w-48 shrink-0 flex-col items-center justify-center gap-2 rounded-[12px] border-2 border-dashed border-gray-200 bg-gray-50 transition-colors hover:border-[#0b4d8d]/40 hover:bg-blue-50/20 disabled:opacity-60 sm:h-52 sm:w-52"
           >
             <Plus className="h-7 w-7 text-gray-400" />
             <span className="text-xs text-gray-400">

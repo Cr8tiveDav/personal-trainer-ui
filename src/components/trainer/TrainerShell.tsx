@@ -54,7 +54,7 @@ export function TrainerShell({
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className="fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg md:hidden"
+          className="fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-[9999px] bg-primary text-white shadow-lg md:hidden"
           aria-label="Open menu"
         >
           <Menu className="h-5 w-5" />

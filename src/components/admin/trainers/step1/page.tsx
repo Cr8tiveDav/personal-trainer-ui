@@ -101,7 +101,7 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
   const bio = values.bio ?? "";
 
   return (
-    <div className="rounded-lg bg-white p-6">
+    <div className="rounded-[8px] bg-white p-6">
       <h2 className="text-base font-semibold text-gray-900">
         Basic information
       </h2>

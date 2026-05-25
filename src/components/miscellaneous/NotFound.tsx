@@ -19,7 +19,7 @@ const NotFound = () => {
 
         <Link
           href='/'
-          className='inline-block rounded-full bg-primary px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90'
+          className='inline-block rounded-[9999px] bg-primary px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90'
         >
           Back to home
         </Link>

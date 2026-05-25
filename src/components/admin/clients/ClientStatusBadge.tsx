@@ -9,7 +9,7 @@ const STATUS_STYLES: Record<ClientStatus, string> = {
 
 export function ClientStatusBadge({ status }: { status: ClientStatus }) {
   return (
-    <span className={cn('rounded-full px-3 py-1 text-xs font-medium', STATUS_STYLES[status])}>
+    <span className={cn('rounded-[9999px] px-3 py-1 text-xs font-medium', STATUS_STYLES[status])}>
       {status}
     </span>
   )

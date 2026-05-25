@@ -96,11 +96,11 @@ function SessionsTableBody({
           alt={person.name}
           width={32}
           height={32}
-          className='h-8 w-8 shrink-0 rounded-full bg-gray-100 object-cover'
+          className='h-8 w-8 shrink-0 rounded-[9999px] bg-gray-100 object-cover'
         />
       ) : (
         <div
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold uppercase ${fallbackClassName}`}
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[9999px] text-[11px] font-semibold uppercase ${fallbackClassName}`}
         >
           {person.name
             .split(' ')
@@ -208,11 +208,11 @@ function SessionsTableBody({
                         </td>
                         <td className='px-4 py-5'>
                           <span
-                            className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ${confStyle(session.clientConf)}`}
+                            className={`inline-flex items-center gap-1.5 rounded-[9999px] px-2 py-0.5 text-[11px] font-semibold ${confStyle(session.clientConf)}`}
                           >
                             {session.clientConf !== 'N/A' && (
                               <span
-                                className={`h-1.5 w-1.5 rounded-full ${dotStyle(session.clientConf)}`}
+                                className={`h-1.5 w-1.5 rounded-[9999px] ${dotStyle(session.clientConf)}`}
                               />
                             )}
                             {session.clientConf}
@@ -224,24 +224,24 @@ function SessionsTableBody({
                             <DropdownMenuTrigger asChild>
                               <Button
                                 variant='ghost'
-                                className='h-8 w-8 rounded-lg p-0 text-gray-400 shadow-none hover:bg-gray-100/80 hover:text-gray-700 focus:ring-0'
+                                className='h-8 w-8 rounded-[8px] p-0 text-gray-400 shadow-none hover:bg-gray-100/80 hover:text-gray-700 focus:ring-0'
                               >
                                 <MoreVertical className='h-4 w-4' />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
                               align='end'
-                              className='z-50 w-48 rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl'
+                              className='z-50 w-48 rounded-[12px] border border-gray-100 bg-white p-1.5 shadow-xl'
                             >
                               <DropdownMenuItem
                                 onClick={() => onForceConfirm?.(session)}
-                                className='cursor-pointer rounded-lg bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
+                                className='cursor-pointer rounded-[8px] bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
                               >
                                 Force Confirm
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => onMarkMissed?.(session.id)}
-                                className='cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:bg-gray-50'
+                                className='cursor-pointer rounded-[8px] px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:bg-gray-50'
                               >
                                 Mark as Missed Session
                               </DropdownMenuItem>
@@ -278,7 +278,7 @@ function SessionsTableBody({
                         />
                       ) : (
                         <div className='mx-auto flex max-w-sm flex-col items-center justify-center px-4 py-10 text-center text-xs font-medium text-gray-400'>
-                          <span className='flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 text-gray-400'>
+                          <span className='flex h-12 w-12 items-center justify-center rounded-[9999px] bg-gray-50 text-gray-400'>
                             <CalendarX className='h-5 w-5' />
                           </span>
                           <p className='mt-3 text-sm font-bold text-gray-900'>{emptyMessage}</p>
@@ -304,7 +304,7 @@ function SessionsTableBody({
               whileTap={{ scale: 0.95 }}
               disabled={currentPage === 1}
               onClick={() => onPageChange(currentPage - 1)}
-              className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-100 bg-white text-gray-400 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40'
+              className='flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-100 bg-white text-gray-400 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40'
               aria-label='Previous page'
             >
               <ChevronLeft className='h-3.5 w-3.5' />
@@ -319,7 +319,7 @@ function SessionsTableBody({
                   layout
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onPageChange(page)}
-                  className={`relative flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition-colors ${
+                  className={`relative flex h-9 w-9 items-center justify-center rounded-[6px] text-sm font-medium transition-colors ${
                     isActive
                       ? 'text-white'
                       : 'border border-gray-100 bg-white text-gray-500 hover:bg-gray-50'
@@ -328,7 +328,7 @@ function SessionsTableBody({
                   {isActive && (
                     <motion.span
                       layoutId='sessions-table-page'
-                      className='absolute inset-0 rounded-md bg-[#0b4d8d]'
+                      className='absolute inset-0 rounded-[6px] bg-[#0b4d8d]'
                       transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                     />
                   )}
@@ -346,7 +346,7 @@ function SessionsTableBody({
               whileTap={{ scale: 0.95 }}
               disabled={currentPage === totalPages}
               onClick={() => onPageChange(currentPage + 1)}
-              className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-100 bg-white text-gray-400 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40'
+              className='flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-100 bg-white text-gray-400 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40'
               aria-label='Next page'
             >
               <ChevronRight className='h-3.5 w-3.5' />

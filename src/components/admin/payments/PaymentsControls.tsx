@@ -32,7 +32,7 @@ const PaymentsControls = ({
           value={searchValue}
           onChange={(event) => onSearchChange(event.target.value)}
           placeholder="Search"
-          className="h-12 w-full rounded-lg border border-border bg-card pl-12 pr-4 text-sm text-foreground outline-none transition-shadow placeholder:text-muted focus:ring-2 focus:ring-primary/10"
+          className="h-12 w-full rounded-[8px] border border-border bg-card pl-12 pr-4 text-sm text-foreground outline-none transition-shadow placeholder:text-muted focus:ring-2 focus:ring-primary/10"
         />
       </label>
 
@@ -42,7 +42,7 @@ const PaymentsControls = ({
           <select
             value={statusValue}
             onChange={(event) => onStatusChange(event.target.value)}
-            className="h-12 w-full appearance-none rounded-lg border border-border bg-card px-4 pr-10 text-sm font-medium text-muted outline-none transition-shadow focus:ring-2 focus:ring-primary/10 sm:w-36"
+            className="h-12 w-full appearance-none rounded-[8px] border border-border bg-card px-4 pr-10 text-sm font-medium text-muted outline-none transition-shadow focus:ring-2 focus:ring-primary/10 sm:w-36"
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -57,10 +57,10 @@ const PaymentsControls = ({
           type="button"
           disabled
           title="Additional filters will be added when more payment filters are available."
-          className="inline-flex h-12 cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-medium text-muted opacity-70"
+          className="inline-flex h-12 cursor-not-allowed items-center justify-center gap-2 rounded-[8px] border border-border bg-card px-4 text-sm font-medium text-muted opacity-70"
         >
           Add filter
-          <span className="rounded bg-secondary px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted">
+          <span className="rounded-[4px] bg-secondary px-1.5 py-0.5 text-[10px] font-semibold uppercase text-muted">
             Soon
           </span>
           <ListFilter className="size-4" />

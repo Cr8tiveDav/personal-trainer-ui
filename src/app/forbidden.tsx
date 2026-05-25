@@ -10,7 +10,7 @@ export default function Forbidden() {
       </p>
       <Link
         href="/"
-        className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2 inline-flex h-9 items-center justify-center rounded-md px-4 text-sm font-medium transition-colors"
+        className="bg-primary text-primary-foreground hover:bg-primary/90 mt-2 inline-flex h-9 items-center justify-center rounded-[6px] px-4 text-sm font-medium transition-colors"
       >
         Return home
       </Link>

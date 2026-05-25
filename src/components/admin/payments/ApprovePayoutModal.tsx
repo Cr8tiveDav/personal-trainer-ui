@@ -62,7 +62,7 @@ const ApprovePayoutModal = ({
         <button
           type="button"
           onClick={openModal}
-          className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+          className="rounded-[6px] bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
         >
           Approve
         </button>
@@ -74,8 +74,8 @@ const ApprovePayoutModal = ({
           aria-labelledby="approve-payout-title"
           className="fixed inset-0 z-60 grid place-items-center bg-black/40 p-4"
         >
-          <div className="w-full max-w-xl rounded-lg bg-card p-6 text-center shadow-xl">
-            <div className="mx-auto grid size-12 place-items-center rounded-full bg-[hsl(var(--success)/0.12)] text-[hsl(var(--success))]">
+          <div className="w-full max-w-xl rounded-[8px] bg-card p-6 text-center shadow-xl">
+            <div className="mx-auto grid size-12 place-items-center rounded-[9999px] bg-[hsl(var(--success)/0.12)] text-[hsl(var(--success))]">
               <CheckCircle2 className="size-7" />
             </div>
             <h3
@@ -102,14 +102,14 @@ const ApprovePayoutModal = ({
               <button
                 type="button"
                 onClick={closeModal}
-                className="inline-flex h-11 min-w-40 items-center justify-center rounded-md border border-border px-4 text-sm font-medium text-foreground"
+                className="inline-flex h-11 min-w-40 items-center justify-center rounded-[6px] border border-border px-4 text-sm font-medium text-foreground"
               >
                 Close
               </button>
               <button
                 type="button"
                 onClick={handleConfirm}
-                className="inline-flex h-11 min-w-40 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
+                className="inline-flex h-11 min-w-40 items-center justify-center rounded-[6px] bg-primary px-4 text-sm font-medium text-primary-foreground"
               >
                 Yes Approve
               </button>

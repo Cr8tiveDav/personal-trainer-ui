@@ -13,7 +13,7 @@ export function TrainerDashboardSkeleton() {
     <div className='space-y-6 pb-10 md:pb-12'>
       <div className='flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <Skeleton className='h-8 w-64 max-w-[80vw]' />
-        <Skeleton className='h-10 w-48 rounded-lg' />
+        <Skeleton className='h-10 w-48 rounded-[8px]' />
       </div>
 
       <div className='grid grid-cols-1 gap-3 xl:grid-cols-4 xl:items-stretch'>

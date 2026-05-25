@@ -36,11 +36,11 @@ const UserCard = () => {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="hover:bg-subtle flex items-center rounded-full p-1"
+          className="hover:bg-subtle flex items-center rounded-[9999px] p-1"
           disabled={status === 'loading'}
         >
           {status === 'loading' && (
-            <span className="bg-subtle-hover/80 size-8 animate-pulse rounded-full sm:size-10" />
+            <span className="bg-subtle-hover/80 size-8 animate-pulse rounded-[9999px] sm:size-10" />
           )}
           {status === 'authenticated' && (
             <Avatar className="size-8 sm:size-10">

@@ -15,19 +15,19 @@ const Hero = () => {
         }}
       ></div>
 
-      <div className="absolute -left-20 top-0 h-200 w-150 rounded-full bg-[#C2DCFF]/30 blur-[120px]"></div>
-      <div className="absolute -right-20 top-0 h-200 w-150 rounded-full bg-[#F5D9C0]/30 blur-[120px]"></div>
+      <div className="absolute -left-20 top-0 h-200 w-150 rounded-[9999px] bg-[#C2DCFF]/30 blur-[120px]"></div>
+      <div className="absolute -right-20 top-0 h-200 w-150 rounded-[9999px] bg-[#F5D9C0]/30 blur-[120px]"></div>
 
       <div className="container relative z-10 mx-auto px-4">
         <div className="flex flex-col items-center text-center gap-3">
-          <div className="inline-flex items-center rounded-full border border-primary px-4 py-1.5 text-xs font-semibold text-primary shadow-sm">
-            <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-primary"></span>
+          <div className="inline-flex items-center rounded-[9999px] border border-primary px-4 py-1.5 text-xs font-semibold text-primary shadow-sm">
+            <span className="mr-2 h-2 w-2 animate-pulse rounded-[9999px] bg-primary"></span>
             Live Trainer Accountability
           </div>
 
           <h1 className='max-w-3xl text-4xl font-bold  text-muted-foreground sm:text-5xl md:text-5xl lg:text-6xl'>
             Stay Consistent With Real{' '}
-            <span className='relative m-2 inline-block bg-[#0F4F80] rounded-md text-5xl px-4 md:text-4xl lg:text-5xl pb-1.5 text-white'>
+            <span className='relative m-2 inline-block bg-[#0F4F80] rounded-[6px] text-5xl px-4 md:text-4xl lg:text-5xl pb-1.5 text-white'>
               Trainers
             </span>
           </h1>
@@ -60,7 +60,7 @@ const Hero = () => {
               fill
               sizes='100vw'
               loading='eager'
-              className='w-full rounded-2xl object-cover'
+              className='w-full rounded-[16px] object-cover'
             />
           </div>
         </div>

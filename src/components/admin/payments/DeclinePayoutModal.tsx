@@ -90,7 +90,7 @@ const DeclinePayoutModal = ({
         <button
           type="button"
           onClick={openModal}
-          className="rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground"
+          className="rounded-[6px] border border-border px-4 py-2 text-sm font-medium text-foreground"
         >
           Decline
         </button>
@@ -102,8 +102,8 @@ const DeclinePayoutModal = ({
           aria-labelledby="decline-payout-title"
           className="fixed inset-0 z-60 grid place-items-center bg-black/40 p-4"
         >
-          <div className="w-full max-w-xl rounded-lg bg-card p-5 shadow-xl sm:p-6">
-            <div className="mx-auto grid size-12 place-items-center rounded-full bg-[hsl(var(--error)/0.12)] text-[hsl(var(--error))]">
+          <div className="w-full max-w-xl rounded-[8px] bg-card p-5 shadow-xl sm:p-6">
+            <div className="mx-auto grid size-12 place-items-center rounded-[9999px] bg-[hsl(var(--error)/0.12)] text-[hsl(var(--error))]">
               <XCircle className="size-7" />
             </div>
             <h3
@@ -132,7 +132,7 @@ const DeclinePayoutModal = ({
                 <select
                   value={reason}
                   onChange={(event) => setReason(event.target.value)}
-                  className="mt-2 h-11 w-full rounded-md border border-border bg-card px-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/10"
+                  className="mt-2 h-11 w-full rounded-[6px] border border-border bg-card px-3 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/10"
                 >
                   <option value="">Select a reason</option>
                   {declineReasons.map((declineReason) => (
@@ -151,7 +151,7 @@ const DeclinePayoutModal = ({
                   value={note}
                   onChange={(event) => setNote(event.target.value)}
                   placeholder="Reason for decline"
-                  className="mt-2 min-h-28 w-full resize-none rounded-md border border-border bg-card px-3 py-3 text-sm text-foreground outline-none placeholder:text-muted focus:ring-2 focus:ring-primary/10"
+                  className="mt-2 min-h-28 w-full resize-none rounded-[6px] border border-border bg-card px-3 py-3 text-sm text-foreground outline-none placeholder:text-muted focus:ring-2 focus:ring-primary/10"
                 />
               </label>
             </div>
@@ -160,7 +160,7 @@ const DeclinePayoutModal = ({
               <button
                 type="button"
                 onClick={closeModal}
-                className="inline-flex h-11 min-w-40 items-center justify-center rounded-md border border-border px-4 text-sm font-medium text-foreground"
+                className="inline-flex h-11 min-w-40 items-center justify-center rounded-[6px] border border-border px-4 text-sm font-medium text-foreground"
               >
                 Cancel
               </button>
@@ -168,7 +168,7 @@ const DeclinePayoutModal = ({
                 type="button"
                 onClick={handleConfirm}
                 disabled={!reason}
-                className="inline-flex h-11 min-w-40 items-center justify-center rounded-md bg-[hsl(var(--error))] px-4 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex h-11 min-w-40 items-center justify-center rounded-[6px] bg-[hsl(var(--error))] px-4 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Decline Payout
               </button>

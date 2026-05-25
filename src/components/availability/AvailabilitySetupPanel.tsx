@@ -198,7 +198,7 @@ export function AvailabilitySetupPanel({
     !isSaving && !!timezone && newDaysEnabled.length > 0 && allNewHaveTimes;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-0 bg-white rounded-xl border border-gray-100 overflow-hidden">
+    <div className="flex flex-col lg:flex-row gap-0 bg-white rounded-[12px] border border-gray-100 overflow-hidden">
       <div className="flex-1 p-6 lg:border-r lg:border-gray-100">
         <h3 className="text-sm font-semibold text-gray-900">Working days</h3>
         <p className="text-xs text-gray-500 mt-1 mb-5">
@@ -226,7 +226,7 @@ export function AvailabilitySetupPanel({
                 }
                 onClick={() => handleDayClick(day.value)}
                 className={cn(
-                  "flex min-w-[72px] flex-col items-center justify-center rounded-lg border px-3 py-3 transition-all",
+                  "flex min-w-[72px] flex-col items-center justify-center rounded-[8px] border px-3 py-3 transition-all",
                   isPersisted &&
                     "cursor-not-allowed border-[#0b4d8d]/30 bg-[#0b4d8d]/15 text-[#0b4d8d]",
                   !isPersisted &&
@@ -261,7 +261,7 @@ export function AvailabilitySetupPanel({
         {selectedSchedule?.enabled &&
         selectedDayMeta &&
         !isSelectedPersisted ? (
-          <div className="rounded-lg border border-gray-100 bg-gray-50/80 p-4 mb-6">
+          <div className="rounded-[8px] border border-gray-100 bg-gray-50/80 p-4 mb-6">
             <p className="text-xs font-semibold text-gray-700 mb-4">
               Hours for {selectedDayMeta.label}
             </p>
@@ -309,7 +309,7 @@ export function AvailabilitySetupPanel({
             type="button"
             onClick={handleSave}
             disabled={!canSave}
-            className="rounded-lg bg-[#0b4d8d] px-8 py-2.5 text-sm font-semibold text-white hover:bg-[#093e72] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-[8px] bg-[#0b4d8d] px-8 py-2.5 text-sm font-semibold text-white hover:bg-[#093e72] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSaving
               ? "Saving..."
@@ -337,14 +337,14 @@ export function AvailabilitySetupPanel({
               aria-checked={isCurrentlyAvailable}
               onClick={() => setIsCurrentlyAvailable((v) => !v)}
               className={cn(
-                "relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none",
+                "relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-[9999px] transition-colors focus:outline-none",
                 isCurrentlyAvailable ? "bg-gray-900" : "bg-gray-200",
               )}
             >
               <span className="sr-only">Toggle availability</span>
               <span
                 className={cn(
-                  "inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform",
+                  "inline-block h-4 w-4 transform rounded-[9999px] bg-white shadow transition-transform",
                   isCurrentlyAvailable ? "translate-x-6" : "translate-x-1",
                 )}
               />
@@ -362,7 +362,7 @@ export function AvailabilitySetupPanel({
                 type="text"
                 value={timezone}
                 onChange={(e) => setTimezone(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#0b4d8d]"
+                className="w-full rounded-[8px] border border-gray-200 px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#0b4d8d]"
                 autoFocus
               />
               <button

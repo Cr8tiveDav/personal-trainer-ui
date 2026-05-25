@@ -24,7 +24,7 @@ const FaqAccordion = ({
     <div
       role="region"
       className={cn(
-        'inline-flex w-full flex-col items-start justify-start rounded-xl bg-neutral-50 p-6 md:max-w-[590px]',
+        'inline-flex w-full flex-col items-start justify-start rounded-[12px] bg-neutral-50 p-6 md:max-w-[590px]',
         containerClassName
       )}
     >
