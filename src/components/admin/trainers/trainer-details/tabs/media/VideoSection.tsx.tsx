@@ -20,15 +20,15 @@ export function VideoEmptyState({ onFileSelect, loading }: any) {
         <h3 className='text-sm font-bold text-gray-900'>Intro / workout video</h3>
         <p className='text-xs text-gray-400 mt-0.5'>MP4 or MOV · max 500 MB · max 10 min · transcoded to H.264</p>
       </div>
-      <div className='flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-gray-200 bg-gray-50 py-14 transition-colors hover:border-[#0b4d8d]/30 hover:bg-blue-50/20'>
-        <div className='flex h-12 w-12 items-center justify-center rounded-xl border border-gray-200 bg-white shadow-sm'>
+      <div className='flex flex-col items-center justify-center gap-3 rounded-[12px] border-2 border-dashed border-gray-200 bg-gray-50 py-14 transition-colors hover:border-[#0b4d8d]/30 hover:bg-blue-50/20'>
+        <div className='flex h-12 w-12 items-center justify-center rounded-[12px] border border-gray-200 bg-white shadow-sm'>
           <Video className='h-5 w-5 text-gray-400' />
         </div>
         <button
           type='button'
           disabled={loading}
           onClick={() => inputRef.current?.click()}
-          className='flex items-center gap-2 rounded-lg bg-[#0b4d8d] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#093e71] disabled:opacity-60'
+          className='flex items-center gap-2 rounded-[8px] bg-[#0b4d8d] px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-[#093e71] disabled:opacity-60'
         >
           Upload Video
         </button>
@@ -52,7 +52,7 @@ export function VideoTableView({ video, trainerName, trainerSpecialty, onView, o
   const inputRef = useRef<HTMLInputElement>(null)
 
   return (
-    <div className='rounded-xl border border-gray-100 bg-white shadow-sm overflow-hidden'>
+    <div className='rounded-[12px] border border-gray-100 bg-white shadow-sm overflow-hidden'>
       <table className='w-full text-sm'>
         <thead>
           <tr className='border-b border-gray-100 text-left'>
@@ -67,7 +67,7 @@ export function VideoTableView({ video, trainerName, trainerSpecialty, onView, o
           <tr className='border-b border-gray-50 hover:bg-gray-50/60 transition-colors'>
             <td className='px-5 py-4'>
               <div
-                className='relative flex h-12 w-20 items-center justify-center overflow-hidden rounded-lg bg-gray-900 cursor-pointer'
+                className='relative flex h-12 w-20 items-center justify-center overflow-hidden rounded-[8px] bg-gray-900 cursor-pointer'
                 onClick={video.url ? onView : undefined}
               >
                 {video.url ? (
@@ -79,7 +79,7 @@ export function VideoTableView({ video, trainerName, trainerSpecialty, onView, o
                       playsInline
                     />
                     <div className='absolute inset-0 flex items-center justify-center bg-black/30'>
-                      <div className='flex h-6 w-6 items-center justify-center rounded-full bg-black/50'>
+                      <div className='flex h-6 w-6 items-center justify-center rounded-[9999px] bg-black/50'>
                         <Play className='h-3 w-3 fill-white text-white' />
                       </div>
                     </div>
@@ -129,9 +129,9 @@ export function VideoDetailView({ video, onBack, onReplace, onRemove, uploading 
       </button>
 
       {video.url ? (
-        <video src={video.url} controls className='w-full rounded-xl' />
+        <video src={video.url} controls className='w-full rounded-[12px]' />
       ) : (
-        <div className='flex min-h-[200px] items-center justify-center rounded-xl border border-dashed border-gray-200 bg-gray-50 text-sm text-gray-500'>
+        <div className='flex min-h-[200px] items-center justify-center rounded-[12px] border border-dashed border-gray-200 bg-gray-50 text-sm text-gray-500'>
           Video is processing. Check back in a few minutes.
         </div>
       )}

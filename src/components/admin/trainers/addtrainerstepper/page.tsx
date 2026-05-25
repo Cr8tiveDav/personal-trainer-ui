@@ -26,7 +26,7 @@ export function AddTrainerStepper({ currentStep }: StepperProps) {
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className='flex items-center gap-0 w-full mb-8 bg-white p-6 rounded-lg'
+      className='flex items-center gap-0 w-full mb-8 bg-white p-6 rounded-[8px]'
     >
       {STEPS.map((step, index) => {
         const isCompleted = currentStep > step.number
@@ -39,7 +39,7 @@ export function AddTrainerStepper({ currentStep }: StepperProps) {
                 layout
                 transition={{ type: 'spring', stiffness: 400, damping: 28 }}
                 className={cn(
-                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-1 text-sm font-semibold',
+                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-[9999px] border-1 text-sm font-semibold',
                   isCompleted
                     ? 'border-primary bg-primary text-white'
                     : isActive
@@ -62,7 +62,7 @@ export function AddTrainerStepper({ currentStep }: StepperProps) {
               </div>
             </div>
             {index < STEPS.length - 1 && (
-              <div className='flex-1 h-px mx-4 overflow-hidden rounded-full bg-gray-200'>
+              <div className='flex-1 h-px mx-4 overflow-hidden rounded-[9999px] bg-gray-200'>
                 <motion.div
                   className='h-full bg-primary origin-left'
                   initial={false}

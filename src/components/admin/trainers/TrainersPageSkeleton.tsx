@@ -5,8 +5,8 @@ import TrainerTableSkeleton from './trainers-list/table/TrainerTableSkeleton'
 
 function StatCardSkeleton() {
   return (
-    <div className='flex flex-col justify-between gap-2 rounded-xl border border-[#EBEBEB] bg-white p-5'>
-      <Skeleton className='h-10 w-10 rounded-full' />
+    <div className='flex flex-col justify-between gap-2 rounded-[12px] border border-[#EBEBEB] bg-white p-5'>
+      <Skeleton className='h-10 w-10 rounded-[9999px]' />
       <Skeleton className='h-9 w-20' />
       <Skeleton className='h-3 w-28' />
     </div>
@@ -15,7 +15,7 @@ function StatCardSkeleton() {
 
 function TrainersListSkeleton() {
   return (
-    <div className='flex flex-col rounded-3xl border border-[#CBD5E1] bg-white'>
+    <div className='flex flex-col rounded-[24px] border border-[#CBD5E1] bg-white'>
       <div className='py-6 px-4'>
         <section className='flex w-full flex-col items-start gap-6'>
           <div className='flex w-full gap-6 border-b border-[#CBD5E1] pb-3'>
@@ -25,10 +25,10 @@ function TrainersListSkeleton() {
           </div>
 
           <div className='flex w-full flex-col gap-4 md:flex-row md:items-center md:gap-11.5'>
-            <Skeleton className='h-10 w-full rounded-lg md:flex-1' />
+            <Skeleton className='h-10 w-full rounded-[8px] md:flex-1' />
             <div className='flex items-center gap-4'>
-              <Skeleton className='h-10 w-24 rounded-lg' />
-              <Skeleton className='h-10 w-24 rounded-lg' />
+              <Skeleton className='h-10 w-24 rounded-[8px]' />
+              <Skeleton className='h-10 w-24 rounded-[8px]' />
             </div>
           </div>
         </section>
@@ -54,7 +54,7 @@ function TrainersListSkeleton() {
       <div className='flex flex-col items-center justify-center gap-4 border-t border-gray-200 py-6'>
         <div className='flex items-center gap-1 md:gap-3'>
           {Array.from({ length: 7 }).map((_, i) => (
-            <Skeleton key={i} className='h-9 w-9 rounded-md' />
+            <Skeleton key={i} className='h-9 w-9 rounded-[6px]' />
           ))}
         </div>
         <Skeleton className='mt-4 h-4 w-40' />

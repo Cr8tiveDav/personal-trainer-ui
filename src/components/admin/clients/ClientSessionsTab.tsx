@@ -73,7 +73,7 @@ export function ClientSessionsTab({ clientId }: ClientSessionsTabProps) {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className='overflow-hidden rounded-xl border border-[#EBEBEB] bg-white'
+        className='overflow-hidden rounded-[12px] border border-[#EBEBEB] bg-white'
       >
         <div className='border-b border-gray-100 p-6'>
           <h3 className='text-2xl font-medium text-muted-foreground'>
@@ -150,10 +150,10 @@ export function ClientSessionsTab({ clientId }: ClientSessionsTabProps) {
                               alt={session.trainer.name}
                               width={32}
                               height={32}
-                              className='h-8 w-8 shrink-0 rounded-full object-cover bg-gray-100'
+                              className='h-8 w-8 shrink-0 rounded-[9999px] object-cover bg-gray-100'
                             />
                           ) : (
-                            <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-purple-50 text-xs font-bold uppercase text-purple-600'>
+                            <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-[9999px] bg-purple-50 text-xs font-bold uppercase text-purple-600'>
                               {session.trainer.name.charAt(0)}
                             </div>
                           )}
@@ -179,7 +179,7 @@ export function ClientSessionsTab({ clientId }: ClientSessionsTabProps) {
                       </td>
                       <td className='px-6 py-4 text-right'>
                         <span
-                          className={`inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-medium capitalize ${getStateBadgeStyles(session.state)}`}
+                          className={`inline-flex items-center justify-center rounded-[9999px] px-3 py-1 text-xs font-medium capitalize ${getStateBadgeStyles(session.state)}`}
                         >
                           {session.state}
                         </span>

@@ -7,14 +7,14 @@ export function ClientsPageHeader() {
       {/* <div className='flex items-center gap-3'>
         <button
           type='button'
-          className='flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
+          className='flex items-center gap-2 rounded-[8px] border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50'
         >
           <Download className='h-4 w-4' />
           Export CSV
         </button>
         <button
           type='button'
-          className='flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90'
+          className='flex items-center gap-2 rounded-[8px] bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90'
         >
           <Plus className='h-4 w-4' />
           Add Client

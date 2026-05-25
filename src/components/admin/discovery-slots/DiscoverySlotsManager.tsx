@@ -153,7 +153,7 @@ export function DiscoverySlotsManager() {
 
   if (isError) {
     return (
-      <div className='rounded-xl border border-gray-100 bg-white p-8 text-center text-sm text-red-500'>
+      <div className='rounded-[12px] border border-gray-100 bg-white p-8 text-center text-sm text-red-500'>
         Failed to load discovery slots. Please refresh and try again.
       </div>
     )
@@ -169,7 +169,7 @@ export function DiscoverySlotsManager() {
         </p>
       </div>
 
-      <div className='rounded-xl border border-gray-100 bg-white overflow-hidden'>
+      <div className='rounded-[12px] border border-gray-100 bg-white overflow-hidden'>
         <div className='border-b border-gray-100 px-6 py-4 flex flex-wrap items-center justify-between gap-3'>
           <div>
             <h2 className='text-sm font-semibold text-gray-900'>
@@ -208,7 +208,7 @@ export function DiscoverySlotsManager() {
                     setForm((prev) => ({ ...prev, dayOfWeek: day.value }))
                   }
                   className={cn(
-                    'min-w-[72px] rounded-lg border px-3 py-3 text-sm font-medium transition-all',
+                    'min-w-[72px] rounded-[8px] border px-3 py-3 text-sm font-medium transition-all',
                     isTaken && 'cursor-not-allowed opacity-40',
                     isSelected
                       ? 'bg-[#0b4d8d] border-[#0b4d8d] text-white shadow-sm'
@@ -259,7 +259,7 @@ export function DiscoverySlotsManager() {
                     onChange={(e) =>
                       setForm((prev) => ({ ...prev, timezone: e.target.value }))
                     }
-                    className='w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#0b4d8d]'
+                    className='w-full rounded-[8px] border border-gray-200 px-3 py-2 text-sm text-gray-900 outline-none focus:border-[#0b4d8d]'
                     autoFocus
                   />
                   <button
@@ -286,7 +286,7 @@ export function DiscoverySlotsManager() {
             <Button
               type='button'
               variant='default'
-              className='mt-0 min-w-[140px] rounded-lg bg-[#0b4d8d] hover:bg-[#093d73]'
+              className='mt-0 min-w-[140px] rounded-[8px] bg-[#0b4d8d] hover:bg-[#093d73]'
               disabled={!canSubmit}
               onClick={handleSubmit}
             >
@@ -300,7 +300,7 @@ export function DiscoverySlotsManager() {
         </div>
       </div>
 
-      <div className='rounded-xl border border-gray-100 bg-white overflow-hidden'>
+      <div className='rounded-[12px] border border-gray-100 bg-white overflow-hidden'>
         <div className='px-6 py-4 border-b border-gray-100'>
           <h2 className='text-sm font-semibold text-gray-900'>Configured slots</h2>
           <p className='text-xs text-gray-500 mt-0.5'>
@@ -349,7 +349,7 @@ export function DiscoverySlotsManager() {
                         <button
                           type='button'
                           onClick={() => startEdit(slot)}
-                          className='inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 text-gray-600 hover:bg-gray-50'
+                          className='inline-flex h-8 w-8 items-center justify-center rounded-[6px] border border-gray-200 text-gray-600 hover:bg-gray-50'
                           aria-label={`Edit ${dayLabel(slot.day_of_week)}`}
                         >
                           <Pencil className='h-4 w-4' />
@@ -357,7 +357,7 @@ export function DiscoverySlotsManager() {
                         <button
                           type='button'
                           onClick={() => setDeleteTarget(slot)}
-                          className='inline-flex h-8 w-8 items-center justify-center rounded-md border border-gray-200 text-red-600 hover:bg-red-50'
+                          className='inline-flex h-8 w-8 items-center justify-center rounded-[6px] border border-gray-200 text-red-600 hover:bg-red-50'
                           aria-label={`Delete ${dayLabel(slot.day_of_week)}`}
                         >
                           <Trash2 className='h-4 w-4' />

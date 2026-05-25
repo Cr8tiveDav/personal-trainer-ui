@@ -36,12 +36,12 @@ export function SettingsForm() {
           <h1 className='text-2xl font-bold text-gray-900'>Settings</h1>
           <p className='mt-1 text-sm text-gray-500'>Configure how FitCall handles bookings, trainers, and content.</p>
         </div>
-        <button className='shrink-0 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90'>
+        <button className='shrink-0 rounded-[8px] bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90'>
           Save Changes
         </button>
       </div>
 
-      <div className='rounded-2xl border border-gray-100 bg-white p-6 shadow-sm'>
+      <div className='rounded-[16px] border border-gray-100 bg-white p-6 shadow-sm'>
         <h2 className='text-base font-bold text-gray-900'>General</h2>
         <p className='mt-0.5 text-sm text-gray-400'>Defaults applied to every booking and listing.</p>
 
@@ -55,7 +55,7 @@ export function SettingsForm() {
               <select
                 value={sessionDuration}
                 onChange={(e) => setSessionDuration(e.target.value)}
-                className='w-44 appearance-none rounded-lg border border-gray-200 px-4 py-2 pr-8 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20'
+                className='w-44 appearance-none rounded-[8px] border border-gray-200 px-4 py-2 pr-8 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20'
               >
                 <option value='30'>30 minutes</option>
                 <option value='45'>45 minutes</option>
@@ -78,7 +78,7 @@ export function SettingsForm() {
               <select
                 value={maxTrainers}
                 onChange={(e) => setMaxTrainers(e.target.value)}
-                className='w-44 appearance-none rounded-lg border border-gray-200 px-4 py-2 pr-8 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20'
+                className='w-44 appearance-none rounded-[8px] border border-gray-200 px-4 py-2 pr-8 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20'
               >
                 {['3', '4', '5', '6', '8', '10', '12'].map((n) => (
                   <option key={n} value={n}>{n}</option>
@@ -90,7 +90,7 @@ export function SettingsForm() {
         </div>
       </div>
 
-      <div className='rounded-2xl border border-gray-100 bg-white p-6 shadow-sm'>
+      <div className='rounded-[16px] border border-gray-100 bg-white p-6 shadow-sm'>
         <h2 className='text-base font-bold text-gray-900'>Trainer Rules</h2>
         <p className='mt-0.5 text-sm text-gray-400'>Control which trainers are eligible to be listed and assigned.</p>
 
@@ -102,12 +102,12 @@ export function SettingsForm() {
             </div>
             <button
               onClick={() => setRequireVideo((prev) => !prev)}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none ${
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-[9999px] border-2 border-transparent transition-colors focus:outline-none ${
                 requireVideo ? 'bg-primary' : 'bg-gray-200'
               }`}
             >
               <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform ${
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-[9999px] bg-white shadow ring-0 transition-transform ${
                   requireVideo ? 'translate-x-5' : 'translate-x-0'
                 }`}
               />
@@ -123,12 +123,12 @@ export function SettingsForm() {
             </div>
             <button
               onClick={() => setAutoAssign((prev) => !prev)}
-              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors focus:outline-none ${
+              className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-[9999px] border-2 border-transparent transition-colors focus:outline-none ${
                 autoAssign ? 'bg-primary' : 'bg-gray-200'
               }`}
             >
               <span
-                className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition-transform ${
+                className={`pointer-events-none inline-block h-5 w-5 transform rounded-[9999px] bg-white shadow ring-0 transition-transform ${
                   autoAssign ? 'translate-x-5' : 'translate-x-0'
                 }`}
               />
@@ -137,7 +137,7 @@ export function SettingsForm() {
         </div>
       </div>
 
-      <div className='rounded-2xl border border-gray-100 bg-white p-6 shadow-sm'>
+      <div className='rounded-[16px] border border-gray-100 bg-white p-6 shadow-sm'>
         <h2 className='text-base font-bold text-gray-900'>Categories</h2>
         <p className='mt-0.5 text-sm text-gray-400'>Specialties available for trainers and client requests.</p>
 
@@ -145,7 +145,7 @@ export function SettingsForm() {
           {categories.map((cat) => (
             <span
               key={cat}
-              className='flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1 text-sm text-gray-700'
+              className='flex items-center gap-1.5 rounded-[9999px] border border-gray-200 bg-white px-3 py-1 text-sm text-gray-700'
             >
               {cat}
               <button onClick={() => removeCategory(cat)} className='text-gray-400 hover:text-gray-600'>
@@ -162,12 +162,12 @@ export function SettingsForm() {
             value={newCategory}
             onChange={(e) => setNewCategory(e.target.value)}
             onKeyDown={handleKeyDown}
-            className='flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20'
+            className='flex-1 rounded-[8px] border border-gray-200 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20'
           />
           <button
             onClick={addCategory}
             disabled={!newCategory.trim()}
-            className='flex shrink-0 items-center gap-1.5 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40'
+            className='flex shrink-0 items-center gap-1.5 rounded-[8px] border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40'
           >
             <Plus className='h-4 w-4' />
             Add category

@@ -7,8 +7,8 @@ const TABLE_COLUMNS = 6;
 
 function ClientStatCardSkeleton() {
   return (
-    <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
-      <Skeleton className="mb-3 h-9 w-9 rounded-lg" />
+    <div className="rounded-[12px] border border-gray-100 bg-white p-5 shadow-sm">
+      <Skeleton className="mb-3 h-9 w-9 rounded-[8px]" />
       <Skeleton className="mb-2 h-8 w-20" />
       <Skeleton className="h-4 w-28" />
     </div>
@@ -17,7 +17,7 @@ function ClientStatCardSkeleton() {
 
 function ClientsTableSectionSkeleton() {
   return (
-    <div className="rounded-2xl border-2 border-dashed border-blue-200 bg-white">
+    <div className="rounded-[16px] border-2 border-dashed border-blue-200 bg-white">
       <div className="px-6 pt-5">
         <div className="flex w-full gap-6 border-b border-[#CBD5E1] pb-3">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -27,9 +27,9 @@ function ClientsTableSectionSkeleton() {
       </div>
 
       <div className="flex items-center gap-3 border-b border-gray-100 px-6 py-4">
-        <Skeleton className="h-10 flex-1 rounded-lg" />
-        <Skeleton className="h-10 w-20 rounded-lg" />
-        <Skeleton className="h-10 w-20 rounded-lg" />
+        <Skeleton className="h-10 flex-1 rounded-[8px]" />
+        <Skeleton className="h-10 w-20 rounded-[8px]" />
+        <Skeleton className="h-10 w-20 rounded-[8px]" />
       </div>
 
       <div className="min-h-50 overflow-x-auto">
@@ -53,7 +53,7 @@ function ClientsTableSectionSkeleton() {
         <Skeleton className="h-4 w-44" />
         <div className="flex items-center gap-1">
           {Array.from({ length: 7 }).map((_, i) => (
-            <Skeleton key={i} className="h-9 w-9 rounded-md" />
+            <Skeleton key={i} className="h-9 w-9 rounded-[6px]" />
           ))}
         </div>
       </div>

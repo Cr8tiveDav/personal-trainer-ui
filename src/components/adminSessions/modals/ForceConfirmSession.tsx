@@ -68,7 +68,7 @@ export function ForceConfirmSessionModal({ session, onClose, onConfirm }: ForceC
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/45 px-4 backdrop-blur-sm'>
-      <div className='relative flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl bg-white shadow-2xl'>
+      <div className='relative flex max-h-[90vh] w-full max-w-2xl flex-col overflow-hidden rounded-[12px] bg-white shadow-2xl'>
         <div className='flex items-start justify-between border-b border-gray-100 p-6 pb-4'>
           <div>
             <h2 className='text-sm font-bold text-gray-900'>Force Confirm Session</h2>
@@ -77,7 +77,7 @@ export function ForceConfirmSessionModal({ session, onClose, onConfirm }: ForceC
           <button
             type='button'
             onClick={onClose}
-            className='rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700'
+            className='rounded-[9999px] p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700'
           >
             <X className='h-4 w-4' />
           </button>
@@ -97,7 +97,7 @@ export function ForceConfirmSessionModal({ session, onClose, onConfirm }: ForceC
               <div key={item.label} className='flex items-center justify-between gap-4'>
                 <span className='font-medium text-gray-400'>{item.label}</span>
                 {item.isBadge ? (
-                  <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${typeStyles[item.value] ?? 'bg-gray-50 text-gray-500'}`}>
+                  <span className={`inline-flex items-center rounded-[9999px] px-2 py-0.5 text-[11px] font-semibold ${typeStyles[item.value] ?? 'bg-gray-50 text-gray-500'}`}>
                     {item.value}
                   </span>
                 ) : (
@@ -120,13 +120,13 @@ export function ForceConfirmSessionModal({ session, onClose, onConfirm }: ForceC
                       key={option.key}
                       type='button'
                       onClick={() => setBehalf(option.key)}
-                    className={`rounded-lg border p-4 text-center transition-colors ${
+                    className={`rounded-[8px] border p-4 text-center transition-colors ${
                       isSelected
                         ? 'border-[#0b4d8d] bg-[#eff8ff]'
                         : 'border-gray-100 bg-white hover:bg-gray-50'
                     }`}
                   >
-                      <span className={`mx-auto flex h-8 w-8 items-center justify-center rounded-full ${isSelected ? 'bg-[#0b4d8d] text-white' : 'bg-[#eff8ff] text-[#0b4d8d]'}`}>
+                      <span className={`mx-auto flex h-8 w-8 items-center justify-center rounded-[9999px] ${isSelected ? 'bg-[#0b4d8d] text-white' : 'bg-[#eff8ff] text-[#0b4d8d]'}`}>
                         <Icon className='h-4 w-4' />
                       </span>
                       <span className='mt-2 block text-xs font-bold text-gray-900'>{option.title}</span>
@@ -141,7 +141,7 @@ export function ForceConfirmSessionModal({ session, onClose, onConfirm }: ForceC
               <p className='mb-2 text-xs font-bold text-gray-900'>Why Are You Force Confirming?</p>
               <div className='space-y-2'>
                 {reasons.map((item) => (
-                  <label key={item} className='flex cursor-pointer items-center gap-2 rounded-md py-1 text-xs font-medium text-gray-500'>
+                  <label key={item} className='flex cursor-pointer items-center gap-2 rounded-[6px] py-1 text-xs font-medium text-gray-500'>
                     <input
                       type='radio'
                       name='force-confirm-reason'
@@ -162,11 +162,11 @@ export function ForceConfirmSessionModal({ session, onClose, onConfirm }: ForceC
                 value={notes}
                 onChange={(event) => setNotes(event.target.value)}
                 placeholder='Add internal notes for this audit trail...'
-                className='min-h-20 w-full resize-none rounded-lg border border-gray-100 px-3 py-2 text-xs outline-none focus:border-[#0b4d8d]'
+                className='min-h-20 w-full resize-none rounded-[8px] border border-gray-100 px-3 py-2 text-xs outline-none focus:border-[#0b4d8d]'
               />
             </div>
 
-            <div className='rounded-md border border-[#ffeccc] bg-[#fffcf5] px-3 py-2 text-[11px] font-medium leading-relaxed text-[#b25e00]'>
+            <div className='rounded-[6px] border border-[#ffeccc] bg-[#fffcf5] px-3 py-2 text-[11px] font-medium leading-relaxed text-[#b25e00]'>
               Once you confirm, the trainer will be paid for this session at the end of the month. This cannot be reversed, and your name will be recorded as the admin who approved it.
             </div>
           </div>
@@ -176,14 +176,14 @@ export function ForceConfirmSessionModal({ session, onClose, onConfirm }: ForceC
           <button
             type='button'
             onClick={onClose}
-            className='h-9 rounded-md border border-gray-200 px-4 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-50'
+            className='h-9 rounded-[6px] border border-gray-200 px-4 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-50'
           >
             Cancel
           </button>
           <button
             type='button'
             onClick={handleConfirm}
-            className='h-9 rounded-md bg-[#0b4d8d] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#093e71]'
+            className='h-9 rounded-[6px] bg-[#0b4d8d] px-4 text-xs font-semibold text-white transition-colors hover:bg-[#093e71]'
           >
             Confirm & Mark as Completed
           </button>

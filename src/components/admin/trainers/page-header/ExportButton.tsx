@@ -11,7 +11,7 @@ const ExportButton = ({ onExport }: ExportButtonProps) => {
       size='lg'
       variant='outline'
       onClick={onExport}
-      className='h-12 w-32.5 py-3 px-4.5 text-base text-muted-foreground font-semibold border border-[#A3A3A3] rounded-md cursor-pointer'
+      className='h-12 w-32.5 py-3 px-4.5 text-base text-muted-foreground font-semibold border border-[#A3A3A3] rounded-[6px] cursor-pointer'
     >
       Export CSV
     </Button>

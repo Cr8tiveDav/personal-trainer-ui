@@ -19,13 +19,13 @@ export function TrainerCreatedSuccess({
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className='rounded-xl border border-gray-100 bg-white p-8 sm:p-12 text-center shadow-sm'
+      className='rounded-[12px] border border-gray-100 bg-white p-8 sm:p-12 text-center shadow-sm'
     >
       <motion.div
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.08, type: 'spring', stiffness: 260, damping: 18 }}
-        className='mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-500'
+        className='mx-auto flex h-16 w-16 items-center justify-center rounded-[9999px] bg-green-500'
       >
         <Image src='/success.svg' alt='' width={40} height={40} aria-hidden />
       </motion.div>
@@ -39,7 +39,7 @@ export function TrainerCreatedSuccess({
 
       <Button
         asChild
-        className='mt-8 bg-[#0b4d8d] hover:bg-[#093e72] text-white h-11 px-8 rounded-lg font-semibold'
+        className='mt-8 bg-[#0b4d8d] hover:bg-[#093e72] text-white h-11 px-8 rounded-[8px] font-semibold'
       >
         <Link href='/admin/trainers'>Back to trainers</Link>
       </Button>

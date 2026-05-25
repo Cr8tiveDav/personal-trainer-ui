@@ -89,13 +89,13 @@ export function SessionTableRow({
               alt={session.client.name}
               width={28}
               height={28}
-              className='h-7 w-7 shrink-0 rounded-full bg-gray-100 object-cover'
+              className='h-7 w-7 shrink-0 rounded-[9999px] bg-gray-100 object-cover'
               onError={(e) => {
                 ;(e.target as HTMLImageElement).style.display = 'none'
               }}
             />
           ) : (
-            <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#0b4d8d]/10 text-[10px] font-bold uppercase text-[#0b4d8d]'>
+            <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-[9999px] bg-[#0b4d8d]/10 text-[10px] font-bold uppercase text-[#0b4d8d]'>
               {session.client.name.charAt(0)}
             </div>
           )}
@@ -116,13 +116,13 @@ export function SessionTableRow({
               alt={session.trainer.name}
               width={28}
               height={28}
-              className='h-7 w-7 shrink-0 rounded-full bg-gray-100 object-cover'
+              className='h-7 w-7 shrink-0 rounded-[9999px] bg-gray-100 object-cover'
               onError={(e) => {
                 ;(e.target as HTMLImageElement).style.display = 'none'
               }}
             />
           ) : (
-            <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-purple-50 text-[10px] font-bold uppercase text-purple-600'>
+            <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-[9999px] bg-purple-50 text-[10px] font-bold uppercase text-purple-600'>
               {session.trainer.name.charAt(0)}
             </div>
           )}
@@ -144,10 +144,10 @@ export function SessionTableRow({
 
       <td className='px-4 py-3.5'>
         <span
-          className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ${confStyle(session.clientConf)}`}
+          className={`inline-flex items-center gap-1.5 rounded-[9999px] px-2 py-0.5 text-[11px] font-semibold ${confStyle(session.clientConf)}`}
         >
           {session.clientConf !== 'N/A' && (
-            <span className={`h-1.5 w-1.5 rounded-full ${dotStyle(session.clientConf)}`} />
+            <span className={`h-1.5 w-1.5 rounded-[9999px] ${dotStyle(session.clientConf)}`} />
           )}
           {session.clientConf}
         </span>
@@ -158,19 +158,19 @@ export function SessionTableRow({
           <DropdownMenuTrigger asChild>
             <Button
               variant='ghost'
-              className='h-8 w-8 rounded-lg p-0 text-gray-400 shadow-none hover:bg-gray-100/80 hover:text-gray-700 focus:ring-0'
+              className='h-8 w-8 rounded-[8px] p-0 text-gray-400 shadow-none hover:bg-gray-100/80 hover:text-gray-700 focus:ring-0'
             >
               <MoreVertical className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align='end'
-            className='z-50 w-40 rounded-xl border border-gray-100 bg-white p-1.5 shadow-xl'
+            className='z-50 w-40 rounded-[12px] border border-gray-100 bg-white p-1.5 shadow-xl'
           >
             {isClientConfirmed ? (
               <DropdownMenuItem
                 onClick={() => onViewDetails(session.id)}
-                className='cursor-pointer rounded-lg bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
+                className='cursor-pointer rounded-[8px] bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
               >
                 View detail
               </DropdownMenuItem>
@@ -178,13 +178,13 @@ export function SessionTableRow({
               <>
                 <DropdownMenuItem
                   onClick={() => onViewDetails(session.id)}
-                  className='cursor-pointer rounded-lg bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
+                  className='cursor-pointer rounded-[8px] bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
                 >
                   View detail
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => onReschedule?.(session.id)}
-                  className='cursor-pointer rounded-lg px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:bg-gray-50'
+                  className='cursor-pointer rounded-[8px] px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:bg-gray-50'
                 >
                   Reschedule
                 </DropdownMenuItem>

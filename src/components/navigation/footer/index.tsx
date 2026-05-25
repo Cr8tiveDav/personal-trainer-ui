@@ -11,7 +11,7 @@ const Footer = () => {
         <div className='mb-12 grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-12 lg:gap-8'>
           <div className='lg:col-span-5'>
             <div className='mb-6 flex items-center gap-2'>
-              <div className='relative h-10 w-10 overflow-hidden rounded-xl'>
+              <div className='relative h-10 w-10 overflow-hidden rounded-[12px]'>
                 <Image
                   src='/logo.svg'
                   alt='Fitcall Logo'

@@ -11,8 +11,8 @@ const Hero = () => {
       <div className="container">
         <div className="flex flex-col-reverse items-center gap-12 px-2 sm:flex-row lg:items-center">
           <div className="w-full min-w-0 lg:w-1/2">
-            <div className="mb-4 inline-flex max-w-full flex-wrap items-center rounded-full bg-primarybadge px-4 py-2 text-xs font-medium text-primary">
-              <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-primary"></span>
+            <div className="mb-4 inline-flex max-w-full flex-wrap items-center rounded-[9999px] bg-primarybadge px-4 py-2 text-xs font-medium text-primary">
+              <span className="mr-2 h-2 w-2 animate-pulse rounded-[9999px] bg-primary"></span>
               Live trainer accountability
             </div>
 
@@ -30,7 +30,7 @@ const Hero = () => {
           </div>
 
           <div className="flex w-full min-w-0 justify-center lg:w-1/2">
-            <div className="relative h-80 w-full max-w-full overflow-hidden rounded-md sm:h-105 md:h-125 md:max-w-125 lg:h-150">
+            <div className="relative h-80 w-full max-w-full overflow-hidden rounded-[6px] sm:h-105 md:h-125 md:max-w-125 lg:h-150">
               <Swiper
                 modules={[Pagination, Scrollbar, A11y, Autoplay]}
                 autoplay={{ delay: 5000, disableOnInteraction: false }}

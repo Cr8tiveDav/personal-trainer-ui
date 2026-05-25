@@ -10,7 +10,7 @@ export function VideoStatusBadge({ status }: { status: VideoStatus }) {
   const { dot, text } = STYLES[status]
   return (
     <span className={`flex items-center gap-1.5 text-sm font-medium ${text}`}>
-      <span className={`h-2 w-2 rounded-full ${dot}`} />
+      <span className={`h-2 w-2 rounded-[9999px] ${dot}`} />
       {status}
     </span>
   )

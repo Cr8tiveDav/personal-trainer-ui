@@ -37,7 +37,7 @@ export function RecentReviews({
   return (
     <div
       className={cn(
-        'flex h-full  flex-col rounded-xl border border-gray-100 bg-white shadow-sm',
+        'flex h-full  flex-col rounded-[12px] border border-gray-100 bg-white shadow-sm',
         className,
       )}
     >
@@ -74,7 +74,7 @@ export function RecentReviews({
         <div className='flex flex-1 flex-col px-5 py-4'>
           <div className='flex items-start justify-between gap-3'>
             <div className='flex items-center gap-2.5'>
-              <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white'>
+              <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-[9999px] bg-primary text-xs font-semibold text-white'>
                 {featured.clientName.charAt(0)}
               </div>
               <div>

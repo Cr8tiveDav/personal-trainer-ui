@@ -31,7 +31,7 @@ const FilterControls = ({
       />
 
       <div className='flex flex-col md:flex-row md:items-center gap-4 md:gap-11.5 w-full'>
-        <div className='w-full h-10 flex md:flex-1 items-center gap-2 rounded-lg border border-gray-200 px-3 py-2'>
+        <div className='w-full h-10 flex md:flex-1 items-center gap-2 rounded-[8px] border border-gray-200 px-3 py-2'>
           <Search className='h-4 w-4 shrink-0 text-gray-400' />
           <input
             type='text'

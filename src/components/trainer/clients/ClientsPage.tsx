@@ -28,10 +28,10 @@ function ClientRow({ client }: { client: TrainerClient }) {
               alt={client.name}
               width={36}
               height={36}
-              className='h-9 w-9 shrink-0 rounded-full object-cover'
+              className='h-9 w-9 shrink-0 rounded-[9999px] object-cover'
             />
           ) : (
-            <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white'>
+            <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-[9999px] bg-primary text-sm font-semibold text-white'>
               {client.name.charAt(0)}
             </div>
           )}
@@ -124,7 +124,7 @@ export function ClientsPage() {
         </p>
       </div>
 
-      <div className='rounded-xl border border-gray-100 bg-white shadow-sm'>
+      <div className='rounded-[12px] border border-gray-100 bg-white shadow-sm'>
         <div className='flex flex-col gap-4 border-b border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between'>
           <p className='text-sm text-gray-500'>
             {totalCount === 0
@@ -132,7 +132,7 @@ export function ClientsPage() {
               : `${totalCount} client${totalCount === 1 ? '' : 's'}`}
           </p>
           <div className='flex items-center gap-2'>
-            <div className='flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2'>
+            <div className='flex items-center gap-2 rounded-[8px] border border-gray-200 bg-gray-50 px-3 py-2'>
               <Search className='h-4 w-4 shrink-0 text-gray-400' />
               <input
                 type='text'
@@ -207,7 +207,7 @@ export function ClientsPage() {
                 type='button'
                 onClick={() => setPage((p) => Math.max(1, Math.min(p - 1, totalPages)))}
                 disabled={displayPage <= 1 || isFetching}
-                className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
+                className='flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                 aria-label='Previous page'
               >
                 <ChevronLeft className='h-4 w-4' />
@@ -221,7 +221,7 @@ export function ClientsPage() {
                   setPage((p) => Math.min(totalPages, Math.max(1, p + 1)))
                 }
                 disabled={displayPage >= totalPages || isFetching}
-                className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
+                className='flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                 aria-label='Next page'
               >
                 <ChevronRight className='h-4 w-4' />

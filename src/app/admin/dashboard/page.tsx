@@ -13,7 +13,7 @@ export default function AdminDashboardPage() {
       <StatCardsSection />
 
       <div className='flex flex-col gap-6 lg:flex-row'>
-        <div className='w-full shrink-0 space-y-6 rounded-xl border border-gray-100 bg-white p-6 shadow-sm lg:w-[400px]'>
+        <div className='w-full shrink-0 space-y-6 rounded-[12px] border border-[#E4E2E9] bg-white p-6 lg:w-[400px]'>
           <QuickActions />
           <LatestPayment />
         </div>

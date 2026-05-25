@@ -221,7 +221,7 @@ export function TrainerMediaTab({
 
           {openUploadModal && !isUploading && (
             <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-              <div className='w-full max-w-2xl rounded-xl bg-white p-6'>
+              <div className='w-full max-w-2xl rounded-[12px] bg-white p-6'>
                 <VideoEmptyState
                   loading={false}
                   onFileSelect={(files: File[]) => handleUploadVideo(files[0])}
@@ -229,7 +229,7 @@ export function TrainerMediaTab({
                 <button
                   type='button'
                   onClick={() => setOpenUploadModal(false)}
-                  className='mt-3 w-full rounded-lg border border-gray-200 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50'
+                  className='mt-3 w-full rounded-[8px] border border-gray-200 py-2 text-xs font-medium text-gray-500 hover:bg-gray-50'
                 >
                   Cancel
                 </button>

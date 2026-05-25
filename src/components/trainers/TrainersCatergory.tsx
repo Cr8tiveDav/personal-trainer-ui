@@ -13,7 +13,7 @@ const CategoryFilter = ({ categories, active, onChange }: Props) => {
         <button
           key={cat}
           onClick={() => onChange(cat)}
-          className={`rounded-full border border-[#EBEBEB] px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
+          className={`rounded-[9999px] border border-[#EBEBEB] px-4 py-1.5 text-sm font-medium transition-all duration-200 ${
             active === cat
               ? 'bg-primary text-white'
               : 'text-muted hover:text-muted-foreground'

@@ -24,7 +24,7 @@ function StarRating({ rating }: { rating: number }) {
 
 function ReviewCard({ review }: { review: Review }) {
   return (
-    <article className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm">
+    <article className="rounded-[12px] border border-gray-100 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">
           {review.clientAvatar ? (
@@ -32,10 +32,10 @@ function ReviewCard({ review }: { review: Review }) {
             <img
               src={review.clientAvatar}
               alt={review.clientName}
-              className="h-9 w-9 shrink-0 rounded-full object-cover"
+              className="h-9 w-9 shrink-0 rounded-[9999px] object-cover"
             />
           ) : (
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-white">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[9999px] bg-primary text-xs font-semibold text-white">
               {review.clientName.charAt(0)}
             </div>
           )}
@@ -76,7 +76,7 @@ export function TrainerReviewsList({
     return (
       <div className="space-y-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <Skeleton key={i} className="h-28 w-full rounded-xl" />
+          <Skeleton key={i} className="h-28 w-full rounded-[12px]" />
         ))}
       </div>
     );
@@ -84,7 +84,7 @@ export function TrainerReviewsList({
 
   if (isError) {
     return (
-      <div className="rounded-xl border border-gray-100 bg-white p-8 text-center text-sm text-red-500">
+      <div className="rounded-[12px] border border-gray-100 bg-white p-8 text-center text-sm text-red-500">
         Could not load reviews. Please try again.
       </div>
     );
@@ -92,7 +92,7 @@ export function TrainerReviewsList({
 
   if (reviews.length === 0) {
     return (
-      <div className="rounded-xl border border-gray-100 bg-white shadow-sm">
+      <div className="rounded-[12px] border border-gray-100 bg-white shadow-sm">
         <EmptyState
           imageSrc={EMPTY_STATE_IMAGE_PATHS.reviews}
           imageAlt="No reviews"
