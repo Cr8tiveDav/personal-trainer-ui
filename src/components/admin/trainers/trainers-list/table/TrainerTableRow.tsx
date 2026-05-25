@@ -60,10 +60,10 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
                 alt={trainer.name}
                 width={40}
                 height={40}
-                className="rounded-full h-10 w-10 object-cover"
+                className="rounded-[9999px] h-10 w-10 object-cover"
               />
             ) : (
-              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-medium">
+              <div className="h-10 w-10 rounded-[9999px] bg-gray-200 flex items-center justify-center text-gray-500 font-medium">
                 {trainer.name.charAt(0)}
               </div>
             )}
@@ -96,7 +96,7 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
       </td>
       <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
         <div className="flex items-center gap-2">
-          <div className={cn("h-2 w-2 rounded-full", availabilityColor)} />
+          <div className={cn("h-2 w-2 rounded-[9999px]", availabilityColor)} />
           <span
             className={cn("text-sm font-medium", {
               "text-[#14561C]": trainer.availability === "Available",

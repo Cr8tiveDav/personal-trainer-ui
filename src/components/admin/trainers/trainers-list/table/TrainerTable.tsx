@@ -173,7 +173,7 @@ function TrainerTableBody({
               whileTap={{ scale: 0.95 }}
               onClick={() => onPageChange(displayPage - 1)}
               disabled={displayPage <= 1 || isLoading}
-              className="flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Previous page"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -200,7 +200,7 @@ function TrainerTableBody({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onPageChange(pageNumber)}
                   disabled={isLoading}
-                  className={`relative flex h-9 w-9 items-center justify-center rounded-md font-medium transition-colors ${
+                  className={`relative flex h-9 w-9 items-center justify-center rounded-[6px] font-medium transition-colors ${
                     isActive
                       ? "text-white"
                       : "border border-gray-200 text-gray-600 hover:bg-gray-50"
@@ -209,7 +209,7 @@ function TrainerTableBody({
                   {isActive && (
                     <motion.span
                       layoutId="trainer-table-page"
-                      className="absolute inset-0 rounded-md bg-[#0F4F80]"
+                      className="absolute inset-0 rounded-[6px] bg-[#0F4F80]"
                       transition={{
                         type: "spring",
                         stiffness: 380,
@@ -227,7 +227,7 @@ function TrainerTableBody({
               whileTap={{ scale: 0.95 }}
               onClick={() => onPageChange(displayPage + 1)}
               disabled={displayPage >= totalPages || isLoading}
-              className="flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Next page"
             >
               <ChevronRight className="h-4 w-4" />

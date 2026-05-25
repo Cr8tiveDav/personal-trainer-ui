@@ -114,19 +114,19 @@ export function ClientsTable({
             placeholder='Search by name or email'
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className='w-full rounded-lg border border-gray-200 py-2 pl-9 pr-4 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary'
+            className='w-full rounded-[8px] border border-gray-200 py-2 pl-9 pr-4 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary'
           />
         </div>
         <button
           type='button'
-          className='flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
+          className='flex items-center gap-2 rounded-[8px] border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
         >
           <Filter className='h-4 w-4' />
           Filter
         </button>
         <button
           type='button'
-          className='flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
+          className='flex items-center gap-2 rounded-[8px] border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
         >
           <ArrowUpDown className='h-4 w-4' />
           Sort
@@ -220,7 +220,7 @@ export function ClientsTable({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onPageChange(displayPage - 1)}
                   disabled={displayPage <= 1 || isLoading}
-                  className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
+                  className='flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                   aria-label='Previous page'
                 >
                   <ChevronLeft className='h-4 w-4' />
@@ -247,7 +247,7 @@ export function ClientsTable({
                       whileTap={{ scale: 0.95 }}
                       onClick={() => onPageChange(pageNumber)}
                       disabled={isLoading}
-                      className={`relative flex h-9 w-9 items-center justify-center rounded-md text-sm font-medium transition-colors ${
+                      className={`relative flex h-9 w-9 items-center justify-center rounded-[6px] text-sm font-medium transition-colors ${
                         isActive
                           ? 'text-white'
                           : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
@@ -256,7 +256,7 @@ export function ClientsTable({
                       {isActive && (
                         <motion.span
                           layoutId='client-table-page'
-                          className='absolute inset-0 rounded-md bg-primary'
+                          className='absolute inset-0 rounded-[6px] bg-primary'
                           transition={{
                             type: 'spring',
                             stiffness: 380,
@@ -274,7 +274,7 @@ export function ClientsTable({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onPageChange(displayPage + 1)}
                   disabled={displayPage >= totalPages || isLoading}
-                  className='flex h-9 w-9 items-center justify-center rounded-md border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
+                  className='flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                   aria-label='Next page'
                 >
                   <ChevronRight className='h-4 w-4' />

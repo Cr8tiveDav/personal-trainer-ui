@@ -52,7 +52,7 @@ export function ReusableTabs<T extends string = string>({
               {isActive && (
                 <motion.span
                   layoutId={layoutId}
-                  className='absolute inset-x-0 bottom-0 h-0.5 bg-[#2272AD] rounded-full'
+                  className='absolute inset-x-0 bottom-0 h-0.5 bg-[#2272AD] rounded-[9999px]'
                   transition={{ type: 'spring', stiffness: 400, damping: 32 }}
                 />
               )}

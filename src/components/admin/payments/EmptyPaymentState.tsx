@@ -14,7 +14,7 @@ const EmptyPaymentState = ({
   description = 'Payment records for this tab will appear here when available.',
 }: EmptyPaymentStateProps) => {
   return (
-    <div className='flex min-h-80 items-center justify-center rounded-lg border border-dashed border-border bg-card p-8'>
+    <div className='flex min-h-80 items-center justify-center rounded-[8px] border border-dashed border-border bg-card p-8'>
       <EmptyState
         imageSrc={imageSrc}
         imageAlt={imageAlt}

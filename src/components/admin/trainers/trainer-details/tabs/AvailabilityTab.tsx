@@ -31,7 +31,7 @@ const AvailabilityTab = ({ trainerId, enabled = true }: AvailabilityTabProps) =>
 
   if (isError) {
     return (
-      <div className='rounded-xl border border-gray-100 bg-white p-8 text-center text-sm text-red-500'>
+      <div className='rounded-[12px] border border-gray-100 bg-white p-8 text-center text-sm text-red-500'>
         Failed to load availability. Please try again.
       </div>
     )

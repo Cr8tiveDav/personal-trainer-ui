@@ -19,14 +19,14 @@ export function Step3ReviewAndCreate({
   onSubmit,
 }: Step3Props) {
   return (
-    <div className='rounded-lg bg-white p-6'>
+    <div className='rounded-[8px] bg-white p-6'>
       <h2 className='text-base font-semibold text-gray-900'>Review & create</h2>
       <p className='mt-1 mb-6 text-sm text-gray-500'>
         Confirm the details below. Login credentials will be emailed to the trainer automatically.
       </p>
 
-      <div className='mb-6 flex items-start gap-4 rounded-xl border border-[#0b4d8d]/20 bg-[#f4f9fd] p-4'>
-        <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#0b4d8d] text-white'>
+      <div className='mb-6 flex items-start gap-4 rounded-[12px] border border-[#0b4d8d]/20 bg-[#f4f9fd] p-4'>
+        <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#0b4d8d] text-white'>
           <Mail className='h-5 w-5' />
         </div>
         <div>
@@ -37,7 +37,7 @@ export function Step3ReviewAndCreate({
         </div>
       </div>
 
-      <div className='rounded-xl bg-gray-50 p-5 mb-6'>
+      <div className='rounded-[12px] bg-gray-50 p-5 mb-6'>
         <p className='text-sm font-semibold text-muted mb-4'>Summary</p>
         <div className='space-y-3'>
           {[
@@ -74,7 +74,7 @@ export function Step3ReviewAndCreate({
           type='button'
           onClick={onSubmit}
           disabled={isSubmitting}
-          className='flex items-center gap-2 bg-[#0b4d8d] hover:bg-[#093e72] text-white h-11 px-6 rounded-lg font-semibold shadow-none'
+          className='flex items-center gap-2 bg-[#0b4d8d] hover:bg-[#093e72] text-white h-11 px-6 rounded-[8px] font-semibold shadow-none'
         >
           {isSubmitting ? 'Creating trainer...' : 'Create trainer'}
         </Button>

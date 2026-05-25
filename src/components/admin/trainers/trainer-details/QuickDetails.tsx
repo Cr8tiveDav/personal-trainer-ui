@@ -8,7 +8,7 @@ interface QuickDetailsProps {
 
 const QuickDetails: React.FC<QuickDetailsProps> = ({ trainer }) => {
   return (
-    <div className='w-full h-full bg-white rounded-2xl border border-[#EBEBEB] py-6 px-4 flex flex-col'>
+    <div className='w-full h-full bg-white rounded-[16px] border border-[#EBEBEB] py-6 px-4 flex flex-col'>
       <h2 className='text-[22px] font-bold text-gray-900 mb-4'>Details</h2>
       <hr className='border-[#EBEBEB] mb-8' />
 

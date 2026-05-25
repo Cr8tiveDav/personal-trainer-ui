@@ -20,7 +20,7 @@ const TrainerTableSkeleton = () => {
         >
           <td className="py-4 px-6 whitespace-nowrap">
             <div className="flex items-center gap-3">
-              <Skeleton className="w-10 h-10 rounded-full" />
+              <Skeleton className="w-10 h-10 rounded-[9999px]" />
               <div className="flex flex-col gap-2">
                 <Skeleton className="h-4 w-32" />
                 <Skeleton className="h-3 w-40" />
@@ -28,10 +28,10 @@ const TrainerTableSkeleton = () => {
             </div>
           </td>
           <td className="py-4 px-6 whitespace-nowrap">
-            <Skeleton className="h-6 w-24 rounded-full" />
+            <Skeleton className="h-6 w-24 rounded-[9999px]" />
           </td>
           <td className="py-4 px-6 whitespace-nowrap">
-            <Skeleton className="h-6 w-20 rounded-full" />
+            <Skeleton className="h-6 w-20 rounded-[9999px]" />
           </td>
           <td className="py-4 px-6 whitespace-nowrap">
             <Skeleton className="h-4 w-12" />
@@ -41,7 +41,7 @@ const TrainerTableSkeleton = () => {
           </td>
           <td className="py-4 px-6 whitespace-nowrap">
             <div className="flex items-center gap-2">
-              <Skeleton className="h-2 w-2 rounded-full" />
+              <Skeleton className="h-2 w-2 rounded-[9999px]" />
               <Skeleton className="h-4 w-16" />
             </div>
           </td>
@@ -49,7 +49,7 @@ const TrainerTableSkeleton = () => {
             <Skeleton className="h-4 w-24" />
           </td>
           <td className="py-4 px-6 whitespace-nowrap text-right">
-            <Skeleton className="h-8 w-8 rounded-md ml-auto" />
+            <Skeleton className="h-8 w-8 rounded-[6px] ml-auto" />
           </td>
         </motion.tr>
       ))}

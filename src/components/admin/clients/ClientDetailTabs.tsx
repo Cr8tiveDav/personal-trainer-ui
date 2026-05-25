@@ -53,7 +53,7 @@ function OverviewTab({ client }: { client: Client }) {
         ].map(({ icon, value, label }) => (
           <div
             key={label}
-            className='rounded-xl border border-gray-100 bg-white p-5 shadow-sm'
+            className='rounded-[12px] border border-gray-100 bg-white p-5 shadow-sm'
           >
             <div className='mb-3'>{icon}</div>
             <p className='text-2xl font-bold text-gray-900'>{value}</p>
@@ -62,7 +62,7 @@ function OverviewTab({ client }: { client: Client }) {
         ))}
       </div>
 
-      <div className='rounded-2xl border border-gray-100 bg-white p-6 shadow-sm'>
+      <div className='rounded-[16px] border border-gray-100 bg-white p-6 shadow-sm'>
         <h4 className='mb-2 text-base font-semibold text-gray-900'>Account</h4>
         <p className='text-sm leading-relaxed text-gray-500'>
           Client profile for {client.name}. Open the Sessions tab to see every
@@ -90,15 +90,15 @@ function ClientTrainersTab({ clientId }: { clientId: string }) {
 
   if (isLoading) {
     return (
-      <div className='flex min-h-[200px] items-center justify-center rounded-2xl border border-gray-100 bg-white'>
-        <div className='h-8 w-8 animate-spin rounded-full border-b-2 border-primary' />
+      <div className='flex min-h-[200px] items-center justify-center rounded-[16px] border border-gray-100 bg-white'>
+        <div className='h-8 w-8 animate-spin rounded-[9999px] border-b-2 border-primary' />
       </div>
     )
   }
 
   if (isError) {
     return (
-      <div className='flex min-h-[200px] items-center justify-center rounded-2xl border border-gray-100 bg-white p-6 text-center text-sm text-red-500'>
+      <div className='flex min-h-[200px] items-center justify-center rounded-[16px] border border-gray-100 bg-white p-6 text-center text-sm text-red-500'>
         Failed to load trainer details.
       </div>
     )
@@ -106,7 +106,7 @@ function ClientTrainersTab({ clientId }: { clientId: string }) {
 
   if (trainers.length === 0) {
     return (
-      <div className='flex min-h-[200px] items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white'>
+      <div className='flex min-h-[200px] items-center justify-center rounded-[16px] border border-dashed border-gray-200 bg-white'>
         <p className='text-sm text-gray-400'>No trainers linked to sessions yet.</p>
       </div>
     )
@@ -117,9 +117,9 @@ function ClientTrainersTab({ clientId }: { clientId: string }) {
       {trainers.map((trainer) => (
         <div
           key={trainer.name}
-          className='flex items-center gap-3 rounded-xl border border-gray-100 bg-white p-4 shadow-sm'
+          className='flex items-center gap-3 rounded-[12px] border border-gray-100 bg-white p-4 shadow-sm'
         >
-          <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-50 text-sm font-bold uppercase text-purple-600'>
+          <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-[9999px] bg-purple-50 text-sm font-bold uppercase text-purple-600'>
             {trainer.name.charAt(0)}
           </div>
           <div>
@@ -134,7 +134,7 @@ function ClientTrainersTab({ clientId }: { clientId: string }) {
 
 function EmptyTab({ name }: { name: string }) {
   return (
-    <div className='flex min-h-[200px] items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-white'>
+    <div className='flex min-h-[200px] items-center justify-center rounded-[16px] border border-dashed border-gray-200 bg-white'>
       <p className='text-sm text-gray-400'>{name} data will appear here.</p>
     </div>
   )

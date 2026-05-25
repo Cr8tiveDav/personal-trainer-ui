@@ -197,7 +197,7 @@ export function ForgotPasswordFlow() {
                 <button
                   type='button'
                   onClick={goToResetStep}
-                  className='bg-primary relative flex w-full justify-center rounded-md px-4 py-2.5 text-sm font-medium text-white hover:bg-[#093e72] sm:px-6 sm:py-3 sm:text-base'
+                  className='bg-primary relative flex w-full justify-center rounded-[6px] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#093e72] sm:px-6 sm:py-3 sm:text-base'
                 >
                   Enter reset code
                 </button>

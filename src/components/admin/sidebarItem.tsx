@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '~/utils'
-import { LucideIcon } from 'lucide-react'
+import React from 'react'
 
 interface SidebarItemProps {
   label: string
   href: string
-  icon: LucideIcon
+  icon: React.ComponentType<{ className?: string }>
   collapsed?: boolean
 }
 
@@ -21,7 +21,7 @@ export function SidebarItem({ label, href, icon: Icon, collapsed }: SidebarItemP
       href={href}
       title={collapsed ? label : undefined}
       className={cn(
-        'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+        'flex items-center gap-3 rounded-[8px] px-3 py-2 text-sm font-medium transition-colors',
         collapsed && 'justify-center px-2',
         isActive
           ? 'bg-primary text-white'

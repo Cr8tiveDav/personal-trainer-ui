@@ -57,7 +57,7 @@ export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
             type="button"
             variant="ghost"
             onClick={(e) => e.stopPropagation()}
-            className="h-8 w-8 p-0 text-gray-400 hover:text-gray-700 focus:ring-0 shadow-none hover:bg-gray-100 rounded-full"
+            className="h-8 w-8 p-0 text-gray-400 hover:text-gray-700 focus:ring-0 shadow-none hover:bg-gray-100 rounded-[9999px]"
           >
             <MoreVertical className="h-4 w-4" />
             <span className="sr-only">Trainer actions</span>
@@ -66,18 +66,18 @@ export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
         <DropdownMenuContent
           align="end"
           onClick={(e) => e.stopPropagation()}
-          className="w-44 rounded-xl p-1.5 border border-gray-100 shadow-xl bg-white z-50"
+          className="w-44 rounded-[12px] p-1.5 border border-gray-100 shadow-xl bg-white z-50"
         >
           <DropdownMenuItem
             onSelect={() => goToDetail()}
-            className="rounded-lg px-3 py-2 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900"
+            className="rounded-[8px] px-3 py-2 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900"
           >
             <Eye className="h-3.5 w-3.5" />
             View
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={() => setEditOpen(true)}
-            className="rounded-lg px-3 py-2 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900"
+            className="rounded-[8px] px-3 py-2 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900"
           >
             <Pencil className="h-3.5 w-3.5" />
             Edit
@@ -85,7 +85,7 @@ export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
           <DropdownMenuItem
             onSelect={handleResendSetup}
             disabled={resendSetup.isPending || !trainer.email?.trim()}
-            className="rounded-lg px-3 py-2 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 disabled:opacity-50 disabled:pointer-events-none"
+            className="rounded-[8px] px-3 py-2 text-xs font-semibold text-gray-700 cursor-pointer hover:bg-gray-100 focus:bg-gray-100 focus:text-gray-900 data-[highlighted]:bg-gray-100 data-[highlighted]:text-gray-900 disabled:opacity-50 disabled:pointer-events-none"
           >
             <Mail className="h-3.5 w-3.5" />
             {resendSetup.isPending ? "Sending…" : "Resend email"}
@@ -93,7 +93,7 @@ export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
           <DropdownMenuSeparator className="my-1 border-gray-100" />
           <DropdownMenuItem
             onSelect={() => setDeleteOpen(true)}
-            className="rounded-lg px-3 py-2 text-xs font-semibold text-red-600 cursor-pointer hover:bg-red-50 focus:bg-red-50 focus:text-red-700 data-[highlighted]:bg-red-50 data-[highlighted]:text-red-700"
+            className="rounded-[8px] px-3 py-2 text-xs font-semibold text-red-600 cursor-pointer hover:bg-red-50 focus:bg-red-50 focus:text-red-700 data-[highlighted]:bg-red-50 data-[highlighted]:text-red-700"
           >
             <Trash2 className="h-3.5 w-3.5" />
             Delete

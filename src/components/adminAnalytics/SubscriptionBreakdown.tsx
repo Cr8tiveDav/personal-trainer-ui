@@ -19,7 +19,7 @@ export function SubscriptionBreakdown() {
     const subscriptionData = response?.data ?? EMPTY_DATA
 
     return (
-        <div className='rounded-xl border border-gray-100 bg-white p-5 shadow-sm'>
+        <div className='rounded-[12px] border border-gray-100 bg-white p-5 shadow-sm'>
             <h2 className='mb-1 text-base font-semibold text-gray-900'>Subscription Breakdown</h2>
             <p className='mb-6 text-sm text-gray-400'>{subscriptionData.total} active subscribers</p>
 
@@ -50,7 +50,7 @@ export function SubscriptionBreakdown() {
                         <div key={plan.name} className='flex items-center justify-between'>
                             <div className='flex items-center gap-2'>
                                 <span
-                                    className='h-3 w-3 rounded-full'
+                                    className='h-3 w-3 rounded-[9999px]'
                                     style={{ backgroundColor: plan.color }}
                                 />
                                 <span className='text-sm text-gray-600'>{plan.name}</span>

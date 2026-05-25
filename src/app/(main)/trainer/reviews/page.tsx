@@ -31,7 +31,7 @@ export default function TrainerReviewsPage() {
 
   if (!trainerId) {
     return (
-      <div className="rounded-xl border border-gray-100 bg-white p-8 text-center text-sm text-gray-500">
+      <div className="rounded-[12px] border border-gray-100 bg-white p-8 text-center text-sm text-gray-500">
         Please{" "}
         <Link href="/trainers/login" className="text-primary hover:underline">
           sign in
