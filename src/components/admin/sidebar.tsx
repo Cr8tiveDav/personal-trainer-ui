@@ -48,7 +48,7 @@ const NAV_SECTIONS = [
     label: 'PLATFORM',
     items: [
       { label: 'Analytics', href: '/admin/analytics', icon: LineChart },
-      { label: 'Video Content', href: '/admin/video-content', icon: Video },
+      { label: 'Media Content', href: '/admin/media', icon: Video },
       { label: 'Settings', href: '/admin/settings', icon: Settings },
     ],
   },
