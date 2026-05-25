@@ -3,6 +3,8 @@
 import { type FormEvent, useState } from 'react'
 import { toast } from 'sonner'
 
+import { waitlistAction } from '@/actions/waitlist'
+
 type FormValues = {
   name: string
   email: string
@@ -30,11 +32,12 @@ const validateForm = (values: FormValues) => {
   const errors: FormErrors = {}
   const trimmedName = values.name.trim()
   const trimmedEmail = values.email.trim()
+  const trimmedPhone = values.phone.trim()
   const phoneDigits = values.phone.replace(/\D/g, '')
 
   if (!trimmedName) {
     errors.name = 'Full name is required.'
-  } else if (!/^[A-Za-z][A-Za-z\s'-]{1,}$/.test(trimmedName)) {
+  } else if (!/^[\p{L}\p{M}][\p{L}\p{M}\p{Zs}'.-]{1,}$/u.test(trimmedName)) {
     errors.name = 'Enter a valid name.'
   }
 
@@ -48,8 +51,10 @@ const validateForm = (values: FormValues) => {
     errors.country = 'Country code is required.'
   }
 
-  if (!values.phone.trim()) {
+  if (!trimmedPhone) {
     errors.phone = 'Phone number is required.'
+  } else if (!/^\+?[\d\s().-]+$/.test(trimmedPhone)) {
+    errors.phone = 'Enter a valid phone number.'
   } else if (phoneDigits.length < 7 || phoneDigits.length > 15) {
     errors.phone = 'Enter a valid phone number.'
   }
@@ -65,6 +70,7 @@ const LeadForm = ({
 }: LeadFormProps) => {
   const [values, setValues] = useState<FormValues>(initialFormValues)
   const [errors, setErrors] = useState<FormErrors>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const updateField = (field: keyof FormValues, value: string) => {
     setValues((currentValues) => ({ ...currentValues, [field]: value }))
@@ -77,7 +83,7 @@ const LeadForm = ({
     })
   }
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const nextErrors = validateForm(values)
@@ -85,10 +91,31 @@ const LeadForm = ({
 
     if (Object.keys(nextErrors).length > 0) return
 
-    setValues(initialFormValues)
-    toast.success('Submission successful. We will be in touch soon.', {
-      duration: 3500,
-    })
+    const formData = new FormData()
+    formData.append('name', values.name.trim())
+    formData.append('email', values.email.trim())
+    formData.append('phone_number', values.phone.trim())
+    formData.append('location', `get-fit:${formId}`)
+
+    setIsSubmitting(true)
+
+    try {
+      const result = await waitlistAction(null, formData)
+
+      if (result?.success) {
+        setValues(initialFormValues)
+        toast.success('Submission successful. We will be in touch soon.', {
+          duration: 3500,
+        })
+        return
+      }
+
+      toast.error(result?.error || 'Something went wrong. Please try again.')
+    } catch {
+      toast.error('Something went wrong. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const inputClassName = (hasError?: boolean) =>
@@ -117,6 +144,7 @@ const LeadForm = ({
           type="text"
           placeholder="Full name"
           value={values.name}
+          disabled={isSubmitting}
           aria-invalid={Boolean(errors.name)}
           aria-describedby={errors.name ? `${formId}-name-error` : undefined}
           onChange={(event) => updateField('name', event.target.value)}
@@ -141,6 +169,7 @@ const LeadForm = ({
           type="email"
           placeholder={compact ? 'you@example.com' : 'johndoe@example.com'}
           value={values.email}
+          disabled={isSubmitting}
           aria-invalid={Boolean(errors.email)}
           aria-describedby={errors.email ? `${formId}-email-error` : undefined}
           onChange={(event) => updateField('email', event.target.value)}
@@ -172,6 +201,7 @@ const LeadForm = ({
           <select
             id={`${formId}-country`}
             value={values.country}
+            disabled={isSubmitting}
             aria-invalid={Boolean(errors.country)}
             onChange={(event) => updateField('country', event.target.value)}
             className="border-r border-[#E6E6E6] bg-transparent px-2 text-xs text-[#8B8B8B] outline-none"
@@ -188,6 +218,7 @@ const LeadForm = ({
             type="tel"
             placeholder={phonePlaceholder}
             value={values.phone}
+            disabled={isSubmitting}
             aria-invalid={Boolean(errors.phone)}
             aria-describedby={
               errors.phone || errors.country
@@ -210,12 +241,13 @@ const LeadForm = ({
 
       <button
         type="submit"
+        disabled={isSubmitting}
         className={[
           compact ? 'h-8' : 'h-9',
-          'mt-0.5 rounded-md bg-[#064779] text-[11px] font-semibold text-white transition hover:bg-[#073f6b] focus:ring-2 focus:ring-[#064779]/25 focus:outline-none',
+          'mt-0.5 rounded-md bg-[#064779] text-[11px] font-semibold text-white transition hover:bg-[#073f6b] focus:ring-2 focus:ring-[#064779]/25 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
         ].join(' ')}
       >
-        Submit
+        {isSubmitting ? 'Submitting...' : 'Submit'}
       </button>
     </form>
   )

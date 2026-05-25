@@ -7,7 +7,7 @@ const GetFitVideo = () => {
     <section className="bg-white px-5 pt-9 pb-14 sm:px-8 md:pt-12 md:pb-16">
       <div className="mx-auto w-full max-w-[1088px]">
         <h2 className="text-center text-[12px] leading-tight font-bold text-[#202124] min-[480px]:text-[22px] md:text-[32px]">
-          Watch more about FitCall
+          See how FitCall works
         </h2>
 
         <div className="mx-auto mt-3 w-full max-w-[1088px] overflow-hidden rounded-[8px] min-[480px]:mt-5 min-[480px]:rounded-[14px] md:rounded-[16px]">
