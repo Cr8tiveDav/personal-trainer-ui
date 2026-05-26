@@ -16,14 +16,6 @@ function extractApiErrorMessage(data: unknown): string | undefined {
     return record.message.trim();
   }
 
-  if (typeof record.error === 'string' && record.error.trim()) {
-    return record.error.trim();
-  }
-
-  if (typeof record.detail === 'string' && record.detail.trim()) {
-    return record.detail.trim();
-  }
-
   return undefined;
 }
 

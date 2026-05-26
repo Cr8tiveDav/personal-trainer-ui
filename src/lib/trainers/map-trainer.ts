@@ -54,6 +54,7 @@ export function mapBackendToFrontend(
   const onboarding = backendTrainer.onboarding_status?.toLowerCase();
   if (onboarding === 'active' || onboarding === 'approved') status = 'Active';
   else if (onboarding === 'suspended') status = 'Suspended';
+  else if (onboarding === 'rejected') status = 'Rejected';
 
   const date = backendTrainer.created_at
     ? new Date(backendTrainer.created_at)
