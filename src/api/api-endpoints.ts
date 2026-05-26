@@ -32,8 +32,14 @@ export const API_ENDPOINTS = {
     ME_AVAILABILITY: "/trainers/me/availability",
     /** GET authenticated trainer profile */
     ME: "/trainers/me",
-  },
 
+
+},
+MEDIA: {
+  LIST: "/media",
+  UPLOAD_IMAGE: "/media/images",
+  UPLOAD_VIDEO: "/media/videos",
+},
   WAITLIST: {
     JOIN: "/waitlist",
   },
