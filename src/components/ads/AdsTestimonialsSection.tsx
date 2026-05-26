@@ -72,9 +72,9 @@ const AdsTestimonialsSection = ({
             cardsGridClassName,
           )}
         >
-          {testimonials.map((testimonial) => (
+          {testimonials.map((testimonial, index) => (
             <article
-              key={testimonial.name}
+              key={`${testimonial.name}-${index}`}
               className={cn(
                 'flex min-h-[124px] flex-col rounded-2xl border border-[#EAEAEA] bg-white px-5 py-5 md:min-h-[124px] md:px-5 md:py-4',
                 cardClassName,

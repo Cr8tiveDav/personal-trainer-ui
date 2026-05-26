@@ -97,7 +97,7 @@ const AdsHeroSection = ({
         </div>
       </div>
 
-      {socialLinks ? (
+      {socialLinks && socialLinks.length > 0 ? (
         <div className="border-y border-[#EFEFEF]">
           <div className="mx-auto flex w-full max-w-[1088px] flex-col gap-4 px-5 py-5 text-[10px] text-[#707070] sm:px-8 md:flex-row md:items-center md:justify-between md:px-10 lg:px-0">
             <p>{socialLabel}</p>

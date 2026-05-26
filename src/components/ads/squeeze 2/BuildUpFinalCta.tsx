@@ -1,6 +1,26 @@
-import Image from 'next/image'
+import { getImageProps } from 'next/image'
 
 const BuildUpFinalCta = () => {
+  const commonImageProps = {
+    alt: '',
+    sizes: '100vw',
+    className: 'absolute inset-0 h-full w-full object-cover object-center',
+  }
+  const {
+    props: { srcSet: desktopSrcSet },
+  } = getImageProps({
+    ...commonImageProps,
+    src: '/images/ads/footer_desk.png',
+    width: 1376,
+    height: 768,
+  })
+  const { props: mobileImageProps } = getImageProps({
+    ...commonImageProps,
+    src: '/images/ads/footer_mob.png',
+    width: 1376,
+    height: 768,
+  })
+
   return (
     <section className="bg-white pt-0 pb-0">
       <div className="sr-only">
@@ -11,40 +31,17 @@ const BuildUpFinalCta = () => {
         </p>
       </div>
 
-      <div className="relative aspect-[1376/768] w-full overflow-hidden min-[480px]:hidden">
-        <Image
-          src="/images/ads/footer_mob.png"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover"
-        />
+      <div className="relative aspect-[1376/768] w-full overflow-hidden min-[480px]:aspect-[1376/342]">
+        <picture>
+          <source media="(min-width: 480px)" srcSet={desktopSrcSet} />
+          <img {...mobileImageProps} alt="" />
+        </picture>
         <div className="absolute inset-0 bg-black/35" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center text-white">
-          <h2 className="text-[30px] leading-[1.02] font-extrabold">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center text-white min-[480px]:px-8">
+          <h2 className="text-[30px] leading-[1.02] font-extrabold min-[480px]:text-[34px] min-[480px]:leading-tight md:text-[44px]">
             Find your trainer today
           </h2>
-          <p className="mt-3 max-w-[260px] text-[11px] leading-[1.45]">
-            Sign up for consistent training with our expert FitCall trainers in
-            your corner.
-          </p>
-        </div>
-      </div>
-
-      <div className="relative hidden aspect-[1376/342] w-full overflow-hidden min-[480px]:block">
-        <Image
-          src="/images/ads/footer_desk.png"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-black/35" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center text-white">
-          <h2 className="text-[34px] leading-tight font-extrabold md:text-[44px]">
-            Find your trainer today
-          </h2>
-          <p className="mt-3 max-w-[560px] text-[12px] leading-[1.5] md:text-[14px]">
+          <p className="mt-3 max-w-[260px] text-[11px] leading-[1.45] min-[480px]:max-w-[560px] min-[480px]:text-[12px] min-[480px]:leading-[1.5] md:text-[14px]">
             Sign up for consistent training with our expert FitCall trainers in
             your corner.
           </p>
