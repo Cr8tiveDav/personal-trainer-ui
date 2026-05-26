@@ -6,7 +6,7 @@ import { Button } from '../ui/button';
 
 const Hero = () => {
   return (
-    <section className='relative w-full overflow-hidden pt-28 md:pt-36'>
+    <section className='relative w-full overflow-hidden pt-[122px] md:pt-[154px]'>
       <div
         className='absolute inset-0 z-0 opacity-[0.03]'
         style={{
