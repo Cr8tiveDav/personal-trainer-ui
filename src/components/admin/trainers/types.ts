@@ -1,4 +1,4 @@
-export type TrainerStatus = 'Active' | 'Suspended' | 'Pending';
+export type TrainerStatus = 'Active' | 'Suspended' | 'Pending' | 'Rejected';
 export type TrainerAvailability = 'Available' | 'Offline' | 'Busy';
 
 export interface Trainer {

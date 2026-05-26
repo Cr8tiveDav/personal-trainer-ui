@@ -17,6 +17,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value }) => {
   } else if (type === 'status') {
     switch (value.toLowerCase()) {
       case 'active':
+      case 'approved':
         badgeStyles =
           'bg-[#ECFDF5] text-[#14561C] border-none px-3 py-1 text-xs font-medium rounded-[9999px]';
         break;
@@ -27,6 +28,10 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value }) => {
       case 'pending':
         badgeStyles =
           'bg-[#F5A6231A] text-[#A86908] border-none px-3 py-1 text-xs font-medium rounded-[9999px]';
+        break;
+      case 'rejected':
+        badgeStyles =
+          'bg-red-50 text-[#9C1E1C] border-none px-3 py-1 text-xs font-medium rounded-[9999px]';
         break;
       default:
         badgeStyles =
