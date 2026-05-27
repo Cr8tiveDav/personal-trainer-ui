@@ -61,18 +61,23 @@ export interface AuthResponse {
   success: boolean
   message: string
 }
-export interface ErrorResponse {
+
+export interface FieldError {
+  field: string
   message: string
-  status_code?: number
-  success: boolean
+}
+
+export interface ErrorResponse {
+  code: string
+  message: string
+  status: string
+  errors?: FieldError[]
 }
 
 export interface Organisation {
   id: string
   name: string
   description: string
-  user_role: 'admin' | 'manager' | 'user' | string
-  organisation_id: string
 }
 
 export interface FAQ {

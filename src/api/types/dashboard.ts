@@ -49,8 +49,12 @@ export interface TopTrainer {
   trend: "up" | "down" | "neutral";
 }
 
+
 export type DashboardStatsResponse = ApiEnvelope<StatsData>;
 export type LatestPaymentResponse = ApiEnvelope<Payment | null>;
 export type RecentActivityResponse = ApiEnvelope<Activity[]>;
 export type RevenueSnapshotResponse = ApiEnvelope<RevenueData>;
 export type TopTrainersResponse = ApiEnvelope<TopTrainer[]>;
+export type SubscriptionCountResponse = ApiEnvelope<{
+  active_subscriptions: number;
+}>;

@@ -32,8 +32,14 @@ export const API_ENDPOINTS = {
     ME_AVAILABILITY: "/trainers/me/availability",
     /** GET authenticated trainer profile */
     ME: "/trainers/me",
-  },
 
+
+},
+MEDIA: {
+  LIST: "/media",
+  UPLOAD_IMAGE: "/media/images",
+  UPLOAD_VIDEO: "/media/videos",
+},
   WAITLIST: {
     JOIN: "/waitlist",
   },
@@ -44,6 +50,7 @@ export const API_ENDPOINTS = {
 
   DASHBOARD: {
     STATS: "/dashboard/stats",
+    SUBSCRIPTION_COUNT:"/admin/subscriptions/count"
   },
 
   SESSIONS: {
@@ -65,6 +72,7 @@ export const API_ENDPOINTS = {
 
   PAYMENTS: {
     LATEST: "/payments/latest",
+    LIST:"/admin/revenue",
   },
 
   DISCOVERY_SLOTS: {
