@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,33 +10,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { paymentSummaries } from "./data";
 import type { PaymentSummary } from "./types";
-
+import { useRevenue } from "@/api/revenue";
 type DisplayCurrency = "USD" | "GBP";
-
 const CURRENCIES: { code: DisplayCurrency; label: string }[] = [
   { code: "USD", label: "USD" },
   { code: "GBP", label: "GBP" },
 ];
-
-/** Mock display values per currency (summary cards only). */
-const VALUES_BY_CURRENCY: Record<
-  DisplayCurrency,
-  Record<string, string>
-> = {
-  USD: {
-    "total-revenue": "$1.5M",
-    "client-revenue": "$800k",
-    "trainer-revenue": "$400k",
-    "pending-payouts": "$3.2M",
-  },
-  GBP: {
-    "total-revenue": "£1.5M",
-    "client-revenue": "£800k",
-    "trainer-revenue": "£400k",
-    "pending-payouts": "£3.2M",
-  },
-};
-
 function CurrencyFlag({ code }: { code: DisplayCurrency }) {
   if (code === "USD") {
     return (
@@ -72,9 +50,35 @@ const helperToneClass: Record<
   warning: "text-[hsl(var(--warning))]",
 };
 
+function formatCurrency(value: number, currency: DisplayCurrency) {
+  const symbol = currency === "USD" ? "$" : "£";
+
+  if (value >= 1_000_000) return `${symbol}${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `${symbol}${(value / 1_000).toFixed(0)}k`;
+  return `${symbol}${value}`;
+}
+
 const PaymentsSummaryCards = () => {
   const [currency, setCurrency] = useState<DisplayCurrency>("USD");
-  const values = VALUES_BY_CURRENCY[currency];
+  const { data, isLoading } = useRevenue();
+  const revenue = data?.revenue;
+  const values: Record<string, string> = {
+    "total-revenue": revenue
+      ? formatCurrency(revenue.total, currency)
+      : "—",
+
+    "client-revenue": revenue
+      ? formatCurrency(revenue.subscriptions, currency)
+      : "—",
+
+    "trainer-revenue": revenue
+      ? formatCurrency(revenue.one_time_sessions, currency)
+      : "—",
+
+    "pending-payouts": revenue
+      ? formatCurrency(revenue.trial_conversions, currency)
+      : "—",
+  };
 
   return (
     <section className="space-y-6">
@@ -114,9 +118,11 @@ const PaymentsSummaryCards = () => {
             <p className="text-sm font-medium text-foreground">
               {summary.label}
             </p>
+
             <p className="mt-5 text-2xl font-semibold tracking-normal text-foreground sm:text-3xl">
-              {values[summary.id] ?? summary.value}
+              {isLoading ? "..." : values[summary.id] ?? summary.value}
             </p>
+
             <p
               className={`mt-2 text-xs ${
                 helperToneClass[summary.helperTone ?? "neutral"]

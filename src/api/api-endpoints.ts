@@ -50,6 +50,7 @@ MEDIA: {
 
   DASHBOARD: {
     STATS: "/dashboard/stats",
+    SUBSCRIPTION_COUNT:"/admin/subscriptions/count"
   },
 
   SESSIONS: {
@@ -71,6 +72,7 @@ MEDIA: {
 
   PAYMENTS: {
     LATEST: "/payments/latest",
+    LIST:"/admin/revenue",
   },
 
   DISCOVERY_SLOTS: {
