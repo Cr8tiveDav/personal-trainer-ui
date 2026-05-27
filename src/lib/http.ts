@@ -17,8 +17,10 @@ import {
   invalidateAccessTokenCache,
   isAccessTokenExpired,
   logoutUser,
+  setToken,
 } from "./get-token";
-import { refreshAccessTokenClient } from "./refresh-access-token";
+import { refreshSessionAction } from "@/actions/auth";
+import { siteConfig } from "@/config/site";
 
 export type ErrorData = {
   message: string;
@@ -89,10 +91,30 @@ function coalescedRefresh(
   refreshToken: string,
   accessToken: string | null,
 ): Promise<string | null> {
-  refreshPromise ??= refreshAccessTokenClient(refreshToken, accessToken)
-    .then((token) => {
-      if (token) rejectedRefreshToken = null;
-      return token;
+  refreshPromise ??= refreshSessionAction()
+    .then((result) => {
+      if (result && result.success) {
+        rejectedRefreshToken = null;
+        setToken(
+          siteConfig.cookieNames.access_token,
+          result.accessToken,
+          result.expiresIn,
+        );
+        return result.accessToken;
+      }
+
+      if (result && result.reason === "server_error") {
+        throw new Error("server_error");
+      }
+
+      return null;
+    })
+    .catch((err) => {
+      if (err.message === "server_error") {
+        throw err;
+      }
+      console.error("Failed to refresh session via Server Action:", err);
+      throw new Error("server_error");
     })
     .finally(() => {
       refreshPromise = null;
@@ -195,7 +217,10 @@ async function handleUnauthorized(
       }
       setAuthHeader(originalRequest, newToken);
       return getApi()(originalRequest);
-    } catch {
+    } catch (err: any) {
+      if (err?.message === "server_error") {
+        return Promise.reject(error);
+      }
       rejectedRefreshToken = refreshToken;
       logoutUser();
       return Promise.reject(error);
@@ -211,7 +236,10 @@ async function handleUnauthorized(
     }
     setAuthHeader(originalRequest, newToken);
     return getApi()(originalRequest);
-  } catch {
+  } catch (err: any) {
+    if (err?.message === "server_error") {
+      return Promise.reject(error);
+    }
     rejectedRefreshToken = refreshToken;
     logoutUser();
     return Promise.reject(error);

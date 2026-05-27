@@ -13,69 +13,95 @@ type RefreshResponse = {
   expires_in?: number;
 };
 
+export type RefreshActionResult =
+  | { success: true; accessToken: string; expiresIn: number }
+  | { success: false; reason: "unauthenticated" | "server_error" };
+
 async function refreshAccessToken(
   refreshToken: string,
   expiredAccessToken: string | null,
-): Promise<string | null> {
-  const res = await fetch(apiUrl(API_ENDPOINTS.AUTH.REFRESH), {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${refreshToken}`,
-    },
-    body: JSON.stringify({
-      access_token: expiredAccessToken ?? "",
-    }),
-  });
+): Promise<RefreshActionResult> {
+  try {
+    const res = await fetch(apiUrl(API_ENDPOINTS.AUTH.REFRESH), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${refreshToken}`,
+      },
+      body: JSON.stringify({
+        access_token: expiredAccessToken ?? "",
+      }),
+    });
 
-  if (!res.ok) return null;
+    if (!res.ok) {
+      if (res.status === 400 || res.status === 401 || res.status === 403) {
+        return { success: false, reason: "unauthenticated" };
+      }
+      return { success: false, reason: "server_error" };
+    }
 
-  const newTokens = (await res.json()) as RefreshResponse;
-  const sessionToken =
-    newTokens.data?.access_token ?? newTokens.access_token ?? null;
-  const newRefreshToken =
-    newTokens.data?.refresh_token ?? newTokens.refresh_token ?? null;
+    const newTokens = (await res.json()) as RefreshResponse;
+    const sessionToken =
+      newTokens.data?.access_token ?? newTokens.access_token ?? null;
+    const newRefreshToken =
+      newTokens.data?.refresh_token ?? newTokens.refresh_token ?? null;
 
-  if (!sessionToken) return null;
+    if (!sessionToken) {
+      return { success: false, reason: "unauthenticated" };
+    }
 
-  const cookieStore = await cookies();
-  const maxAge =
-    newTokens.data?.expires_in ?? newTokens.expires_in ?? 3600;
+    const cookieStore = await cookies();
+    const maxAge =
+      newTokens.data?.expires_in ?? newTokens.expires_in ?? 3600;
 
-  cookieStore.set("session_token", sessionToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge,
-  });
-
-  cookieStore.set("access_token", sessionToken, {
-    httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge,
-  });
-
-  if (newRefreshToken) {
-    cookieStore.set("refresh_token", newRefreshToken, {
+    cookieStore.set("session_token", sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
       maxAge: 7 * 24 * 60 * 60,
     });
-  }
 
-  return sessionToken;
+    cookieStore.set("access_token", sessionToken, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    cookieStore.set("has_refresh_token", "true", {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 60 * 60,
+    });
+
+    if (newRefreshToken) {
+      cookieStore.set("refresh_token", newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 7 * 24 * 60 * 60,
+      });
+    }
+
+    return { success: true, accessToken: sessionToken, expiresIn: maxAge };
+  } catch (error) {
+    console.error("Error refreshing token on server:", error);
+    return { success: false, reason: "server_error" };
+  }
 }
 
-export async function refreshSessionToken(): Promise<string | null> {
+export async function refreshSessionToken(): Promise<RefreshActionResult> {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refresh_token")?.value;
-  const expiredAccessToken = cookieStore.get("session_token")?.value ?? null;
-  if (!refreshToken) return null;
+  const expiredAccessToken = cookieStore.get("session_token")?.value ?? cookieStore.get("access_token")?.value ?? null;
+  if (!refreshToken) {
+    return { success: false, reason: "unauthenticated" };
+  }
   return refreshAccessToken(refreshToken, expiredAccessToken);
 }
 
@@ -90,7 +116,8 @@ export async function getAccessToken(): Promise<string | null> {
 
   if (!refreshToken) return null;
 
-  return refreshAccessToken(refreshToken, null);
+  const result = await refreshAccessToken(refreshToken, null);
+  return result.success ? result.accessToken : null;
 }
 
 export async function authenticatedFetch(
@@ -121,7 +148,8 @@ export async function authenticatedFetch(
     const expiredAccessToken = token
 
     if (refreshToken) {
-      token = await refreshAccessToken(refreshToken, expiredAccessToken)
+      const result = await refreshAccessToken(refreshToken, expiredAccessToken)
+      token = result.success ? result.accessToken : null
       if (token) res = await doFetch()
     }
   }

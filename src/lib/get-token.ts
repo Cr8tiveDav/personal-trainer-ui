@@ -37,7 +37,11 @@ export function getToken() {
 
 export function getRefreshToken() {
   if (typeof window === "undefined") return null;
-  return cookies.get(siteConfig.cookieNames.refresh_token) || null;
+  const actualToken = cookies.get(siteConfig.cookieNames.refresh_token);
+  if (actualToken) return actualToken;
+  const hasToken = cookies.get("has_refresh_token");
+  if (hasToken === "true") return "true";
+  return null;
 }
 
 export function getCookie(key: string) {
@@ -49,16 +53,17 @@ export function getCookie(key: string) {
 }
 
 export function setToken(key: string, value: string, maxAgeSeconds?: number) {
+  const isAccessToken = key === siteConfig.cookieNames.access_token;
+  const cookieMaxAge = isAccessToken ? 7 * 24 * 60 * 60 : (maxAgeSeconds ?? 7 * 24 * 60 * 60);
+
   cookies.set(key, value, {
     path: "/",
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    ...(maxAgeSeconds
-      ? { maxAge: maxAgeSeconds }
-      : { expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) }),
+    maxAge: cookieMaxAge,
   });
 
-  if (key === siteConfig.cookieNames.access_token) {
+  if (isAccessToken) {
     cachedToken = value;
     if (maxAgeSeconds) {
       setAccessTokenExpiry(maxAgeSeconds);
@@ -78,6 +83,7 @@ export function clearAuthCookies() {
   invalidateAccessTokenCache();
   removeToken(siteConfig.cookieNames.access_token);
   removeToken(siteConfig.cookieNames.refresh_token);
+  removeToken("has_refresh_token");
   removeToken(siteConfig.cookieNames.user_type);
   removeToken(siteConfig.cookieNames.email);
   removeToken(siteConfig.cookieNames.user_profile);

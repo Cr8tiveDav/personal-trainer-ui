@@ -20,55 +20,39 @@ const TrainersList = () => {
   const tabCounts = counts ?? defaultCounts;
 
   const onboardingStatus = getTrainerListOnboardingStatus(activeTab);
-  const listTotalWithoutSearch =
-    activeTab === "all"
-      ? tabCounts.all
-      : activeTab === "active"
-        ? tabCounts.active
-        : activeTab === "pending"
-          ? tabCounts.pending
-          : tabCounts.suspended;
-
-  const maxPage = Math.max(
-    1,
-    Math.ceil(listTotalWithoutSearch / PER_PAGE) || 1,
-  );
-  const queryPage =
-    searchQuery.trim() || listTotalWithoutSearch === 0
-      ? page
-      : Math.min(page, maxPage);
 
   const { data, isLoading, isError, isFetching } = useAdminTrainers(
-    queryPage,
+    page,
     PER_PAGE,
     { onboardingStatus },
   );
 
   const hasListData = data !== undefined;
   const showSkeleton = isLoading && !hasListData;
-  const metaTotal = data?.meta?.total_count ?? 0;
+  const trainers = data?.trainers ?? [];
+  const metaTotalCount = data?.meta?.total_count ?? 0;
 
   const filteredTrainers = useMemo(() => {
-    const trainers = data?.trainers ?? [];
+    const list = trainers;
     const query = searchQuery.trim().toLowerCase();
-    if (!query) return trainers;
+    if (!query) return list;
 
-    return trainers.filter((trainer) => {
+    return list.filter((trainer) => {
       const name = (trainer.name ?? "").toLowerCase();
       const email = (trainer.email ?? "").toLowerCase();
       return name.includes(query) || email.includes(query);
     });
-  }, [data?.trainers, searchQuery]);
+  }, [trainers, searchQuery]);
 
   const listTotalCount = searchQuery.trim()
     ? filteredTrainers.length
-    : metaTotal > 0
-      ? metaTotal
-      : listTotalWithoutSearch;
+    : metaTotalCount;
 
-  const totalPages = Math.max(1, Math.ceil(listTotalCount / PER_PAGE) || 1);
-  const displayPage =
-    listTotalCount === 0 ? 1 : Math.min(queryPage, totalPages);
+  const totalPages = searchQuery.trim()
+    ? Math.max(1, Math.ceil(filteredTrainers.length / PER_PAGE))
+    : data?.meta?.total_pages ?? 1;
+
+  const displayPage = listTotalCount === 0 ? 1 : Math.min(page, totalPages);
 
   function handleTabChange(tab: TabType) {
     setActiveTab(tab);
