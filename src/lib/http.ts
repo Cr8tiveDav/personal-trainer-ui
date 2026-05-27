@@ -83,8 +83,7 @@ function isRefreshTokenUsable(refreshToken: string): boolean {
 function shouldProactivelyRefresh(accessToken: string | null): boolean {
   if (!accessToken) return true;
   if (isAccessTokenExpired()) return true;
-  if (hasJwtExp(accessToken) && isJwtExpired(accessToken, 30_000)) return true;
-  return false;
+  return hasJwtExp(accessToken) && isJwtExpired(accessToken, 30_000);
 }
 
 function coalescedRefresh(
@@ -100,6 +99,9 @@ function coalescedRefresh(
           result.accessToken,
           result.expiresIn,
         );
+        if (typeof window !== "undefined") {
+          localStorage.setItem("has_refresh_token", "true");
+        }
         return result.accessToken;
       }
 
@@ -113,7 +115,6 @@ function coalescedRefresh(
       if (err.message === "server_error") {
         throw err;
       }
-      console.error("Failed to refresh session via Server Action:", err);
       throw new Error("server_error");
     })
     .finally(() => {
@@ -191,13 +192,13 @@ async function handleUnauthorized(
   const accessToken = getToken();
 
   if (!refreshToken) {
-    if (accessToken) logoutUser();
+    if (accessToken) logoutUser(undefined, "No refresh token cookie available");
     return Promise.reject(error);
   }
 
   if (!isRefreshTokenUsable(refreshToken)) {
     rejectedRefreshToken = refreshToken;
-    logoutUser();
+    logoutUser(undefined, "Refresh token is invalid, expired, or already used");
     return Promise.reject(error);
   }
 
@@ -212,7 +213,7 @@ async function handleUnauthorized(
       const newToken = await refreshPromise;
       if (!newToken) {
         rejectedRefreshToken = refreshToken;
-        logoutUser();
+        logoutUser(undefined, "Concurrent session refresh returned no token");
         return Promise.reject(error);
       }
       setAuthHeader(originalRequest, newToken);
@@ -222,7 +223,7 @@ async function handleUnauthorized(
         return Promise.reject(error);
       }
       rejectedRefreshToken = refreshToken;
-      logoutUser();
+      logoutUser(undefined, `Concurrent session refresh failed: ${err?.message || "unknown error"}`);
       return Promise.reject(error);
     }
   }
@@ -231,7 +232,7 @@ async function handleUnauthorized(
     const newToken = await refreshSession(refreshToken, accessToken);
     if (!newToken) {
       rejectedRefreshToken = refreshToken;
-      logoutUser();
+      logoutUser(undefined, "Token refresh request returned no token");
       return Promise.reject(error);
     }
     setAuthHeader(originalRequest, newToken);
@@ -241,7 +242,7 @@ async function handleUnauthorized(
       return Promise.reject(error);
     }
     rejectedRefreshToken = refreshToken;
-    logoutUser();
+    logoutUser(undefined, `Token refresh request failed: ${err?.message || "unknown error"}`);
     return Promise.reject(error);
   }
 }

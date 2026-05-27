@@ -90,7 +90,6 @@ async function refreshAccessToken(
 
     return { success: true, accessToken: sessionToken, expiresIn: maxAge };
   } catch (error) {
-    console.error("Error refreshing token on server:", error);
     return { success: false, reason: "server_error" };
   }
 }

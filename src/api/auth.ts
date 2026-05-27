@@ -39,6 +39,9 @@ async function persistAuthSession(body: LoginResponse["data"]) {
     body.expires_in,
   );
   setAccessTokenExpiry(body.expires_in);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("has_refresh_token", "true");
+  }
 
   const userType = body.user.user_type ?? "admin";
   setToken(siteConfig.cookieNames.user_type, userType);

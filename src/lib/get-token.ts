@@ -39,8 +39,8 @@ export function getRefreshToken() {
   if (typeof window === "undefined") return null;
   const actualToken = cookies.get(siteConfig.cookieNames.refresh_token);
   if (actualToken) return actualToken;
-  const hasToken = cookies.get("has_refresh_token");
-  if (hasToken === "true") return "true";
+  const hasToken = cookies.get("has_refresh_token") || localStorage.getItem("has_refresh_token");
+  if (hasToken === "true" || hasToken === true) return "true";
   return null;
 }
 
@@ -90,15 +90,21 @@ export function clearAuthCookies() {
   removeToken(siteConfig.cookieNames.trainer_id);
   if (typeof window !== "undefined") {
     sessionStorage.removeItem(ACCESS_TOKEN_EXPIRY_KEY);
+    localStorage.removeItem("has_refresh_token");
   }
 }
 
-export function logoutUser(loginPath?: string) {
+export function logoutUser(loginPath?: string, reason?: string) {
   const userType = getCookie(siteConfig.cookieNames.user_type);
   const resolvedPath =
     loginPath ??
     (userType === "trainer" ? TRAINER_LOGIN_PATH : "/admin/login");
 
+  if (reason && typeof window !== "undefined") {
+    if (!localStorage.getItem("logout_reason")) {
+      localStorage.setItem("logout_reason", reason);
+    }
+  }
   clearAuthCookies();
   if (typeof window === "undefined") return;
   window.location.replace(resolvedPath);
