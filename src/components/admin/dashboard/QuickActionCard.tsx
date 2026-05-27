@@ -15,8 +15,8 @@ interface QuickAction {
 
 const ACTIONS: QuickAction[] = [
   { label: 'Add Trainer', href: '/admin/trainers/new', icon: Dumbbell },
-  { label: 'View Clients', href: '/admin/clients', icon: Users },
-  { label: 'Broadcast', href: '/admin/broadcast', icon: Megaphone },
+  { label: 'View Clients', href: '/admin/users', icon: Users },
+  { label: 'Broadcast', href: '/admin/media', icon: Megaphone },
   { label: 'Reports', href: '/admin/analytics', icon: LineChart },
 ];
 
