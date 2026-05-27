@@ -1,5 +1,4 @@
 export { default as GoogleLogo } from './google-logo'
-export { default as CodeIcon } from './code-icon'
 export { default as DashboardIcon } from './dashboard-icon'
 export { default as TrainersIcon } from './trainers-icon'
 export { default as ClientsIcon } from './clients-icon'
