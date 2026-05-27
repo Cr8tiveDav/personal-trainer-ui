@@ -15,13 +15,11 @@ import type {
   BackendTrainerResponse,
   CreateTrainerResponse,
   TrainerDetailResponse,
-  TrainersListMeta,
   TrainersListResponse,
   UpdateTrainerPayload,
   UpdateTrainerResponse,
 } from './types/trainers';
 import type {
-  Trainer,
   TrainerResponse,
 } from '@/components/admin/trainers/types';
 import { buildCreateTrainerFormData } from '@/lib/trainers/build-create-trainer-form-data';
@@ -37,12 +35,7 @@ export type AdminTrainersFilters = {
   searchQuery?: string;
 };
 
-const DEFAULT_META: TrainersListMeta = {
-  page: 1,
-  per_page: 10,
-  total_pages: 1,
-  total_count: 0,
-};
+
 
 export const trainerQueryKeys = {
   all: ['admin-trainers'] as const,
@@ -63,30 +56,6 @@ function isBackendTrainer(value: unknown): value is BackendTrainerResponse {
   return typeof row.id === 'string';
 }
 
-function normalizeTrainersList(response: TrainersListResponse): {
-  trainers: Trainer[];
-  meta: TrainersListMeta;
-} {
-  const rows = Array.isArray(response.data) ? response.data : [];
-  const meta = response.meta ?? DEFAULT_META;
-
-  const perPage = meta.per_page ?? 10;
-  const totalCount = meta.total_count ?? rows.length;
-  const totalPages =
-    meta.total_pages ??
-    (totalCount > 0 ? Math.max(1, Math.ceil(totalCount / perPage)) : 0);
-
-  return {
-    trainers: rows.filter(isBackendTrainer).map(mapBackendToFrontend),
-    meta: {
-      page: meta.page ?? 1,
-      per_page: perPage,
-      total_pages: totalPages,
-      total_count: totalCount,
-      next: meta.next,
-    },
-  };
-}
 
 export function useAdminTrainers(
   page: number,

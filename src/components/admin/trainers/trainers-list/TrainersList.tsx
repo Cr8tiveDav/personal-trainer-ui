@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { TabType } from "../types";
 import FilterControls from "./filters/FilterControls";
 import TrainerTable from "./table/TrainerTable";
@@ -24,7 +24,7 @@ const TrainersList = () => {
   const { data, isLoading, isError, isFetching } = useAdminTrainers(
     page,
     PER_PAGE,
-    { onboardingStatus },
+    { onboardingStatus, searchQuery },
   );
 
   const hasListData = data !== undefined;
@@ -32,25 +32,9 @@ const TrainersList = () => {
   const trainers = data?.trainers ?? [];
   const metaTotalCount = data?.meta?.total_count ?? 0;
 
-  const filteredTrainers = useMemo(() => {
-    const list = trainers;
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return list;
+  const listTotalCount = metaTotalCount;
 
-    return list.filter((trainer) => {
-      const name = (trainer.name ?? "").toLowerCase();
-      const email = (trainer.email ?? "").toLowerCase();
-      return name.includes(query) || email.includes(query);
-    });
-  }, [trainers, searchQuery]);
-
-  const listTotalCount = searchQuery.trim()
-    ? filteredTrainers.length
-    : metaTotalCount;
-
-  const totalPages = searchQuery.trim()
-    ? Math.max(1, Math.ceil(filteredTrainers.length / PER_PAGE))
-    : data?.meta?.total_pages ?? 1;
+  const totalPages = data?.meta?.total_pages ?? 1;
 
   const displayPage = listTotalCount === 0 ? 1 : Math.min(page, totalPages);
 
@@ -82,7 +66,7 @@ const TrainersList = () => {
       </div>
 
       <TrainerTable
-        trainers={filteredTrainers}
+        trainers={trainers}
         isLoading={showSkeleton || countsLoading}
         isFetching={isFetching && !showSkeleton}
         isError={isError}

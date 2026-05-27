@@ -36,7 +36,6 @@ async function persistAuthSession(body: LoginResponse["data"]) {
   await loginSessionAction(
     body.access_token,
     body.refresh_token,
-    body.expires_in,
   );
   setAccessTokenExpiry(body.expires_in);
   if (typeof window !== "undefined") {

@@ -89,7 +89,7 @@ async function refreshAccessToken(
     }
 
     return { success: true, accessToken: sessionToken, expiresIn: maxAge };
-  } catch (error) {
+  } catch {
     return { success: false, reason: "server_error" };
   }
 }

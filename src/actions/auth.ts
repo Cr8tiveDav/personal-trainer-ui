@@ -16,8 +16,7 @@ export async function refreshSessionAction(): Promise<RefreshActionResult> {
  */
 export async function loginSessionAction(
   accessToken: string,
-  refreshToken: string,
-  expiresIn: number
+  refreshToken: string
 ): Promise<void> {
   const cookieStore = await cookies();
 

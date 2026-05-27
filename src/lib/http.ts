@@ -86,10 +86,7 @@ function shouldProactivelyRefresh(accessToken: string | null): boolean {
   return hasJwtExp(accessToken) && isJwtExpired(accessToken, 30_000);
 }
 
-function coalescedRefresh(
-  refreshToken: string,
-  accessToken: string | null,
-): Promise<string | null> {
+function coalescedRefresh(): Promise<string | null> {
   refreshPromise ??= refreshSessionAction()
     .then((result) => {
       if (result && result.success) {
@@ -151,7 +148,6 @@ function retryWithLatestTokens(
 
 async function refreshSession(
   refreshToken: string,
-  accessToken: string | null,
 ): Promise<string | null> {
   const currentRefreshToken = getRefreshToken();
   if (
@@ -164,7 +160,7 @@ async function refreshSession(
     if (currentAccessToken) return currentAccessToken;
   }
 
-  return coalescedRefresh(refreshToken, accessToken);
+  return coalescedRefresh();
 }
 
 /** Returns a valid access token, refreshing silently when expired. */
@@ -178,7 +174,7 @@ export async function ensureValidAccessToken(): Promise<string | null> {
 
   try {
     if (refreshPromise) return refreshPromise;
-    return await refreshSession(refreshToken, accessToken);
+    return await refreshSession(refreshToken);
   } catch {
     return accessToken;
   }
@@ -218,18 +214,19 @@ async function handleUnauthorized(
       }
       setAuthHeader(originalRequest, newToken);
       return getApi()(originalRequest);
-    } catch (err: any) {
-      if (err?.message === "server_error") {
+    } catch (err) {
+      const errorMsg = (err as Error | null)?.message || "unknown error";
+      if (errorMsg === "server_error") {
         return Promise.reject(error);
       }
       rejectedRefreshToken = refreshToken;
-      logoutUser(undefined, `Concurrent session refresh failed: ${err?.message || "unknown error"}`);
+      logoutUser(undefined, `Concurrent session refresh failed: ${errorMsg}`);
       return Promise.reject(error);
     }
   }
 
   try {
-    const newToken = await refreshSession(refreshToken, accessToken);
+    const newToken = await refreshSession(refreshToken);
     if (!newToken) {
       rejectedRefreshToken = refreshToken;
       logoutUser(undefined, "Token refresh request returned no token");
@@ -237,12 +234,13 @@ async function handleUnauthorized(
     }
     setAuthHeader(originalRequest, newToken);
     return getApi()(originalRequest);
-  } catch (err: any) {
-    if (err?.message === "server_error") {
+  } catch (err) {
+    const errorMsg = (err as Error | null)?.message || "unknown error";
+    if (errorMsg === "server_error") {
       return Promise.reject(error);
     }
     rejectedRefreshToken = refreshToken;
-    logoutUser(undefined, `Token refresh request failed: ${err?.message || "unknown error"}`);
+    logoutUser(undefined, `Token refresh request failed: ${errorMsg}`);
     return Promise.reject(error);
   }
 }
