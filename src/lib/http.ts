@@ -17,8 +17,10 @@ import {
   invalidateAccessTokenCache,
   isAccessTokenExpired,
   logoutUser,
+  setToken,
 } from "./get-token";
-import { refreshAccessTokenClient } from "./refresh-access-token";
+import { refreshSessionAction } from "@/actions/auth";
+import { siteConfig } from "@/config/site";
 
 export type ErrorData = {
   message: string;
@@ -81,18 +83,36 @@ function isRefreshTokenUsable(refreshToken: string): boolean {
 function shouldProactivelyRefresh(accessToken: string | null): boolean {
   if (!accessToken) return true;
   if (isAccessTokenExpired()) return true;
-  if (hasJwtExp(accessToken) && isJwtExpired(accessToken, 30_000)) return true;
-  return false;
+  return hasJwtExp(accessToken) && isJwtExpired(accessToken, 30_000);
 }
 
-function coalescedRefresh(
-  refreshToken: string,
-  accessToken: string | null,
-): Promise<string | null> {
-  refreshPromise ??= refreshAccessTokenClient(refreshToken, accessToken)
-    .then((token) => {
-      if (token) rejectedRefreshToken = null;
-      return token;
+function coalescedRefresh(): Promise<string | null> {
+  refreshPromise ??= refreshSessionAction()
+    .then((result) => {
+      if (result && result.success) {
+        rejectedRefreshToken = null;
+        setToken(
+          siteConfig.cookieNames.access_token,
+          result.accessToken,
+          result.expiresIn,
+        );
+        if (typeof window !== "undefined") {
+          localStorage.setItem("has_refresh_token", "true");
+        }
+        return result.accessToken;
+      }
+
+      if (result && result.reason === "server_error") {
+        throw new Error("server_error");
+      }
+
+      return null;
+    })
+    .catch((err) => {
+      if (err.message === "server_error") {
+        throw err;
+      }
+      throw new Error("server_error");
     })
     .finally(() => {
       refreshPromise = null;
@@ -128,7 +148,6 @@ function retryWithLatestTokens(
 
 async function refreshSession(
   refreshToken: string,
-  accessToken: string | null,
 ): Promise<string | null> {
   const currentRefreshToken = getRefreshToken();
   if (
@@ -141,7 +160,7 @@ async function refreshSession(
     if (currentAccessToken) return currentAccessToken;
   }
 
-  return coalescedRefresh(refreshToken, accessToken);
+  return coalescedRefresh();
 }
 
 /** Returns a valid access token, refreshing silently when expired. */
@@ -155,7 +174,7 @@ export async function ensureValidAccessToken(): Promise<string | null> {
 
   try {
     if (refreshPromise) return refreshPromise;
-    return await refreshSession(refreshToken, accessToken);
+    return await refreshSession(refreshToken);
   } catch {
     return accessToken;
   }
@@ -169,13 +188,13 @@ async function handleUnauthorized(
   const accessToken = getToken();
 
   if (!refreshToken) {
-    if (accessToken) logoutUser();
+    if (accessToken) logoutUser(undefined, "No refresh token cookie available");
     return Promise.reject(error);
   }
 
   if (!isRefreshTokenUsable(refreshToken)) {
     rejectedRefreshToken = refreshToken;
-    logoutUser();
+    logoutUser(undefined, "Refresh token is invalid, expired, or already used");
     return Promise.reject(error);
   }
 
@@ -190,30 +209,38 @@ async function handleUnauthorized(
       const newToken = await refreshPromise;
       if (!newToken) {
         rejectedRefreshToken = refreshToken;
-        logoutUser();
+        logoutUser(undefined, "Concurrent session refresh returned no token");
         return Promise.reject(error);
       }
       setAuthHeader(originalRequest, newToken);
       return getApi()(originalRequest);
-    } catch {
+    } catch (err) {
+      const errorMsg = (err as Error | null)?.message || "unknown error";
+      if (errorMsg === "server_error") {
+        return Promise.reject(error);
+      }
       rejectedRefreshToken = refreshToken;
-      logoutUser();
+      logoutUser(undefined, `Concurrent session refresh failed: ${errorMsg}`);
       return Promise.reject(error);
     }
   }
 
   try {
-    const newToken = await refreshSession(refreshToken, accessToken);
+    const newToken = await refreshSession(refreshToken);
     if (!newToken) {
       rejectedRefreshToken = refreshToken;
-      logoutUser();
+      logoutUser(undefined, "Token refresh request returned no token");
       return Promise.reject(error);
     }
     setAuthHeader(originalRequest, newToken);
     return getApi()(originalRequest);
-  } catch {
+  } catch (err) {
+    const errorMsg = (err as Error | null)?.message || "unknown error";
+    if (errorMsg === "server_error") {
+      return Promise.reject(error);
+    }
     rejectedRefreshToken = refreshToken;
-    logoutUser();
+    logoutUser(undefined, `Token refresh request failed: ${errorMsg}`);
     return Promise.reject(error);
   }
 }

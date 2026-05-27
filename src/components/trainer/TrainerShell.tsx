@@ -24,7 +24,7 @@ export function TrainerShell({
   const isDashboard = pathname === "/trainer/dashboard";
 
   return (
-    <div className="flex h-screen w-full overflow-hidden bg-[#f4f5f7]">
+    <div className="fixed inset-0 flex overflow-hidden bg-[#f4f5f7]">
       <TrainerSidebar
         userName={userName}
         userEmail={userEmail}
