@@ -22,7 +22,7 @@ export function AdminShell({
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className='flex h-dvh w-full overflow-hidden bg-gray-50'>
+    <div className='fixed inset-0 flex overflow-hidden bg-gray-50'>
       <Sidebar
         userName={userName}
         userEmail={userEmail}

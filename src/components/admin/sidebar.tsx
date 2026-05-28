@@ -3,15 +3,10 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import {
-  Users,
-  Hourglass,
   Settings,
   ChevronRight,
-  Dumbbell,
-  CreditCard,
   LineChart,
   X,
-  Menu,
   Video,
   PhoneCall,
 } from 'lucide-react'
@@ -23,8 +18,6 @@ import {
   ClientsIcon,
   SessionIcon,
   PaymentIcon,
-  AnalyticsIcon,
-  SettingsIcon,
 } from '@/components/icons'
 
 const NAV_SECTIONS = [
