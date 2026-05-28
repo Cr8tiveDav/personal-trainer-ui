@@ -33,7 +33,7 @@ export function AddTrainerStepper({ currentStep }: StepperProps) {
         const isActive = currentStep === step.number
 
         return (
-          <div key={step.number} className='flex items-center flex-1'>
+          <div key={step.number} className={cn('flex items-center', index < STEPS.length - 1 ? 'flex-1' : 'flex-none')}>
             <div className='flex items-center gap-3'>
               <motion.div
                 layout

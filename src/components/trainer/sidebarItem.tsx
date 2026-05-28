@@ -10,6 +10,7 @@ interface TrainerSidebarItemProps {
   href: string;
   icon: LucideIcon;
   collapsed?: boolean;
+  onClick?: () => void;
 }
 
 export function TrainerSidebarItem({
@@ -17,6 +18,7 @@ export function TrainerSidebarItem({
   href,
   icon: Icon,
   collapsed,
+  onClick,
 }: TrainerSidebarItemProps) {
   const pathname = usePathname();
   const isActive =
@@ -26,6 +28,7 @@ export function TrainerSidebarItem({
   return (
     <Link
       href={href}
+      onClick={onClick}
       title={collapsed ? label : undefined}
       className={cn(
         "flex items-center gap-3 rounded-[8px] px-3 py-2 text-sm font-medium transition-colors",

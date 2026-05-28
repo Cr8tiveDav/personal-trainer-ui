@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { X, Menu } from 'lucide-react'
 
@@ -11,16 +12,20 @@ import { cn } from '@/lib/utils'
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+  const [prevPath, setPrevPath] = useState(pathname)
+
+  if (pathname !== prevPath) {
+    setPrevPath(pathname)
+    setOpen(false)
+  }
 
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-    }
-
-    return () => {
-      document.body.style.overflow = 'auto'
+      return () => {
+        document.body.style.overflow = 'auto'
+      }
     }
   }, [open])
 
@@ -35,7 +40,7 @@ export default function MobileNav() {
 
       <div
         className={cn(
-          "fixed inset-0 z-90 bg-black/50 backdrop-blur-sm transition-opacity duration-300",
+          "fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm transition-opacity duration-300",
           open ? "opacity-100 visible" : "opacity-0 invisible"
         )}
         onClick={() => setOpen(false)}
@@ -43,12 +48,14 @@ export default function MobileNav() {
 
       <aside
         className={cn(
-          "fixed right-0 top-0 z-100 flex h-screen w-[85%] max-w-sm flex-col bg-white shadow-2xl transition-transform duration-500 ease-out",
+          "fixed right-0 top-0 z-[100] flex h-screen w-[85%] max-w-sm flex-col bg-white shadow-2xl transition-transform duration-500 ease-out",
           open ? "translate-x-0" : "translate-x-full"
         )}
       >
         <div className="flex items-center justify-between border-b border-secondary px-6 py-5">
-          <Logo />
+          <div onClick={() => setOpen(false)} className="flex">
+            <Logo />
+          </div>
 
           <button
             onClick={() => setOpen(false)}

@@ -1,14 +1,14 @@
-import { DashboardGreeting } from '@/components/admin/dashboard/DashboardGreeting'
-import { LatestPayment } from '@/components/admin/dashboard/LatestPatment'
-import { QuickActions } from '@/components/admin/dashboard/QuickActionCard'
-import { RecentActivity } from '@/components/admin/dashboard/RecentActivity'
-import { RevenueSnapshot } from '@/components/admin/dashboard/RevenueSnapShot'
-import { StatCardsSection } from '@/components/admin/dashboard/StatSection'
-import { TopTrainers } from '@/components/admin/dashboard/TopTrainers/TopTrainers'
+import { DashboardGreeting } from '@/components/admin/dashboard/DashboardGreeting';
+import { LatestPayment } from '@/components/admin/dashboard/LatestPatment';
+import { QuickActions } from '@/components/admin/dashboard/QuickActionCard';
+import { RecentActivity } from '@/components/admin/dashboard/RecentActivity';
+import { RevenueSnapshot } from '@/components/admin/dashboard/RevenueSnapShot';
+import { StatCardsSection } from '@/components/admin/dashboard/StatSection';
+import { TopTrainers } from '@/components/admin/dashboard/TopTrainers/TopTrainers';
 
 export default function AdminDashboardPage() {
   return (
-    <div className='w-full space-y-6 px-4 pb-6 lg:px-10'>
+    <div className='w-full space-y-6 md:px-4 pb-6 lg:px-10'>
       <DashboardGreeting />
       <StatCardsSection />
 
@@ -31,5 +31,5 @@ export default function AdminDashboardPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

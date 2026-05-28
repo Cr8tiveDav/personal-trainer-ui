@@ -10,62 +10,16 @@ export const categories = [
   'Mind & Body',
 ] as const
 
-export type Category = (typeof categories)[number]
+export type Category = string
 
 export type Trainer = {
+  id?: string
   name: string
   sessions: number
   specialties: string[]
-  image: string
+  image?: string | null
   rating?: number
   categories: Category[]
 }
 
-export const trainers: Trainer[] = [
-  {
-    name: 'Tobi Adeyemi',
-    sessions: 48,
-    specialties: ['Strength', 'Mobility & Recovery'],
-    image: '/images/landing-page/tra1.jpg',
-    categories: ['Strength', 'Mobility & Recovery'],
-  },
-  {
-    name: 'John Mathew',
-    sessions: 136,
-    specialties: ['Strength', 'Mobility & Recovery'],
-    image: '/images/landing-page/tra2.png',
-    categories: ['Strength', 'Strength & Conditioning'],
-  },
-  {
-    name: 'Israel Dennis',
-    sessions: 82,
-    specialties: ['Strength', 'Yoga & Flexibility'],
-    image: '/images/landing-page/tra3.jpg',
-    categories: ['Strength', 'Yoga & Flexibility'],
-  },
-  {
-    name: 'Ayobami Gabriel',
-    sessions: 64,
-    specialties: [
-      'Pilates & Core',
-      'Mobility & Recovery',
-      'Yoga & Flexibility',
-    ],
-    image: '/images/landing-page/tra4.jpg',
-    categories: ['Pilates & Core', 'Mobility & Recovery', 'Yoga & Flexibility'],
-  },
-  {
-    name: 'Bakare Samuel',
-    sessions: 210,
-    specialties: ['Strength', 'Mobility & Recovery'],
-    image: '/images/landing-page/tra5.jpg',
-    categories: ['Strength', 'Mobility & Recovery'],
-  },
-  {
-    name: 'James Gray',
-    sessions: 95,
-    specialties: ['Strength', 'Mobility & Recovery'],
-    image: '/images/landing-page/tra6.jpg',
-    categories: ['Strength', 'Mobility & Recovery'],
-  },
-]
+

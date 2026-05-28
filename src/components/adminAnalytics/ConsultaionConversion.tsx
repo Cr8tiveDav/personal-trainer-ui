@@ -27,8 +27,8 @@ export function ConsultationConversion() {
       <h2 className='text-xl font-bold text-foreground'>Consultation Conversion</h2>
       <p className='mt-1 text-sm text-muted'>Track how consultations turn into paid users.</p>
 
-      <div className='mt-6 flex items-center gap-6'>
-        <div className='flex-1'>
+      <div className='mt-6 flex flex-col md:flex-row items-center gap-6'>
+        <div className='w-full md:flex-1'>
           <ResponsiveContainer width='100%' height={250}>
             <FunnelChart>
               <Tooltip
@@ -48,7 +48,7 @@ export function ConsultationConversion() {
           </ResponsiveContainer>
         </div>
 
-        <div className='bg-gray-100 md:max-w-[200px] rounded-[6px] flex flex-col gap-10 p-3'>
+        <div className='w-full md:max-w-[200px] bg-gray-100 rounded-[6px] flex flex-col gap-10 p-3'>
           <div>
             <p className='text-3xl font-bold text-foreground'>{stats.conversion_rate}%</p>
             <p className='text-sm  text-muted-foreground'>Conversation rate</p>
