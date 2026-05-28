@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import {
   Select,
   SelectContent,
@@ -57,35 +56,21 @@ export function PhoneInputField({
   disabled,
   name,
 }: PhoneInputProps) {
-  const parsed = parseE164(value)
-  const [dialCode, setDialCode] = useState(parsed.dialCode)
-  const [local, setLocal] = useState(parsed.local)
-
-  // Sync internal state when parent passes a new value (e.g. back navigation restoring data)
-  useEffect(() => {
-    const { dialCode: newDial, local: newLocal } = parseE164(value)
-    setDialCode(newDial)
-    setLocal(newLocal)
-  }, [value])
-
+  // Fully controlled — derive display values directly from value prop.
+  // This ensures back navigation and form resets always reflect current state.
+  const { dialCode, local } = parseE164(value)
   const selected = COUNTRIES.find((c) => c.dial === dialCode) ?? COUNTRIES[0]
-
-  const emit = (newDial: string, newLocal: string) => {
-    const digits = newLocal.replace(/\D/g, '')
-    onChange(digits ? `+${newDial}${digits}` : '')
-  }
 
   const handleDialChange = (code: string) => {
     const country = COUNTRIES.find((c) => c.code === code)
     if (!country) return
-    setDialCode(country.dial)
-    emit(country.dial, local)
+    const digits = local.replace(/\D/g, '')
+    onChange(digits ? `+${country.dial}${digits}` : '')
   }
 
   const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const digits = e.target.value.replace(/\D/g, '')
-    setLocal(digits)
-    emit(dialCode, digits)
+    onChange(digits ? `+${dialCode}${digits}` : '')
   }
 
   return (
