@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Mail } from 'lucide-react'
+import { ArrowLeft, Mail } from 'lucide-react'
 import { cn } from '@/utils'
 import { BasicInfoValues } from '../step1/page'
 
@@ -10,6 +10,7 @@ interface Step3Props {
   hasImage: boolean
   isSubmitting: boolean
   onSubmit: () => void
+  onBack: () => void
 }
 
 export function Step3ReviewAndCreate({
@@ -17,6 +18,7 @@ export function Step3ReviewAndCreate({
   hasImage,
   isSubmitting,
   onSubmit,
+  onBack,
 }: Step3Props) {
   return (
     <div className='rounded-[8px] bg-white p-6'>
@@ -69,7 +71,16 @@ export function Step3ReviewAndCreate({
         </div>
       </div>
 
-      <div className='flex justify-end'>
+      <div className='flex justify-between'>
+        <Button
+          type='button'
+          variant='outline'
+          onClick={onBack}
+          disabled={isSubmitting}
+          className='flex items-center gap-2'
+        >
+          <ArrowLeft className='h-4 w-4' /> Back
+        </Button>
         <Button
           type='button'
           onClick={onSubmit}
