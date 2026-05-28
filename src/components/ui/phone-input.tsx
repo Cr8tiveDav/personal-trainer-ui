@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Select,
   SelectContent,
@@ -60,6 +60,13 @@ export function PhoneInputField({
   const parsed = parseE164(value)
   const [dialCode, setDialCode] = useState(parsed.dialCode)
   const [local, setLocal] = useState(parsed.local)
+
+  // Sync internal state when parent passes a new value (e.g. back navigation restoring data)
+  useEffect(() => {
+    const { dialCode: newDial, local: newLocal } = parseE164(value)
+    setDialCode(newDial)
+    setLocal(newLocal)
+  }, [value])
 
   const selected = COUNTRIES.find((c) => c.dial === dialCode) ?? COUNTRIES[0]
 
