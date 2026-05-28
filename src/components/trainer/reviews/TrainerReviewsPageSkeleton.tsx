@@ -8,7 +8,7 @@ export function TrainerReviewsPageSkeleton() {
       <Skeleton className='h-7 w-28' />
       <div className='space-y-3'>
         {Array.from({ length: 4 }).map((_, i) => (
-          <Skeleton key={i} className='h-28 w-full rounded-xl' />
+          <Skeleton key={i} className='h-28 w-full rounded-[12px]' />
         ))}
       </div>
     </div>

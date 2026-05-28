@@ -17,7 +17,7 @@ const Hero = () => {
           />
         </div>
 
-        <div className="relative mx-auto mt-10 w-full max-w-6xl overflow-hidden rounded-2xl shadow-sm md:rounded-[2.5rem]">
+        <div className="relative mx-auto mt-10 w-full max-w-6xl overflow-hidden rounded-[16px] shadow-sm md:rounded-[2.5rem]">
           <Image
             src="/images/about-us/about.png"
             alt="FitCall team and mission"

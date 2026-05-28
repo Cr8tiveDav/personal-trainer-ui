@@ -78,7 +78,7 @@ function EditAvailabilityDayModalForm({
       </DialogHeader>
 
       <form onSubmit={handleSubmit} className='space-y-5'>
-        <div className='flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50/80 px-4 py-3'>
+        <div className='flex items-center justify-between rounded-[8px] border border-gray-100 bg-gray-50/80 px-4 py-3'>
           <div>
             <p className='text-sm font-medium text-gray-900'>Available this day</p>
             <p className='text-xs text-gray-500 mt-0.5'>
@@ -91,13 +91,13 @@ function EditAvailabilityDayModalForm({
             aria-checked={enabled}
             onClick={() => setEnabled((v) => !v)}
             className={cn(
-              'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors',
+              'relative inline-flex h-6 w-11 shrink-0 items-center rounded-[9999px] transition-colors',
               enabled ? 'bg-[#0b4d8d]' : 'bg-gray-200',
             )}
           >
             <span
               className={cn(
-                'inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform',
+                'inline-block h-4 w-4 transform rounded-[9999px] bg-white shadow transition-transform',
                 enabled ? 'translate-x-6' : 'translate-x-1',
               )}
             />

@@ -33,8 +33,8 @@ function DiscoverySlotsTableSkeleton() {
           </td>
           <td className='px-6 py-4'>
             <div className='flex justify-end gap-2'>
-              <Skeleton className='h-8 w-8 rounded-md' />
-              <Skeleton className='h-8 w-8 rounded-md' />
+              <Skeleton className='h-8 w-8 rounded-[6px]' />
+              <Skeleton className='h-8 w-8 rounded-[6px]' />
             </div>
           </td>
         </motion.tr>
@@ -52,7 +52,7 @@ export function DiscoverySlotsPageSkeleton() {
         <Skeleton className='mt-1.5 h-4 w-full max-w-xl' />
       </div>
 
-      <div className='overflow-hidden rounded-xl border border-gray-100 bg-white'>
+      <div className='overflow-hidden rounded-[12px] border border-gray-100 bg-white'>
         <div className='flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-6 py-4'>
           <div className='space-y-2'>
             <Skeleton className='h-4 w-20' />
@@ -64,18 +64,18 @@ export function DiscoverySlotsPageSkeleton() {
           <Skeleton className='mb-3 h-3 w-20' />
           <div className='mb-6 flex flex-wrap gap-2'>
             {Array.from({ length: DAY_PILL_COUNT }).map((_, i) => (
-              <Skeleton key={i} className='h-11 w-[72px] rounded-lg' />
+              <Skeleton key={i} className='h-11 w-[72px] rounded-[8px]' />
             ))}
           </div>
 
           <div className='mb-6 grid max-w-xl grid-cols-1 gap-5 sm:grid-cols-2'>
             <div className='space-y-2'>
               <Skeleton className='h-4 w-10' />
-              <Skeleton className='h-10 w-full rounded-lg' />
+              <Skeleton className='h-10 w-full rounded-[8px]' />
             </div>
             <div className='space-y-2'>
               <Skeleton className='h-4 w-12' />
-              <Skeleton className='h-10 w-full rounded-lg' />
+              <Skeleton className='h-10 w-full rounded-[8px]' />
             </div>
           </div>
 
@@ -85,12 +85,12 @@ export function DiscoverySlotsPageSkeleton() {
           </div>
 
           <div className='flex justify-end'>
-            <Skeleton className='h-10 w-[140px] rounded-lg' />
+            <Skeleton className='h-10 w-[140px] rounded-[8px]' />
           </div>
         </div>
       </div>
 
-      <div className='overflow-hidden rounded-xl border border-gray-100 bg-white'>
+      <div className='overflow-hidden rounded-[12px] border border-gray-100 bg-white'>
         <div className='border-b border-gray-100 px-6 py-4 space-y-2'>
           <Skeleton className='h-4 w-32' />
           <Skeleton className='h-3 w-40' />

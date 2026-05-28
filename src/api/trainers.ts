@@ -15,12 +15,13 @@ import type {
   BackendTrainerResponse,
   CreateTrainerResponse,
   TrainerDetailResponse,
-  TrainersListMeta,
   TrainersListResponse,
   UpdateTrainerPayload,
   UpdateTrainerResponse,
 } from './types/trainers';
-import type { Trainer, TrainerResponse } from '@/components/admin/trainers/types';
+import type {
+  TrainerResponse,
+} from '@/components/admin/trainers/types';
 import { buildCreateTrainerFormData } from '@/lib/trainers/build-create-trainer-form-data';
 import type { CreateTrainerFormInput } from '@/lib/trainers/build-create-trainer-form-data';
 import {
@@ -31,19 +32,19 @@ import { mapBackendToFrontend } from '@/lib/trainers/map-trainer';
 
 export type AdminTrainersFilters = {
   onboardingStatus?: string;
+  searchQuery?: string;
 };
 
-const DEFAULT_META: TrainersListMeta = {
-  page: 1,
-  per_page: 10,
-  total_pages: 1,
-  total_count: 0,
-};
+
 
 export const trainerQueryKeys = {
   all: ['admin-trainers'] as const,
-  list: (page: number, perPage: number, onboardingStatus?: string) =>
-    ['admin-trainers', page, perPage, onboardingStatus] as const,
+  list: (
+    page: number,
+    perPage: number,
+    onboardingStatus?: string,
+    searchQuery?: string,
+  ) => ['admin-trainers', page, perPage, onboardingStatus, searchQuery] as const,
   summary: (onboardingStatus?: string) =>
     ['admin-trainers', 'summary', onboardingStatus] as const,
   detail: (id: string) => ['trainer', id] as const,
@@ -55,30 +56,6 @@ function isBackendTrainer(value: unknown): value is BackendTrainerResponse {
   return typeof row.id === 'string';
 }
 
-function normalizeTrainersList(response: TrainersListResponse): {
-  trainers: Trainer[];
-  meta: TrainersListMeta;
-} {
-  const rows = Array.isArray(response.data) ? response.data : [];
-  const meta = response.meta ?? DEFAULT_META;
-
-  const perPage = meta.per_page ?? 10;
-  const totalCount = meta.total_count ?? rows.length;
-  const totalPages =
-    meta.total_pages ??
-    (totalCount > 0 ? Math.max(1, Math.ceil(totalCount / perPage)) : 0);
-
-  return {
-    trainers: rows.filter(isBackendTrainer).map(mapBackendToFrontend),
-    meta: {
-      page: meta.page ?? 1,
-      per_page: perPage,
-      total_pages: totalPages,
-      total_count: totalCount,
-      next: meta.next,
-    },
-  };
-}
 
 export function useAdminTrainers(
   page: number,
@@ -87,23 +64,56 @@ export function useAdminTrainers(
   options?: { enabled?: boolean },
 ) {
   const onboardingStatus = filters?.onboardingStatus;
+  const searchQuery = filters?.searchQuery;
 
   return useQuery({
-    queryKey: trainerQueryKeys.list(page, perPage, onboardingStatus),
+    queryKey: trainerQueryKeys.list(page, perPage, onboardingStatus, searchQuery),
     enabled: options?.enabled ?? true,
     placeholderData: (previousData) => previousData,
     queryFn: async () => {
-      const params = new URLSearchParams({
-        page: String(page),
-        per_page: String(perPage),
-      });
-      if (onboardingStatus) {
-        params.set('onboarding_status', onboardingStatus);
-      }
       const response = await getRequest<TrainersListResponse>({
-        url: `${API_ENDPOINTS.TRAINERS.LIST}?${params.toString()}`,
+        url: `${API_ENDPOINTS.TRAINERS.LIST}?limit=100`,
       });
-      return normalizeTrainersList(response);
+      const allTrainers = Array.isArray(response.data) ? response.data : [];
+
+      // Filter based on onboardingStatus and searchQuery
+      const filtered = allTrainers.filter((t) => {
+        if (onboardingStatus) {
+          const status = t.onboarding_status?.toLowerCase();
+          if (onboardingStatus === 'approved') {
+            if (status !== 'approved' && status !== 'active') return false;
+          } else {
+            if (status !== onboardingStatus) return false;
+          }
+        }
+
+        if (searchQuery) {
+          const query = searchQuery.trim().toLowerCase();
+          const name = (t.name ?? '').toLowerCase();
+          const email = (t.email ?? '').toLowerCase();
+          if (!name.includes(query) && !email.includes(query)) return false;
+        }
+
+        return true;
+      });
+
+      // Paginate locally
+      const start = (page - 1) * perPage;
+      const end = start + perPage;
+      const paginatedTrainers = filtered
+        .slice(start, end)
+        .filter(isBackendTrainer)
+        .map(mapBackendToFrontend);
+
+      return {
+        trainers: paginatedTrainers,
+        meta: {
+          page,
+          per_page: perPage,
+          total_pages: Math.ceil(filtered.length / perPage),
+          total_count: filtered.length,
+        },
+      };
     },
     staleTime: 60_000,
   });
@@ -113,40 +123,54 @@ export function useAdminTrainersSummary(onboardingStatus?: string) {
   return useQuery({
     queryKey: trainerQueryKeys.summary(onboardingStatus),
     queryFn: async () => {
-      const params = new URLSearchParams({ page: '1', per_page: '1' });
-      if (onboardingStatus) {
-        params.set('onboarding_status', onboardingStatus);
-      }
       const response = await getRequest<TrainersListResponse>({
-        url: `${API_ENDPOINTS.TRAINERS.LIST}?${params.toString()}`,
+        url: `${API_ENDPOINTS.TRAINERS.LIST}?limit=100`,
       });
-      return response.meta?.total_count ?? 0;
+      const allTrainers = Array.isArray(response.data) ? response.data : [];
+
+      const filtered = allTrainers.filter((t) => {
+        if (!onboardingStatus) return true;
+        const status = t.onboarding_status?.toLowerCase();
+        if (onboardingStatus === 'approved') {
+          return status === 'approved' || status === 'active';
+        }
+        return status === onboardingStatus;
+      });
+
+      return filtered.length;
     },
     staleTime: 60_000,
   });
 }
 
 export function useTrainerStatusCounts() {
-  const all = useAdminTrainersSummary();
-  const approved = useAdminTrainersSummary('approved');
-  const pending = useAdminTrainersSummary('pending');
-  const suspended = useAdminTrainersSummary('suspended');
+  const { data, isLoading } = useQuery({
+    queryKey: ['admin-trainers-summary-counts'],
+    queryFn: async () => {
+      const response = await getRequest<TrainersListResponse>({
+        url: `${API_ENDPOINTS.TRAINERS.LIST}?limit=100`,
+      });
+      return Array.isArray(response.data) ? response.data : [];
+    },
+    staleTime: 60_000,
+  });
 
-  const isLoading =
-    all.isLoading ||
-    approved.isLoading ||
-    pending.isLoading ||
-    suspended.isLoading;
+  const trainers = data ?? [];
 
   const counts = {
-    all: all.data ?? 0,
-    active: approved.data ?? 0,
-    pending: pending.data ?? 0,
-    suspended: suspended.data ?? 0,
+    all: trainers.length,
+    active: trainers.filter((t) => {
+      const status = t.onboarding_status?.toLowerCase();
+      return status === 'active' || status === 'approved';
+    }).length,
+    pending: trainers.filter((t) => t.onboarding_status?.toLowerCase() === 'pending').length,
+    suspended: trainers.filter((t) => t.onboarding_status?.toLowerCase() === 'suspended').length,
   };
 
   return { counts, isLoading };
 }
+
+
 
 /** @deprecated Prefer useAdminTrainers for lists and useTrainerStatusCounts for tab/stats counts. */
 export function useGetTrainers() {
@@ -193,7 +217,7 @@ export function useUpdateTrainer(trainerId: string) {
 
         if (!response.data?.id) {
           throw new Error(
-            response.message || 'Trainer updated but response was invalid',
+            response.message || 'Trainer updated but response was invalid'
           );
         }
 
@@ -213,7 +237,7 @@ export function useUpdateTrainer(trainerId: string) {
       const updated = response.data?.data;
       if (!updated?.id) {
         throw new Error(
-          response.data?.message || 'Trainer updated but response was invalid',
+          response.data?.message || 'Trainer updated but response was invalid'
         );
       }
 
@@ -246,7 +270,7 @@ export function useCreateTrainer() {
 
       if (!response.data?.id) {
         throw new Error(
-          response.message || 'Trainer created but response had no id',
+          response.message || 'Trainer created but response had no id'
         );
       }
 
@@ -266,18 +290,19 @@ export function useCreateTrainer() {
 export function useResendTrainerSetup() {
   return useMutation({
     mutationFn: async (email: string) => {
-      const { data } = await postRequest<{ message?: string }, { email: string }>(
-        {
-          url: API_ENDPOINTS.TRAINERS.RESEND_SETUP,
-          payload: { email },
-        },
-      );
+      const { data } = await postRequest<
+        { message?: string },
+        { email: string }
+      >({
+        url: API_ENDPOINTS.TRAINERS.RESEND_SETUP,
+        payload: { email },
+      });
       return data;
     },
     mutationKey: ['resend-trainer-setup'],
     onSuccess(data) {
       showSuccessToast(
-        data?.message ?? 'Account setup link resent to the trainer.',
+        data?.message ?? 'Account setup link resent to the trainer.'
       );
     },
     onError(error) {
@@ -308,10 +333,12 @@ export function useDeleteTrainer() {
 export function useSetPassword() {
   return useMutation({
     mutationFn: (payload: { token: string; new_password: string }) =>
-      postRequest<{ message: string }, { token: string; new_password: string }>({
-        url: API_ENDPOINTS.TRAINERS.SET_PASSWORD,
-        payload,
-      }),
+      postRequest<{ message: string }, { token: string; new_password: string }>(
+        {
+          url: API_ENDPOINTS.TRAINERS.SET_PASSWORD,
+          payload,
+        }
+      ),
     mutationKey: ['set-password'],
   });
 }

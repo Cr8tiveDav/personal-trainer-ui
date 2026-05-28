@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { TabType } from "../types";
 import FilterControls from "./filters/FilterControls";
 import TrainerTable from "./table/TrainerTable";
@@ -20,55 +20,23 @@ const TrainersList = () => {
   const tabCounts = counts ?? defaultCounts;
 
   const onboardingStatus = getTrainerListOnboardingStatus(activeTab);
-  const listTotalWithoutSearch =
-    activeTab === "all"
-      ? tabCounts.all
-      : activeTab === "active"
-        ? tabCounts.active
-        : activeTab === "pending"
-          ? tabCounts.pending
-          : tabCounts.suspended;
-
-  const maxPage = Math.max(
-    1,
-    Math.ceil(listTotalWithoutSearch / PER_PAGE) || 1,
-  );
-  const queryPage =
-    searchQuery.trim() || listTotalWithoutSearch === 0
-      ? page
-      : Math.min(page, maxPage);
 
   const { data, isLoading, isError, isFetching } = useAdminTrainers(
-    queryPage,
+    page,
     PER_PAGE,
-    { onboardingStatus },
+    { onboardingStatus, searchQuery },
   );
 
   const hasListData = data !== undefined;
   const showSkeleton = isLoading && !hasListData;
-  const metaTotal = data?.meta?.total_count ?? 0;
+  const trainers = data?.trainers ?? [];
+  const metaTotalCount = data?.meta?.total_count ?? 0;
 
-  const filteredTrainers = useMemo(() => {
-    const trainers = data?.trainers ?? [];
-    const query = searchQuery.trim().toLowerCase();
-    if (!query) return trainers;
+  const listTotalCount = metaTotalCount;
 
-    return trainers.filter((trainer) => {
-      const name = (trainer.name ?? "").toLowerCase();
-      const email = (trainer.email ?? "").toLowerCase();
-      return name.includes(query) || email.includes(query);
-    });
-  }, [data?.trainers, searchQuery]);
+  const totalPages = data?.meta?.total_pages ?? 1;
 
-  const listTotalCount = searchQuery.trim()
-    ? filteredTrainers.length
-    : metaTotal > 0
-      ? metaTotal
-      : listTotalWithoutSearch;
-
-  const totalPages = Math.max(1, Math.ceil(listTotalCount / PER_PAGE) || 1);
-  const displayPage =
-    listTotalCount === 0 ? 1 : Math.min(queryPage, totalPages);
+  const displayPage = listTotalCount === 0 ? 1 : Math.min(page, totalPages);
 
   function handleTabChange(tab: TabType) {
     setActiveTab(tab);
@@ -86,7 +54,7 @@ const TrainersList = () => {
   }
 
   return (
-    <div className="flex flex-col rounded-3xl border border-[#CBD5E1] bg-white">
+    <div className="flex flex-col rounded-[24px] border border-[#CBD5E1] bg-white">
       <div className="py-6 px-4">
         <FilterControls
           activeTab={activeTab}
@@ -98,7 +66,7 @@ const TrainersList = () => {
       </div>
 
       <TrainerTable
-        trainers={filteredTrainers}
+        trainers={trainers}
         isLoading={showSkeleton || countsLoading}
         isFetching={isFetching && !showSkeleton}
         isError={isError}

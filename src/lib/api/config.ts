@@ -3,11 +3,15 @@
  * Example: https://api.staging.fitcall.me/api/v1
  */
 export function getApiBaseUrl(): string {
-  const base = process.env.API_URL?.replace(/\/$/, '')
+  const raw = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
+  const base = raw?.replace(/\/$/, '');
   if (!base) {
-    throw new Error('API_URL is not configured')
+    throw new Error('Neither NEXT_PUBLIC_API_URL nor API_URL is configured');
   }
-  return base
+  if (base.endsWith('/api/v1')) {
+    return base;
+  }
+  return `${base}/api/v1`;
 }
 
 export function apiUrl(path: string): string {

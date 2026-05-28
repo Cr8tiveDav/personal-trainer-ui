@@ -24,6 +24,7 @@ import {
 const STATUS_LABELS: Record<string, string> = {
   pending: 'Pending',
   approved: 'Approved',
+  rejected: 'Rejected',
   suspended: 'Suspended',
 }
 

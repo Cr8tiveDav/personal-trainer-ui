@@ -26,6 +26,7 @@ import {
   TRAINER_SPECIALIZATIONS,
   type TrainerSpecialization,
 } from "@/api/types/trainers";
+import { PhoneInputField } from "@/components/ui/phone-input";
 
 const GENDERS = ["Male", "Female", "Other"] as const;
 
@@ -43,7 +44,11 @@ const SPECIALIZATION_OPTIONS: {
 const step1Schema = z.object({
   name: z.string().trim().min(2, "Full name is required"),
   email: z.string().trim().email("Valid email is required"),
-  phone_number: z.string().trim().min(7, "Phone number is required"),
+  phone_number: z
+    .string()
+    .trim()
+    .min(1, 'Phone number is required')
+    .regex(/^\+[1-9]\d{6,14}$/, 'Enter a valid phone number'),
   gender: z.enum(GENDERS, { message: "Gender is required" }),
   specialization: z.enum(TRAINER_SPECIALIZATIONS, {
     message: "Specialty is required",
@@ -101,7 +106,7 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
   const bio = values.bio ?? "";
 
   return (
-    <div className="rounded-lg bg-white p-6">
+    <div className="rounded-[8px] bg-white p-6">
       <h2 className="text-base font-semibold text-gray-900">
         Basic information
       </h2>
@@ -167,11 +172,12 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
                     Phone number <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="e.g +234 913 140 4048"
-                      className={`login-input ${fieldState.error ? "login-input--error" : ""}`}
-                      {...field}
+                    <PhoneInputField
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      hasError={!!fieldState.error}
                     />
                   </FormControl>
                   <FormMessage />

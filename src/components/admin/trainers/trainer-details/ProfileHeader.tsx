@@ -9,7 +9,7 @@ interface ProfileHeaderProps {
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({ trainer }) => {
   return (
-    <div className='w-full min-h-88 md:h-88 pb-6 md:pb-0 bg-white rounded-2xl border border-gray-100 overflow-hidden flex flex-col relative'>
+    <div className='w-full min-h-88 md:h-88 pb-6 md:pb-0 bg-white rounded-[16px] border border-gray-100 overflow-hidden flex flex-col relative'>
       {/* Cover Image */}
       <div className='h-44 w-full bg-[url("/images/trainer/cover-placeholder.svg")] bg-cover bg-center bg-[#1a2b3c] relative flex items-end pb-4 pl-32.5 md:pl-55'>
         {/* Name and Badge */}
@@ -27,7 +27,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ trainer }) => {
           >
             <div
               className={cn(
-                'w-1.5 h-1.5 rounded-full',
+                'w-1.5 h-1.5 rounded-[9999px]',
                 trainer.availability === 'Available'
                   ? 'bg-[#14561C]'
                   : 'bg-gray-400'
@@ -49,7 +49,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ trainer }) => {
 
       {/* Avatar */}
       <div className='absolute top-28.75 left-4 md:left-8 z-20'>
-        <div className='h-25 w-25 md:h-42.5 md:w-42.5 rounded-full border-[3px] border-[#EBEBEB] overflow-hidden bg-gray-200 flex items-center justify-center'>
+        <div className='h-25 w-25 md:h-42.5 md:w-42.5 rounded-[9999px] border-[3px] border-[#EBEBEB] overflow-hidden bg-gray-200 flex items-center justify-center'>
           {trainer.avatarUrl ? (
             <Image
               src={trainer.avatarUrl}
@@ -92,7 +92,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ trainer }) => {
         </div>
 
         {/* <div className='mt-0 md:mt-0 shrink-0 w-full md:w-auto'>
-          <button className='flex items-center justify-center gap-2 w-full md:w-34.25 h-12 px-4.5 py-3 bg-[#F5F5F5] border border-[#A3A3A3] rounded-lg text-[13px] font-semibold text-gray-900 hover:bg-gray-50 transition-colors cursor-pointer'>
+          <button className='flex items-center justify-center gap-2 w-full md:w-34.25 h-12 px-4.5 py-3 bg-[#F5F5F5] border border-[#A3A3A3] rounded-[8px] text-[13px] font-semibold text-gray-900 hover:bg-gray-50 transition-colors cursor-pointer'>
             <Image
               src='/images/admin-dashboard/icons/messenger-logo.svg'
               alt='Message'

@@ -28,7 +28,7 @@ export function TrainerSidebarItem({
       href={href}
       title={collapsed ? label : undefined}
       className={cn(
-        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+        "flex items-center gap-3 rounded-[8px] px-3 py-2 text-sm font-medium transition-colors",
         collapsed && "justify-center px-2",
         isActive
           ? "bg-primary text-white"

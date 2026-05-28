@@ -22,7 +22,7 @@ export function ActivityRow({ activity }: ActivityRowProps) {
 
   return (
     <div className='flex items-center gap-4 py-3'>
-      <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gray-100 text-sm font-semibold text-gray-600'>
+      <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-[9999px] bg-gray-100 text-sm font-semibold text-gray-600'>
         {client_name.charAt(0)}
       </div>
       <div className='flex-1 min-w-0'>

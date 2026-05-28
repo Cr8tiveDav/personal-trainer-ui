@@ -179,7 +179,7 @@ export default function SessionsList({
                 setCurrentPage(1)
               }}
               placeholder='Search by client, trainer, or session ID'
-              className='w-full h-10 pl-9 pr-4 rounded-lg border border-gray-200 text-xs bg-white placeholder-gray-400 focus:outline-none focus:border-[#0b4d8d]'
+              className='w-full h-10 pl-9 pr-4 rounded-[8px] border border-gray-200 text-xs bg-white placeholder-gray-400 focus:outline-none focus:border-[#0b4d8d]'
             />
           </div>
 
@@ -188,14 +188,14 @@ export default function SessionsList({
               <button
                 type='button'
                 onClick={() => setIsTrainerMenuOpen((isOpen) => !isOpen)}
-                className='flex h-10 items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 font-medium text-gray-700 transition-colors hover:bg-gray-50'
+                className='flex h-10 items-center gap-1.5 rounded-[8px] border border-gray-200 bg-white px-3 font-medium text-gray-700 transition-colors hover:bg-gray-50'
               >
                 {selectedTrainer === 'all' ? 'All Trainers' : selectedTrainer}
                 <ChevronDown className='h-3.5 w-3.5 text-gray-400' />
               </button>
 
               {isTrainerMenuOpen && (
-                <div className='absolute right-0 top-11 z-30 w-56 overflow-hidden rounded-xl border border-gray-100 bg-white py-1.5 shadow-xl'>
+                <div className='absolute right-0 top-11 z-30 w-56 overflow-hidden rounded-[12px] border border-gray-100 bg-white py-1.5 shadow-xl'>
                   <button
                     type='button'
                     onClick={() => {
@@ -236,7 +236,7 @@ export default function SessionsList({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          className='overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm'
+          className='overflow-hidden rounded-[12px] border border-gray-100 bg-white shadow-sm'
         >
           <div className='flex items-center justify-between border-b border-gray-100 bg-white p-4'>
             {activeTab === 'all' ? (

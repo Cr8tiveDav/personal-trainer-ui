@@ -42,7 +42,7 @@ export function RescheduleSessionModal({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm animate-fade-in'>
-      <div className='relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl flex flex-col text-xs text-[#111111] animate-in fade-in zoom-in-95 duration-150'>
+      <div className='relative w-full max-w-md rounded-[16px] bg-white p-6 shadow-2xl flex flex-col text-xs text-[#111111] animate-in fade-in zoom-in-95 duration-150'>
         
         {/* Modal Header */}
         <div className='flex items-center justify-between border-b border-gray-100 pb-3.5'>
@@ -55,7 +55,7 @@ export function RescheduleSessionModal({
           <button 
             type='button' 
             onClick={onClose} 
-            className='rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors'
+            className='rounded-[9999px] p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors'
           >
             <X className='h-4 w-4' />
           </button>
@@ -63,7 +63,7 @@ export function RescheduleSessionModal({
 
         <form onSubmit={handleSubmit} className='mt-4 space-y-4'>
           {/* Current Schedule Banner Warning */}
-          <div className='rounded-lg bg-gray-50 border border-gray-100 p-3 flex justify-between items-center text-gray-600 font-medium'>
+          <div className='rounded-[8px] bg-gray-50 border border-gray-100 p-3 flex justify-between items-center text-gray-600 font-medium'>
             <span className='text-gray-400'>Current Time</span>
             <span className='font-semibold text-gray-800'>{currentScheduledTime}</span>
           </div>
@@ -80,7 +80,7 @@ export function RescheduleSessionModal({
                   setNewDate(e.target.value)
                   if(error) setError('')
                 }}
-                className='w-full h-10 pl-9 pr-3 rounded-lg border border-gray-200 bg-white focus:outline-none focus:border-[#0b4d8d] focus:ring-1 focus:ring-[#0b4d8d]'
+                className='w-full h-10 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white focus:outline-none focus:border-[#0b4d8d] focus:ring-1 focus:ring-[#0b4d8d]'
               />
             </div>
           </div>
@@ -96,7 +96,7 @@ export function RescheduleSessionModal({
                   setNewTime(e.target.value)
                   if(error) setError('')
                 }}
-                className='w-full h-10 pl-9 pr-3 rounded-lg border border-gray-200 bg-white appearance-none focus:outline-none focus:border-[#0b4d8d] focus:ring-1 focus:ring-[#0b4d8d]'
+                className='w-full h-10 pl-9 pr-3 rounded-[8px] border border-gray-200 bg-white appearance-none focus:outline-none focus:border-[#0b4d8d] focus:ring-1 focus:ring-[#0b4d8d]'
               >
                 <option value=''>Select operational session time</option>
                 <option value='08:00 AM'>08:00 AM</option>
@@ -117,13 +117,13 @@ export function RescheduleSessionModal({
             <button
               type='button'
               onClick={onClose}
-              className='px-4 h-9 border border-gray-200 bg-white rounded-lg font-semibold text-gray-600 hover:bg-gray-50 transition-colors'
+              className='px-4 h-9 border border-gray-200 bg-white rounded-[8px] font-semibold text-gray-600 hover:bg-gray-50 transition-colors'
             >
               Discard Changes
             </button>
             <button
               type='submit'
-              className='px-4 h-9 bg-[#0b4d8d] hover:bg-[#093e72] text-white font-semibold rounded-lg shadow-none transition-all'
+              className='px-4 h-9 bg-[#0b4d8d] hover:bg-[#093e72] text-white font-semibold rounded-[8px] shadow-none transition-all'
             >
               Confirm Reschedule
             </button>

@@ -132,7 +132,7 @@ export function VerificationCodeInput({
           onBlur={onBlur}
           onFocus={(e) => e.target.select()}
           className={cn(
-            'login-input h-12 w-10 rounded-lg border text-center text-lg font-semibold tracking-normal sm:h-14 sm:w-12',
+            'login-input h-12 w-10 rounded-[8px] border text-center text-lg font-semibold tracking-normal sm:h-14 sm:w-12',
             error && 'login-input--error',
             disabled && 'cursor-not-allowed opacity-60',
           )}

@@ -149,7 +149,7 @@ export function ClientsList() {
   };
 
   return (
-    <div className="flex flex-col rounded-3xl border border-[#CBD5E1] bg-white">
+    <div className="flex flex-col rounded-[24px] border border-[#CBD5E1] bg-white">
       <div className="px-6 pt-5">
         <ClientFilterTabs
           counts={tabCounts}

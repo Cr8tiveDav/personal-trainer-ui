@@ -22,7 +22,7 @@ const FitnessLifestyle = () => {
             height={487}
             priority
             sizes="true"
-            className="rounded-[97.77px] object-cover md:rounded-3xl"
+            className="rounded-[97.77px] object-cover md:rounded-[24px]"
           />
         </div>
       </div>

@@ -52,7 +52,7 @@ export default function MobileNav() {
 
           <button
             onClick={() => setOpen(false)}
-            className="rounded-full bg-slate-100 p-2"
+            className="rounded-[9999px] bg-slate-100 p-2"
           >
             <X className="h-5 w-5 text-slate-700" />
           </button>
@@ -64,7 +64,7 @@ export default function MobileNav() {
               key={link.link}
               href={link.link}
               onClick={() => setOpen(false)}
-              className="rounded-xl px-4 py-4 text-lg font-semibold text-slate-900 transition hover:bg-slate-100"
+              className="rounded-[12px] px-4 py-4 text-lg font-semibold text-slate-900 transition hover:bg-slate-100"
             >
               {link.route}
             </Link>
@@ -74,7 +74,7 @@ export default function MobileNav() {
         <div className="border-t p-6 border-secondary">
           <Button
             asChild
-            className="h-14 w-full rounded-xl bg-[#0d2b45] text-base font-semibold"
+            className="h-14 w-full rounded-[12px] bg-[#0d2b45] text-base font-semibold"
           >
             <Link href="/waitlist" onClick={() => setOpen(false)}>
               Join Waitlist

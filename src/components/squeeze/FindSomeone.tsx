@@ -21,12 +21,12 @@ const FindSomeoneSection = () => {
             <input
               type="text"
               placeholder="Full name"
-              className="min-h-12 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary"
+              className="min-h-12 w-full rounded-[6px] border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary"
             />
             <input
               type="email"
               placeholder="johndoe@example.com"
-              className="min-h-12 w-full rounded-md border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary"
+              className="min-h-12 w-full rounded-[6px] border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary"
             />
             <Button type="submit"> Submit</Button>
           </div>

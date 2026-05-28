@@ -3,34 +3,36 @@
 import Image from 'next/image'
 import { useState } from 'react'
 import {
-  Users,
-  Hourglass,
   Settings,
   ChevronRight,
-  Dumbbell,
-  CreditCard,
   LineChart,
   X,
-  Menu,
   Video,
   PhoneCall,
 } from 'lucide-react'
 import { SidebarItem } from './sidebarItem'
 import { cn } from '~/utils'
+import {
+  DashboardIcon,
+  TrainersIcon,
+  ClientsIcon,
+  SessionIcon,
+  PaymentIcon,
+} from '@/components/icons'
 
 const NAV_SECTIONS = [
   {
     label: 'OVERVIEW',
     items: [
-      { label: 'Dashboard', href: '/admin/dashboard', icon: Menu },
+      { label: 'Dashboard', href: '/admin/dashboard', icon: DashboardIcon },
     ],
   },
   {
     label: 'MANAGEMENT',
     items: [
-      { label: 'Trainers', href: '/admin/trainers', icon: Dumbbell },
-      { label: 'Clients', href: '/admin/users', icon: Users },
-      { label: 'Sessions', href: '/admin/sessions', icon: Hourglass },
+      { label: 'Trainers', href: '/admin/trainers', icon: TrainersIcon },
+      { label: 'Clients', href: '/admin/users', icon: ClientsIcon },
+      { label: 'Sessions', href: '/admin/sessions', icon: SessionIcon },
       {
         label: 'Discovery slots',
         href: '/admin/discovery-slots',
@@ -41,14 +43,14 @@ const NAV_SECTIONS = [
   {
     label: 'FINANCE',
     items: [
-      { label: 'Payments', href: '/admin/payments', icon: CreditCard },
+      { label: 'Payments', href: '/admin/payments', icon: PaymentIcon },
     ],
   },
   {
     label: 'PLATFORM',
     items: [
       { label: 'Analytics', href: '/admin/analytics', icon: LineChart },
-      { label: 'Video Content', href: '/admin/video-content', icon: Video },
+      { label: 'Media Content', href: '/admin/media', icon: Video },
       { label: 'Settings', href: '/admin/settings', icon: Settings },
     ],
   },
@@ -94,7 +96,7 @@ function SidebarInner({
         ) : (
           <button
             onClick={onCollapse}
-            className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors'
+            className='flex h-7 w-7 shrink-0 items-center justify-center rounded-[6px] border border-gray-200 text-gray-400 hover:bg-gray-50 hover:text-gray-600 transition-colors'
           >
             {collapsed ? <ChevronRight className='h-4 w-4' /> : <Image src="/collapse.svg" alt='collapse' width={20} height={20} className='h-4 w-4' />}
           </button>
@@ -118,11 +120,11 @@ function SidebarInner({
         ))}
       </nav>
 
-      <div className={cn('flex items-center gap-3 rounded-lg border border-gray-100 p-3', collapsed && 'justify-center')}>
+      <div className={cn('flex items-center gap-3 rounded-[8px] border border-gray-100 p-3', collapsed && 'justify-center')}>
         {userAvatar ? (
-          <Image src={userAvatar} alt={userName} width={36} height={36} className='rounded-full object-cover shrink-0' />
+          <Image src={userAvatar} alt={userName} width={36} height={36} className='rounded-[9999px] object-cover shrink-0' />
         ) : (
-          <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-white'>
+          <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-[9999px] bg-primary text-sm font-semibold text-white'>
             {userName.charAt(0).toUpperCase()}
           </div>
         )}

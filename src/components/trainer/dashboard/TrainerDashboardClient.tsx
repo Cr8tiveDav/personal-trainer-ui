@@ -62,7 +62,7 @@ export function TrainerDashboardClient() {
 
   if (!trainerId) {
     return (
-      <div className="rounded-xl border border-gray-100 bg-white p-8 text-center text-sm text-gray-500">
+      <div className="rounded-[12px] border border-gray-100 bg-white p-8 text-center text-sm text-gray-500">
         Could not resolve your trainer profile. Please sign out and log in
         again.
       </div>
@@ -86,7 +86,7 @@ export function TrainerDashboardClient() {
         </h1>
         <button
           type="button"
-          className="inline-flex w-fit items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 shadow-sm"
+          className="inline-flex w-fit items-center gap-2 rounded-[8px] border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 shadow-sm"
         >
           <CalendarDays className="h-4 w-4 text-gray-400" />
           {todayLabel}

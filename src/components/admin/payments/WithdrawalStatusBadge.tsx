@@ -36,7 +36,7 @@ const WithdrawalStatusBadge = ({ status }: WithdrawalStatusBadgeProps) => {
 
   return (
     <span
-      className={`inline-flex min-w-24 justify-center rounded-md px-3 py-1.5 text-xs font-medium ${config.className}`}
+      className={`inline-flex min-w-24 justify-center rounded-[6px] px-3 py-1.5 text-xs font-medium ${config.className}`}
     >
       {config.label}
     </span>

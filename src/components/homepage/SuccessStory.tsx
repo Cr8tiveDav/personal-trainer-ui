@@ -78,12 +78,12 @@ const SuccessStory = () => {
                       alt={story.name}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className='rounded-xl object-cover'
+                      className='rounded-[12px] object-cover'
                       priority={index === 0}
                     />
                   </div>
 
-                  <div className='flex flex-col justify-center rounded-xl border border-gray-100 bg-white p-4 shadow-sm lg:p-8'>
+                  <div className='flex flex-col justify-center rounded-[12px] border border-gray-100 bg-white p-4 shadow-sm lg:p-8'>
                     <div className='space-y-6 text-base leading-relaxed text-muted'>
                       {story.paragraphs.map((text, pIndex) => (
                         <p key={pIndex}>{text}</p>

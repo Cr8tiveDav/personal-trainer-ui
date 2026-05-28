@@ -130,7 +130,7 @@ const PayoutDetailsSidebar = ({
           <button
             type="button"
             onClick={onClose}
-            className="grid size-10 place-items-center rounded-full bg-secondary text-foreground transition-colors hover:bg-border"
+            className="grid size-10 place-items-center rounded-[9999px] bg-secondary text-foreground transition-colors hover:bg-border"
             aria-label="Close payout details"
           >
             <X className="size-5" />
@@ -141,11 +141,11 @@ const PayoutDetailsSidebar = ({
           <p className="text-3xl font-semibold text-foreground sm:text-4xl">
             {formatCurrency(amount)}
           </p>
-          <div className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-border bg-card px-3 text-sm font-medium text-foreground">
+          <div className="inline-flex h-9 shrink-0 items-center gap-2 rounded-[8px] border border-border bg-card px-3 text-sm font-medium text-foreground">
             <span className="inline-flex gap-0.5">
-              <span className="h-4 w-1.5 rounded-sm bg-[#008751]" />
-              <span className="h-4 w-1.5 rounded-sm bg-white ring-1 ring-border" />
-              <span className="h-4 w-1.5 rounded-sm bg-[#008751]" />
+              <span className="h-4 w-1.5 rounded-[4px] bg-[#008751]" />
+              <span className="h-4 w-1.5 rounded-[4px] bg-white ring-1 ring-border" />
+              <span className="h-4 w-1.5 rounded-[4px] bg-[#008751]" />
             </span>
             NGN
           </div>
@@ -161,7 +161,7 @@ const PayoutDetailsSidebar = ({
                 <button
                   type="button"
                   onClick={openModal}
-                  className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-primary px-4 text-sm font-semibold text-primary-foreground"
+                  className="inline-flex h-14 items-center justify-center gap-3 rounded-[8px] bg-primary px-4 text-sm font-semibold text-primary-foreground"
                 >
                   <Check className="size-5" />
                   Approve Payout
@@ -176,7 +176,7 @@ const PayoutDetailsSidebar = ({
                 <button
                   type="button"
                   onClick={openModal}
-                  className="inline-flex h-14 items-center justify-center gap-3 rounded-lg bg-[#EAF4FC] px-4 text-sm font-semibold text-primary"
+                  className="inline-flex h-14 items-center justify-center gap-3 rounded-[8px] bg-[#EAF4FC] px-4 text-sm font-semibold text-primary"
                 >
                   <X className="size-5" />
                   Decline Payout
@@ -189,7 +189,7 @@ const PayoutDetailsSidebar = ({
         {isApprovalSuccess ? (
           <div
             role="status"
-            className="mt-4 flex items-center gap-3 rounded-md border border-border bg-card px-4 py-3 text-sm font-medium text-[hsl(var(--success))]"
+            className="mt-4 flex items-center gap-3 rounded-[6px] border border-border bg-card px-4 py-3 text-sm font-medium text-[hsl(var(--success))]"
           >
             <Check className="size-5" />
             This payout has been approved
@@ -199,7 +199,7 @@ const PayoutDetailsSidebar = ({
         {isDeclineSuccess ? (
           <div
             role="status"
-            className="mt-4 rounded-md border border-border bg-card px-4 py-3 text-sm"
+            className="mt-4 rounded-[6px] border border-border bg-card px-4 py-3 text-sm"
           >
             <div className="flex items-center gap-3 font-medium text-[hsl(var(--error))]">
               <X className="size-5" />
@@ -215,7 +215,7 @@ const PayoutDetailsSidebar = ({
 
         <section className="mt-8">
           <h3 className="text-lg font-semibold text-foreground">Transaction</h3>
-          <div className="mt-4 space-y-5 rounded-lg bg-secondary/70 p-4">
+          <div className="mt-4 space-y-5 rounded-[8px] bg-secondary/70 p-4">
             {transactionRows.map((row) => (
               <div
                 key={row.label}
@@ -234,7 +234,7 @@ const PayoutDetailsSidebar = ({
           <h3 className="text-lg font-semibold text-foreground">
             Receiver details
           </h3>
-          <div className="mt-4 space-y-5 rounded-lg bg-secondary/70 p-4">
+          <div className="mt-4 space-y-5 rounded-[8px] bg-secondary/70 p-4">
             {receiverRows.map((row) => (
               <div
                 key={row.label}

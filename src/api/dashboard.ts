@@ -5,11 +5,12 @@ import { getRequest } from "~/lib/http";
 import { API_ENDPOINTS } from "./api-endpoints";
 import type {
   DashboardStatsResponse,
-  LatestPaymentResponse,
   RecentActivityResponse,
-  RevenueSnapshotResponse,
+  SubscriptionCountResponse,
   TopTrainersResponse,
 } from "./types/dashboard";
+import { ApiEnvelope } from "./types";
+import { RevenueApiResponse, RevenueData } from "./types/payment";
 
 export function useDashboardStats() {
   return useQuery({
@@ -25,9 +26,12 @@ export function useLatestPayment() {
   return useQuery({
     queryKey: ["latest-payment"],
     queryFn: () =>
-      getRequest<LatestPaymentResponse>({
-        url: API_ENDPOINTS.PAYMENTS.LATEST,
-      }),
+      getRequest<ApiEnvelope<RevenueData>>({
+        url: API_ENDPOINTS.PAYMENTS.LIST,
+      }).then((res) => ({
+        ...res,
+        data: res.data.latest_payment,
+      })),
   });
 }
 
@@ -45,18 +49,27 @@ export function useRevenueSnapshot() {
   return useQuery({
     queryKey: ["revenue-snapshot"],
     queryFn: () =>
-      getRequest<RevenueSnapshotResponse>({
-        url: API_ENDPOINTS.FINANCE.SUMMARY,
+      getRequest<RevenueApiResponse>({
+        url: API_ENDPOINTS.PAYMENTS.LIST,
       }),
   });
 }
-
 export function useTopTrainers() {
   return useQuery({
     queryKey: ["top-trainers"],
     queryFn: () =>
       getRequest<TopTrainersResponse>({
         url: API_ENDPOINTS.TRAINERS.RANKINGS,
+      }),
+  });
+}
+
+export function useSubscriptionCount() {
+  return useQuery({
+    queryKey: ["subscription-count"],
+    queryFn: () =>
+      getRequest<SubscriptionCountResponse>({
+        url: API_ENDPOINTS.DASHBOARD.SUBSCRIPTION_COUNT,
       }),
   });
 }

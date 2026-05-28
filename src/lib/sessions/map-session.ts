@@ -324,5 +324,6 @@ export const mapBackendSessionsResponse = (payload: unknown): Session[] => {
 
   return possibleList
     .map(mapBackendSessionToSession)
-    .filter((session) => session.id);
+    .filter((session) => session.id)
+    .reverse();
 };

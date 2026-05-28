@@ -1,26 +1,26 @@
-'use client'
+'use client';
 
-import Image from 'next/image'
-import { A11y, Autoplay, Pagination, Scrollbar } from 'swiper/modules'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { WaitlistForm } from './WaitListForm'
+import Image from 'next/image';
+import { A11y, Autoplay, Pagination, Scrollbar } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { WaitlistForm } from './WaitListForm';
 
 const Hero = () => {
   return (
-    <section className="mb-16 w-full overflow-hidden">
-      <div className="container">
-        <div className="flex flex-col-reverse items-center gap-12 px-2 sm:flex-row lg:items-center">
-          <div className="w-full min-w-0 lg:w-1/2">
-            <div className="mb-4 inline-flex max-w-full flex-wrap items-center rounded-full bg-primarybadge px-4 py-2 text-xs font-medium text-primary">
-              <span className="mr-2 h-2 w-2 animate-pulse rounded-full bg-primary"></span>
+    <section className='mb-16 w-full overflow-hidden'>
+      <div className='container'>
+        <div className='flex flex-col-reverse items-center gap-12 px-2 sm:flex-row lg:items-center'>
+          <div className='w-full min-w-0 lg:w-1/2'>
+            <div className='mb-4 inline-flex max-w-full flex-wrap items-center rounded-[9999px] bg-primarybadge px-4 py-2 text-xs font-medium text-primary'>
+              <span className='mr-2 h-2 w-2 animate-pulse rounded-[9999px] bg-primary'></span>
               Live trainer accountability
             </div>
 
-            <h1 className="mb-6 wrap-break-word text-left text-4xl font-bold leading-tight tracking-tight text-muted-foreground sm:text-5xl md:text-6xl">
+            <h1 className='mb-6 wrap-break-word text-left text-4xl font-bold leading-tight tracking-tight text-muted-foreground sm:text-5xl md:text-6xl'>
               Never miss a workout session
             </h1>
 
-            <p className="mb-8 max-w-full wrap-break-word text-left text-base leading-relaxed text-muted">
+            <p className='mb-8 max-w-full wrap-break-word text-left text-base leading-relaxed text-muted'>
               Connect with vetted fitness trainers who call you at your
               scheduled time — live, on video. Join the waitlist for exclusive
               early access to FitCall.
@@ -29,24 +29,24 @@ const Hero = () => {
             <WaitlistForm />
           </div>
 
-          <div className="flex w-full min-w-0 justify-center lg:w-1/2">
-            <div className="relative h-80 w-full max-w-full overflow-hidden rounded-md sm:h-105 md:h-125 md:max-w-125 lg:h-150">
+          <div className='flex w-full min-w-0 justify-center lg:w-1/2'>
+            <div className='relative h-80 w-full max-w-full overflow-hidden rounded-[6px] sm:h-105 md:h-125 md:max-w-125 lg:h-150'>
               <Swiper
                 modules={[Pagination, Scrollbar, A11y, Autoplay]}
                 autoplay={{ delay: 5000, disableOnInteraction: false }}
                 loop
                 speed={1200}
-                className="h-full w-full"
+                className='h-full w-full'
               >
                 <SwiperSlide>
-                  <div className="relative h-full w-full">
+                  <div className='relative h-full w-full'>
                     <Image
-                      src="/images/landing-page/hero.png"
-                      alt="Professional Trainer"
+                      src='/images/landing-page/hero.png'
+                      alt='Professional Trainer'
                       fill
                       priority
-                      sizes="true"
-                      className="object-cover"
+                      sizes='true'
+                      className='object-cover'
                     />
                   </div>
                 </SwiperSlide>
@@ -56,7 +56,7 @@ const Hero = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;

@@ -10,8 +10,9 @@ import type { LoginPayload, LoginResponse } from "./types/auth";
 import { siteConfig } from "@/config/site";
 import { persistTrainerId } from "@/lib/auth/trainer-profile";
 import { TRAINER_LOGIN_PATH } from "@/lib/auth/trainer-routes";
-import { getCookie, logoutUser, setToken } from "@/lib/get-token";
+import { getCookie, logoutUser, setToken, setAccessTokenExpiry } from "@/lib/get-token";
 import { resetAuthRefreshState } from "@/lib/http";
+import { loginSessionAction } from "@/actions/auth";
 
 export type LoginType = "admin" | "trainer";
 
@@ -30,18 +31,16 @@ function resolveRedirectPath(
   return role === "trainer" ? "/trainer/dashboard" : "/admin/dashboard";
 }
 
-function persistAuthSession(body: LoginResponse["data"]) {
+async function persistAuthSession(body: LoginResponse["data"]) {
   resetAuthRefreshState();
-  setToken(
-    siteConfig.cookieNames.access_token,
+  await loginSessionAction(
     body.access_token,
-    body.expires_in,
-  );
-  setToken(
-    siteConfig.cookieNames.refresh_token,
     body.refresh_token,
-    7 * 24 * 60 * 60,
   );
+  setAccessTokenExpiry(body.expires_in);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("has_refresh_token", "true");
+  }
 
   const userType = body.user.user_type ?? "admin";
   setToken(siteConfig.cookieNames.user_type, userType);
@@ -85,13 +84,13 @@ export function useLogin(options: UseLoginOptions) {
     },
     mutationKey: ["login", options.type],
 
-    onSuccess(response) {
+    async onSuccess(response) {
       if (!response?.data?.data) {
         toast.error("Login failed");
         return;
       }
 
-      persistAuthSession(response.data.data);
+      await persistAuthSession(response.data.data);
       showSuccessToast("Login successful!");
       router.push(
         resolveRedirectPath(

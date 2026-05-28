@@ -31,7 +31,7 @@ const OverviewTab = ({ trainer }: OverviewTabProps) => {
   return (
     <div className='flex flex-col gap-8'>
       {/* About Section */}
-      <div className='bg-white rounded-xl border border-[#EBEBEB] py-8 px-12'>
+      <div className='bg-white rounded-[12px] border border-[#EBEBEB] py-8 px-12'>
         <h3 className='text-2xl font-medium text-muted-foreground mb-2'>
           About
         </h3>
@@ -62,7 +62,7 @@ const OverviewTab = ({ trainer }: OverviewTabProps) => {
       </div>
 
       {/* Recent Activity */}
-      <div className='bg-white rounded-2xl border border-[#EBEBEB] overflow-hidden'>
+      <div className='bg-white rounded-[16px] border border-[#EBEBEB] overflow-hidden'>
         <div className='p-6 pb-5'>
           <h3 className='text-2xl font-medium text-muted-foreground'>
             Recent activity

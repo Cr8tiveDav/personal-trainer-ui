@@ -9,8 +9,8 @@ const STYLES: Record<SessionStatus, { dot: string; text: string; bg: string }> =
 export function SessionStatusBadge({ status }: { status: SessionStatus }) {
   const { dot, text, bg } = STYLES[status]
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${bg} ${text}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${dot}`} />
+    <span className={`inline-flex items-center gap-1.5 rounded-[9999px] px-2.5 py-1 text-xs font-medium ${bg} ${text}`}>
+      <span className={`h-1.5 w-1.5 rounded-[9999px] ${dot}`} />
       {status}
     </span>
   )

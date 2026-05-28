@@ -6,7 +6,7 @@ import { Button } from '../ui/button';
 
 const Hero = () => {
   return (
-    <section className='relative w-full overflow-hidden pt-28 md:pt-36'>
+    <section className='relative w-full overflow-hidden pt-[122px] md:pt-[154px]'>
       <div
         className='absolute inset-0 z-0 opacity-[0.03]'
         style={{
@@ -15,13 +15,13 @@ const Hero = () => {
         }}
       ></div>
 
-      <div className='absolute -left-20 top-0 h-200 w-200 rounded-full bg-[#2d5894]/20 blur-[120px]'></div>
-      <div className='absolute -right-20 top-0 h-200 w-200 rounded-full bg-[#eca465]/20 blur-[120px]'></div>
+      <div className='absolute -left-20 top-0 h-200 w-200 rounded-[9999px] bg-[#2d5894]/20 blur-[120px]'></div>
+      <div className='absolute -right-20 top-0 h-200 w-200 rounded-[9999px] bg-[#eca465]/20 blur-[120px]'></div>
 
       <div className='container relative z-10 mx-auto px-4'>
         <div className='flex flex-col items-center text-center'>
-          <div className='mb-6 inline-flex items-center rounded-full border border-primary bg-primarybadge px-4 py-1.5 text-xs font-semibold text-primary shadow-sm'>
-            <span className='mr-2 h-2 w-2 animate-pulse rounded-full bg-primary'></span>
+          <div className='mb-6 inline-flex items-center rounded-[9999px] border border-primary bg-primarybadge px-4 py-1.5 text-xs font-semibold text-primary shadow-sm'>
+            <span className='mr-2 h-2 w-2 animate-pulse rounded-[9999px] bg-primary'></span>
             Real trainers · Real sessions · Real results
           </div>
 

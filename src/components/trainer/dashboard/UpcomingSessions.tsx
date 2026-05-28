@@ -16,7 +16,7 @@ function PlatformIcon({ platform }: { platform: UpcomingSession['platform'] }) {
 
   return (
     <span
-      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded text-[9px] font-bold text-white ${colors[platform]}`}
+      className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-[4px] text-[9px] font-bold text-white ${colors[platform]}`}
     >
       {platform === 'zoom' ? 'Z' : platform === 'whatsapp' ? 'W' : platform === 'meet' ? 'G' : '▶'}
     </span>
@@ -33,7 +33,7 @@ export function UpcomingSessions({
   return (
     <div
       className={cn(
-        "flex h-full min-h-0 flex-col pb-20 rounded-xl border border-gray-100 bg-white shadow-sm",
+        "flex h-full min-h-0 flex-col pb-20 rounded-[12px] border border-gray-100 bg-white shadow-sm",
         className,
       )}
     >
@@ -65,7 +65,7 @@ export function UpcomingSessions({
                 key={session.id}
                 className="flex items-center gap-3 px-5 py-3.5"
               >
-                <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-gray-50 text-center">
+                <div className="flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-[8px] bg-gray-50 text-center">
                   <span className="text-[10px] font-semibold uppercase text-gray-400">
                     {session.monthLabel}
                   </span>
