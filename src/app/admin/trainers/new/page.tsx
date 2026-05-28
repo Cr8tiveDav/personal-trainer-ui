@@ -23,7 +23,7 @@ const stepMotion = {
 export default function AddTrainerPage() {
   const [step, setStep] = useState(1)
   const [basicInfo, setBasicInfo] = useState<BasicInfoValues | null>(null)
-  const [displayPicture, setDisplayPicture] = useState<File | null>(null)
+  const [mediaFiles, setMediaFiles] = useState<File[]>([])
   const createTrainer = useCreateTrainer()
   const [created, setCreated] = useState(false)
 
@@ -32,13 +32,16 @@ export default function AddTrainerPage() {
     setStep(2)
   }
 
-  const handleStep2 = (image: File | null) => {
-    setDisplayPicture(image)
+  const handleStep2 = (images: File[]) => {
+    setMediaFiles(images)
     setStep(3)
   }
 
   const handleCreate = async () => {
     if (!basicInfo) return
+
+    // First image is the display picture, rest are gallery images (uploaded after creation)
+    const displayPicture = mediaFiles[0] ?? null
 
     createTrainer.mutate(
       {
@@ -114,8 +117,9 @@ export default function AddTrainerPage() {
             {step === 2 && (
               <motion.div key='step-2' {...stepMotion}>
                 <Step2MediaUpload
-                  defaultImage={displayPicture}
+                  defaultImages={mediaFiles}
                   onNext={handleStep2}
+                  onBack={() => setStep(1)}
                 />
               </motion.div>
             )}
@@ -123,9 +127,10 @@ export default function AddTrainerPage() {
               <motion.div key='step-3' {...stepMotion}>
                 <Step3ReviewAndCreate
                   basicInfo={basicInfo}
-                  hasImage={!!displayPicture}
+                  hasImage={mediaFiles.length > 0}
                   isSubmitting={createTrainer.isPending}
                   onSubmit={handleCreate}
+                  onBack={() => setStep(2)}
                 />
               </motion.div>
             )}

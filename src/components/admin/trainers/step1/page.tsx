@@ -43,7 +43,11 @@ const SPECIALIZATION_OPTIONS: {
 const step1Schema = z.object({
   name: z.string().trim().min(2, "Full name is required"),
   email: z.string().trim().email("Valid email is required"),
-  phone_number: z.string().trim().min(7, "Phone number is required"),
+  phone_number: z
+    .string()
+    .trim()
+    .min(7, 'Phone number is required')
+    .regex(/^\+?[\d\s\-(). ]{7,20}$/, 'Phone number must contain only numbers'),
   gender: z.enum(GENDERS, { message: "Gender is required" }),
   specialization: z.enum(TRAINER_SPECIALIZATIONS, {
     message: "Specialty is required",
