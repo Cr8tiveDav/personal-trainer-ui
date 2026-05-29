@@ -58,7 +58,7 @@ async function getAuthToken() {
 }
 
 async function refreshAccessToken(refreshToken: string, baseURL: string) {
-  const refreshRes = await fetch(`${baseURL}/api/v1/auth/refresh`, {
+  const refreshRes = await fetch(`${baseURL}/auth/refresh`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ refresh_token: refreshToken }),
@@ -78,7 +78,7 @@ export async function GET(
   const baseURL = process.env.NEXT_PUBLIC_API_URL || '';
 
   const fetchFromBackend = async (token: string) =>
-    fetch(`${baseURL}/api/v1/trainers/${id}`, {
+    fetch(`${baseURL}/trainers/${id}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -160,7 +160,7 @@ export async function PATCH(
   const body = await request.json();
 
   const fetchFromBackend = async (token: string) =>
-    fetch(`${baseURL}/api/v1/trainers/${id}`, {
+    fetch(`${baseURL}/trainers/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

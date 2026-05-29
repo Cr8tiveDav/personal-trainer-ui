@@ -51,7 +51,7 @@ export async function GET(request: Request) {
 
   // Helper function to fetch data from backend
   const fetchFromBackend = async (token: string) => {
-    return fetch(`${baseURL}/api/v1/trainers`, {
+    return fetch(`${baseURL}/trainers`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
       }
 
       // Hit the refresh endpoint
-      const refreshRes = await fetch(`${baseURL}/api/v1/auth/refresh`, {
+      const refreshRes = await fetch(`${baseURL}/auth/refresh`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

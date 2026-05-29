@@ -22,15 +22,10 @@ const QuickDetails: React.FC<QuickDetailsProps> = ({ trainer }) => {
         <div className='flex items-center justify-between'>
           <span className='text-sm text-gray-500'>Experience</span>
           <span className='text-sm font-medium text-gray-900'>
-            4 years
-          </span>{' '}
-          {/* Placeholder */}
-        </div>
-
-        <div className='flex items-center justify-between'>
-          <span className='text-sm text-gray-500'>Gender</span>
-          <span className='text-sm font-medium text-gray-900'>Female</span>{' '}
-          {/* Placeholder */}
+            {trainer.years_of_experience != null
+              ? `${trainer.years_of_experience} yr${trainer.years_of_experience !== 1 ? 's' : ''}`
+              : 'N/A'}
+          </span>
         </div>
 
         <div className='flex items-center justify-between'>
