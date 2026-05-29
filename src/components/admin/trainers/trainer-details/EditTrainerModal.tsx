@@ -195,14 +195,14 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
                   <FormLabel>Years of Experience</FormLabel>
                   <FormControl>
                     <Input
-                      type='text'
-                      inputMode='numeric'
-                      pattern='[0-9]*'
+                      type='number'
+                      min={0}
+                      step={1}
                       placeholder='e.g. 3'
                       className='login-input'
                       value={field.value ?? ''}
                       onChange={(e) => {
-                        const raw = e.target.value.replace(/[^0-9]/g, '')
+                        const raw = e.target.value
                         field.onChange(raw === '' ? undefined : Number(raw))
                       }}
                       onBlur={field.onBlur}
