@@ -22,7 +22,7 @@ export function ClientsPageClient() {
         <ClientsPageSkeleton />
       ) : (
         <>
-          <ClientStatCards />
+        
           <ClientsList />
         </>
       )}
