@@ -9,6 +9,7 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Toaster as Sonner } from "~/components/ui/sonner";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
@@ -45,28 +46,30 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ProgressBar
-        style="style"
-        options={{ showSpinner: false }}
-        shallowRouting
-      />
-      {children}
-      <ReactQueryDevtools initialIsOpen={false} />
-      <Sonner
-        richColors
-        expand
-        closeButton
-        position="top-right"
-        visibleToasts={4}
-        style={{ zIndex: 99999 }}
-        toastOptions={{
-          duration: 5000,
-          classNames: {
-            error: "!bg-red-600 !text-white !border-red-700",
-            success: "!bg-emerald-600 !text-white !border-emerald-700",
-          },
-        }}
-      />
+      <NuqsAdapter>
+        <ProgressBar
+          style="style"
+          options={{ showSpinner: false }}
+          shallowRouting
+        />
+        {children}
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Sonner
+          richColors
+          expand
+          closeButton
+          position="top-right"
+          visibleToasts={4}
+          style={{ zIndex: 99999 }}
+          toastOptions={{
+            duration: 5000,
+            classNames: {
+              error: "!bg-red-600 !text-white !border-red-700",
+              success: "!bg-emerald-600 !text-white !border-emerald-700",
+            },
+          }}
+        />
+      </NuqsAdapter>
     </QueryClientProvider>
   );
 }

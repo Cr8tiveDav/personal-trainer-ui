@@ -22,7 +22,9 @@ export function buildCreateTrainerFormData(input: CreateTrainerFormInput): FormD
 
   body.append('email', input.email.trim())
   body.append('name', input.name.trim())
-  body.append('phone_number', input.phone_number.trim())
+  const rawPhone = input.phone_number.trim()
+  const formattedPhone = rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`
+  body.append('phone_number', formattedPhone)
   body.append('gender', input.gender.trim())
 
   input.specializations.forEach((spec) => {

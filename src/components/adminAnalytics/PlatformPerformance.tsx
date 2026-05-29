@@ -33,7 +33,7 @@ export function PlatformPerformance() {
     const chartData = response?.data ?? EMPTY_DATA
 
     return (
-        <div className='rounded-[12px] border border-gray-100 bg-white p-6 shadow-sm'>
+        <div className='p-6 rounded-[12px] border border-[#E4E2E9] bg-white'>
             <div className='mb-6 flex items-start justify-between'>
                 <div>
                     <h2 className='text-xl font-bold text-foreground'>Platform Performance</h2>

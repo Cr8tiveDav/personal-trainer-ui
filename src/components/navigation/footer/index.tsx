@@ -137,30 +137,30 @@ const Footer = () => {
                   src='/images/landing-page/icons/twitter.png'
                   alt='Twitter'
                   fill
-                  sizes='true'
+                  sizes='16px'
                   className='object-contain'
                 />
               </div>
             </Link>
             <Link
-              href='https://www.instagram.com/fitcall.me/'
+              href='https://www.facebook.com/share/1CuMUprEk9/'
               target='_blank'
               rel='noopener noreferrer'
-              className='text-gray-400 transition-colors hover:text-black'
+              className='flex items-center gap-2 text-gray-400 transition-colors hover:text-black'
             >
               <div className='relative h-4 w-4'>
                 <Image
-                  src='/images/landing-page/icons/insta.png'
-                  alt='Instagram'
+                  src='/images/landing-page/icons/facebook.png'
+                  alt='Facebook'
                   fill
-                  sizes='true'
+                  sizes='16px'
                   className='object-contain'
                 />
               </div>
             </Link>
             <Link
-              href='#'
-              // target='_blank'
+              href='https://www.linkedin.com/company/fitcall-app'
+              target='_blank'
               rel='noopener noreferrer'
               className='text-gray-400 transition-colors hover:text-black'
             >
@@ -169,7 +169,23 @@ const Footer = () => {
                   src='/images/landing-page/icons/link.png'
                   alt='LinkedIn'
                   fill
-                  sizes='true'
+                  sizes='16px'
+                  className='object-contain'
+                />
+              </div>
+            </Link>
+            <Link
+              href='https://www.tiktok.com/@fitcall.me'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='text-gray-400 transition-colors hover:text-black'
+            >
+              <div className='relative h-4 w-4'>
+                <Image
+                  src='/images/landing-page/icons/tiktok.png'
+                  alt='TikTok'
+                  fill
+                  sizes='16px'
                   className='object-contain'
                 />
               </div>
