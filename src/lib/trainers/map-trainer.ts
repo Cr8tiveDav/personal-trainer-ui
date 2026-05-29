@@ -1,0 +1,101 @@
+import type {
+  BackendTrainerResponse,
+  Trainer,
+  TrainerAvailability,
+  TrainerStatus,
+} from '@/components/admin/trainers/types';
+
+/** Go sql.NullString-style rating from the API */
+type NullableString = { String: string; Valid: boolean };
+
+function parseAverageRating(
+  rating: BackendTrainerResponse['average_rating'],
+): number {
+  if (rating == null) return 0;
+  if (typeof rating === 'number') return rating;
+  const nullable = rating as NullableString;
+  if (nullable.Valid && nullable.String) {
+    const parsed = parseFloat(nullable.String);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  }
+  return 0;
+}
+
+function fallbackName(trainer: BackendTrainerResponse): string {
+  const bio = trainer.bio?.trim();
+  if (bio) {
+    const short = bio.length > 40 ? `${bio.slice(0, 40)}…` : bio;
+    return short;
+  }
+  return `Trainer ${trainer.id.slice(0, 8)}`;
+}
+
+function formatGender(value: string | null | undefined): string | undefined {
+  const raw = value?.trim();
+  if (!raw) return undefined;
+  return raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+}
+
+function formatList(items: string[]) {
+  if (!items || items.length === 0) return '';
+
+  if (items.length === 1) return items[0];
+
+  const lastItem = items[items.length - 1];
+  const remainingItems = items.slice(0, -1);
+
+  return remainingItems.join(', ') + ' & ' + lastItem;
+}
+
+export function mapBackendToFrontend(
+  backendTrainer: BackendTrainerResponse,
+): Trainer {
+  let status: TrainerStatus = 'Pending';
+  const onboarding = backendTrainer.onboarding_status?.toLowerCase();
+  if (onboarding === 'active' || onboarding === 'approved') status = 'Active';
+  else if (onboarding === 'suspended') status = 'Suspended';
+  else if (onboarding === 'rejected') status = 'Rejected';
+
+  const date = backendTrainer.created_at
+    ? new Date(backendTrainer.created_at)
+    : new Date();
+  const dateAdded = date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+
+  const rating = parseAverageRating(backendTrainer.average_rating);
+
+  const displayPicture = backendTrainer.display_picture?.trim() ?? '';
+  const name = backendTrainer.name?.trim() || fallbackName(backendTrainer);
+  const email =
+    backendTrainer.email?.trim() || backendTrainer.user_id || '';
+
+  const specializations = backendTrainer.specializations ?? [];
+
+  return {
+    id: backendTrainer.id,
+    name,
+    email,
+    phoneNumber: backendTrainer.phone_number?.trim() || undefined,
+    gender: formatGender(backendTrainer.gender),
+    avatarUrl: displayPicture || undefined,
+    specialty: formatList(specializations) || specializations[0] || 'General',
+    specializations,
+    trainingStyles: backendTrainer.training_styles ?? [],
+    bio: backendTrainer.bio ?? '',
+    introVideoUrl: backendTrainer.intro_video_url?.trim() ?? '',
+    displayPictureUrl: displayPicture,
+    onboardingStatus:
+      backendTrainer.onboarding_status?.toLowerCase() ?? 'pending',
+    status,
+    sessions: null,
+    earnings: 0,
+    availability: 'Offline' as TrainerAvailability,
+    dateAdded,
+    averageRating: rating,
+    totalReviews: backendTrainer.total_reviews ?? 0,
+    yearsOfExperience: backendTrainer.years_of_experience ?? 0,
+  };
+}

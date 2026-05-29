@@ -1,3 +1,6 @@
+import { API_ENDPOINTS } from '@/api/api-endpoints'
+import { apiUrl } from '@/lib/api/config'
+
 type ContactPayload = {
   email: string
   subject: string
@@ -6,7 +9,7 @@ type ContactPayload = {
 }
 
 export async function submitContactForm(payload: ContactPayload) {
-  const res = await fetch(`${process.env.API_URL}/contact-us`, {
+  const res = await fetch(apiUrl(API_ENDPOINTS.CONTACT.SUBMIT), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

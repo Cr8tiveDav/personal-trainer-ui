@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import SectionHeader from '../ui/SectionHeader'
+import { cn } from '@/lib/utils'
 
 const CountdownTimer = () => {
   const [time, setTime] = useState({ days: 2, hrs: 14, mins: 22 })
@@ -22,7 +23,7 @@ const CountdownTimer = () => {
 
   return (
     <div className='flex h-full flex-col items-center justify-center gap-4'>
-      <div className='flex w-full max-w-xs flex-col items-center gap-4 rounded-2xl border border-[#EBEBEB] bg-white px-8 py-6 shadow-sm'>
+      <div className='flex w-full max-w-xs flex-col items-center gap-4 rounded-[16px] border border-[#EBEBEB] bg-white px-8 py-6 shadow-sm'>
         <div className='flex items-center gap-2 text-sm text-[#5C5C5C]'>
           <Image
             src='/images/landing-page/icons/noti.png'
@@ -91,11 +92,15 @@ const steps = [
   },
 ]
 
-const HowItWorks = () => {
+interface HowItWorksProps {
+  className?: string
+}
+
+const HowItWorks = ({ className }: HowItWorksProps) => {
   const [activeCategory, setActiveCategory] = useState(0)
 
   return (
-    <section className="w-full py-20">
+    <section className={cn("w-full py-12 md:py-20", className)}>
       <div className="container flex flex-col">
         <SectionHeader
           badge='HOW IT WORKS'
@@ -107,7 +112,7 @@ const HowItWorks = () => {
 
           {/* Card 1 — Trainer Discovery */}
           <div className="flex flex-col">
-            <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col overflow-hidden rounded-xl border border-[#EBEBEB] bg-[#F7F7F7] p-10">
+            <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col overflow-hidden rounded-[12px] border border-[#EBEBEB] bg-[#F7F7F7] p-10">
               {/* Circular image categories */}
               <div className="hide_scrollbar mb-4 flex gap-3 overflow-x-auto">
                 {categories.map((cat, i) => (
@@ -116,7 +121,7 @@ const HowItWorks = () => {
                     onClick={() => setActiveCategory(i)}
                     className="flex shrink-0 flex-col items-center gap-1"
                   >
-                    <div className={`relative h-10 w-10 overflow-hidden rounded-full border-2 transition-all ${
+                    <div className={`relative h-10 w-10 overflow-hidden rounded-[9999px] border-2 transition-all ${
                       activeCategory === i ? 'border-primary' : 'border-transparent'
                     }`}>
                       <Image
@@ -136,7 +141,7 @@ const HowItWorks = () => {
                 ))}
               </div>
               
-              <div className="relative w-full flex-1 overflow-hidden rounded-lg">
+              <div className="relative w-full flex-1 overflow-hidden rounded-[8px]">
                 <Image
                   src="/images/landing-page/ste1.png"
                   alt={steps[0].title}
@@ -147,7 +152,7 @@ const HowItWorks = () => {
               </div>
             </div>
             <div className="flex flex-col items-start">
-              <span className="mb-3 rounded-full bg-primarybadge px-3 py-1 text-[12px] font-bold text-primary">
+              <span className="mb-3 rounded-[9999px] bg-primarybadge px-3 py-1 text-[12px] font-bold text-primary">
                 STEP 01
               </span>
               <h3 className="mb-2 text-xl font-bold text-muted-foreground md:text-2xl">
@@ -161,11 +166,11 @@ const HowItWorks = () => {
 
           {/* Card 2 — Countdown Timer */}
           <div className="flex flex-col">
-            <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col items-center justify-center rounded-xl border border-[#EBEBEB] bg-[#F7F7F7] p-4">
+            <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col items-center justify-center rounded-[12px] border border-[#EBEBEB] bg-[#F7F7F7] p-4">
               <CountdownTimer />
             </div>
             <div className="flex flex-col items-start">
-              <span className="mb-3 rounded-full bg-primarybadge px-3 py-1 text-[12px] font-bold text-primary">
+              <span className="mb-3 rounded-[9999px] bg-primarybadge px-3 py-1 text-[12px] font-bold text-primary">
                 STEP 02
               </span>
               <h3 className="mb-2 text-xl font-bold text-muted-foreground md:text-2xl">
@@ -179,7 +184,7 @@ const HowItWorks = () => {
 
           {/* Card 3 — Photo */}
           <div className="flex flex-col">
-            <div className="relative mb-6 h-72 md:h-80 lg:h-96 overflow-hidden rounded-xl border border-[#EBEBEB]">
+            <div className="relative mb-6 h-72 md:h-80 lg:h-96 overflow-hidden rounded-[12px] border border-[#EBEBEB]">
               <Image
                 src="/images/landing-page/step-3.png"
                 alt={steps[2].title}
@@ -189,7 +194,7 @@ const HowItWorks = () => {
               />
             </div>
             <div className="flex flex-col items-start">
-              <span className="mb-3 rounded-full bg-primarybadge px-3 py-1 text-[12px] font-bold text-primary">
+              <span className="mb-3 rounded-[9999px] bg-primarybadge px-3 py-1 text-[12px] font-bold text-primary">
                 STEP 03
               </span>
               <h3 className="mb-2 text-xl font-bold text-muted-foreground md:text-2xl">

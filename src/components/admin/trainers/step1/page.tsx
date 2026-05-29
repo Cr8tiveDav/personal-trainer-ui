@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/incompatible-library */
-'use client'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
+'use client';
+import { useForm, type Resolver } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import {
   Form,
   FormControl,
@@ -10,80 +10,131 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { type Resolver } from 'react-hook-form'
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { ArrowRight } from 'lucide-react'
+} from '@/components/ui/select';
+import { ArrowRight } from 'lucide-react';
+import {
+  TRAINER_SPECIALIZATIONS,
+  type TrainerSpecialization,
+} from "@/api/types/trainers";
+import { PhoneInputField } from "@/components/ui/phone-input";
 
-const SPECIALIZATIONS = ['yoga', 'speed', 'cardio', 'endurance', 'strength']
-const GENDERS = ['Male', 'Female', 'Other']
+const GENDERS = ['Male', 'Female', 'Other'] as const;
 
-const schema = z.object({
-  name: z.string().min(2, 'Full name is required'),
-  email: z.string().email('Valid email is required'),
-  phone_number: z.string().min(7, 'Phone number is required'),
-  gender: z.string().min(1, 'Gender is required'),
-  specializations: z.array(z.string()).min(1, 'At least one specialization is required'),
-  years_of_experience: z.coerce.number().min(0, 'Years of experience is required'),
+const SPECIALIZATION_OPTIONS: {
+  value: TrainerSpecialization;
+  label: string;
+}[] = [
+  { value: 'yoga', label: 'Yoga' },
+  { value: 'speed', label: 'Speed' },
+  { value: 'cardio', label: 'Cardio' },
+  { value: 'endurance', label: 'Endurance' },
+  { value: 'strength', label: 'Strength & Conditioning' },
+];
+
+const step1Schema = z.object({
+  name: z.string().trim().min(2, "Full name is required"),
+  email: z.string().trim().email("Valid email is required"),
+  phone_number: z
+    .string()
+    .trim()
+    .min(1, 'Phone number is required')
+    .regex(/^\+[1-9]\d{6,14}$/, 'Enter a valid phone number'),
+  gender: z.enum(GENDERS, { message: "Gender is required" }),
+  specialization: z.enum(TRAINER_SPECIALIZATIONS, {
+    message: 'Specialty is required',
+  }),
+  years_of_experience: z
+    .number({ message: 'Years of experience is required' })
+    .min(0, 'Years of experience is required'),
   bio: z.string().max(400).optional(),
-})
+});
 
-export type BasicInfoValues = z.infer<typeof schema>
+type Step1FormValues = z.infer<typeof step1Schema>;
+
+export type BasicInfoValues = Omit<Step1FormValues, 'specialization'> & {
+  specializations: TrainerSpecialization[];
+};
+
+function toBasicInfoValues(values: Step1FormValues): BasicInfoValues {
+  const { specialization, ...rest } = values;
+  return { ...rest, specializations: [specialization] };
+}
+
+function toStep1DefaultValues(
+  values?: Partial<BasicInfoValues>
+): Partial<Step1FormValues> {
+  if (!values) return {};
+  const { specializations, ...rest } = values;
+  return {
+    ...rest,
+    specialization: specializations?.[0],
+  };
+}
 
 interface Step1Props {
-  defaultValues?: Partial<BasicInfoValues>
-  onNext: (values: BasicInfoValues) => void
+  defaultValues?: Partial<BasicInfoValues>;
+  onNext: (values: BasicInfoValues) => void;
 }
 
 export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
-  const form = useForm<BasicInfoValues>({
-    resolver: zodResolver(schema) as Resolver<BasicInfoValues>,
+  const form = useForm<Step1FormValues>({
+    resolver: zodResolver(step1Schema) as Resolver<Step1FormValues>,
     mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       name: '',
       email: '',
       phone_number: '',
-      gender: '',
-      specializations: [],
-      years_of_experience: 0,
+      years_of_experience: undefined,
       bio: '',
-      ...defaultValues,
+      ...toStep1DefaultValues(defaultValues),
     },
-  })
+  });
 
-  const { isValid } = form.formState
-  const bio = form.watch('bio') ?? ''
+  const values = form.watch();
+  const canContinue = step1Schema.safeParse(values).success;
+  const bio = values.bio ?? '';
 
   return (
-    <div className='rounded-lg bg-white p-6 '>
-      <h2 className='text-base font-semibold text-gray-900'>Basic information</h2>
-      <p className='mt-1 mb-6 text-sm text-muted-foreground'>This is what clients will see on the trainers public profile.</p>
+    <div className='rounded-[8px] bg-white p-6'>
+      <h2 className='text-base font-semibold text-gray-900'>
+        Basic information
+      </h2>
+      <p className='mt-1 mb-6 text-sm text-muted-foreground'>
+        This is what clients will see on the trainer&apos;s public profile.
+      </p>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onNext)} className='space-y-5'>
+        <form
+          onSubmit={form.handleSubmit((data) =>
+            onNext(toBasicInfoValues(data))
+          )}
+          className='space-y-5'
+        >
           <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
-            
-            {/* Full Name */}
             <FormField
               control={form.control}
               name='name'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Full name <span className='text-red-500'>*</span></FormLabel>
+                  <FormLabel>
+                    Full name <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input 
-                      placeholder='e.g Amara Johnson' 
+                    <Input
+                      placeholder='e.g. Amara Johnson'
                       className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
-                      {...field} 
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -91,19 +142,20 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
               )}
             />
 
-            {/* Email */}
             <FormField
               control={form.control}
               name='email'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Email <span className='text-red-500'>*</span></FormLabel>
+                  <FormLabel>
+                    Email <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input 
-                      type='email' 
-                      placeholder='e.g joe@example.com' 
+                    <Input
+                      type='email'
+                      placeholder='e.g joe@example.com'
                       className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
-                      {...field} 
+                      {...field}
                     />
                   </FormControl>
                   <FormMessage />
@@ -111,19 +163,21 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
               )}
             />
 
-            {/* Phone Number */}
             <FormField
               control={form.control}
               name='phone_number'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Phone number <span className='text-red-500'>*</span></FormLabel>
+                  <FormLabel>
+                    Phone number <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input 
-                      type='tel' 
-                      placeholder='e.g +234 913 140 4048' 
-                      className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
-                      {...field} 
+                    <PhoneInputField
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      hasError={!!fieldState.error}
                     />
                   </FormControl>
                   <FormMessage />
@@ -131,22 +185,27 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
               )}
             />
 
-            {/* Gender */}
             <FormField
               control={form.control}
               name='gender'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Gender <span className='text-red-500'>*</span></FormLabel>
+                  <FormLabel>
+                    Gender <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}>
-                        <SelectValue placeholder='Female' />
+                      <SelectTrigger
+                        className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
+                      >
+                        <SelectValue placeholder='Select gender' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {GENDERS.map((g) => (
-                        <SelectItem key={g} value={g}>{g}</SelectItem>
+                        <SelectItem key={g} value={g}>
+                          {g}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -155,25 +214,27 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
               )}
             />
 
-            {/* Specialty */}
             <FormField
               control={form.control}
-              name='specializations'
+              name='specialization'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Specialty <span className='text-red-500'>*</span></FormLabel>
-                  <Select
-                    onValueChange={(val) => field.onChange([val])}
-                    value={field.value?.[0] ?? ''}
-                  >
+                  <FormLabel>
+                    Specialty <span className='text-red-500'>*</span>
+                  </FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
-                      <SelectTrigger className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}>
-                        <SelectValue placeholder='e.g Strength & Conditioning' />
+                      <SelectTrigger
+                        className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
+                      >
+                        <SelectValue placeholder='Select specialty' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {SPECIALIZATIONS.map((s) => (
-                        <SelectItem key={s} value={s} className='capitalize'>{s}</SelectItem>
+                      {SPECIALIZATION_OPTIONS.map(({ value, label }) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -182,20 +243,33 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
               )}
             />
 
-            {/* Years of Experience */}
             <FormField
               control={form.control}
               name='years_of_experience'
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Years of Experience <span className='text-red-500'>*</span></FormLabel>
+                  <FormLabel>
+                    Years of Experience <span className='text-red-500'>*</span>
+                  </FormLabel>
                   <FormControl>
-                    <Input 
-                      type='number' 
-                      min={0} 
-                      placeholder='e.g 1' 
+                    <Input
+                      type='number'
+                      min={0}
+                      placeholder='e.g 1'
                       className={`login-input ${fieldState.error ? 'login-input--error' : ''}`}
-                      {...field} 
+                      value={field.value ?? ''}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        if (raw === '') {
+                          field.onChange(undefined);
+                        } else {
+                          const n = Number(raw);
+                          field.onChange(Number.isFinite(n) ? n : undefined);
+                        }
+                      }}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
                     />
                   </FormControl>
                   <FormMessage />
@@ -204,7 +278,6 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
             />
           </div>
 
-          {/* Bio / About */}
           <FormField
             control={form.control}
             name='bio'
@@ -212,7 +285,9 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
               <FormItem>
                 <FormLabel className='flex items-center justify-between'>
                   Bio / About
-                  <span className='text-xs text-muted-foreground'>{bio.length}/400</span>
+                  <span className='text-xs text-muted-foreground'>
+                    {bio.length}/400
+                  </span>
                 </FormLabel>
                 <FormControl>
                   <Textarea
@@ -228,13 +303,16 @@ export function Step1BasicInfo({ defaultValues, onNext }: Step1Props) {
           />
 
           <div className='flex justify-end'>
-            {/* The single point of change: disabled state governed by react-hook-form validation status */}
-            <Button type='submit' disabled={!isValid} className='flex items-center gap-2'>
+            <Button
+              type='submit'
+              disabled={!canContinue}
+              className='flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none'
+            >
               Continue <ArrowRight className='h-4 w-4' />
             </Button>
           </div>
         </form>
       </Form>
     </div>
-  )
+  );
 }

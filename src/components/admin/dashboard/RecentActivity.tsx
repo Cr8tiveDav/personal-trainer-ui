@@ -1,48 +1,57 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { useQuery } from '@tanstack/react-query'
-import { Activity, ActivityRow } from './ActivityRow'
-
-
-async function fetchRecentActivity(): Promise<Activity[]> {
-  const res = await fetch('/api/v1/sessions/recent')
-  if (!res.ok) throw new Error('Failed to fetch activity')
-  const data = await res.json()
-  return data.data
-}
+import Link from 'next/link';
+import { useRecentActivity } from '@/api/dashboard';
+import {
+  EMPTY_STATE_IMAGE_PATHS,
+  EmptyState,
+} from '@/components/ui/EmptyState';
+import { ActivityRow } from './ActivityRow';
 
 export function RecentActivity() {
-  const { data: activities } = useQuery({
-    queryKey: ['recent-activity'],
-    queryFn: fetchRecentActivity,
-  })
-
-  const list = activities ?? []
-
+  const { data: response, isPending, isSuccess } = useRecentActivity();
+  const activities = isSuccess ? (response?.data?.items ?? []) : [];
   return (
-    <div className='flex-1 rounded-xl border border-gray-100 bg-white p-5 shadow-sm h-full'>
+    <div className='flex-1 rounded-[12px] border border-[#E4E2E9] bg-white p-5 h-full'>
       <div className='mb-4 flex items-center justify-between'>
-        <h2 className='text-base font-semibold text-gray-900'>Recent activity</h2>
+        <h2 className='text-[24px] font-semibold text-gray-900'>
+          Recent activity
+        </h2>
         <Link
           href='/admin/sessions'
-          className='text-sm font-medium text-primary hover:underline'
+          className='text-base font-semibold text-primary hover:underline'
         >
           View all
         </Link>
       </div>
 
-      {list.length === 0 ? (
-        <div className='flex flex-col items-center justify-center py-10 text-center'>
-          <p className='text-sm text-gray-400'>No recent activity yet</p>
+      {isPending ? (
+        <div className='divide-y divide-[#EBEBEB]'>
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className='flex items-center gap-4 py-4 animate-pulse'>
+              <div className='h-10 w-10 shrink-0 rounded-[9999px] bg-gray-200' />
+              <div className='flex-1 min-w-0'>
+                <div className='h-4 w-40 bg-gray-200 rounded' />
+                <div className='h-3 w-20 bg-gray-200 rounded mt-2' />
+              </div>
+              <div className='h-6.5 w-16 bg-gray-200 rounded-[9999px]' />
+            </div>
+          ))}
         </div>
+      ) : isSuccess && activities.length === 0 ? (
+        <EmptyState
+          imageSrc={EMPTY_STATE_IMAGE_PATHS.recentActivity}
+          imageAlt='No recent activity'
+          title='No recent activity yet'
+          description='Session bookings and updates will show up here once clients start training.'
+        />
       ) : (
-        <div className='divide-y divide-gray-50'>
-          {list.map((activity) => (
+        <div className='divide-y divide-[#EBEBEB]'>
+          {activities.map((activity) => (
             <ActivityRow key={activity.id} activity={activity} />
           ))}
         </div>
       )}
     </div>
-  )
+  );
 }

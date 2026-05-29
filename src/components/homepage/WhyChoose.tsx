@@ -44,7 +44,7 @@ const WhyChoose = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className='w-full py-20'>
+    <section className='w-full py-12 md:py-20'>
       <div className='container'>
         <SectionHeader
           badge='WHY CHOOSE FITCALL?'
@@ -100,8 +100,8 @@ const WhyChoose = () => {
                         }}
                       />
                     )}
-                    <div className='flex w-full items-center gap-4 rounded-2xl border border-[#EBEBEB] px-4 py-4 transition-all duration-300 md:px-5 md:py-6'>
-                      <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#EBEBEB]'>
+                    <div className='flex w-full items-center gap-4 rounded-[16px] border border-[#EBEBEB] px-4 py-4 transition-all duration-300 md:px-5 md:py-6'>
+                      <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border border-[#EBEBEB]'>
                         <Image
                           src={feature.icon}
                           alt={feature.title}

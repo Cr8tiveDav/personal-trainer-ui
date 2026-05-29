@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { useQueryClient } from '@tanstack/react-query'
+import { useUpdateTrainer } from '@/api/trainers'
 import {
   Dialog,
   DialogContent,
@@ -62,17 +62,17 @@ interface EditTrainerModalProps {
 }
 
 export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalProps) {
-  const queryClient = useQueryClient()
+  const { mutateAsync, isPending } = useUpdateTrainer(trainer.id)
 
   const form = useForm<EditFormValues>({
     resolver: zodResolver(editSchema),
     defaultValues: {
       specialization: trainer.specializations?.[0] ?? trainer.specialty ?? '',
       bio: trainer.bio ?? '',
-      years_of_experience: trainer.years_of_experience ?? undefined,
-      intro_video_url: trainer.intro_video_url ?? '',
+      years_of_experience: trainer.yearsOfExperience ?? undefined,
+      intro_video_url: trainer.introVideoUrl ?? '',
       onboarding_status:
-        (trainer.onboarding_status?.toLowerCase() as (typeof ONBOARDING_STATUSES)[number]) ??
+        (trainer.onboardingStatus?.toLowerCase() as (typeof ONBOARDING_STATUSES)[number]) ??
         'pending',
     },
   })
@@ -82,39 +82,26 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
     form.reset({
       specialization: trainer.specializations?.[0] ?? trainer.specialty ?? '',
       bio: trainer.bio ?? '',
-      years_of_experience: trainer.years_of_experience ?? undefined,
-      intro_video_url: trainer.intro_video_url ?? '',
+      years_of_experience: trainer.yearsOfExperience ?? undefined,
+      intro_video_url: trainer.introVideoUrl ?? '',
       onboarding_status:
-        (trainer.onboarding_status?.toLowerCase() as (typeof ONBOARDING_STATUSES)[number]) ??
+        (trainer.onboardingStatus?.toLowerCase() as (typeof ONBOARDING_STATUSES)[number]) ??
         'pending',
     })
   }, [trainer, form])
 
-  const { isSubmitting } = form.formState
+  const isSubmitting = isPending
 
   async function onSubmit(values: EditFormValues) {
-    const payload = {
-      specializations: [values.specialization],
-      bio: values.bio || undefined,
-      years_of_experience: values.years_of_experience,
-      intro_video_url: values.intro_video_url || undefined,
-      onboarding_status: values.onboarding_status,
-    }
-
     try {
-      const res = await fetch(`/api/admin/trainers/${trainer.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+      await mutateAsync({
+        specializations: [values.specialization],
+        bio: values.bio || undefined,
+        years_of_experience: values.years_of_experience,
+        intro_video_url: values.intro_video_url || undefined,
+        onboarding_status: values.onboarding_status,
       })
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}))
-        throw new Error(err?.error || 'Failed to update trainer')
-      }
-
       toast.success('Trainer updated successfully.')
-      await queryClient.invalidateQueries({ queryKey: ['trainer', trainer.id] })
       onClose()
     } catch (err: unknown) {
       toast.error(err instanceof Error ? err.message : 'Something went wrong.')

@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import React, { useState, useTransition } from 'react';
+import React, { useState } from 'react';
+import { useLogin, type LoginType } from '@/api/auth';
 import {
   Form,
   FormControl,
@@ -19,19 +20,12 @@ import Link from 'next/link';
 import { Eye, EyeOff, Asterisk } from 'lucide-react';
 import { Input } from '../ui/input';
 import { cn } from '~/utils';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
-import { loginAction } from '@/actions/auth';
-
-type LoginType = 'admin' | 'trainer';
-
 interface LoginProps {
   type: LoginType;
 }
 
 const Login = ({ type }: LoginProps) => {
-  const router = useRouter();
-  const [isLoading, startTransition] = useTransition();
+  const login = useLogin({ type });
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -42,26 +36,15 @@ const Login = ({ type }: LoginProps) => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-    const formData = new FormData();
-    formData.append('email', values.email);
-    formData.append('password', values.password);
-    formData.append('type', type);
-
-    startTransition(async () => {
-      const result = await loginAction(null, formData);
-
-      if (result?.success && result.redirectTo) {
-        toast.success('Login successful!');
-        router.push(result.redirectTo);
-      } else {
-        toast.error(result?.error || 'Authentication failed');
-      }
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    login.mutate({
+      email: values.email,
+      password: values.password,
     });
   };
 
   return (
-    <section className='min-h-screen bg-secondary flex items-center py-6 sm:py-8'>
+    <section className='min-h-screen bg-secondary flex items-center justify-center py-6 sm:py-8'>
       <div className='container px-4 sm:px-6'>
         <div className='mx-auto grid max-w-[1201px] md:grid-cols-2'>
           <article className='relative hidden w-full min-h-[678px]  md:block'>
@@ -73,7 +56,7 @@ const Login = ({ type }: LoginProps) => {
             />
           </article>
 
-          <article className='relative z-30 right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12'>
+          <article className='relative z-30 md:right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12'>
             <Image
               src='/images/trainer/logo.svg'
               alt='Logo'
@@ -87,7 +70,10 @@ const Login = ({ type }: LoginProps) => {
             </h2>
 
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className='space-y-5'
+              >
                 <FormField
                   control={form.control}
                   name='email'
@@ -103,13 +89,12 @@ const Login = ({ type }: LoginProps) => {
 
                       <FormControl>
                         <Input
-                          disabled={isLoading}
+                          disabled={login.isPending}
                           placeholder='johndoe@example.com'
                           {...field}
                           className={cn(
                             'login-input text-sm h-[44px] sm:text-base',
-                            form.formState.errors.email &&
-                              'login-input--error'
+                            form.formState.errors.email && 'login-input--error'
                           )}
                         />
                       </FormControl>
@@ -135,7 +120,7 @@ const Login = ({ type }: LoginProps) => {
                       <div className='relative'>
                         <FormControl>
                           <Input
-                            disabled={isLoading}
+                            disabled={login.isPending}
                             type={showPassword ? 'text' : 'password'}
                             placeholder='Enter Password'
                             {...field}
@@ -149,9 +134,7 @@ const Login = ({ type }: LoginProps) => {
 
                         <button
                           type='button'
-                          onClick={() =>
-                            setShowPassword(prev => !prev)
-                          }
+                          onClick={() => setShowPassword((prev) => !prev)}
                           className='absolute inset-y-0 right-0 flex items-center pr-3'
                         >
                           {showPassword ? (
@@ -174,15 +157,15 @@ const Login = ({ type }: LoginProps) => {
                 />
 
                 <FramerButton
-                  isLoading={isLoading}
-                  disabled={isLoading}
+                  isLoading={login.isPending}
+                  disabled={login.isPending}
                   text='Login'
                   className='bg-primary text-sm sm:text-base'
                 />
 
                 <div className='!mt-2 flex justify-end'>
                   <Link
-                    href='/forgot-password'
+                    href='/admin/forgot-password'
                     className='cursor-pointer text-xs font-semibold text-red-800 sm:text-sm'
                   >
                     Forgot Password?

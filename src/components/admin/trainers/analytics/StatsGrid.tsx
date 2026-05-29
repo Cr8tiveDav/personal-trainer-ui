@@ -1,39 +1,24 @@
-'use client';
+'use client'
 
-import React from 'react';
-import StatCard from './StatCard';
-import { useQuery } from '@tanstack/react-query';
-import { TrainerResponse } from '../types';
-
-const fetchAllTrainers = async (): Promise<TrainerResponse> => {
-  const res = await fetch('/api/admin/trainers?status=all');
-  if (!res.ok) {
-    if (res.status === 401) {
-      if (typeof window !== 'undefined') {
-        window.location.href = '/admin/login';
-      }
-    }
-    throw new Error('Failed to fetch trainers stats');
-  }
-  return res.json();
-};
+import React from 'react'
+import StatCard from './StatCard'
+import { useTrainerStatusCounts } from '@/api/trainers'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const StatsGrid = () => {
-  const { data } = useQuery({
-    queryKey: ['admin-trainers', 'all'],
-    queryFn: fetchAllTrainers,
-  });
+  const { counts, isLoading } = useTrainerStatusCounts()
+  const showSkeleton = isLoading
 
   const stats = [
     {
       title: 'Active Trainers',
-      value: data?.counts?.active ?? '...',
+      value: showSkeleton ? '' : (counts.active ?? 0),
       icon: '/images/admin-dashboard/icons/users-three.svg',
       variant: '#F7F7F7',
     },
     {
       title: 'Pending Approvals',
-      value: data?.counts?.pending ?? '...',
+      value: showSkeleton ? '' : (counts.pending ?? 0),
       icon: '/images/admin-dashboard/icons/hourglass-high.svg',
       variant: '#FEF0EF',
     },
@@ -49,21 +34,32 @@ const StatsGrid = () => {
       icon: '/images/admin-dashboard/icons/trend-up.svg',
       variant: '#F7F7F7',
     },
-  ];
+  ]
 
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full'>
-      {stats.map((stat, index) => (
-        <StatCard
-          key={index}
-          title={stat.title}
-          value={stat.value}
-          icon={stat.icon}
-          variant={stat.variant}
-        />
-      ))}
+      {stats.map((stat, index) =>
+        showSkeleton ? (
+          <div
+            key={index}
+            className='flex flex-col justify-between gap-2 rounded-[12px] border border-[#EBEBEB] bg-white p-5'
+          >
+            <Skeleton className='h-10 w-10 rounded-[9999px]' />
+            <Skeleton className='h-9 w-20' />
+            <Skeleton className='h-3 w-28' />
+          </div>
+        ) : (
+          <StatCard
+            key={index}
+            title={stat.title}
+            value={stat.value}
+            icon={stat.icon}
+            variant={stat.variant}
+          />
+        ),
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default StatsGrid;
+export default StatsGrid

@@ -1,16 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, Pencil } from 'lucide-react';
+import { useTrainerById } from '@/api/trainers';
+import { EditTrainerModal } from './EditTrainerModal';
+import { Button } from '@/components/ui/button';
 import ProfileHeader from './ProfileHeader';
 import QuickDetails from './QuickDetails';
 import TrainerTabs from './TrainerTabs';
 import OverviewTab from './tabs/OverviewTab';
+import SessionsTab from './tabs/SessionsTab';
+// import EarningsTab from './tabs/EarningsTab';
 import AvailabilityTab from './tabs/AvailabilityTab';
-import { EditTrainerModal } from './EditTrainerModal';
-import { Button } from '@/components/ui/button';
+import { TrainerMediaTab } from './tabs/MediaTabs';
+import { TrainerDetailsSkeleton } from './TrainerDetailsSkeleton';
 
 export type TabType =
   | 'overview'
@@ -19,42 +23,36 @@ export type TabType =
   | 'media'
   | 'availability';
 
-const fetchTrainer = async (id: string) => {
-  const response = await fetch(`/api/admin/trainers/${id}`);
-  if (!response.ok) {
-    if (response.status === 401) {
-      if (typeof window !== 'undefined') {
-        window.location.href = '/admin/login';
-      }
-    }
-    throw new Error('Failed to fetch trainer');
-  }
-  return response.json();
+const TAB_FROM_QUERY: Record<string, TabType> = {
+  overview: 'overview',
+  sessions: 'sessions',
+  // earnings: 'earnings',
+  media: 'media',
+  availability: 'availability',
 };
 
 const TrainerDetailsClient = () => {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const id = params.id as string;
-  const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [userTab, setUserTab] = useState<TabType | null>(null);
   const [editOpen, setEditOpen] = useState(false);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['trainer', id],
-    queryFn: () => fetchTrainer(id),
-  });
+  const { data, isLoading, isError } = useTrainerById(id);
+
+  const tabParam = searchParams.get('tab');
+  const queryTab =
+    tabParam && TAB_FROM_QUERY[tabParam] ? TAB_FROM_QUERY[tabParam] : null;
+  const activeTab = userTab ?? queryTab ?? 'overview';
 
   if (isLoading) {
-    return (
-      <div className='w-full h-64 flex items-center justify-center'>
-        <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-primary'></div>
-      </div>
-    );
+    return <TrainerDetailsSkeleton />;
   }
 
   if (isError || !data?.data) {
     return (
-      <div className='w-full p-8 text-center'>
+      <div className='w-full md:p-8 text-center'>
         <p className='text-red-500 mb-4'>Failed to load trainer details.</p>
         <button
           onClick={() => router.push('/admin/trainers')}
@@ -69,8 +67,7 @@ const TrainerDetailsClient = () => {
   const trainer = data.data;
 
   return (
-    <div className='w-full mx-auto space-y-6 px-4 pb-12'>
-      {/* Breadcrumb / Back button + Edit */}
+    <div className='w-full mx-auto space-y-6 md:px-4 pb-12'>
       <div className='flex items-center justify-between'>
         <button
           onClick={() => router.push('/admin/trainers')}
@@ -90,44 +87,38 @@ const TrainerDetailsClient = () => {
         </Button>
       </div>
 
-      {/* Top Section: Profile and Details */}
       <div className='flex flex-col lg:flex-row gap-6 w-full'>
-        {/* Profile Header takes up approx 2/3 */}
         <div className='flex-1 lg:w-2/3'>
           <ProfileHeader trainer={trainer} />
         </div>
 
-        {/* Quick Details takes up approx 1/3 */}
         <div className='w-full lg:w-1/3'>
           <QuickDetails trainer={trainer} />
         </div>
       </div>
 
-      {/* Tabs Section */}
       <div className='w-full mt-8'>
-        <TrainerTabs activeTab={activeTab} onTabChange={setActiveTab} />
+        <TrainerTabs activeTab={activeTab} onTabChange={setUserTab} />
 
         <div className='mt-6'>
           {activeTab === 'overview' && <OverviewTab trainer={trainer} />}
-          {activeTab === 'sessions' && (
-            <div className='py-8 text-center text-gray-500'>
-              Sessions tab content coming soon.
-            </div>
-          )}
-          {activeTab === 'earnings' && (
-            <div className='py-8 text-center text-gray-500'>
-              Earnings tab content coming soon.
-            </div>
-          )}
+          {activeTab === 'sessions' && <SessionsTab trainerId={trainer.id} />}
+          {/* {activeTab === 'earnings' && <EarningsTab trainerId={trainer.id} />} */}
           {activeTab === 'media' && (
-            <div className='py-8 text-center text-gray-500'>
-              Media tab content coming soon.
-            </div>
+            <TrainerMediaTab
+              trainerId={trainer.id}
+              trainerName={trainer.name}
+              trainerSpecialty={trainer.specialty}
+            />
           )}
-          {activeTab === 'availability' && <AvailabilityTab />}
+          {activeTab === 'availability' && (
+            <AvailabilityTab
+              trainerId={trainer.id}
+              enabled={activeTab === 'availability'}
+            />
+          )}
         </div>
       </div>
-
       <EditTrainerModal
         open={editOpen}
         onClose={() => setEditOpen(false)}

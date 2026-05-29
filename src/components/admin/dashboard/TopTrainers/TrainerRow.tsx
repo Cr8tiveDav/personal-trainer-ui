@@ -1,4 +1,4 @@
-import { TrendingUp, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { cn } from '~/utils'
 
 export interface Trainer {
@@ -15,30 +15,47 @@ interface TrainerRowProps {
 }
 
 const RANK_COLORS: Record<number, string> = {
-  1: 'text-yellow-500',
-  2: 'text-gray-400',
-  3: 'text-orange-400',
+  1: 'text-[#FBBD23]',
+  2: 'text-[#6D6A81]',
+  3: 'text-[#D48A0C]',
+  4: 'text-[#D48A0C]',
+  5: 'text-[#D48A0C]',
 }
 
 export function TrainerRow({ trainer }: TrainerRowProps) {
   const { rank, initial, name, rating, total_sessions, trend } = trainer
 
   return (
-    <div className='flex items-center gap-4 py-3'>
-      <span className={cn('w-6 text-sm font-bold', RANK_COLORS[rank] ?? 'text-gray-500')}>
+    <div className='flex items-center gap-4 py-3.5'>
+      <span className={cn('w-8 text-sm font-bold', RANK_COLORS[rank] ?? 'text-gray-500')}>
         #{rank}
       </span>
-      {trend === 'up' && <TrendingUp className='h-3 w-3 shrink-0 text-green-500' />}
-      <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs font-semibold text-gray-600'>
-        {initial}
+
+      <div className='flex items-center gap-1.5'>
+        <span className='w-4 flex justify-center shrink-0 select-none'>
+          {trend === 'up' && (
+            <span className='text-[#1E7829] text-[13px] font-bold'>▲</span>
+          )}
+          {trend === 'down' && (
+            <span className='text-[#C42D2B] text-[13px] font-bold'>▼</span>
+          )}
+        </span>
+
+        <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-[99999px] border border-[#EBEBEB] bg-white text-sm font-bold text-muted-foreground select-none'>
+          {initial}
+        </div>
       </div>
-      <p className='flex-1 text-sm font-medium text-gray-900'>{name}</p>
-      <div className='flex items-center gap-1'>
-        <span className='text-sm font-semibold text-gray-700'>{rating}</span>
-        <Star className='h-3.5 w-3.5 fill-yellow-400 text-yellow-400' />
+
+      <p className='flex-1 text-sm font-semibold text-muted-foreground'>{name}</p>
+
+      <div className='flex items-center gap-1.5'>
+        <span className='text-sm font-semibold text-[#D48A0C]'>{rating.toFixed(1)}</span>
+        <Star className='h-3.5 w-3.5 fill-[#D48A0C] text-[#D48A0C]' />
       </div>
-      <p className='w-16 text-right text-xs text-gray-400'>
-        {total_sessions} <br /> sessions
+
+      <p className='w-16 text-right text-xs text-gray-900 font-medium leading-tight select-none ml-6'>
+        <span className='text-sm font-semibold text-gray-900'>{total_sessions}</span> <br />
+        <span className='text-sm text-muted-foreground font-medium'>{total_sessions === 1 ? 'Session' : 'Sessions'}</span>
       </p>
     </div>
   )

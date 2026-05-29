@@ -1,51 +1,80 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { TabType, TrainerResponse } from '../types';
-import FilterControls from './filters/FilterControls';
-import TrainerTable from './table/TrainerTable';
+import React, { useState } from "react";
+import { TabType } from "../types";
+import FilterControls from "./filters/FilterControls";
+import TrainerTable from "./table/TrainerTable";
+import { useAdminTrainers, useTrainerStatusCounts } from "@/api/trainers";
+import { getTrainerListOnboardingStatus } from "@/lib/trainers/admin-trainer-filters";
 
-async function fetchTrainers(status: string): Promise<TrainerResponse> {
-  const res = await fetch(`/api/admin/trainers?status=${status}`);
-  if (!res.ok) {
-    if (res.status === 401) {
-      if (typeof window !== 'undefined') {
-        window.location.href = '/admin/login';
-      }
-    }
-    throw new Error('Failed to fetch trainers');
-  }
-  return res.json();
-}
+const PER_PAGE = 10;
+
+const defaultCounts = { all: 0, active: 0, pending: 0, suspended: 0 };
 
 const TrainersList = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('all');
+  const [activeTab, setActiveTab] = useState<TabType>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
 
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['admin-trainers', activeTab],
-    queryFn: () => fetchTrainers(activeTab),
-  });
+  const { counts, isLoading: countsLoading } = useTrainerStatusCounts();
+  const tabCounts = counts ?? defaultCounts;
 
-  const defaultCounts = { all: 0, active: 0, pending: 0, suspended: 0 };
-  const counts = data?.counts || defaultCounts;
+  const onboardingStatus = getTrainerListOnboardingStatus(activeTab);
+
+  const { data, isLoading, isError, isFetching } = useAdminTrainers(
+    page,
+    PER_PAGE,
+    { onboardingStatus, searchQuery },
+  );
+
+  const hasListData = data !== undefined;
+  const showSkeleton = isLoading && !hasListData;
+  const trainers = data?.trainers ?? [];
+  const metaTotalCount = data?.meta?.total_count ?? 0;
+
+  const listTotalCount = metaTotalCount;
+
+  const totalPages = data?.meta?.total_pages ?? 1;
+
+  const displayPage = listTotalCount === 0 ? 1 : Math.min(page, totalPages);
+
+  function handleTabChange(tab: TabType) {
+    setActiveTab(tab);
+    setPage(1);
+  }
+
+  function handleSearchChange(value: string) {
+    setSearchQuery(value);
+    setPage(1);
+  }
+
+  function goToPage(next: number) {
+    if (next < 1 || next > totalPages || next === displayPage) return;
+    setPage(next);
+  }
 
   return (
-    <div className='flex flex-col rounded-3xl border border-[#CBD5E1] bg-white'>
-      {/* Top section: Filters, Search, Tabs */}
-      <div className='py-6 px-4'>
+    <div className="flex flex-col rounded-[24px] border border-[#CBD5E1] bg-white">
+      <div className="py-6 px-4">
         <FilterControls
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          counts={counts}
+          setActiveTab={handleTabChange}
+          counts={tabCounts}
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
         />
       </div>
 
-      {/* Table section */}
       <TrainerTable
-        trainers={data?.data}
-        isLoading={isLoading}
+        trainers={trainers}
+        isLoading={showSkeleton || countsLoading}
+        isFetching={isFetching && !showSkeleton}
         isError={isError}
+        listKey={`${activeTab}-${searchQuery}-page-${displayPage}`}
+        listTotalCount={listTotalCount}
+        displayPage={displayPage}
+        totalPages={totalPages}
+        onPageChange={goToPage}
       />
     </div>
   );

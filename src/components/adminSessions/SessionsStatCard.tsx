@@ -1,125 +1,76 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-import { AlertCircle } from 'lucide-react'
-
-interface SessionStats {
-  total_sessions: number
-  total_sessions_change: string
-  need_confirmation: number
-  open_disputes: number
-  trial_paid_rate: string
-  trial_paid_rate_change: string
-  no_show_rate: string
-  no_show_rate_change: string
-}
+import { useSessionStats } from '@/api/sessions'
 
 interface SessionStatCardProps {
   label: string
-  value: string | number
-  subtext: string
+  value?: string | number
+  subtext?: string
   valueColor?: 'default' | 'amber' | 'red'
-  trendColor?: 'green' | 'red'
+  isLoading?: boolean
 }
 
-function SessionStatCard({ label, value, subtext, valueColor = 'default', trendColor }: SessionStatCardProps) {
+function SessionStatCard({ label, value, subtext, valueColor = 'default', isLoading = false }: SessionStatCardProps) {
   const valueClass =
-    valueColor === 'amber'
+    isLoading
+      ? 'text-gray-400'
+      : valueColor === 'amber'
       ? 'text-[#f59e0b]'
       : valueColor === 'red'
       ? 'text-[#d92d20]'
       : 'text-muted-foreground'
-
-  const firstWord = subtext.split(' ')[0]
-  const restText = subtext.substring(subtext.indexOf(' '))
-
-  const trendClass =
-    trendColor === 'green'
-      ? 'text-[#0f973d]'
-      : trendColor === 'red'
-      ? 'text-[#d92d20]'
-      : 'text-muted'
+  const valueSizeClass = isLoading ? 'text-sm' : 'text-2xl'
 
   return (
-    <div className='bg-white rounded-xl p-5'>
-      <p className='text-[10px] font-bold uppercase  text-muted'>{label}</p>
-      <h3 className={`mt-2 text-2xl font-bold ${valueClass}`}>{value}</h3>
-      <p className='mt-1 text-xs font-medium text-muted'>
-        <span className={trendClass}>{firstWord}</span>
-        {restText}
-      </p>
+    <div className='bg-white rounded-[12px] p-5'>
+      <p className='whitespace-nowrap text-xs font-bold uppercase text-muted'>{label}</p>
+      <h3 className={`mt-2 flex h-8 items-center font-bold ${valueSizeClass} ${valueClass}`}>{value ?? '-'}</h3>
+      {subtext && <p className='mt-1 text-xs font-medium text-muted'>{subtext}</p>}
     </div>
   )
 }
 
-async function fetchSessionStats(): Promise<SessionStats> {
-  const res = await fetch('/api/v1/sessions/stats')
-  if (!res.ok) throw new Error('Failed to fetch session stats')
-  const data = await res.json()
-  return data.data
-}
-
 export function SessionsStatsSection() {
-  const { data } = useQuery({
-    queryKey: ['session-stats'],
-    queryFn: fetchSessionStats,
-  })
-
-  const stats = data ?? {
-    total_sessions: 342,
-    total_sessions_change: '+12% vs April',
-    need_confirmation: 11,
-    open_disputes: 4,
-    trial_paid_rate: '62%',
-    trial_paid_rate_change: '+4pts this month',
-    no_show_rate: '6.2%',
-    no_show_rate_change: '+1pt vs April',
-  }
+  const { data: response, isError, isLoading } = useSessionStats()
+  const stats = response?.data
 
   return (
     <div className='w-full space-y-4'>
       <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5'>
         <SessionStatCard
-          label='Total Sessions (May)'
-          value={stats.total_sessions}
-          subtext={stats.total_sessions_change}
-          trendColor='green'
+          label='Total Sessions'
+          value={isLoading && !stats ? 'Loading' : stats?.total_sessions}
+          isLoading={isLoading && !stats}
+          subtext={stats?.total_sessions_change ? `${stats.total_sessions_change} this month` : 'this month'}
         />
         <SessionStatCard
           label='Need Confirmation'
-          value={stats.need_confirmation}
+          value={stats?.need_confirmation}
           subtext='awaiting resolution'
           valueColor='amber'
         />
         <SessionStatCard
           label='Open Disputes'
-          value={stats.open_disputes}
-          subtext='awaiting resolution'
+          value={stats?.open_disputes}
           valueColor='red'
         />
         <SessionStatCard
-          label='Trial → Paid Rate'
-          value={stats.trial_paid_rate}
-          subtext={stats.trial_paid_rate_change}
-          trendColor='green'
+          label='Trial to Paid Rate'
+          value={stats?.trial_paid_rate}
+          subtext={stats?.trial_paid_rate_change}
         />
         <SessionStatCard
           label='No-Show Rate'
-          value={stats.no_show_rate}
-          subtext={stats.no_show_rate_change}
-          trendColor='red'
+          value={stats?.no_show_rate}
+          subtext={stats?.no_show_rate_change}
         />
       </div>
 
-      <div className='flex items-start gap-3 rounded-lg border border-[#ffeccc] bg-[#fffcf5] p-4'>
-        <AlertCircle className='h-5 w-5 shrink-0 text-[#f59e0b]' />
-        <div className='text-xs leading-relaxed'>
-          <p className='font-bold text-[#944a00]'>4 sessions need your attention</p>
-          <p className='mt-0.5 text-[#b25e00]/90'>
-            2 disputes awaiting admin decision, 1 trainer flagged for repeated no-shows (3 this month), and 1 suspected trial abuse — client has booked free trials with 3 different trainers.
-          </p>
+      {isError && !stats && (
+        <div className='rounded-[8px] border border-gray-100 bg-white p-4 text-xs font-medium text-gray-400'>
+          Session metrics could not be loaded.
         </div>
-      </div>
+      )}
     </div>
   )
 }

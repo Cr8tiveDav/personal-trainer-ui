@@ -1,0 +1,26 @@
+'use client';
+
+import { useAdminTrainers } from '@/api/trainers';
+import TrainersPageHeader from './page-header/TrainersPageHeader';
+import StatsGrid from './analytics/StatsGrid';
+import TrainersList from './trainers-list/TrainersList';
+import { TrainersPageSkeleton } from './TrainersPageSkeleton';
+
+export function TrainersPageClient() {
+  const { data, isLoading } = useAdminTrainers(1, 10);
+  const showSkeleton = isLoading && !data;
+
+  return (
+    <div className='mx-auto w-full space-y-6 md:px-4 pb-6 lg:px-10'>
+      <TrainersPageHeader />
+      {showSkeleton ? (
+        <TrainersPageSkeleton />
+      ) : (
+        <>
+          <StatsGrid />
+          <TrainersList />
+        </>
+      )}
+    </div>
+  );
+}

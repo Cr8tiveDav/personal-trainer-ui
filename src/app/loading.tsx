@@ -5,7 +5,7 @@ export default function Loading() {
       aria-label="Loading"
       className="flex min-h-[60vh] items-center justify-center p-6"
     >
-      <div className="border-muted-foreground/30 border-t-foreground h-8 w-8 animate-spin rounded-full border-2" />
+      <div className="border-muted-foreground/30 border-t-foreground h-8 w-8 animate-spin rounded-[9999px] border-2" />
     </div>
   );
 }

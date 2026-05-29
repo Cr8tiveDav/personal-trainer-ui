@@ -1,15 +1,8 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useConsultationConversion } from '@/api/analytics'
+import type { ConversionData } from '@/api/types/analytics'
 import { FunnelChart, Funnel, LabelList, ResponsiveContainer, Tooltip } from 'recharts'
-
-interface ConversionData {
-  consultations: number
-  subscriptions: number
-  drop_off: number
-  conversion_rate: number
-  trend: string
-}
 
 const EMPTY_DATA: ConversionData = {
   consultations: 100,
@@ -19,20 +12,9 @@ const EMPTY_DATA: ConversionData = {
   trend: '0% from last month',
 }
 
-async function fetchConversionData(): Promise<ConversionData> {
-  const res = await fetch('/api/v1/analytics/conversion')
-  if (!res.ok) throw new Error('Failed to fetch conversion data')
-  const data = await res.json()
-  return data.data
-}
-
 export function ConsultationConversion() {
-  const { data } = useQuery({
-    queryKey: ['consultation-conversion'],
-    queryFn: fetchConversionData,
-  })
-
-  const stats = data ?? EMPTY_DATA
+  const { data: response } = useConsultationConversion()
+  const stats = response?.data ?? EMPTY_DATA
 
   const funnelData = [
     { value: stats.consultations, name: 'Consultations', fill: '#4f8ef7' },
@@ -41,12 +23,12 @@ export function ConsultationConversion() {
   ]
 
   return (
-    <div className='flex-1 rounded-xl border border-gray-100 bg-white p-6 shadow-sm'>
+    <div className='flex-1 rounded-[12px] p-6 rounded-[12px] border border-[#E4E2E9] bg-white'>
       <h2 className='text-xl font-bold text-foreground'>Consultation Conversion</h2>
       <p className='mt-1 text-sm text-muted'>Track how consultations turn into paid users.</p>
 
-      <div className='mt-6 flex items-center gap-6'>
-        <div className='flex-1'>
+      <div className='mt-6 flex flex-col md:flex-row items-center gap-6'>
+        <div className='w-full md:flex-1'>
           <ResponsiveContainer width='100%' height={250}>
             <FunnelChart>
               <Tooltip
@@ -66,7 +48,7 @@ export function ConsultationConversion() {
           </ResponsiveContainer>
         </div>
 
-        <div className='bg-gray-100 md:max-w-[200px] rounded-md flex flex-col gap-10 p-3'>
+        <div className='w-full md:max-w-[200px] bg-gray-100 rounded-[6px] flex flex-col gap-10 p-3'>
           <div>
             <p className='text-3xl font-bold text-foreground'>{stats.conversion_rate}%</p>
             <p className='text-sm  text-muted-foreground'>Conversation rate</p>

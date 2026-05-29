@@ -77,13 +77,13 @@ export function ContactForm() {
   }
 
   return (
-    <div className="w-full rounded-lg border border-[#ECECEC] bg-white p-4 md:p-6">
+    <div className="w-full rounded-[8px] border border-[#ECECEC] bg-white p-4 md:p-6">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-5"
         >
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <FormField
               control={form.control}
               name="fullName"
