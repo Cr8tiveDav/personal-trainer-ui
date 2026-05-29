@@ -30,9 +30,15 @@ import {
 } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { Trainer } from '../types'
-import { toast } from 'sonner'
 
-const ONBOARDING_STATUSES = ['pending', 'active', 'suspended'] as const
+// API canonical values — backend accepts 'approved' not 'active'
+const ONBOARDING_STATUSES = ['pending', 'approved', 'suspended'] as const
+
+const ONBOARDING_STATUS_LABELS: Record<(typeof ONBOARDING_STATUSES)[number], string> = {
+  pending: 'Pending',
+  approved: 'Active',
+  suspended: 'Suspended',
+}
 
 const SPECIALIZATION_OPTIONS = [
   { value: 'yoga', label: 'Yoga' },
@@ -101,10 +107,10 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
         intro_video_url: values.intro_video_url || undefined,
         onboarding_status: values.onboarding_status,
       })
-      toast.success('Trainer updated successfully.')
+      // NOTE: toasts are handled by useUpdateTrainer's onSuccess/onError callbacks
       onClose()
-    } catch (err: unknown) {
-      toast.error(err instanceof Error ? err.message : 'Something went wrong.')
+    } catch {
+      // error toast already fired by the hook's onError
     }
   }
 
@@ -169,8 +175,8 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
                       </FormControl>
                       <SelectContent>
                         {ONBOARDING_STATUSES.map((s) => (
-                          <SelectItem key={s} value={s} className='capitalize'>
-                            {s.charAt(0).toUpperCase() + s.slice(1)}
+                          <SelectItem key={s} value={s}>
+                            {ONBOARDING_STATUS_LABELS[s]}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -189,13 +195,14 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
                   <FormLabel>Years of Experience</FormLabel>
                   <FormControl>
                     <Input
-                      type='number'
-                      min={0}
+                      type='text'
+                      inputMode='numeric'
+                      pattern='[0-9]*'
                       placeholder='e.g. 3'
                       className='login-input'
                       value={field.value ?? ''}
                       onChange={(e) => {
-                        const raw = e.target.value
+                        const raw = e.target.value.replace(/[^0-9]/g, '')
                         field.onChange(raw === '' ? undefined : Number(raw))
                       }}
                       onBlur={field.onBlur}
