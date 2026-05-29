@@ -25,9 +25,9 @@ export function TrainerCreatedSuccess({
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.08, type: 'spring', stiffness: 260, damping: 18 }}
-        className='mx-auto flex h-16 w-16 items-center justify-center rounded-[9999px] bg-green-500'
+        className='mx-auto flex h-20 w-20 items-center justify-center'
       >
-        <Image src='/success.svg' alt='' width={40} height={40} aria-hidden />
+        <Image src='/success.svg' alt='' width={80} height={80} aria-hidden />
       </motion.div>
 
       <h2 className='mt-6 text-xl font-bold text-gray-900'>Trainer created</h2>

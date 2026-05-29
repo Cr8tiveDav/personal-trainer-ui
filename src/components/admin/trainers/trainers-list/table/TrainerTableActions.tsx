@@ -57,7 +57,7 @@ export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
             type="button"
             variant="ghost"
             onClick={(e) => e.stopPropagation()}
-            className="h-8 w-8 p-0 text-gray-400 hover:text-gray-700 focus:ring-0 shadow-none hover:bg-gray-100 rounded-[9999px]"
+            className="h-10 w-10 p-0 text-gray-400 hover:text-gray-700 focus:ring-0 shadow-none hover:bg-gray-100 rounded-[9999px]"
           >
             <MoreVertical className="h-4 w-4" />
             <span className="sr-only">Trainer actions</span>

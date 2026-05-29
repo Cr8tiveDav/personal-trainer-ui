@@ -100,7 +100,7 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
   const [activeCategory, setActiveCategory] = useState(0)
 
   return (
-    <section className={cn("w-full py-20", className)}>
+    <section className={cn("w-full py-12 md:py-20", className)}>
       <div className="container flex flex-col">
         <SectionHeader
           badge='HOW IT WORKS'

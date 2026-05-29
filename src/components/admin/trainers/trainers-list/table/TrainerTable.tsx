@@ -152,7 +152,7 @@ function TrainerTableBody({
         </table>
       </div>
 
-      <motion.div className="flex flex-col items-center justify-center border-t border-gray-200 py-6 sm:flex-row sm:justify-between sm:px-6">
+      <motion.div className="flex flex-col items-center justify-center border-t border-gray-200 py-6 px-4 sm:flex-row sm:justify-between sm:px-6">
         <AnimatePresence mode="wait">
           <motion.p
             key={resultsLabel}
@@ -173,7 +173,7 @@ function TrainerTableBody({
               whileTap={{ scale: 0.95 }}
               onClick={() => onPageChange(displayPage - 1)}
               disabled={displayPage <= 1 || isLoading}
-              className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Previous page"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -184,7 +184,7 @@ function TrainerTableBody({
                 return (
                   <span
                     key={`ellipsis-${index}`}
-                    className="flex h-9 w-9 items-center justify-center text-gray-500"
+                    className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center text-gray-500"
                   >
                     …
                   </span>
@@ -200,7 +200,7 @@ function TrainerTableBody({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onPageChange(pageNumber)}
                   disabled={isLoading}
-                  className={`relative flex h-9 w-9 items-center justify-center rounded-[6px] font-medium transition-colors ${
+                  className={`relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[6px] font-medium transition-colors ${
                     isActive
                       ? "text-white"
                       : "border border-gray-200 text-gray-600 hover:bg-gray-50"
@@ -227,7 +227,7 @@ function TrainerTableBody({
               whileTap={{ scale: 0.95 }}
               onClick={() => onPageChange(displayPage + 1)}
               disabled={displayPage >= totalPages || isLoading}
-              className="flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Next page"
             >
               <ChevronRight className="h-4 w-4" />

@@ -4,7 +4,7 @@ import SectionHeader from '../ui/SectionHeader'
 
 const Features = () => {
   return (
-    <section className="mt-12 w-full scroll-mt-28 py-20">
+    <section className="mt-0 md:mt-12 w-full scroll-mt-28 py-12 md:py-20">
       <div className="container flex flex-col">
         <SectionHeader
           badge="POWERFUL FEATURES"

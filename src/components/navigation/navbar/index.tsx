@@ -62,7 +62,7 @@ const Navbar = () => {
             <Link href="/waitlist">Join Waitlist</Link>
           </Button>
           <div className="md:hidden">
-            <MobileNav />
+            <MobileNav key={pathname} />
           </div>
         </div>
       </div>

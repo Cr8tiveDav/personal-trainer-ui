@@ -8,6 +8,8 @@ import { cn } from "@/utils";
 import { formatDisplayName, TruncateEmail } from "@/lib/utils";
 import { TrainerTableActions } from "./TrainerTableActions";
 
+import { useRouter } from "next/navigation";
+
 interface TrainerTableRowProps {
   trainer: Trainer;
   index?: number;
@@ -38,6 +40,7 @@ export const trainerRowVariants: Variants = {
 };
 
 const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
+  const router = useRouter();
   let availabilityColor = "bg-[#D9D9D9]";
   if (trainer.availability === "Available") availabilityColor = "bg-[#14561C]";
   if (trainer.availability === "Busy") availabilityColor = "bg-[#A86908]";
@@ -49,7 +52,8 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
       animate="visible"
       exit="exit"
       custom={index}
-      className="group border-b border-gray-100"
+      onClick={() => router.push(`/admin/trainers/${trainer.id}`)}
+      className="group border-b border-gray-100 cursor-pointer"
     >
       <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
         <div className="flex items-center gap-3">
