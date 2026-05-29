@@ -28,6 +28,7 @@ export function SessionTableRow({ session, onViewDetails, onReschedule, onCancel
     Settled: 'bg-[#e7f6ec] text-[#0f973d]',
     Disputed: 'bg-[#fef3f2] text-[#d92d20]',
     Missed: 'bg-[#f2f4f7] text-[#475467]',
+    Cancelled: 'bg-[#fef3f2] text-[#d92d20]',
   }
 
   const typeStyles: Record<string, string> = {

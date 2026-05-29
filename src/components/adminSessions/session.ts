@@ -1,3 +1,21 @@
+// Raw shape returned by GET /api/v1/admin/sessions
+export interface ApiSession {
+  id: string
+  session_id: string
+  booking_status: 'pending' | 'completed' | 'cancelled'
+  client_id: string
+  client_name: string
+  client_email: string
+  trainer_id: string
+  trainer_name: string
+  trainer_email: string
+  scheduled_start: string
+  scheduled_end: string
+  session_platform: string
+  timezone: string
+  zoom_meeting_link: string
+}
+
 export interface Session {
   id: string
   client: { name: string; avatar?: string; country: string }
@@ -8,8 +26,78 @@ export interface Session {
   amount: number
   clientConf: 'Yes' | 'Pending' | 'N/A'
   trainerConf: 'Yes' | 'Pending' | 'N/A'
-  state: 'Completed' | 'Unconfirmed' | 'Scheduled' | 'Settled' | 'Disputed' | 'Missed'
+  state: 'Completed' | 'Unconfirmed' | 'Scheduled' | 'Settled' | 'Disputed' | 'Missed' | 'Cancelled'
+  // Extra metadata from API — used for filtering, not rendered in table
+  trainerId?: string
+  scheduledStartISO?: string
+  zoomLink?: string
 }
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function formatScheduled(isoStr: string, timezone?: string): string {
+  try {
+    const date = new Date(isoStr)
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: timezone || undefined,
+    })
+  } catch {
+    return isoStr
+  }
+}
+
+function formatDuration(startISO: string, endISO: string): string {
+  try {
+    const diffMs = new Date(endISO).getTime() - new Date(startISO).getTime()
+    const totalMins = Math.round(diffMs / 60000)
+    if (totalMins <= 0) return '--'
+    const hrs = totalMins / 60
+    if (totalMins < 60) return `${totalMins}min`
+    if (hrs % 1 === 0) return `${hrs}hr${hrs > 1 ? 's' : ''}`
+    return `${hrs}hrs`
+  } catch {
+    return '--'
+  }
+}
+
+export function mapApiSession(api: ApiSession): Session {
+  const now = new Date()
+  const start = new Date(api.scheduled_start)
+
+  let state: Session['state']
+  if (api.booking_status === 'completed') {
+    state = 'Completed'
+  } else if (api.booking_status === 'cancelled') {
+    state = 'Cancelled'
+  } else if (start > now) {
+    state = 'Scheduled'
+  } else {
+    state = 'Unconfirmed'
+  }
+
+  return {
+    id: api.id.slice(0, 8).toUpperCase(),
+    client: { name: api.client_name, country: '' },
+    trainer: { name: api.trainer_name, country: '' },
+    type: 'One Time',
+    scheduled: formatScheduled(api.scheduled_start, api.timezone),
+    duration: formatDuration(api.scheduled_start, api.scheduled_end),
+    amount: 0,
+    clientConf: 'N/A',
+    trainerConf: 'N/A',
+    state,
+    trainerId: api.trainer_id,
+    scheduledStartISO: api.scheduled_start,
+    zoomLink: api.zoom_meeting_link,
+  }
+}
+
+// ─── Dummy fallback (used when API is unavailable) ────────────────────────────
 
 export const DUMMY_SESSIONS: Session[] = [
   {
@@ -42,7 +130,7 @@ export const DUMMY_SESSIONS: Session[] = [
     trainer: { name: 'Sam B.', avatar: 'https://i.pravatar.cc/150?u=88', country: 'NG' },
     type: 'Free Trial',
     scheduled: 'Today, 9:00AM',
-    duration: '1hrs',
+    duration: '1hr',
     amount: 0,
     clientConf: 'N/A',
     trainerConf: 'N/A',
@@ -78,70 +166,10 @@ export const DUMMY_SESSIONS: Session[] = [
     trainer: { name: 'Sandy B.', avatar: 'https://i.pravatar.cc/150?u=66', country: 'NG' },
     type: 'Monthly',
     scheduled: 'May 1, 6:00PM',
-    duration: '-',
+    duration: '--',
     amount: 20,
     clientConf: 'Pending',
     trainerConf: 'Pending',
     state: 'Missed',
   },
-  {
-    id: 'S-0895',
-    client: { name: 'Jade K.', avatar: 'https://i.pravatar.cc/150?u=6', country: 'US' },
-    trainer: { name: 'Sandy B.', avatar: 'https://i.pravatar.cc/150?u=66', country: 'NG' },
-    type: 'Monthly',
-    scheduled: 'May 1, 8:00AM',
-    duration: '1hr',
-    amount: 20,
-    clientConf: 'Pending',
-    trainerConf: 'Pending',
-    state: 'Unconfirmed',
-  },
-  {
-    id: 'S-0894',
-    client: { name: 'Jade K.', avatar: 'https://i.pravatar.cc/150?u=6', country: 'US' },
-    trainer: { name: 'Sandy B.', avatar: 'https://i.pravatar.cc/150?u=66', country: 'NG' },
-    type: 'One Time',
-    scheduled: 'Apr 30, 2:00PM',
-    duration: '1.5hrs',
-    amount: 20,
-    clientConf: 'Yes',
-    trainerConf: 'Pending',
-    state: 'Unconfirmed',
-  },
-  {
-    id: 'S-0893',
-    client: { name: 'Jade K.', avatar: 'https://i.pravatar.cc/150?u=6', country: 'US' },
-    trainer: { name: 'Sandy B.', avatar: 'https://i.pravatar.cc/150?u=66', country: 'NG' },
-    type: 'Monthly',
-    scheduled: 'Apr 30, 9:00AM',
-    duration: '-',
-    amount: 20,
-    clientConf: 'Pending',
-    trainerConf: 'Yes',
-    state: 'Disputed',
-  },
-  {
-    id: 'S-0892',
-    client: { name: 'Jade K.', avatar: 'https://i.pravatar.cc/150?u=6', country: 'US' },
-    trainer: { name: 'Sandy B.', avatar: 'https://i.pravatar.cc/150?u=66', country: 'NG' },
-    type: 'Monthly',
-    scheduled: 'Apr 29, 9:00AM',
-    duration: '-',
-    amount: 20,
-    clientConf: 'Pending',
-    trainerConf: 'Pending',
-    state: 'Missed',
-  },
-  {
-    id: 'S-0891',
-    client: { name: 'Jade K.', avatar: 'https://i.pravatar.cc/150?u=6', country: 'US' },
-    trainer: { name: 'Sandy B.', avatar: 'https://i.pravatar.cc/150?u=66', country: 'NG' },
-    type: 'Monthly',
-    scheduled: 'Apr 28, 9:00AM',
-    duration: '-',
-    amount: 20,
-    clientConf: 'Pending',
-    trainerConf: 'Pending',
-    state: 'Missed',
-  }
 ]
