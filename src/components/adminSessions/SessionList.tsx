@@ -195,7 +195,7 @@ export default function SessionsList({
               </button>
 
               {isTrainerMenuOpen && (
-                <div className='absolute right-0 top-11 z-30 w-56 overflow-hidden rounded-[12px] border border-gray-100 bg-white py-1.5 shadow-xl'>
+                <div className='absolute left-0 md:left-auto md:right-0 top-11 z-30 w-56 overflow-hidden rounded-[12px] border border-gray-100 bg-white py-1.5 shadow-xl'>
                   <button
                     type='button'
                     onClick={() => {

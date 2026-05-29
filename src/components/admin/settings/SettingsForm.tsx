@@ -155,7 +155,7 @@ export function SettingsForm() {
           ))}
         </div>
 
-        <div className='mt-4 flex items-center gap-3'>
+        <div className='mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3'>
           <input
             type='text'
             placeholder='Add a category...'
@@ -167,7 +167,7 @@ export function SettingsForm() {
           <button
             onClick={addCategory}
             disabled={!newCategory.trim()}
-            className='flex shrink-0 items-center gap-1.5 rounded-[8px] border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40'
+            className='flex shrink-0 items-center justify-center gap-1.5 rounded-[8px] border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40'
           >
             <Plus className='h-4 w-4' />
             Add category

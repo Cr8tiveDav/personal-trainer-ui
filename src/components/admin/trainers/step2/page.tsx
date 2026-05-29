@@ -1,14 +1,15 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { useState, useRef, useMemo, useEffect } from 'react'
+import { useState, useRef, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ArrowRight, ImageIcon, X } from 'lucide-react'
-import Image from 'next/image'
 
 interface Step2Props {
   defaultImages?: File[]
   onNext: (images: File[]) => void
-  onBack: () => void
+  onBack: (images: File[]) => void
+  onChange?: (images: File[]) => void
 }
 
 const ACCEPTED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic']
@@ -16,9 +17,10 @@ const ACCEPTED_IMAGE_TYPES = ACCEPTED_MIME_TYPES.join(',')
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 const MAX_IMAGES = 5
 
-export function Step2MediaUpload({ defaultImages = [], onNext, onBack }: Step2Props) {
+export function Step2MediaUpload({ defaultImages = [], onNext, onBack, onChange }: Step2Props) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const [images, setImages] = useState<File[]>(defaultImages)
+  // Copy defaultImages to ensure a fresh array reference on mount, forcing useMemo previews to recompute
+  const [images, setImages] = useState<File[]>(() => [...defaultImages])
   const [error, setError] = useState<string | null>(null)
   const [isDragging, setIsDragging] = useState(false)
 
@@ -45,20 +47,22 @@ export function Step2MediaUpload({ defaultImages = [], onNext, onBack }: Step2Pr
         setError(`You can upload a maximum of ${MAX_IMAGES} images.`)
         return prev
       }
+      onChange?.(combined)
       return combined
     })
   }
 
   const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index))
+    setImages((prev) => {
+      const updated = prev.filter((_, i) => i !== index)
+      onChange?.(updated)
+      return updated
+    })
     setError(null)
   }
 
-  // Create blob URLs once per images array and revoke on cleanup to prevent memory leaks
+  // Create blob URLs once per images array
   const previews = useMemo(() => images.map((f) => URL.createObjectURL(f)), [images])
-  useEffect(() => {
-    return () => { previews.forEach((url) => URL.revokeObjectURL(url)) }
-  }, [previews])
 
   return (
     <div className='rounded-[12px] border border-gray-100 bg-white p-6 shadow-sm'>
@@ -130,11 +134,9 @@ export function Step2MediaUpload({ defaultImages = [], onNext, onBack }: Step2Pr
         <div className='mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3'>
           {previews.map((url, index) => (
             <div key={index} className='relative group rounded-[12px] overflow-hidden border border-gray-200'>
-              <Image
+              <img
                 src={url}
                 alt={`Preview ${index + 1}`}
-                width={200}
-                height={200}
                 className='w-full h-24 object-cover'
               />
               {index === 0 && (
@@ -161,7 +163,7 @@ export function Step2MediaUpload({ defaultImages = [], onNext, onBack }: Step2Pr
         <Button
           type='button'
           variant='outline'
-          onClick={onBack}
+          onClick={() => onBack(images)}
           className='flex items-center gap-2'
         >
           <ArrowLeft className='h-4 w-4' /> Back

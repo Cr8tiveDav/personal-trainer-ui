@@ -8,7 +8,7 @@ type Props = {
 
 const CategoryFilter = ({ categories, active, onChange }: Props) => {
   return (
-    <div className="mb-10 flex w-full flex-wrap items-center gap-2 bg-white p-3 xl:justify-between">
+    <div className="mb-10 flex w-full flex-wrap items-center justify-center md:justify-start gap-2 bg-white p-3">
       {categories.map((cat) => (
         <button
           key={cat}

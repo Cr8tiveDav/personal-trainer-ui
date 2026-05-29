@@ -45,7 +45,14 @@ export function Step3ReviewAndCreate({
           {[
             { label: 'Name', value: basicInfo.name },
             { label: 'Email', value: basicInfo.email },
-            { label: 'Phone', value: basicInfo.phone_number },
+            {
+              label: 'Phone',
+              value: basicInfo.phone_number
+                ? (basicInfo.phone_number.startsWith('+')
+                  ? basicInfo.phone_number
+                  : `+${basicInfo.phone_number}`)
+                : '—',
+            },
             { label: 'Gender', value: basicInfo.gender },
             {
               label: 'Specialty',
