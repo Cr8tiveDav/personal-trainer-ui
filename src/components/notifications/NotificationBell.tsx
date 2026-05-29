@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Bell } from "lucide-react";
 import {
   EMPTY_STATE_IMAGE_PATHS,
@@ -60,13 +60,9 @@ export function NotificationBell({
   emptyDescription,
 }: NotificationBellProps) {
   const { data: notifications = [], isError, isLoading } = useNotifications();
-  const [readIds, setReadIds] = useState<Set<string>>(() => new Set());
+  const [readIds, setReadIds] = useState<Set<string>>(loadReadIds);
 
   useNotificationSocket();
-
-  useEffect(() => {
-    setReadIds(loadReadIds());
-  }, []);
 
   const unreadCount = useMemo(
     () => notifications.filter((notification) => !readIds.has(notification.id)).length,
