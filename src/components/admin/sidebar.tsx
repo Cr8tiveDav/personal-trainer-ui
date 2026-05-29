@@ -5,7 +5,6 @@ import { useState } from 'react'
 import {
   Settings,
   ChevronRight,
-  LineChart,
   X,
   Video,
   PhoneCall,
@@ -50,7 +49,6 @@ const NAV_SECTIONS = [
   {
     label: 'PLATFORM',
     items: [
-      { label: 'Analytics', href: '/admin/analytics', icon: LineChart },
       { label: 'Media Content', href: '/admin/media', icon: Video },
       { label: 'Settings', href: '/admin/settings', icon: Settings },
     ],
