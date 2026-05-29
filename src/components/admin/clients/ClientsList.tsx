@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useAdminClients, useAdminUserTrainerCount } from "@/api/clients";
 import { ClientFilterTabs, type ClientTab } from "./ClientFilterTabs";
 import { ClientsTable } from "./ClientsTable";
+import { ClientStatCards } from "./ClientStatCards";
 
 const PER_PAGE = 10;
 
@@ -149,30 +150,34 @@ export function ClientsList() {
   };
 
   return (
-    <div className="flex flex-col rounded-[24px] border border-[#CBD5E1] bg-white">
-      <div className="px-6 pt-5">
-        <ClientFilterTabs
-          counts={tabCounts}
+    <div className="flex flex-col gap-4">
+      <ClientStatCards counts={tabCounts} isLoading={showSkeleton} />
+
+      <div className="flex flex-col rounded-[24px] border border-[#CBD5E1] bg-white">
+        <div className="px-6 pt-5">
+          <ClientFilterTabs
+            counts={tabCounts}
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            isLoading={showSkeleton}
+          />
+        </div>
+
+        <ClientsTable
+          clients={filteredClients}
           activeTab={activeTab}
-          onTabChange={handleTabChange}
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
           isLoading={showSkeleton}
+          isFetching={isFetching && !showSkeleton}
+          isError={isError}
+          listKey={`${activeTab}-${searchQuery}-page-${displayPage}`}
+          listTotalCount={listTotalCount}
+          displayPage={displayPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
         />
       </div>
-
-      <ClientsTable
-        clients={filteredClients}
-        activeTab={activeTab}
-        searchQuery={searchQuery}
-        onSearchChange={handleSearchChange}
-        isLoading={showSkeleton}
-        isFetching={isFetching && !showSkeleton}
-        isError={isError}
-        listKey={`${activeTab}-${searchQuery}-page-${displayPage}`}
-        listTotalCount={listTotalCount}
-        displayPage={displayPage}
-        totalPages={totalPages}
-        onPageChange={goToPage}
-      />
     </div>
   );
 }

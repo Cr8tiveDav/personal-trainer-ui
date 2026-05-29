@@ -6,21 +6,17 @@ import { formatDisplayName, TruncateEmail } from "~/lib/utils";
 import type { Client } from "./types";
 import { ClientStatusBadge } from "./ClientStatusBadge";
 import { ClientTableActions } from "./ClientTableActions";
+import { useClientSessions } from "@/api/sessions";  // ← add
 
 interface ClientTableRowProps {
   client: Client;
   index?: number;
 }
 
-function formatRevenue(amount: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(amount);
-}
-
 export function ClientTableRow({ client, index = 0 }: ClientTableRowProps) {
+  const { data: sessions } = useClientSessions(client.id)  // ← add
+  const sessionCount = sessions ? sessions.length : client.sessions  // ← add
+
   return (
     <motion.tr
       variants={trainerRowVariants}
@@ -46,7 +42,7 @@ export function ClientTableRow({ client, index = 0 }: ClientTableRowProps) {
         </div>
       </td>
       <td className="px-6 py-4 text-sm text-gray-700 transition-colors group-hover:bg-gray-50/80">
-        {client.sessions}
+        {sessionCount}  {/* ← change from client.sessions */}
       </td>
       <td className="px-6 py-4 text-sm text-gray-500 transition-colors group-hover:bg-gray-50/80">
         {client.joinedAt}
