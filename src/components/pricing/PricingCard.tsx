@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { Button } from '../ui/button'
 import Image from 'next/image'
 
@@ -77,15 +78,17 @@ const PricingCard = ({ plan }: PricingCardProps) => {
       </ul>
 
       <div className="mt-8">
-        <Button
-          className={`h-11 w-full rounded-lg text-sm font-semibold transition-colors ${
-            isHighlighted
-              ? 'bg-primary text-white hover:bg-[#083D70]'
-              : 'border border-[#EAECF0] bg-[#F9FAFB] text-muted-foreground hover:bg-[#F2F4F7]'
-          }`}
-        >
-          {plan.action}
-        </Button>
+        <Link href="/waitlist">
+          <Button
+            className={`h-11 w-full rounded-lg text-sm font-semibold transition-colors ${
+              isHighlighted
+                ? 'bg-primary text-white hover:bg-[#083D70]'
+                : 'border border-[#EAECF0] bg-[#F9FAFB] text-muted-foreground hover:bg-[#F2F4F7]'
+            }`}
+          >
+            {plan.action}
+          </Button>
+        </Link>
         {plan.note && (
           <p className="mt-3 text-center text-xs text-muted">{plan.note}</p>
         )}

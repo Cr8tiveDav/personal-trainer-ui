@@ -29,10 +29,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(interClass, 'w-full mx-auto antialiased')}>
+        <noscript>
+          <div style={{ padding: '2rem', textAlign: 'center', fontFamily: 'sans-serif' }}>
+            <strong>JavaScript is required to use Fitcall.</strong>
+            <p>Please enable JavaScript in your browser settings and reload the page.</p>
+          </div>
+        </noscript>
         <Providers>
           {children}
         </Providers>
-        
+
       </body>
     </html>
   );

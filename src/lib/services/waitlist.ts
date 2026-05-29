@@ -16,5 +16,5 @@ export async function joinWaitlist(payload: WaitlistPayload) {
 
   if (!res.ok) throw new Error(data?.message || 'Something went wrong')
 
-  return data
+  return { data, alreadyExists: res.status === 200 }
 }
