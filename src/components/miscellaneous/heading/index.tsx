@@ -27,7 +27,7 @@ const Heading = (properties: Properties) => {
       data-testid='about-header'
     >
       <p
-        className='mb-6 inline-block rounded-full bg-[#EDF4FD] px-4 py-1.5 text-sm font-medium text-[#063660] md:text-base'
+        className='mb-6 inline-block rounded-[9999px] bg-[#EDF4FD] px-4 py-1.5 text-sm font-medium text-[#063660] md:text-base'
         data-testid='about-tag'
       >
         {properties?.tag}

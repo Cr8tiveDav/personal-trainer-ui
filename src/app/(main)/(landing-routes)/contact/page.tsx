@@ -8,6 +8,27 @@ export const metadata: Metadata = {
   description: "Get in touch with us. We're online & happy to help.",
 }
 
+const contactFaqs = [
+  {
+    value: 'contact-item-1',
+    question: 'How do FitCall sessions work?',
+    answer:
+      'FitCall.me is an accountability-driven fitness platform that connects users with real fitness trainers who help them stay consistent through scheduled sessions, reminders, and real human follow-up.',
+  },
+  {
+    value: 'contact-item-2',
+    question: 'Can I cancel anytime?',
+    answer:
+      'Yes. You can cancel before your next billing cycle, and your access will remain active until the end of the period you already paid for.',
+  },
+  {
+    value: 'contact-item-3',
+    question: 'Do I need any equipment?',
+    answer:
+      'No equipment is required to get started. Your trainer can tailor sessions around bodyweight movements and whatever space or equipment you already have.',
+  },
+]
+
 export default function ContactPage() {
   return (
     <main className="w-full bg-secondary pt-28 md:pt-48">
@@ -15,8 +36,8 @@ export default function ContactPage() {
         <div className="container">
           <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-24">
             <div className="flex flex-col justify-start">
-              <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-full border border-[#D1E9FF] bg-primarybadge px-3 py-1">
-                <span className="h-2 w-2 rounded-full bg-primary" />
+              <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-[9999px] border border-[#D1E9FF] bg-primarybadge px-3 py-1">
+                <span className="h-2 w-2 rounded-[9999px] bg-primary" />
                 <span className="text-sm font-medium text-primary">
                   We&apos;re online & happy to help
                 </span>
@@ -40,7 +61,13 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <FAQSection />
+      <FAQSection
+        badge="Quick answers"
+        title="Before you reach out..."
+        description="You might find your answer here in seconds."
+        faqs={contactFaqs}
+        listClassName="mt-5 md:mt-6"
+      />
       <CTASection />
     </main>
   )

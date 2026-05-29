@@ -21,6 +21,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'api.staging.fitcall.me',
       },
+      {
+        protocol: 'http',
+        hostname: 'api.fitcall.me',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.fitcall.me',
+      },
     ],
   },
 };

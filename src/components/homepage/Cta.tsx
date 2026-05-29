@@ -35,8 +35,8 @@ const CTASection = ({ className }: { className?: string }) => {
   return (
     <section className={cn('bg-white py-20', className)}>
       <div className='container mx-auto px-4'>
-        <div className='relative overflow-hidden rounded-lg bg-linear-to-br from-primary via-[#063660] to-[#0C6FC6] px-6 py-16 text-center text-white md:py-24'>
-          <div className='relative z-10 mx-auto max-w-2xl'>
+        <div className='relative overflow-hidden rounded-[8px] bg-linear-to-br from-primary via-[#063660] to-[#0C6FC6] px-6 py-16 text-center text-white md:py-24'>
+          <div className='relative z-10 mx-auto w-full max-w-2xl'>
             <h2 className='text-2xl font-bold leading-[1.1] tracking-tight md:text-4xl'>
               Stop skipping workouts. Start showing up.
             </h2>
@@ -48,7 +48,7 @@ const CTASection = ({ className }: { className?: string }) => {
 
             <Button
               onClick={handleDownloadRedirect}
-              className='mt-10 min-w-75 bg-white font-bold text-primary transition-transform hover:scale-105 hover:bg-blue-50 hover:text-blue-900 active:scale-95'
+              className='mt-10 h-auto min-h-11 w-full max-w-75 bg-white px-6 py-3 font-bold text-primary transition-transform hover:scale-105 hover:bg-blue-50 hover:text-blue-900 active:scale-95 sm:w-auto sm:min-w-75'
             >
               Download FitCall
             </Button>

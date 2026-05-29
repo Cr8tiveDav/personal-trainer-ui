@@ -1,3 +1,6 @@
+import { API_ENDPOINTS } from '@/api/api-endpoints'
+import { apiUrl } from '@/lib/api/config'
+
 export interface WaitlistPayload {
   email: string
   phone_number: string
@@ -6,7 +9,7 @@ export interface WaitlistPayload {
 }
 
 export async function joinWaitlist(payload: WaitlistPayload) {
-  const res = await fetch(`${process.env.API_URL}/waitlist`, {
+  const res = await fetch(apiUrl(API_ENDPOINTS.WAITLIST.JOIN), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),

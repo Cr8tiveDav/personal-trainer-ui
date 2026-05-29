@@ -1,118 +1,178 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { ChevronLeft } from 'lucide-react'
-import { toast } from 'sonner'
-import { BasicInfoValues, Step1BasicInfo } from '../../../../components/admin/trainers/step1/page'
-import { createTrainerAction, uploadTrainerImageAction, uploadTrainerVideoAction } from '@/actions/addtrainer'
-import { TrainerCreatedSuccess } from '../../../../components/admin/trainers/success/page'
-import { AddTrainerStepper } from '../../../../components/admin/trainers/addtrainerstepper/page'
-import { Step2MediaUpload } from '../../../../components/admin/trainers/step2/page'
-import { Step3AccountSetup } from '../../../../components/admin/trainers/step3/page'
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { AnimatePresence, motion } from 'motion/react';
+import { ChevronLeft } from 'lucide-react';
+import { toast } from 'sonner';
+import { useQueryState, parseAsInteger } from 'nuqs';
+import { useAddTrainerStore } from '@/hooks/trainers/use-add-trainer-store';
+import {
+  BasicInfoValues,
+  Step1BasicInfo,
+} from '../../../../components/admin/trainers/step1/page';
+import { useCreateTrainer } from '@/api/trainers';
+import type { CreatedTrainer } from '@/api/types/trainers';
+import { TrainerCreatedSuccess } from '../../../../components/admin/trainers/success/page';
+import { AddTrainerStepper } from '../../../../components/admin/trainers/addtrainerstepper/page';
+import { Step2MediaUpload } from '../../../../components/admin/trainers/step2/page';
+import { Step3ReviewAndCreate } from '../../../../components/admin/trainers/step3/page';
 
-interface MediaFiles {
-    image: File | null
-    video: File | null
-}
+const stepMotion = {
+  initial: { opacity: 0, x: 16 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: -12 },
+  transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] as const },
+};
 
 export default function AddTrainerPage() {
-    const [step, setStep] = useState(1)
-    const [basicInfo, setBasicInfo] = useState<BasicInfoValues | null>(null)
-    const [media, setMedia] = useState<MediaFiles>({ image: null, video: null })
-    const [isSubmitting, setIsSubmitting] = useState(false)
-    const [createdTrainerName, setCreatedTrainerName] = useState('')
-    const [success, setSuccess] = useState(false)
+  const [stepState, setStepState] = useQueryState(
+    'step',
+    parseAsInteger.withDefault(1)
+  );
 
-    const handleStep1 = (values: BasicInfoValues) => {
-        setBasicInfo(values)
-        setStep(2)
+  const step = stepState ?? 1;
+  const setStep = (next: number) => {
+    void setStepState(next);
+  };
+
+  const { basicInfo, setBasicInfo, mediaFiles, setMediaFiles, reset } = useAddTrainerStore();
+  const createTrainer = useCreateTrainer();
+  const [created, setCreated] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
+
+  // Redirect to step 1 if basicInfo is missing on steps 2 or 3 (e.g. after a page refresh)
+  useEffect(() => {
+    if (step > 1 && !basicInfo && !created) {
+      void setStepState(1);
     }
+  }, [step, basicInfo, created, setStepState]);
 
-    const handleStep2 = (files: MediaFiles) => {
-        setMedia(files)
-        setStep(3)
-    }
+  const handleStep1 = (values: BasicInfoValues) => {
+    setBasicInfo(values);
+    setStep(2);
+  };
 
-    const handleStep3 = async (method: 'invitation' | 'temporary_password', password?: string) => {
-        if (!basicInfo) return
-        setIsSubmitting(true)
+  const handleStep2 = (images: File[]) => {
+    setMediaFiles(images);
+    setStep(3);
+  };
 
-        try {
-            const formData = new FormData()
-            
-           
-            Object.entries(basicInfo).forEach(([key, value]) => {
-                if (value !== undefined && value !== null) {
-                    formData.append(key, String(value))
-                }
-            })
+  const handleCreate = async () => {
+    if (!basicInfo) return;
 
-          
-            formData.append('account_setup_method', method)
-            if (method === 'temporary_password' && password) {
-                formData.append('password', password)
-            }
+    // First image is the display picture, rest are gallery images (uploaded after creation)
+    const displayPicture = mediaFiles[0] ?? null;
 
-        
-            const trainer = await createTrainerAction(formData)
+    createTrainer.mutate(
+      {
+        email: basicInfo.email,
+        name: basicInfo.name,
+        phone_number: basicInfo.phone_number,
+        gender: basicInfo.gender,
+        specializations: basicInfo.specializations,
+        years_of_experience: basicInfo.years_of_experience,
+        bio: basicInfo.bio,
+        display_picture: displayPicture,
+      },
+      {
+        onSuccess: (trainer: CreatedTrainer) => {
+          if (!trainer?.id) {
+            toast.error(
+              'Trainer was provisioned, but no unique identifier was returned from the server.'
+            );
+            return;
+          }
+          setCreated(true);
+        },
+        onError: (error: Error) => {
+          const message =
+            error instanceof Error ? error.message : 'Something went wrong';
+          toast.error(message);
+        },
+      }
+    );
+  };
 
-            if (!trainer || !trainer.id) {
-                throw new Error('Trainer was provisioned, but no unique identifier was returned from the server.')
-            }
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className='w-full max-w-350 mx-auto space-y-6 md:px-4 pb-6'
+    >
+      <Link
+        href='/admin/trainers'
+        className='flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-6 transition-colors'
+      >
+        <ChevronLeft className='h-4 w-4' />
+        Back to trainers
+      </Link>
 
-            if (media.image) await uploadTrainerImageAction(trainer.id, media.image)
-            if (media.video) await uploadTrainerVideoAction(trainer.id, media.video)
+      <motion.div
+        initial={{ opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <h1 className='text-2xl font-bold text-muted-foreground'>
+          Add a new trainer
+        </h1>
+        <p className='mb-8 text-sm text-muted'>
+          Create the profile and provision their account in one request. Login
+          credentials are emailed automatically.
+        </p>
+      </motion.div>
 
-            setCreatedTrainerName(basicInfo.name)
-            setSuccess(true)
-            toast.success('Trainer created successfully!')
-        } catch (error: any) {
-            toast.error(error.message || 'Something went wrong')
-        } finally {
-            setIsSubmitting(false)
-        }
-    }
+      {created && basicInfo ? (
+        <TrainerCreatedSuccess
+          trainerName={basicInfo.name}
+          trainerEmail={basicInfo.email}
+        />
+      ) : (
+        <>
+          <AddTrainerStepper currentStep={step} onStepClick={setStep} />
 
-    if (success) {
-        return <TrainerCreatedSuccess trainerName={createdTrainerName} />
-    }
-
-    return (
-        <div className='w-full max-w-350 mx-auto space-y-6 px-4 pb-6'>
-            <Link
-                href='/admin/trainers'
-                className='flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mb-6 transition-colors'
-            >
-                <ChevronLeft className='h-4 w-4' />
-                Back to Trainer
-            </Link>
-            
-            <div>
-                <h1 className='text-2xl font-bold text-muted-foreground'>Add a new trainer</h1>
-                <p className='mb-8 text-sm text-muted'>
-                    Create the profile, upload media, and get them ready to coach on FitCall.
-                </p>
-            </div>
-
-            <AddTrainerStepper currentStep={step} />
-
+          <AnimatePresence mode='wait'>
             {step === 1 && (
-                <Step1BasicInfo defaultValues={basicInfo ?? undefined} onNext={handleStep1} />
+              <motion.div key='step-1' {...stepMotion}>
+                <Step1BasicInfo
+                  defaultValues={basicInfo ?? undefined}
+                  onNext={handleStep1}
+                />
+              </motion.div>
             )}
             {step === 2 && (
-                <Step2MediaUpload defaultValues={media} onNext={handleStep2} />
+              <motion.div key='step-2' {...stepMotion}>
+                <Step2MediaUpload
+                  defaultImages={mediaFiles}
+                  onNext={handleStep2}
+                  onBack={(currentImages) => {
+                    setMediaFiles(currentImages);
+                    setStep(1);
+                  }}
+                  onChange={setMediaFiles}
+                />
+              </motion.div>
             )}
             {step === 3 && basicInfo && (
-                <Step3AccountSetup
-                    basicInfo={basicInfo}
-                    hasImage={!!media.image}
-                    hasVideo={!!media.video}
-                    isSubmitting={isSubmitting}
-                    onSubmit={handleStep3}
+              <motion.div key='step-3' {...stepMotion}>
+                <Step3ReviewAndCreate
+                  basicInfo={basicInfo}
+                  hasImage={mediaFiles.length > 0}
+                  isSubmitting={createTrainer.isPending}
+                  onSubmit={handleCreate}
+                  onBack={() => setStep(2)}
                 />
+              </motion.div>
             )}
-        </div>
-    )
+          </AnimatePresence>
+        </>
+      )}
+    </motion.div>
+  );
 }

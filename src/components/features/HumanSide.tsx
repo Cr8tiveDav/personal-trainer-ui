@@ -16,7 +16,7 @@ const HumanSide = () => {
   return (
     <section className='w-full bg-secondary py-16 lg:py-24'>
       <div className='container mx-auto max-w-5xl px-4 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch'>
-        <div className='w-full rounded-lg overflow-hidden h-81 md:h-140.5'>
+        <div className='w-full rounded-[8px] overflow-hidden h-81 md:h-140.5'>
           <Image
             src='/images/features/man-running.png'
             alt='Man Running'
@@ -26,7 +26,7 @@ const HumanSide = () => {
           />
         </div>
 
-        <div className='w-full flex flex-col justify-center h-full bg-white p-8 rounded-lg'>
+        <div className='w-full flex flex-col justify-center h-full bg-white p-8 rounded-[8px]'>
           <h3 className='text-lg font-semibold text-primary mb-2'>
             The human side
           </h3>

@@ -9,8 +9,8 @@ interface InsightCardProps {
 
 function InsightCard({ icon, iconBg, title, description }: InsightCardProps) {
   return (
-    <div className='flex flex-1 gap-4 rounded-2xl border border-gray-100 bg-gray-100 p-2 lg:p-8'>
-      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${iconBg}`}>
+    <div className='flex flex-1 gap-4 rounded-[16px] border border-gray-100 bg-gray-100 p-2 lg:p-8'>
+      <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] ${iconBg}`}>
         {icon}
       </div>
       <div>
@@ -23,7 +23,7 @@ function InsightCard({ icon, iconBg, title, description }: InsightCardProps) {
 
 export function PerformanceInsights() {
   return (
-    <div className='rounded-lg border border-gray-100 bg-white p-4 lg:p-8'>
+    <div className='rounded-[12px] border border-[#E4E2E9] bg-white p-4 lg:p-8'>
       <h2 className='text-xl font-bold text-foreground'>Performance Insights</h2>
       <p className='mt-1 text-sm text-muted'>Key observations from platform activity.</p>
 

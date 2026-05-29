@@ -9,7 +9,7 @@ interface Properties {
 
 const TestimonialCard = (properties: Properties) => {
   return (
-    <div className="shadow-xs flex h-full min-h-70.75 flex-col justify-between rounded-3xl border border-gray-100 bg-white p-4 lg:w-82.5">
+    <div className="shadow-xs flex h-full min-h-70.75 flex-col justify-between rounded-[24px] border border-gray-100 bg-white p-4 lg:w-82.5">
       <div>
         <div className="mb-6 flex justify-start">
           <Image src="/quote.svg" alt='quote' width={40} height={40}  />
@@ -21,7 +21,7 @@ const TestimonialCard = (properties: Properties) => {
       </div>
 
       <div className="mt-8 flex items-center space-x-4">
-        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full">
+        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-[9999px]">
           <Image
             src={properties?.image}
             alt={properties?.name}

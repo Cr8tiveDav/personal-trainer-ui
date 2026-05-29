@@ -23,7 +23,7 @@ export default function EnvironmentSwitcher() {
 
   return (
     <motion.div
-      className="fixed bottom-4 left-4 z-50 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 p-4 shadow-lg"
+      className="fixed bottom-4 left-4 z-50 rounded-[8px] bg-gradient-to-r from-blue-500 to-purple-600 p-4 shadow-lg"
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
@@ -31,7 +31,7 @@ export default function EnvironmentSwitcher() {
       <h3 className="mb-2 text-lg font-bold text-white">Backend Environment</h3>
       <div className="flex items-center space-x-4">
         <motion.div
-          className="relative flex h-12 w-24 cursor-pointer items-center justify-center rounded-full bg-white"
+          className="relative flex h-12 w-24 cursor-pointer items-center justify-center rounded-[9999px] bg-white"
           onClick={async () => {
             const newBackend = currentBackend === 'python' ? 'php' : 'python'
             setBackend(newBackend)
@@ -42,7 +42,7 @@ export default function EnvironmentSwitcher() {
           aria-label={`Switch to ${currentBackend === 'python' ? 'PHP' : 'Python'}`}
         >
           <motion.div
-            className="absolute h-11 w-11 rounded-full"
+            className="absolute h-11 w-11 rounded-[9999px]"
             layout
             transition={{
               type: 'spring',
@@ -78,7 +78,7 @@ export default function EnvironmentSwitcher() {
       </div>
       <div className="mt-4 flex space-x-4">
         <button
-          className="rounded bg-gray-700 px-4 py-2 text-white hover:bg-gray-800"
+          className="rounded-[4px] bg-gray-700 px-4 py-2 text-white hover:bg-gray-800"
           onClick={async () => {
             setBackend('')
             await signOut({

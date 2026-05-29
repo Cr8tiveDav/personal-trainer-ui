@@ -1,7 +1,5 @@
-import React from 'react'
+import { TrainerDashboardClient } from '@/components/trainer/dashboard/TrainerDashboardClient'
 
-const page = () => {
-  return <div>Trainer Dashboard Page</div>
+export default function TrainerDashboardPage() {
+  return <TrainerDashboardClient />
 }
-
-export default page

@@ -39,7 +39,7 @@ const PricingCard = ({ plan }: PricingCardProps) => {
 
   return (
     <div
-      className={`relative flex h-fit flex-col rounded-2xl border bg-white p-8 transition-all ${
+      className={`relative flex h-fit flex-col rounded-[16px] border bg-white p-8 transition-all ${
         isHighlighted ? 'border-[#2272AD] shadow-lg' : 'border-[#D1D1D1]'
       }`}
     >
@@ -80,17 +80,17 @@ const PricingCard = ({ plan }: PricingCardProps) => {
       </ul>
 
       <div className='mt-8'>
-        <Link href='/waitlist'>
-          <Button
-            className={`h-11 w-full rounded-lg text-sm font-semibold transition-colors ${
-              isHighlighted
-                ? 'bg-primary text-white hover:bg-[#083D70]'
-                : 'border border-[#EAECF0] bg-[#F9FAFB] text-muted-foreground hover:bg-[#F2F4F7]'
-            }`}
-          >
-            {plan.action}
-          </Button>
-        </Link>
+        {/* Button asChild renders the Link as the single interactive element, avoiding <a><button> nesting */}
+        <Button
+          asChild
+          className={`h-11 w-full rounded-lg text-sm font-semibold transition-colors ${
+            isHighlighted
+              ? 'bg-primary text-white hover:bg-[#083D70]'
+              : 'border border-[#EAECF0] bg-[#F9FAFB] text-muted-foreground hover:bg-[#F2F4F7]'
+          }`}
+        >
+          <Link href='/waitlist'>{plan.action}</Link>
+        </Button>
         {plan.note && (
           <p className='mt-3 text-center text-xs text-muted'>{plan.note}</p>
         )}

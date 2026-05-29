@@ -23,7 +23,7 @@ const WithdrawalPagination = ({
         type="button"
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
-        className="inline-flex h-10 items-center gap-1 rounded-md px-2 text-muted transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 sm:px-3"
+        className="inline-flex h-10 items-center gap-1 rounded-[6px] px-2 text-muted transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 sm:px-3"
       >
         <ChevronLeft className="size-4" />
         <span className="hidden sm:inline">Previous</span>
@@ -42,7 +42,7 @@ const WithdrawalPagination = ({
             key={item}
             type="button"
             onClick={() => onPageChange(item)}
-            className="size-9 rounded-md text-foreground transition-colors hover:bg-secondary data-[active=true]:bg-primary data-[active=true]:text-primary-foreground"
+            className="size-9 rounded-[6px] text-foreground transition-colors hover:bg-secondary data-[active=true]:bg-primary data-[active=true]:text-primary-foreground"
             data-active={currentPage === item}
           >
             {item}
@@ -54,7 +54,7 @@ const WithdrawalPagination = ({
         type="button"
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
-        className="inline-flex h-10 items-center gap-1 rounded-md px-2 text-primary transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 sm:px-3"
+        className="inline-flex h-10 items-center gap-1 rounded-[6px] px-2 text-primary transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50 sm:px-3"
       >
         <span className="hidden sm:inline">Next</span>
         <ChevronRight className="size-4" />

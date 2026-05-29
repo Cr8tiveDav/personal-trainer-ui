@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Providers } from "./provider";
 
-const interClass = 'font-sans'
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 const appName = "Personal Trainer || FITCALL.ME";
 
@@ -27,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn(interClass, 'w-full mx-auto antialiased')}>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className={cn(inter.className, "font-sans w-full mx-auto antialiased")}>
         <noscript>
           <div style={{ padding: '2rem', textAlign: 'center', fontFamily: 'sans-serif' }}>
             <strong>JavaScript is required to use Fitcall.</strong>

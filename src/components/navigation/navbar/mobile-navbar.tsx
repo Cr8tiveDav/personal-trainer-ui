@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { X, Menu } from 'lucide-react'
 
@@ -11,16 +12,20 @@ import { cn } from '@/lib/utils'
 
 export default function MobileNav() {
   const [open, setOpen] = useState(false)
+  const pathname = usePathname()
+  const [prevPath, setPrevPath] = useState(pathname)
+
+  if (pathname !== prevPath) {
+    setPrevPath(pathname)
+    setOpen(false)
+  }
 
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-    }
-
-    return () => {
-      document.body.style.overflow = 'auto'
+      return () => {
+        document.body.style.overflow = 'auto'
+      }
     }
   }, [open])
 
@@ -35,7 +40,7 @@ export default function MobileNav() {
 
       <div
         className={cn(
-          "fixed inset-0 z-90 bg-black/50 backdrop-blur-sm transition-opacity duration-300",
+          "fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm transition-opacity duration-300",
           open ? "opacity-100 visible" : "opacity-0 invisible"
         )}
         onClick={() => setOpen(false)}
@@ -43,16 +48,18 @@ export default function MobileNav() {
 
       <aside
         className={cn(
-          "fixed right-0 top-0 z-100 flex h-screen w-[85%] max-w-sm flex-col bg-white shadow-2xl transition-transform duration-500 ease-out",
+          "fixed right-0 top-0 z-[100] flex h-screen w-[85%] max-w-sm flex-col bg-white shadow-2xl transition-transform duration-500 ease-out",
           open ? "translate-x-0" : "translate-x-full"
         )}
       >
         <div className="flex items-center justify-between border-b border-secondary px-6 py-5">
-          <Logo />
+          <div onClick={() => setOpen(false)} className="flex">
+            <Logo />
+          </div>
 
           <button
             onClick={() => setOpen(false)}
-            className="rounded-full bg-slate-100 p-2"
+            className="rounded-[9999px] bg-slate-100 p-2"
           >
             <X className="h-5 w-5 text-slate-700" />
           </button>
@@ -64,7 +71,7 @@ export default function MobileNav() {
               key={link.link}
               href={link.link}
               onClick={() => setOpen(false)}
-              className="rounded-xl px-4 py-4 text-lg font-semibold text-slate-900 transition hover:bg-slate-100"
+              className="rounded-[12px] px-4 py-4 text-lg font-semibold text-slate-900 transition hover:bg-slate-100"
             >
               {link.route}
             </Link>
@@ -74,7 +81,7 @@ export default function MobileNav() {
         <div className="border-t p-6 border-secondary">
           <Button
             asChild
-            className="h-14 w-full rounded-xl bg-[#0d2b45] text-base font-semibold"
+            className="h-14 w-full rounded-[12px] bg-[#0d2b45] text-base font-semibold"
           >
             <Link href="/waitlist" onClick={() => setOpen(false)}>
               Join Waitlist
