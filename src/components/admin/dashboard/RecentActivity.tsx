@@ -10,8 +10,7 @@ import { ActivityRow } from './ActivityRow';
 
 export function RecentActivity() {
   const { data: response } = useRecentActivity();
-  const list = response?.data ?? [];
-
+  const activities = response?.data?.items ?? [];
   return (
     <div className='flex-1 rounded-[12px] border border-[#E4E2E9] bg-white p-5 h-full'>
       <div className='mb-4 flex items-center justify-between'>
@@ -26,7 +25,7 @@ export function RecentActivity() {
         </Link>
       </div>
 
-      {list.length === 0 ? (
+      {activities.length === 0 ? (
         <EmptyState
           imageSrc={EMPTY_STATE_IMAGE_PATHS.recentActivity}
           imageAlt='No recent activity'
@@ -34,8 +33,8 @@ export function RecentActivity() {
           description='Session bookings and updates will show up here once clients start training.'
         />
       ) : (
-        <div className='divide-y divide-gray-50'>
-          {list.map((activity) => (
+        <div className='divide-y divide-[#EBEBEB]'>
+          {activities.map((activity) => (
             <ActivityRow key={activity.id} activity={activity} />
           ))}
         </div>

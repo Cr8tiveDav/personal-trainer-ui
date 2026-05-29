@@ -1,12 +1,5 @@
 import type { ApiEnvelope } from "./index";
 
-export interface StatsData {
-  total_clients: { value: number; trend: number; is_up: boolean };
-  active_subscriptions: { value: number; trend: number; is_up: boolean };
-  trial_users: { value: number; trend: number; is_up: boolean };
-  total_trainers: { value: number; trend: number; is_up: boolean };
-}
-
 export interface Payment {
   client_name: string;
   plan: string;
@@ -14,15 +7,30 @@ export interface Payment {
   duration: string;
 }
 
+export interface ActivityActor {
+  user_id: string;
+  name: string;
+}
+
+export interface ActivityTrainer {
+  trainer_id: string;
+  user_id: string;
+  name: string;
+}
+
 export interface Activity {
   id: string;
-  client_name: string;
-  plan_type: string;
-  trainer_name: string;
-  timestamp: string;
-  duration: string;
-  amount: number;
-  status: "completed" | "unconfirmed" | "settled" | "disputed";
+  type: string;
+  occurred_at: string;
+  target_id: string;
+  target_type: string;
+  actor: ActivityActor;
+  trainer: ActivityTrainer;
+  event_time?: string;
+  extra?: string;
+  summary: string;
+  duration?: string;
+  amount?: number;
 }
 
 export interface RevenueBreakdownItem {
@@ -41,20 +49,36 @@ export interface RevenueData {
 }
 
 export interface TopTrainer {
-  rank: number;
-  initial: string;
+  id: string;
+  user_id: string;
   name: string;
-  rating: number;
-  total_sessions: number;
-  trend: "up" | "down" | "neutral";
+  email: string;
+  specializations: string[];
+  training_styles: string[];
+  benefits: Array<{
+    id: string;
+    title: string;
+    subtext: string;
+    position: number;
+  }>;
+  bio: string;
+  years_of_experience: number;
+  intro_video_url: string;
+  display_picture: string;
+  gender: string;
+  phone_number: string;
+  onboarding_status: string;
+  average_rating: number;
+  total_reviews: number;
+  booking_count: number;
+  created_at: string;
+  updated_at: string;
 }
 
-
-export type DashboardStatsResponse = ApiEnvelope<StatsData>;
 export type LatestPaymentResponse = ApiEnvelope<Payment | null>;
-export type RecentActivityResponse = ApiEnvelope<Activity[]>;
+export type RecentActivityResponse = ApiEnvelope<{ items: Activity[] }>;
 export type RevenueSnapshotResponse = ApiEnvelope<RevenueData>;
-export type TopTrainersResponse = ApiEnvelope<TopTrainer[]>;
+export type TopTrainersResponse = ApiEnvelope<{ top_trainers: TopTrainer[] }>;
 export type SubscriptionCountResponse = ApiEnvelope<{
   active_subscriptions: number;
 }>;

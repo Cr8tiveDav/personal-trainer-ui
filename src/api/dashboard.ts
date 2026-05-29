@@ -4,23 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { getRequest } from "~/lib/http";
 import { API_ENDPOINTS } from "./api-endpoints";
 import type {
-  DashboardStatsResponse,
   RecentActivityResponse,
   SubscriptionCountResponse,
   TopTrainersResponse,
 } from "./types/dashboard";
 import { ApiEnvelope } from "./types";
 import { RevenueApiResponse, RevenueData } from "./types/payment";
-
-export function useDashboardStats() {
-  return useQuery({
-    queryKey: ["dashboard-stats"],
-    queryFn: () =>
-      getRequest<DashboardStatsResponse>({
-        url: API_ENDPOINTS.DASHBOARD.STATS,
-      }),
-  });
-}
 
 export function useLatestPayment() {
   return useQuery({
@@ -40,7 +29,7 @@ export function useRecentActivity() {
     queryKey: ["recent-activity"],
     queryFn: () =>
       getRequest<RecentActivityResponse>({
-        url: API_ENDPOINTS.SESSIONS.RECENT,
+        url: API_ENDPOINTS.ADMIN.ACTIVITIES,
       }),
   });
 }
@@ -59,7 +48,7 @@ export function useTopTrainers() {
     queryKey: ["top-trainers"],
     queryFn: () =>
       getRequest<TopTrainersResponse>({
-        url: API_ENDPOINTS.TRAINERS.RANKINGS,
+        url: API_ENDPOINTS.ADMIN.TOP_TRAINERS,
       }),
   });
 }

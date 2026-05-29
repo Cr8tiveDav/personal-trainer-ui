@@ -49,7 +49,6 @@ MEDIA: {
   },
 
   DASHBOARD: {
-    STATS: "/dashboard/stats",
     SUBSCRIPTION_COUNT:"/admin/subscriptions/count"
   },
 
@@ -86,5 +85,7 @@ MEDIA: {
     CLIENT_DETAIL: (id: string) => `/admin/clients/${id}`,
     SESSIONS: "/admin/sessions",
     SESSIONS_STATS: "/admin/sessions/stats",
+    ACTIVITIES: "/admin/activities",
+    TOP_TRAINERS: "/admin/top-trainers",
   },
 } as const;

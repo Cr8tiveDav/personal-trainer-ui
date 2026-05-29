@@ -19,7 +19,7 @@ export function SubscriptionBreakdown() {
     const subscriptionData = response?.data ?? EMPTY_DATA
 
     return (
-        <div className='rounded-[12px] border border-gray-100 bg-white p-5 shadow-sm'>
+        <div className='p-6 rounded-[12px] border border-[#E4E2E9] bg-white'>
             <h2 className='mb-1 text-base font-semibold text-gray-900'>Subscription Breakdown</h2>
             <p className='mb-6 text-sm text-gray-400'>{subscriptionData.total} active subscribers</p>
 

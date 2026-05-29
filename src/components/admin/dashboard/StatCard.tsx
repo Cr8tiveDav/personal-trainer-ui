@@ -9,7 +9,7 @@ interface StatCardProps {
 
 export function StatCard({ title, value, trend, isUp = true }: StatCardProps) {
   return (
-    <div className='h-[130px] rounded-[12px] border border-[#E4E2E9] bg-white p-5'>
+    <div className='min-h-[130px] rounded-[12px] border border-[#E4E2E9] bg-white p-5'>
       <div className='mb-4 flex items-center justify-between'>
         <h6 className='text-sm text-[#1C1C1C] '>{title}</h6>
         {trend !== undefined && (
