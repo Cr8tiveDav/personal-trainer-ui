@@ -21,6 +21,7 @@ async function fetchAdminSessions(): Promise<Session[]> {
   const response = await getRequest<SessionsListResponse>({
     url: `${API_ENDPOINTS.ADMIN.SESSIONS}?page=${ADMIN_SESSIONS_PAGE}&limit=${ADMIN_SESSIONS_LIMIT}`,
   });
+  console.log("GET /admin/sessions raw response:", response);
   return mapBackendSessionsResponse(response);
 }
 

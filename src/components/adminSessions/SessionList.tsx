@@ -37,6 +37,14 @@ const filterSessionsByTab = (sessions: Session[], tab: TabKey) => {
 
 const normalizeSearchValue = (value: string) => value.trim().toLowerCase().replace(/^#/, '')
 
+const sortSessionsNewestFirst = (sessions: Session[]) =>
+  [...sessions].sort((a, b) => {
+    const timeDifference = (b.sortTimestamp ?? 0) - (a.sortTimestamp ?? 0)
+    if (timeDifference !== 0) return timeDifference
+
+    return b.id.localeCompare(a.id)
+  })
+
 export default function SessionsList({
   loggedSessions = [],
   sessionUpdates = {},
@@ -55,10 +63,12 @@ export default function SessionsList({
   const { data, isError, isLoading } = useAdminSessions()
 
   const baseSessions: Session[] = data ?? []
-  const sessions: Session[] = [...loggedSessions, ...baseSessions].map((session) => ({
-    ...session,
-    ...sessionUpdates[session.id],
-  }))
+  const sessions: Session[] = sortSessionsNewestFirst(
+    [...loggedSessions, ...baseSessions].map((session) => ({
+      ...session,
+      ...sessionUpdates[session.id],
+    })),
+  )
   const tabCounts: Record<TabKey, number> = {
     all: sessions.length,
     manual: filterSessionsByTab(sessions, 'manual').length,

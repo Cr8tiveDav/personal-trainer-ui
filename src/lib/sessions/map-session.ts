@@ -118,6 +118,52 @@ const formatDateTime = (value: unknown) => {
   });
 };
 
+const getTimeValue = (value: unknown) => {
+  if (typeof value !== "string" && typeof value !== "number") return 0;
+
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? 0 : date.getTime();
+};
+
+const getSessionSortTimestamp = (session: SessionLike) => {
+  const created = readNestedFirstValue(session, [
+    "created_at",
+    "createdAt",
+    "booked_at",
+    "bookedAt",
+    "inserted_at",
+    "insertedAt",
+    "updated_at",
+    "updatedAt",
+  ]);
+  const createdTime = getTimeValue(created);
+  if (createdTime) return createdTime;
+
+  return getTimeValue(
+    readNestedFirstValue(session, [
+      "scheduled_at",
+      "scheduledAt",
+      "scheduled",
+      "scheduled_time",
+      "scheduledTime",
+      "scheduled_for",
+      "scheduledFor",
+      "starts_at",
+      "startsAt",
+      "start_at",
+      "startAt",
+      "scheduled_start",
+      "scheduledStart",
+      "start_time",
+      "startTime",
+      "actual_start",
+      "actualStart",
+      "created_at",
+      "createdAt",
+    ]),
+  );
+};
+
 const formatScheduled = (session: SessionLike) => {
   const scheduled = readNestedFirstValue(session, [
     "scheduled_at",
@@ -303,6 +349,7 @@ export const mapBackendSessionToSession = (
         session.trainer_joined,
     ),
     state: mapState(session.status ?? session.state),
+    sortTimestamp: getSessionSortTimestamp(session),
   };
 };
 
@@ -325,5 +372,5 @@ export const mapBackendSessionsResponse = (payload: unknown): Session[] => {
   return possibleList
     .map(mapBackendSessionToSession)
     .filter((session) => session.id)
-    .reverse();
+    .sort((a, b) => (b.sortTimestamp ?? 0) - (a.sortTimestamp ?? 0));
 };
