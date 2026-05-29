@@ -236,7 +236,7 @@ export default function SessionsList({
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          className='overflow-hidden rounded-[12px] border border-gray-100 bg-white shadow-sm'
+          className='p-6 rounded-[12px] border border-[#E4E2E9] bg-white'
         >
           <div className='flex items-center justify-between border-b border-gray-100 bg-white p-4'>
             {activeTab === 'all' ? (

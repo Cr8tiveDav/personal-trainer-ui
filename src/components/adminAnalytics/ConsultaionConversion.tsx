@@ -23,7 +23,7 @@ export function ConsultationConversion() {
   ]
 
   return (
-    <div className='flex-1 rounded-[12px] border border-gray-100 bg-white p-6 shadow-sm'>
+    <div className='flex-1 rounded-[12px] p-6 rounded-[12px] border border-[#E4E2E9] bg-white'>
       <h2 className='text-xl font-bold text-foreground'>Consultation Conversion</h2>
       <p className='mt-1 text-sm text-muted'>Track how consultations turn into paid users.</p>
 

@@ -9,11 +9,9 @@ type PaymentsControlsProps = {
 
 const statusOptions = [
   { label: "All statuses", value: "all" },
+  { label: "Successful", value: "successful" },
   { label: "Pending", value: "pending" },
-  { label: "In Progress", value: "in_progress" },
-  { label: "Completed", value: "completed" },
-  { label: "On Hold", value: "on_hold" },
-  { label: "Declined", value: "declined" },
+  { label: "Failed", value: "failed" },
 ];
 
 const PaymentsControls = ({
