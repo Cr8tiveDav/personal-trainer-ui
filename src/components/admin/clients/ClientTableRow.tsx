@@ -51,9 +51,6 @@ export function ClientTableRow({ client, index = 0 }: ClientTableRowProps) {
       <td className="px-6 py-4 text-sm text-gray-500 transition-colors group-hover:bg-gray-50/80">
         {client.joinedAt}
       </td>
-      <td className="px-6 py-4 text-sm font-medium text-gray-900 transition-colors group-hover:bg-gray-50/80">
-        {formatRevenue(client.revenue)}
-      </td>
       <td className="px-6 py-4 transition-colors group-hover:bg-gray-50/80">
         <ClientStatusBadge status={client.status} />
       </td>
