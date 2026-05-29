@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronLeft } from 'lucide-react';
 import { toast } from 'sonner';
+import { useQueryState, parseAsInteger } from 'nuqs';
+import { useAddTrainerStore } from '@/hooks/trainers/use-add-trainer-store';
 import {
   BasicInfoValues,
   Step1BasicInfo,
@@ -24,11 +26,32 @@ const stepMotion = {
 };
 
 export default function AddTrainerPage() {
-  const [step, setStep] = useState(1);
-  const [basicInfo, setBasicInfo] = useState<BasicInfoValues | null>(null);
-  const [mediaFiles, setMediaFiles] = useState<File[]>([]);
+  const [stepState, setStepState] = useQueryState(
+    'step',
+    parseAsInteger.withDefault(1)
+  );
+
+  const step = stepState ?? 1;
+  const setStep = (next: number) => {
+    void setStepState(next);
+  };
+
+  const { basicInfo, setBasicInfo, mediaFiles, setMediaFiles, reset } = useAddTrainerStore();
   const createTrainer = useCreateTrainer();
   const [created, setCreated] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
+
+  // Redirect to step 1 if basicInfo is missing on steps 2 or 3 (e.g. after a page refresh)
+  useEffect(() => {
+    if (step > 1 && !basicInfo && !created) {
+      void setStepState(1);
+    }
+  }, [step, basicInfo, created, setStepState]);
 
   const handleStep1 = (values: BasicInfoValues) => {
     setBasicInfo(values);
@@ -44,7 +67,7 @@ export default function AddTrainerPage() {
     if (!basicInfo) return;
 
     // First image is the display picture, rest are gallery images (uploaded after creation)
-    const displayPicture = mediaFiles[0] ?? null
+    const displayPicture = mediaFiles[0] ?? null;
 
     createTrainer.mutate(
       {
@@ -112,7 +135,7 @@ export default function AddTrainerPage() {
         />
       ) : (
         <>
-          <AddTrainerStepper currentStep={step} />
+          <AddTrainerStepper currentStep={step} onStepClick={setStep} />
 
           <AnimatePresence mode='wait'>
             {step === 1 && (
@@ -128,7 +151,11 @@ export default function AddTrainerPage() {
                 <Step2MediaUpload
                   defaultImages={mediaFiles}
                   onNext={handleStep2}
-                  onBack={() => setStep(1)}
+                  onBack={(currentImages) => {
+                    setMediaFiles(currentImages);
+                    setStep(1);
+                  }}
+                  onChange={setMediaFiles}
                 />
               </motion.div>
             )}

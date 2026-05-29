@@ -18,9 +18,10 @@ const STEPS: Step[] = [
 
 interface StepperProps {
   currentStep: number
+  onStepClick?: (step: number) => void
 }
 
-export function AddTrainerStepper({ currentStep }: StepperProps) {
+export function AddTrainerStepper({ currentStep, onStepClick }: StepperProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 6 }}
@@ -39,13 +40,18 @@ export function AddTrainerStepper({ currentStep }: StepperProps) {
                 layout
                 transition={{ type: 'spring', stiffness: 400, damping: 28 }}
                 className={cn(
-                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-[9999px] border-1 text-sm font-semibold',
+                  'flex h-8 w-8 shrink-0 items-center justify-center rounded-[9999px] border-1 text-sm font-semibold select-none',
                   isCompleted
-                    ? 'border-primary bg-primary text-white'
+                    ? 'border-primary bg-primary text-white cursor-pointer'
                     : isActive
                       ? 'border-primary bg-primarybadge text-primary'
                       : 'bg-gray-100 text-muted border-0'
                 )}
+                onClick={() => {
+                  if (isCompleted && onStepClick) {
+                    onStepClick(step.number)
+                  }
+                }}
               >
                 {isCompleted ? <Check className='h-4 w-4' /> : step.number}
               </motion.div>

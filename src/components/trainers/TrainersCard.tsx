@@ -26,7 +26,7 @@ const TrainerCard = ({ trainer }: Props) => {
           <div className="flex h-full w-full items-center justify-center bg-[#f4f5f7] transition-transform duration-1000 cubic-bezier(0.4, 0, 0.2, 1) group-hover:scale-105">
             <div className="relative h-24 w-24">
               <Image
-                src="/logo.svg"
+                src="/logo-transparent.svg"
                 alt="FitCall Logo Placeholder"
                 fill
                 className="object-contain"
