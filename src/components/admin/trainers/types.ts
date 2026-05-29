@@ -5,13 +5,30 @@ export interface Trainer {
   id: string;
   name: string;
   email: string;
-  avatarUrl?: string; // Optional if we don't have images
+  avatarUrl?: string;
   specialty: string;
   status: TrainerStatus;
   sessions: number | null;
   earnings: number;
   availability: TrainerAvailability;
   dateAdded: string;
+  // Editable fields from PATCH /trainers/{id}
+  bio?: string;
+  years_of_experience?: number;
+  specializations?: string[];
+  training_styles?: string[];
+  intro_video_url?: string;
+  onboarding_status?: string;
+}
+
+export interface EditTrainerPayload {
+  specializations?: string[];
+  training_styles?: string[];
+  bio?: string;
+  years_of_experience?: number;
+  intro_video_url?: string;
+  display_picture?: string;
+  onboarding_status?: string;
 }
 
 export interface BackendTrainerResponse {

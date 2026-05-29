@@ -3,13 +3,14 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter } from 'next/navigation';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, Pencil } from 'lucide-react';
 import ProfileHeader from './ProfileHeader';
 import QuickDetails from './QuickDetails';
 import TrainerTabs from './TrainerTabs';
 import OverviewTab from './tabs/OverviewTab';
-
 import AvailabilityTab from './tabs/AvailabilityTab';
+import { EditTrainerModal } from './EditTrainerModal';
+import { Button } from '@/components/ui/button';
 
 export type TabType =
   | 'overview'
@@ -36,6 +37,7 @@ const TrainerDetailsClient = () => {
   const router = useRouter();
   const id = params.id as string;
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [editOpen, setEditOpen] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['trainer', id],
@@ -68,14 +70,25 @@ const TrainerDetailsClient = () => {
 
   return (
     <div className='w-full mx-auto space-y-6 px-4 pb-12'>
-      {/* Breadcrumb / Back button */}
-      <button
-        onClick={() => router.push('/admin/trainers')}
-        className='flex items-center text-sm text-gray-500 hover:text-gray-900 transition-colors'
-      >
-        <ChevronLeft className='w-4 h-4 mr-1' />
-        Back to Trainers
-      </button>
+      {/* Breadcrumb / Back button + Edit */}
+      <div className='flex items-center justify-between'>
+        <button
+          onClick={() => router.push('/admin/trainers')}
+          className='flex items-center text-sm text-gray-500 hover:text-gray-900 transition-colors'
+        >
+          <ChevronLeft className='w-4 h-4 mr-1' />
+          Back to Trainers
+        </button>
+        <Button
+          size='sm'
+          variant='outline'
+          onClick={() => setEditOpen(true)}
+          className='flex items-center gap-1.5'
+        >
+          <Pencil className='w-3.5 h-3.5' />
+          Edit Trainer
+        </Button>
+      </div>
 
       {/* Top Section: Profile and Details */}
       <div className='flex flex-col lg:flex-row gap-6 w-full'>
@@ -114,6 +127,12 @@ const TrainerDetailsClient = () => {
           {activeTab === 'availability' && <AvailabilityTab />}
         </div>
       </div>
+
+      <EditTrainerModal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        trainer={trainer}
+      />
     </div>
   );
 };
