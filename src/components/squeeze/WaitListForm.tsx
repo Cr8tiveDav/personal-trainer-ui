@@ -10,7 +10,7 @@ import { waitlistAction } from '@/actions/waitlist'
 
 const waitlistSchema = z.object({
   name: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
-  email: z.string().min(1, { message: 'Email is required.' }).email({ message: 'Please enter a valid email address.' }),
+  email: z.string().min(1, { message: 'Email is required.' }).email({ message: 'Please enter a valid email address.' }).max(254, { message: 'Email address is too long.' }),
   phone_number: z.string().min(7, { message: 'Please enter a valid phone number.' }),
   location: z.string().min(2, { message: 'Location is required.' }),
 })
@@ -46,8 +46,12 @@ export const WaitlistForm = () => {
       const result = await waitlistAction(null, formData)
 
       if (result?.success) {
-        toast.success('Entry confirmed! Well be in touch soon.')
-        reset()
+        if (result.alreadyExists) {
+          toast.info("You're already on our waitlist! We'll be in touch soon.")
+        } else {
+          toast.success("You're on the list! We'll be in touch soon.")
+          reset()
+        }
       } else {
         toast.error(result?.error || 'Something went wrong. Please try again.')
       }

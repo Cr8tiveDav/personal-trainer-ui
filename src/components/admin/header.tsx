@@ -1,13 +1,10 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Bell, Menu, LogOut } from 'lucide-react'
+import { Menu, LogOut } from 'lucide-react'
 import Image from 'next/image'
 import { useLogout } from '@/api/auth'
-import {
-  EMPTY_STATE_IMAGE_PATHS,
-  EmptyState,
-} from '@/components/ui/EmptyState'
+import { NotificationBell } from '@/components/notifications/NotificationBell'
 
 interface AdminHeaderProps {
   userName: string
@@ -55,31 +52,14 @@ export function AdminHeader({
 
       <div className='ml-auto flex items-center gap-3'>
         <div ref={notifRef} className='relative'>
-          <button
-            type='button'
-            onClick={() => {
+          <NotificationBell
+            isOpen={notifOpen}
+            onToggle={() => {
               setNotifOpen((prev) => !prev)
               setProfileOpen(false)
             }}
-            aria-label='Notifications'
-            className='relative flex h-9 w-9 items-center justify-center rounded-[9999px] hover:bg-gray-100 transition-colors'
-          >
-            <Bell className='h-5 w-5 text-gray-500' />
-          </button>
-          {notifOpen && (
-            <div className='fixed md:absolute left-4 md:left-auto right-4 md:right-0 top-[75px] md:top-11 z-50 w-auto md:w-[400px] rounded-[12px] border border-gray-100 bg-white shadow-lg overflow-hidden'>
-              <p className='border-b border-gray-100 px-5 py-4 text-base font-semibold text-gray-900'>
-                Notifications
-              </p>
-              <EmptyState
-                imageSrc={EMPTY_STATE_IMAGE_PATHS.notification}
-                imageAlt='No notifications'
-                title='No notifications yet'
-                description='Alerts about sessions, clients, and payouts will appear here.'
-                className='min-h-[280px] py-10 px-6 [&_img]:max-w-[220px] [&_h3]:text-base [&_p]:max-w-sm'
-              />
-            </div>
-          )}
+            emptyDescription='Alerts about sessions, clients, and payouts will appear here.'
+          />
         </div>
 
         <div ref={profileRef} className='relative'>
