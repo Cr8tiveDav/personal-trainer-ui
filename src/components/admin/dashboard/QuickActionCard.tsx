@@ -17,7 +17,7 @@ const ACTIONS: QuickAction[] = [
   { label: 'Add Trainer', href: '/admin/trainers/new', icon: Dumbbell },
   { label: 'View Clients', href: '/admin/users', icon: Users },
   { label: 'Broadcast', href: '/admin/media', icon: Megaphone },
-  { label: 'Reports', href: '/admin/analytics', icon: LineChart },
+  { label: 'Reports', href: '/admin/payments', icon: LineChart },
 ];
 
 export function QuickActions() {

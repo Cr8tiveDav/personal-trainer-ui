@@ -1,5 +1,6 @@
 export interface Session {
   id: string;
+  clientId?: string 
   client: { name: string; avatar?: string; country: string; email?: string };
   trainer: { name: string; avatar?: string; country: string; email?: string };
   type: "Monthly" | "Free Trial" | "One Time";
