@@ -10,15 +10,17 @@ interface SidebarItemProps {
   href: string
   icon: React.ComponentType<{ className?: string }>
   collapsed?: boolean
+  onClick?: () => void
 }
 
-export function SidebarItem({ label, href, icon: Icon, collapsed }: SidebarItemProps) {
+export function SidebarItem({ label, href, icon: Icon, collapsed, onClick }: SidebarItemProps) {
   const pathname = usePathname()
   const isActive = pathname === href || (href !== '/admin/dashboard' && pathname.startsWith(`${href}/`))
 
   return (
     <Link
       href={href}
+      onClick={onClick}
       title={collapsed ? label : undefined}
       className={cn(
         'flex items-center gap-3 rounded-[8px] px-3 py-2 text-sm font-medium transition-colors',

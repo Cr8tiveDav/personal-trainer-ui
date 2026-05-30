@@ -49,7 +49,7 @@ const TrainerDetailsClient = () => {
 
   if (isError || !data?.data) {
     return (
-      <div className='w-full p-8 text-center'>
+      <div className='w-full md:p-8 text-center'>
         <p className='text-red-500 mb-4'>Failed to load trainer details.</p>
         <button
           onClick={() => router.push('/admin/trainers')}
@@ -64,7 +64,7 @@ const TrainerDetailsClient = () => {
   const trainer = data.data;
 
   return (
-    <div className='w-full mx-auto space-y-6 px-4 pb-12'>
+    <div className='w-full mx-auto space-y-6 md:px-4 pb-12'>
       <button
         onClick={() => router.push('/admin/trainers')}
         className='flex items-center text-sm text-gray-500 hover:text-gray-900 transition-colors'

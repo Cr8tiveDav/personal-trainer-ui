@@ -178,9 +178,9 @@ export function AvailabilitySetupPanel({
 
     if (newDays.length === 0) return;
 
-    const availability = hasExisting
-      ? mergeNewDaysIntoSchedule(existingSlots, newDays)
-      : newDays;
+    
+      const availability = newDays
+
 
     onSave(availability);
   }

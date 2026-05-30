@@ -1,51 +1,51 @@
 'use client'
 
 import { Users, UserX, CalendarCheck, TrendingUp } from 'lucide-react'
-import { useAdminUserTrainerCount } from '@/api/clients'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const stats = [
-  {
-    label: 'Active clients',
-    key: 'active' as const,
-    icon: Users,
-    iconColor: 'text-blue-500',
-    iconBg: 'bg-blue-50',
-  },
-  {
-    label: 'Inactive client',
-    key: 'inactive' as const,
-    icon: UserX,
-    iconColor: 'text-red-400',
-    iconBg: 'bg-red-50',
-  },
-  {
-    label: 'Sessions booked',
-    key: 'sessions' as const,
-    icon: CalendarCheck,
-    iconColor: 'text-green-500',
-    iconBg: 'bg-green-50',
-  },
-  {
-    label: 'Revenue generated',
-    key: 'revenue' as const,
-    icon: TrendingUp,
-    iconColor: 'text-purple-500',
-    iconBg: 'bg-purple-50',
-  },
-]
+interface StatCounts {
+  all: number
+  active: number
+  inactive: number
+  paused: number
+}
 
-export function ClientStatCards() {
-  const { data, isLoading } = useAdminUserTrainerCount()
-  const counts = data?.data
-  const showSkeleton = isLoading && data === undefined
+interface ClientStatCardsProps {
+  counts: StatCounts
+  isLoading?: boolean
+}
 
-  function getValue(key: (typeof stats)[number]['key']) {
-    if (key === 'active') {
-      return (counts?.total_clients ?? 0).toLocaleString()
-    }
-    return '0'
-  }
+export function ClientStatCards({ counts, isLoading }: ClientStatCardsProps) {
+  const stats = [
+    {
+      label: 'Active clients',
+      value: counts.active.toLocaleString(),
+      icon: Users,
+      iconColor: 'text-blue-500',
+      iconBg: 'bg-blue-50',
+    },
+    {
+      label: 'Inactive clients',
+      value: (counts.inactive + counts.paused).toLocaleString(),
+      icon: UserX,
+      iconColor: 'text-red-400',
+      iconBg: 'bg-red-50',
+    },
+    {
+      label: 'Total clients',
+      value: counts.all.toLocaleString(),
+      icon: CalendarCheck,
+      iconColor: 'text-green-500',
+      iconBg: 'bg-green-50',
+    },
+    {
+      label: 'Revenue generated',
+      value: '—',
+      icon: TrendingUp,
+      iconColor: 'text-purple-500',
+      iconBg: 'bg-purple-50',
+    },
+  ]
 
   return (
     <div className='grid grid-cols-2 gap-4 lg:grid-cols-4'>
@@ -61,10 +61,10 @@ export function ClientStatCards() {
             >
               <Icon className={`h-5 w-5 ${stat.iconColor}`} />
             </div>
-            {showSkeleton ? (
+            {isLoading ? (
               <Skeleton className='mb-2 h-8 w-20' />
             ) : (
-              <p className='text-2xl font-bold text-gray-900'>{getValue(stat.key)}</p>
+              <p className='text-2xl font-bold text-gray-900'>{stat.value}</p>
             )}
             <p className='mt-1 text-sm text-gray-500'>{stat.label}</p>
           </div>

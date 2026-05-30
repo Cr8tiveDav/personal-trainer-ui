@@ -32,20 +32,20 @@ export function ImageGrid({ images }: { images: MediaItem[] }) {
             Manage organisation-level images
           </p>
         </div>
-        <div className="flex shrink-0 items-center gap-3">
-          <div className="relative">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search by title"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-72 rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full sm:w-72 rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
           <Link
             href="/admin/media/upload?type=image"
-            className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+            className="flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
             Upload Image
