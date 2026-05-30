@@ -39,6 +39,7 @@ MEDIA: {
   LIST: "/media",
   UPLOAD_IMAGE: "/media/images",
   UPLOAD_VIDEO: "/media/videos",
+  DELETE_MEDIA: (id: string) => `/media/${id}`,
 },
   WAITLIST: {
     JOIN: "/waitlist",
