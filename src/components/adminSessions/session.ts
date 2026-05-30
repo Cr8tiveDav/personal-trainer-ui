@@ -16,6 +16,7 @@ export interface Session {
     | "Settled"
     | "Disputed"
     | "Missed";
+  sortTimestamp?: number;
   forceConfirmation?: {
     behalf: "client" | "trainer" | "both";
     reason: string;
