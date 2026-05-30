@@ -30,15 +30,12 @@ export function useForgotPassword() {
       showSuccessToast(FORGOT_PASSWORD_SUCCESS_MESSAGE)
     },
     onError(error) {
-      displayError(
-        error,
-        'Unable to process your request. Please try again later.',
-      )
+      displayError(error, 'Unable to process your request. Please try again later.')
     },
   })
 }
 
-export function useResetPassword() {
+export function useResetPassword({ type }: { type: 'admin' | 'trainer' }) {
   const router = useRouter()
 
   return useMutation({
@@ -50,13 +47,10 @@ export function useResetPassword() {
       }),
     onSuccess() {
       showSuccessToast(RESET_PASSWORD_SUCCESS_MESSAGE)
-      router.push('/admin/login')
+      router.push(type === 'admin' ? '/admin/login' : '/trainer/login')
     },
     onError(error) {
-      displayError(
-        error,
-        'Unable to reset your password. Check the code and try again.',
-      )
+      displayError(error, 'Unable to reset your password. Check the code and try again.')
     },
   })
 }
