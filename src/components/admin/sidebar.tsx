@@ -8,7 +8,6 @@ import {
   X,
   Video,
   PhoneCall,
-  BadgeCheck,
 } from 'lucide-react'
 import { SidebarItem } from './sidebarItem'
 import { cn } from '~/utils'
@@ -45,11 +44,7 @@ const NAV_SECTIONS = [
     label: 'FINANCE',
     items: [
       { label: 'Payments', href: '/admin/payments', icon: PaymentIcon },
-      {
-        label: 'Subscriptions',
-        href: '/admin/subscriptions',
-        icon: BadgeCheck,
-      },
+      
     ],
   },
   {
