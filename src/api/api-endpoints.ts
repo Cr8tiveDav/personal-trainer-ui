@@ -88,4 +88,9 @@ MEDIA: {
     ACTIVITIES: "/admin/activities",
     TOP_TRAINERS: "/admin/top-trainers",
   },
+
+  NOTIFICATIONS: {
+    LIST: "/notifications",
+    WS: "/notifications/ws",
+  },
 } as const;
