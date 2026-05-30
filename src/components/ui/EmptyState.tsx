@@ -6,6 +6,8 @@ export const EMPTY_STATE_IMAGE_PATHS = {
   client: '/images/empty-state/client.svg',
   trainer: '/images/empty-state/trainer.svg',
   manualEntry: '/images/empty-state/manual-entry.svg',
+  confirmationQueue: '/images/empty-state/confirmation-queue.png',
+  missedSessions: '/images/empty-state/missed-sessions.png',
   income: '/images/empty-state/income.svg',
   allTransactions: '/images/empty-state/all-transactions.svg',
   notification: '/images/empty-state/notification.svg',

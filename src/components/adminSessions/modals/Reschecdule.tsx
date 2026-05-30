@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import { X, Calendar as CalendarIcon, Clock } from 'lucide-react'
 
 interface RescheduleModalProps {
@@ -8,7 +8,8 @@ interface RescheduleModalProps {
   onClose: () => void
   sessionId: string | null
   currentScheduledTime?: string
-  onConfirmReschedule: (id: string, newDate: string, newTime: string) => void
+  isSubmitting?: boolean
+  onConfirmReschedule: (id: string, newDate: string, newTime: string) => void | Promise<void>
 }
 
 const formatSessionId = (id: string) => {
@@ -21,6 +22,7 @@ export function RescheduleSessionModal({
   onClose,
   sessionId,
   currentScheduledTime = 'Today, 9:00AM',
+  isSubmitting = false,
   onConfirmReschedule
 }: RescheduleModalProps) {
   const [newDate, setNewDate] = useState('')
@@ -29,15 +31,22 @@ export function RescheduleSessionModal({
 
   if (!isOpen || !sessionId) return null
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    if (isSubmitting) return
     if (!newDate || !newTime) {
       setError('Please select both a valid date and time slot.')
       return
     }
     setError('')
-    onConfirmReschedule(sessionId, newDate, newTime)
-    onClose()
+    try {
+      await onConfirmReschedule(sessionId, newDate, newTime)
+      onClose()
+      setNewDate('')
+      setNewTime('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not reschedule session.')
+    }
   }
 
   return (
@@ -55,6 +64,7 @@ export function RescheduleSessionModal({
           <button 
             type='button' 
             onClick={onClose} 
+            disabled={isSubmitting}
             className='rounded-[9999px] p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors'
           >
             <X className='h-4 w-4' />
@@ -117,15 +127,17 @@ export function RescheduleSessionModal({
             <button
               type='button'
               onClick={onClose}
+              disabled={isSubmitting}
               className='px-4 h-9 border border-gray-200 bg-white rounded-[8px] font-semibold text-gray-600 hover:bg-gray-50 transition-colors'
             >
               Discard Changes
             </button>
             <button
               type='submit'
-              className='px-4 h-9 bg-[#0b4d8d] hover:bg-[#093e72] text-white font-semibold rounded-[8px] shadow-none transition-all'
+              disabled={isSubmitting}
+              className='px-4 h-9 bg-[#0b4d8d] hover:bg-[#093e72] text-white font-semibold rounded-[8px] shadow-none transition-all disabled:cursor-not-allowed disabled:opacity-70'
             >
-              Confirm Reschedule
+              {isSubmitting ? 'Saving...' : 'Confirm Reschedule'}
             </button>
           </div>
         </form>

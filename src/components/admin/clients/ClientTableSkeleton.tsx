@@ -34,9 +34,6 @@ export function ClientTableSkeleton() {
             <Skeleton className='h-4 w-24' />
           </td>
           <td className='px-6 py-4'>
-            <Skeleton className='h-4 w-16' />
-          </td>
-          <td className='px-6 py-4'>
             <Skeleton className='h-6 w-20 rounded-[9999px]' />
           </td>
           <td className='px-6 py-4'>

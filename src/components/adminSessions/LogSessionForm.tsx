@@ -68,8 +68,13 @@ const formatScheduled = (dateValue: string, timeValue: string) => {
   return `${dateLabel}, ${timeLabel}`
 }
 
-const createSessionId = () => {
-  return `S-MAN-${String(Date.now()).slice(-6)}`
+const createSessionMeta = () => {
+  const sortTimestamp = Date.now()
+
+  return {
+    id: `S-MAN-${String(sortTimestamp).slice(-6)}`,
+    sortTimestamp,
+  }
 }
 
 export function LogSessionForm({ onCancel, onSubmit }: LogSessionFormProps) {
@@ -93,8 +98,10 @@ export function LogSessionForm({ onCancel, onSubmit }: LogSessionFormProps) {
   const { isValid } = form.formState
 
   const handleSubmit = (values: LogSessionValues) => {
+    const sessionMeta = createSessionMeta()
+
     onSubmit({
-      id: createSessionId(),
+      id: sessionMeta.id,
       client: findClient(values.clientName),
       trainer: findTrainer(values.trainerName),
       type: values.type,
@@ -104,6 +111,7 @@ export function LogSessionForm({ onCancel, onSubmit }: LogSessionFormProps) {
       clientConf: values.clientConf,
       trainerConf: values.trainerConf,
       state: values.state,
+      sortTimestamp: sessionMeta.sortTimestamp,
     })
   }
 
