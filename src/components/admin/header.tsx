@@ -74,6 +74,7 @@ export function AdminHeader({
               type='search'
               value={sessionSearch}
               onChange={(e) => handleSessionSearch(e.target.value)}
+              aria-label='Search sessions'
               placeholder='Search'
               className='h-11 w-full rounded-[8px] border border-gray-200 bg-white pl-10 pr-4 text-sm font-medium text-gray-700 placeholder:text-gray-300 focus:border-[#0b4d8d] focus:outline-none focus:ring-1 focus:ring-[#0b4d8d]'
             />

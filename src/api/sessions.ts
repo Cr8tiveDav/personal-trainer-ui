@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getRequest, putRequest } from "~/lib/http";
 import { API_ENDPOINTS } from "./api-endpoints";
 import type { Session } from "@/components/adminSessions/session";
-import { mapBackendSessionsResponse } from "@/lib/sessions/map-session";
+import { mapBackendSessionsResponse, mapState } from "@/lib/sessions/map-session";
 import { displayError, showSuccessToast } from "@/lib/utils";
 import type {
   CancelSessionResponse,
@@ -42,20 +42,6 @@ type CancelSessionInput = {
 
 type CancelSessionPayload = {
   reason: string;
-};
-
-const mapBookingStatusToSessionState = (status: string): Session["state"] => {
-  const normalized = status.toLowerCase();
-
-  if (normalized === "cancelled" || normalized === "canceled") return "Cancelled";
-  if (normalized === "completed") return "Completed";
-  if (normalized === "settled") return "Settled";
-  if (normalized === "disputed") return "Disputed";
-  if (normalized === "missed") return "Missed";
-  if (normalized === "unconfirmed" || normalized === "pending_confirmation")
-    return "Unconfirmed";
-
-  return "Scheduled";
 };
 
 async function fetchAdminSessions(): Promise<Session[]> {
@@ -152,7 +138,7 @@ export function useCancelSession() {
       }),
     mutationKey: ["cancel-session"],
     onSuccess(response, input) {
-      const state = mapBookingStatusToSessionState(response.data.booking_status);
+      const state = mapState(response.data.booking_status);
 
       queryClient.setQueryData<Session[]>(adminSessionsQueryKey, (current) => {
         let didUpdateTarget = false;

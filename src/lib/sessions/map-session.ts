@@ -289,7 +289,7 @@ const mapConfirmation = (value: unknown): Session["clientConf"] => {
   return "Pending";
 };
 
-const mapState = (value: unknown): Session["state"] => {
+export const mapState = (value: unknown): Session["state"] => {
   const normalized = typeof value === "string" ? value.toLowerCase() : "";
   if (normalized === "completed") return "Completed";
   if (normalized === "cancelled" || normalized === "canceled")

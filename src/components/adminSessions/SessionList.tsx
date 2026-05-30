@@ -116,7 +116,7 @@ export default function SessionsList({
   const [isTrainerMenuOpen, setIsTrainerMenuOpen] = useState(false)
   const [isStateMenuOpen, setIsStateMenuOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<TabKey>('all')
-  const [currentPage, setCurrentPage] = useState(1)
+  const [pagination, setPagination] = useState({ page: 1, search })
   const [selectedSession, setSelectedSession] = useState<Session | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false)
@@ -125,6 +125,10 @@ export default function SessionsList({
   const { data, isError, isLoading } = useAdminSessions()
   const rescheduleSession = useRescheduleSession()
   const cancelSession = useCancelSession()
+  const currentPage = pagination.search === search ? pagination.page : 1
+  const setCurrentPage = (page: number) => {
+    setPagination({ page, search })
+  }
 
   const handleSearchChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString())
@@ -137,7 +141,6 @@ export default function SessionsList({
 
     const query = params.toString()
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
-    setCurrentPage(1)
   }
 
   const baseSessions: Session[] = data ?? []

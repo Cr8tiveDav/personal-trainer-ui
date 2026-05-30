@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import { AlertTriangle, X } from 'lucide-react'
+import { formatSessionId } from '../session-display'
 
 interface CancelSessionModalProps {
   isOpen: boolean
@@ -19,11 +20,6 @@ const CANCELLATION_REASONS = [
   { value: 'duplicate booking', label: 'Duplicate booking' },
 ] as const
 
-const formatSessionId = (id: string) => {
-  if (id.length <= 12) return id
-  return `${id.slice(0, 8)}...${id.slice(-4)}`
-}
-
 export function CancelSessionModal({
   isOpen,
   onClose,
@@ -33,6 +29,17 @@ export function CancelSessionModal({
 }: CancelSessionModalProps) {
   const [reason, setReason] = useState('')
   const [error, setError] = useState('')
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const focusTimer = window.setTimeout(() => {
+      dialogRef.current?.focus()
+    }, 0)
+
+    return () => window.clearTimeout(focusTimer)
+  }, [isOpen])
 
   if (!isOpen || !sessionId) return null
 
@@ -41,6 +48,13 @@ export function CancelSessionModal({
     setReason('')
     setError('')
     onClose()
+  }
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape') {
+      event.preventDefault()
+      handleClose()
+    }
   }
 
   const handleSubmit = async (e: FormEvent) => {
@@ -64,10 +78,21 @@ export function CancelSessionModal({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 backdrop-blur-sm animate-fade-in'>
-      <div className='relative flex w-full max-w-md flex-col rounded-[16px] bg-white p-6 text-xs text-[#111111] shadow-2xl animate-in fade-in zoom-in-95 duration-150'>
+      <div
+        ref={dialogRef}
+        role='dialog'
+        aria-modal='true'
+        aria-labelledby='cancel-session-title'
+        aria-describedby={error ? 'cancel-session-error' : undefined}
+        tabIndex={-1}
+        onKeyDown={handleKeyDown}
+        className='relative flex w-full max-w-md flex-col rounded-[16px] bg-white p-6 text-xs text-[#111111] shadow-2xl outline-none animate-in fade-in zoom-in-95 duration-150'
+      >
         <div className='flex items-center justify-between border-b border-gray-100 pb-3.5'>
           <div>
-            <h2 className='text-sm font-bold text-gray-900'>Cancel Session</h2>
+            <h2 id='cancel-session-title' className='text-sm font-bold text-gray-900'>
+              Cancel Session
+            </h2>
             <p className='mt-0.5 text-[11px] text-gray-400' title={`#${sessionId}`}>
               Cancelling session #{formatSessionId(sessionId)}
             </p>
@@ -91,6 +116,8 @@ export function CancelSessionModal({
             <select
               id='cancel-session-reason'
               value={reason}
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? 'cancel-session-error' : undefined}
               onChange={(e) => {
                 setReason(e.target.value)
                 if (error) setError('')
@@ -113,7 +140,11 @@ export function CancelSessionModal({
             </p>
           </div>
 
-          {error && <p className='text-[11px] font-medium text-red-500'>{error}</p>}
+          {error && (
+            <p id='cancel-session-error' className='text-[11px] font-medium text-red-500'>
+              {error}
+            </p>
+          )}
 
           <div className='mt-2 flex justify-end gap-2 border-t border-gray-100 pt-3.5'>
             <button
