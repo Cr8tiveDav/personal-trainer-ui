@@ -1,6 +1,11 @@
 'use client'
 
-import { X } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Session } from '../session'
 
 interface DrawerProps {
@@ -70,24 +75,38 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }:
     },
   ]
 
-  return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center bg-slate-900/45 px-4 backdrop-blur-[1px] animate-fade-in'>
-      <div className='relative flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-[18px] bg-white shadow-2xl animate-in fade-in zoom-in-95 duration-150'>
-        <div className='flex items-center justify-between border-b border-gray-100 px-6 py-5'>
-          <h2 className='text-sm font-bold text-gray-900'>
-            <span title={`#${session.id}`}>#{formatSessionId(session.id)}</span> - {session.client.name} / {session.trainer.name}
-          </h2>
-          <button
-            type='button'
-            onClick={onClose}
-            className='flex h-8 w-8 items-center justify-center rounded-[9999px] bg-gray-50 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800'
-            aria-label='Close session details'
-          >
-            <X className='h-4 w-4' />
-          </button>
-        </div>
+  const timelineSteps = [
+    { title: 'Session booked', desc: 'Auto-created on platform', active: true },
+    {
+      title:
+        session.clientConf === 'Yes'
+          ? `${session.client.name} confirmed session`
+          : `${session.client.name} confirmation pending`,
+      desc: session.clientConf === 'Yes' ? '2h ago' : 'Pending',
+      active: session.clientConf === 'Yes',
+    },
+    {
+      title:
+        session.trainerConf === 'Yes'
+          ? `${session.trainer.name} confirmed session`
+          : `${session.trainer.name} confirmation pending`,
+      desc: session.trainerConf === 'Yes' ? '1h ago' : 'Pending',
+      active: session.trainerConf === 'Yes',
+    },
+  ]
 
-        <div className='flex-1 space-y-5 overflow-y-auto px-6 py-6'>
+  return (
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) onClose()
+    }}>
+      <DialogContent className='flex h-[90vh] max-w-xl grid-rows-none flex-col gap-0 overflow-hidden rounded-[18px] border-0 bg-white p-0 shadow-2xl sm:rounded-[18px]'>
+        <DialogHeader className='border-b border-gray-100 px-6 py-5 pr-14 text-left'>
+          <DialogTitle className='text-sm font-bold text-gray-900'>
+            <span title={`#${session.id}`}>#{formatSessionId(session.id)}</span> - {session.client.name} / {session.trainer.name}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className='hide_scrollbar min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-6'>
           <div className='rounded-[14px] border border-gray-100 p-5'>
             <div className='space-y-5 text-xs text-gray-600'>
               {details.map((item) => (
@@ -102,11 +121,7 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }:
           <div className='rounded-[14px] border border-gray-100 p-5'>
             <p className='mb-5 border-b border-gray-100 pb-4 text-xs font-bold uppercase text-gray-500'>Timeline</p>
             <div className='relative space-y-4 before:absolute before:bottom-2 before:left-[5px] before:top-2 before:w-px before:bg-gray-200'>
-              {[
-                { title: 'Session booked', desc: 'Auto-created on platform', active: true },
-                { title: `${session.client.name} confirmed session`, desc: '2h ago', active: true },
-                { title: `${session.trainer.name} confirmed session`, desc: '1h ago', active: true },
-              ].map((step) => (
+              {timelineSteps.map((step) => (
                 <div key={step.title} className='relative flex gap-3 pl-0.5 text-xs'>
                   <div className={`z-10 mt-1 h-2 w-2 shrink-0 rounded-[9999px] ${step.active ? 'bg-[#2fb344]' : 'bg-gray-300'}`} />
                   <div>
@@ -136,7 +151,7 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }:
             Cancel Session
           </button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   )
 }

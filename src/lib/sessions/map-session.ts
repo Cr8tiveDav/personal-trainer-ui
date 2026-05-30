@@ -125,6 +125,26 @@ const getTimeValue = (value: unknown) => {
   return Number.isNaN(date.getTime()) ? 0 : date.getTime();
 };
 
+const SCHEDULED_VALUE_KEYS = [
+  "scheduled_at",
+  "scheduledAt",
+  "scheduled",
+  "scheduled_time",
+  "scheduledTime",
+  "scheduled_for",
+  "scheduledFor",
+  "starts_at",
+  "startsAt",
+  "start_at",
+  "startAt",
+  "scheduled_start",
+  "scheduledStart",
+  "start_time",
+  "startTime",
+  "actual_start",
+  "actualStart",
+];
+
 const getSessionSortTimestamp = (session: SessionLike) => {
   const created = readNestedFirstValue(session, [
     "created_at",
@@ -141,23 +161,7 @@ const getSessionSortTimestamp = (session: SessionLike) => {
 
   return getTimeValue(
     readNestedFirstValue(session, [
-      "scheduled_at",
-      "scheduledAt",
-      "scheduled",
-      "scheduled_time",
-      "scheduledTime",
-      "scheduled_for",
-      "scheduledFor",
-      "starts_at",
-      "startsAt",
-      "start_at",
-      "startAt",
-      "scheduled_start",
-      "scheduledStart",
-      "start_time",
-      "startTime",
-      "actual_start",
-      "actualStart",
+      ...SCHEDULED_VALUE_KEYS,
       "created_at",
       "createdAt",
     ]),
@@ -165,25 +169,7 @@ const getSessionSortTimestamp = (session: SessionLike) => {
 };
 
 const formatScheduled = (session: SessionLike) => {
-  const scheduled = readNestedFirstValue(session, [
-    "scheduled_at",
-    "scheduledAt",
-    "scheduled",
-    "scheduled_time",
-    "scheduledTime",
-    "scheduled_for",
-    "scheduledFor",
-    "starts_at",
-    "startsAt",
-    "start_at",
-    "startAt",
-    "scheduled_start",
-    "scheduledStart",
-    "start_time",
-    "startTime",
-    "actual_start",
-    "actualStart",
-  ]);
+  const scheduled = readNestedFirstValue(session, SCHEDULED_VALUE_KEYS);
 
   if (scheduled !== undefined) return formatDateTime(scheduled);
 

@@ -5,8 +5,6 @@ import { useAdminSessions } from '@/api/sessions';
 import SessionsList from '@/components/adminSessions/SessionList';
 import { SessionsPageSkeleton } from '@/components/adminSessions/SessionsPageSkeleton';
 import { Session } from '@/components/adminSessions/session';
-// import { ChevronLeft } from 'lucide-react';
-// import { LogSessionForm } from '@/components/adminSessions/LogSessionForm';
 
 export function SessionsPageClient() {
   const { data, isLoading } = useAdminSessions();
