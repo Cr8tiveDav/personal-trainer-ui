@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import { cn } from "@/utils";
 import type { AvailabilitySlot } from "@/api/availability";
 import { Time12HourSelect } from "@/components/availability/Time12HourSelect";
-import { mergeNewDaysIntoSchedule } from "@/lib/availability/merge-availability";
 import { normalizeTime24, snapToTimeOption } from "@/lib/availability/time-12h";
 
 import { WEEK_DAYS } from "@/lib/availability/week-days";

@@ -1,5 +1,6 @@
 "use client";
-import {  ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useMediaDetail } from "@/api/media";
 import { MediaStatusBadge } from "./VideoStatusBadge";
@@ -37,10 +38,12 @@ export function VideoDetailView({ id }: { id: string }) {
               className="h-full w-full object-cover"
             />
           ) : (
-            <img
+            <Image
               src={media.public_url}
               alt={media.title}
-              className="h-full w-full object-cover"
+              fill
+              unoptimized
+              className="object-cover"
             />
           )}
         </div>

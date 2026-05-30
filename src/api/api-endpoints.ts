@@ -74,6 +74,10 @@ MEDIA: {
     LIST:"/admin/revenue",
   },
 
+  SUBSCRIPTIONS: {
+    ADMIN_LIST: "/admin/subscriptions",
+  },
+
   DISCOVERY_SLOTS: {
     LIST: "/discovery-slots",
     DETAIL: (id: string) => `/discovery-slots/${id}`,
