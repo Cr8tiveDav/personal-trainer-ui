@@ -2,9 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Plus, Play } from "lucide-react";
+import { Search, Plus, Play, Trash2 } from "lucide-react";
 import { MediaStatusBadge } from "./VideoStatusBadge";
+import { useDeleteMedia } from "@/api/media";
 import type { MediaItem } from "@/api/media";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+
+const PER_PAGE = 10;
 
 function formatBytes(bytes: number) {
   if (!bytes) return "-";
@@ -20,15 +32,31 @@ function formatDate(iso: string) {
   });
 }
 
-function ActionButtons({ item }: { item: MediaItem }) {
+function ActionButtons({
+  item,
+  onDeleteClick,
+}: {
+  item: MediaItem;
+  onDeleteClick: (item: MediaItem) => void;
+}) {
   if (item.status === "failed") {
     return (
-      <Link
-        href="/admin/media/upload"
-        className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-white hover:bg-primary/90"
-      >
-        Re-upload
-      </Link>
+      <div className="flex items-center gap-2">
+        <Link
+          href="/admin/media/upload"
+          className="rounded-lg bg-primary px-4 py-1.5 text-sm font-medium text-white hover:bg-primary/90"
+        >
+          Re-upload
+        </Link>
+        <button
+          type="button"
+          onClick={() => onDeleteClick(item)}
+          className="flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          Delete
+        </button>
+      </div>
     );
   }
 
@@ -51,115 +79,212 @@ function ActionButtons({ item }: { item: MediaItem }) {
       >
         View
       </Link>
-      <Link
-        href={`/admin/media/upload?replace=${item.id}`}
-        className="rounded-lg border border-gray-200 px-4 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+     
+      <button
+        type="button"
+        onClick={() => onDeleteClick(item)}
+        className="flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
       >
-        Replace
-      </Link>
+        <Trash2 className="h-3.5 w-3.5" />
+        Delete
+      </button>
     </div>
   );
 }
 
 export function VideoTable({ videos }: { videos: MediaItem[] }) {
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [deleteTarget, setDeleteTarget] = useState<MediaItem | null>(null);
+  const deleteMedia = useDeleteMedia();
 
   const filtered = videos.filter((v) =>
     v.title.toLowerCase().includes(search.toLowerCase()),
   );
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice(
+    (currentPage - 1) * PER_PAGE,
+    currentPage * PER_PAGE,
+  );
+
+  function handleSearch(value: string) {
+    setSearch(value);
+    setPage(1);
+  }
+
+  function handleConfirmDelete() {
+    if (!deleteTarget) return;
+    deleteMedia.mutate(deleteTarget.id, {
+      onSuccess: () => setDeleteTarget(null),
+    });
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Video Content</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Manage trainer intro videos displayed in app
-          </p>
-        </div>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <div className="relative flex-1 sm:flex-none">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by title"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full sm:w-72 rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
+    <>
+      <div className="space-y-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Video Content</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              Manage trainer intro videos displayed in app
+            </p>
           </div>
-          <Link
-            href="/admin/media/upload?type=video"
-            className="flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:bg-primary/90"
-          >
-            <Plus className="h-4 w-4" />
-            Upload Video
-          </Link>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:flex-none">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search by title"
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="w-full sm:w-72 rounded-lg border border-gray-200 bg-white py-2 pl-9 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+            <Link
+              href="/admin/media/upload?type=video"
+              className="flex shrink-0 items-center gap-1.5 rounded-lg bg-primary px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-white hover:bg-primary/90"
+            >
+              <Plus className="h-4 w-4" />
+              Upload Video
+            </Link>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-gray-100 bg-white shadow-sm">
+          {paginated.length === 0 ? (
+            <div className="flex min-h-[200px] items-center justify-center">
+              <p className="text-sm text-gray-400">No videos found.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-400">
+                    <th className="px-6 py-4">Thumbnail</th>
+                    <th className="px-6 py-4">Title</th>
+                    <th className="px-6 py-4">Size</th>
+                    <th className="px-6 py-4">Status</th>
+                    <th className="px-6 py-4">Uploaded</th>
+                    <th className="px-6 py-4">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {paginated.map((item) => (
+                    <tr key={item.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4">
+                        <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                          {item.public_url ? (
+                            <video
+                              src={item.public_url}
+                              className="h-full w-full object-cover"
+                              muted
+                            />
+                          ) : (
+                            <div className="h-full w-full bg-gray-200" />
+                          )}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-black/40">
+                              <Play className="h-3 w-3 fill-white text-white" />
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="font-medium text-gray-900">{item.title}</p>
+                        <p className="text-xs text-gray-400">{item.category}</p>
+                      </td>
+                      <td className="px-6 py-4 text-gray-500">
+                        {formatBytes(item.size_bytes)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <MediaStatusBadge status={item.status} />
+                      </td>
+                      <td className="px-6 py-4 text-gray-500">
+                        {formatDate(item.created_at)}
+                      </td>
+                      <td className="px-6 py-4">
+                        <ActionButtons item={item} onDeleteClick={setDeleteTarget} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between border-t border-gray-100 px-6 py-4">
+              <p className="text-sm text-gray-500">
+                Showing {(currentPage - 1) * PER_PAGE + 1}–
+                {Math.min(currentPage * PER_PAGE, filtered.length)} of{" "}
+                {filtered.length}
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setPage(p)}
+                    className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                      p === currentPage
+                        ? "bg-primary text-white"
+                        : "border border-gray-200 text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="rounded-2xl border border-gray-100 bg-white shadow-sm">
-        {filtered.length === 0 ? (
-          <div className="flex min-h-[200px] items-center justify-center">
-            <p className="text-sm text-gray-400">No videos found.</p>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-100 text-left text-xs font-medium text-gray-400">
-                  <th className="px-6 py-4">Thumbnail</th>
-                  <th className="px-6 py-4">Title</th>
-                  <th className="px-6 py-4">Size</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Uploaded</th>
-                  <th className="px-6 py-4">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
-                {filtered.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
-                      <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-lg bg-gray-100">
-                        {item.public_url ? (
-                          <video
-                            src={item.public_url}
-                            className="h-full w-full object-cover"
-                            muted
-                          />
-                        ) : (
-                          <div className="h-full w-full bg-gray-200" />
-                        )}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-black/40">
-                            <Play className="h-3 w-3 fill-white text-white" />
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="font-medium text-gray-900">{item.title}</p>
-                      <p className="text-xs text-gray-400">{item.category}</p>
-                    </td>
-                    <td className="px-6 py-4 text-gray-500">
-                      {formatBytes(item.size_bytes)}
-                    </td>
-                    <td className="px-6 py-4">
-                      <MediaStatusBadge status={item.status} />
-                    </td>
-                    <td className="px-6 py-4 text-gray-500">
-                      {formatDate(item.created_at)}
-                    </td>
-                    <td className="px-6 py-4">
-                      <ActionButtons item={item} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-    </div>
+      <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <DialogContent className="bg-white" onClick={(e) => e.stopPropagation()}>
+          <DialogHeader>
+            <DialogTitle>Delete video?</DialogTitle>
+            <DialogDescription>
+              This permanently removes {deleteTarget?.title} from the platform. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDeleteTarget(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={deleteMedia.isPending}
+              onClick={handleConfirmDelete}
+            >
+              {deleteMedia.isPending ? "Deleting…" : "Delete video"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

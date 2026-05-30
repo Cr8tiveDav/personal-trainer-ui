@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Search, Plus, Trash2 } from "lucide-react";
 import { useDeleteMedia } from "@/api/media";
@@ -66,10 +67,12 @@ export function ImageGrid({ images }: { images: MediaItem[] }) {
             >
               <div className="relative aspect-square overflow-hidden bg-gray-100">
                 {item.public_url ? (
-                  <img
+                  <Image
                     src={item.public_url}
                     alt={item.title}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    fill
+                    unoptimized
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
                   <div className="h-full w-full bg-gray-200" />

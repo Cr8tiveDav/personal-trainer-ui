@@ -39,6 +39,7 @@ MEDIA: {
   LIST: "/media",
   UPLOAD_IMAGE: "/media/images",
   UPLOAD_VIDEO: "/media/videos",
+  DELETE_MEDIA: (id: string) => `/media/${id}`,
 },
   WAITLIST: {
     JOIN: "/waitlist",
@@ -74,6 +75,10 @@ MEDIA: {
     LIST:"/admin/revenue",
   },
 
+  SUBSCRIPTIONS: {
+    ADMIN_LIST: "/admin/subscriptions",
+  },
+
   DISCOVERY_SLOTS: {
     LIST: "/discovery-slots",
     DETAIL: (id: string) => `/discovery-slots/${id}`,
@@ -87,5 +92,10 @@ MEDIA: {
     SESSIONS_STATS: "/admin/sessions/stats",
     ACTIVITIES: "/admin/activities",
     TOP_TRAINERS: "/admin/top-trainers",
+  },
+
+  NOTIFICATIONS: {
+    LIST: "/notifications",
+    WS: "/notifications/ws",
   },
 } as const;

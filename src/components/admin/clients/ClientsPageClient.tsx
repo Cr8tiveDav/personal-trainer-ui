@@ -1,7 +1,6 @@
 'use client';
 
 import { useAdminClients, useAdminUserTrainerCount } from '@/api/clients';
-import { ClientStatCards } from './ClientStatCards';
 import { ClientsList } from './ClientsList';
 import { ClientsPageHeader } from './ClientsPageHeader';
 import { ClientsPageSkeleton } from './ClientsPageSkeleton';
