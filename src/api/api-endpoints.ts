@@ -74,10 +74,6 @@ MEDIA: {
     LIST:"/admin/revenue",
   },
 
-  NOTIFICATIONS: {
-    LIST: "/notifications",
-  },
-
   SUBSCRIPTIONS: {
     ADMIN_LIST: "/admin/subscriptions",
   },
