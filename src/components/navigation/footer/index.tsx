@@ -75,15 +75,7 @@ const Footer = () => {
                     href='/contact'
                     className='transition-colors hover:text-primary'
                   >
-                    Become a Trainer
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href='/contact'
-                    className='transition-colors hover:text-primary'
-                  >
-                    Contact Us
+                    Contact
                   </Link>
                 </li>
               </ul>

@@ -39,6 +39,6 @@ export const pricingPlans = [
       'Cancel anytime',
     ],
     action: 'Choose Plan',
-    note: 'Renews for $130/month. Cancel anytime',
+    note: 'Renews for $120/month. Cancel anytime',
   },
 ]
