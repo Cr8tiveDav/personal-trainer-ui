@@ -39,6 +39,7 @@ MEDIA: {
   LIST: "/media",
   UPLOAD_IMAGE: "/media/images",
   UPLOAD_VIDEO: "/media/videos",
+  DELETE_MEDIA: (id: string) => `/media/${id}`,
 },
   WAITLIST: {
     JOIN: "/waitlist",
@@ -72,6 +73,10 @@ MEDIA: {
   PAYMENTS: {
     LATEST: "/payments/latest",
     LIST:"/admin/revenue",
+  },
+
+  SUBSCRIPTIONS: {
+    ADMIN_LIST: "/admin/subscriptions",
   },
 
   DISCOVERY_SLOTS: {

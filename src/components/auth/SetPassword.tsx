@@ -51,7 +51,7 @@ export function SetPassword({ token }: SetPasswordProps) {
       {
         onSuccess() {
           toast.success('Password set successfully! Please log in.')
-          router.push('/trainer/mysecureloginkey')
+          router.push('/trainer/login')
         },
         onError(error) {
           displayError(

@@ -26,4 +26,4 @@ export function isTrainerSecretLoginRoute(pathname: string): boolean {
   return !RESERVED_TRAINER_SEGMENTS.has(match[1])
 }
 
-export const TRAINER_LOGIN_PATH = '/trainers/login'
+export const TRAINER_LOGIN_PATH = '/trainer/login'

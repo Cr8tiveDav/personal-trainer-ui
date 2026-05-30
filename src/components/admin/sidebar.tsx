@@ -44,6 +44,7 @@ const NAV_SECTIONS = [
     label: 'FINANCE',
     items: [
       { label: 'Payments', href: '/admin/payments', icon: PaymentIcon },
+      
     ],
   },
   {
