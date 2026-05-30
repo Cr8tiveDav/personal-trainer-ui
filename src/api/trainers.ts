@@ -321,12 +321,13 @@ export function useDeleteTrainer() {
         await deleteRequest({
           url: API_ENDPOINTS.TRAINERS.DETAIL(id),
         });
-      } catch (error: any) {
-        // If the backend returns a 409 Conflict indicating that the trainer
-        // is already deactivated, we catch the error and proceed to sync
-        // the onboarding status to 'suspended' to self-heal the out-of-sync DB state.
-        const status = error?.response?.status;
-        const msg = error?.response?.data?.message || error?.message || '';
+      } catch (error) {
+        const err = error as {
+          response?: { status?: number; data?: { message?: string } };
+          message?: string;
+        };
+        const status = err.response?.status;
+        const msg = err.response?.data?.message || err.message || '';
         const isAlreadyDeactivated =
           status === 409 || msg.toLowerCase().includes('already deactivated');
 
