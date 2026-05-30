@@ -343,4 +343,16 @@ export function useSetPassword() {
   });
 }
 
+export function useGetApprovedTrainers() {
+  return useQuery({
+    queryKey: ['approved-trainers'] as const,
+    queryFn: async () => {
+      const response = await getRequest<TrainersListResponse>({
+        url: `${API_ENDPOINTS.TRAINERS.LIST}?onboarding_status=approved&limit=100`,
+      });
+      return Array.isArray(response.data) ? response.data : [];
+    },
+  });
+}
+
 export type { CreateTrainerFormInput };

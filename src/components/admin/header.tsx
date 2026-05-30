@@ -67,7 +67,7 @@ export function AdminHeader({
             <Bell className='h-5 w-5 text-gray-500' />
           </button>
           {notifOpen && (
-            <div className='absolute right-0 top-11 z-50 w-[min(400px,calc(100vw-2rem))] rounded-[12px] border border-gray-100 bg-white shadow-lg overflow-hidden'>
+            <div className='fixed md:absolute left-4 md:left-auto right-4 md:right-0 top-[75px] md:top-11 z-50 w-auto md:w-[400px] rounded-[12px] border border-gray-100 bg-white shadow-lg overflow-hidden'>
               <p className='border-b border-gray-100 px-5 py-4 text-base font-semibold text-gray-900'>
                 Notifications
               </p>

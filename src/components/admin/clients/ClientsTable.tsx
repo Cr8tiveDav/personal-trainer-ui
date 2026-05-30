@@ -1,12 +1,18 @@
-'use client'
+'use client';
 
-import { Search, Filter, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
-import type { Client } from './types'
-import { ClientTableRow } from './ClientTableRow'
-import { ClientTableSkeleton } from './ClientTableSkeleton'
-import { ClientsEmptyState } from './ClientsEmptyState'
-import type { ClientTab } from './ClientFilterTabs'
+import {
+  Search,
+  Filter,
+  ArrowUpDown,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import type { Client } from './types';
+import { ClientTableRow } from './ClientTableRow';
+import { ClientTableSkeleton } from './ClientTableSkeleton';
+import { ClientsEmptyState } from './ClientsEmptyState';
+import type { ClientTab } from './ClientFilterTabs';
 
 const TABLE_COLUMNS = [
   'CLIENT',
@@ -15,42 +21,35 @@ const TABLE_COLUMNS = [
   'REVENUE',
   'STATUS',
   'ACTIONS',
-] as const
+] as const;
 
 function getVisiblePages(current: number, total: number) {
   if (total <= 5) {
-    return Array.from({ length: total }, (_, i) => i + 1)
+    return Array.from({ length: total }, (_, i) => i + 1);
   }
   if (current <= 3) {
-    return [1, 2, 3, 4, 5, '...'] as const
+    return [1, 2, 3, 4, 5, '...'] as const;
   }
   if (current >= total - 2) {
-    return [
-      '...',
-      total - 4,
-      total - 3,
-      total - 2,
-      total - 1,
-      total,
-    ] as const
+    return ['...', total - 4, total - 3, total - 2, total - 1, total] as const;
   }
-  return ['...', current - 1, current, current + 1, '...'] as const
+  return ['...', current - 1, current, current + 1, '...'] as const;
 }
 
 type ClientsTableProps = {
-  clients?: Client[]
-  activeTab: ClientTab
-  searchQuery: string
-  onSearchChange: (value: string) => void
-  isLoading: boolean
-  isFetching?: boolean
-  isError: boolean
-  listKey?: string
-  listTotalCount: number
-  displayPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
-}
+  clients?: Client[];
+  activeTab: ClientTab;
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  isLoading: boolean;
+  isFetching?: boolean;
+  isError: boolean;
+  listKey?: string;
+  listTotalCount: number;
+  displayPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+};
 
 export function ClientsTable({
   clients,
@@ -66,23 +65,23 @@ export function ClientsTable({
   totalPages,
   onPageChange,
 }: ClientsTableProps) {
-  const perPage = 10
-  const rangeStart =
-    listTotalCount === 0 ? 0 : (displayPage - 1) * perPage + 1
+  const perPage = 10;
+  const rangeStart = listTotalCount === 0 ? 0 : (displayPage - 1) * perPage + 1;
   const rangeEnd =
-    listTotalCount === 0
-      ? 0
-      : Math.min(displayPage * perPage, listTotalCount)
+    listTotalCount === 0 ? 0 : Math.min(displayPage * perPage, listTotalCount);
 
   const resultsLabel =
     listTotalCount === 0
       ? 'Showing 0 results'
-      : `Showing ${rangeStart}–${rangeEnd} of ${listTotalCount} results`
+      : `Showing ${rangeStart}–${rangeEnd} of ${listTotalCount} results`;
 
-  const visiblePages = getVisiblePages(displayPage, Math.max(totalPages, 1))
+  const visiblePages = getVisiblePages(displayPage, Math.max(totalPages, 1));
 
   const showEmpty =
-    !isLoading && !isError && listTotalCount === 0 && (clients?.length ?? 0) === 0
+    !isLoading &&
+    !isError &&
+    listTotalCount === 0 &&
+    (clients?.length ?? 0) === 0;
 
   const emptyTitle =
     searchQuery.trim() !== ''
@@ -93,44 +92,46 @@ export function ClientsTable({
           ? 'No active clients'
           : activeTab === 'Paused'
             ? 'No paused clients'
-            : 'No clients yet'
+            : 'No clients yet';
 
   const emptyDescription =
     searchQuery.trim() !== ''
       ? 'Try a different name or email, or clear the search.'
       : activeTab !== 'All'
         ? 'Switch tabs or check back when client activity changes.'
-        : 'Clients will appear here once they register on the platform.'
+        : 'Clients will appear here once they register on the platform.';
 
-  const showTableContent = !showEmpty
+  const showTableContent = !showEmpty;
 
   return (
     <>
-      <div className='flex items-center gap-3 border-b border-gray-100 px-6 py-4'>
-        <div className='relative flex-1'>
-          <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400' />
+      <div className='flex flex-col gap-4 border-b border-gray-100 px-6 py-4 md:flex-row md:items-center md:gap-11.5'>
+        <div className='w-full h-10 flex md:flex-1 items-center gap-2 rounded-[8px] border border-gray-200 px-3 py-2'>
+          <Search className='h-4 w-4 shrink-0 text-gray-400' />
           <input
             type='text'
             placeholder='Search by name or email'
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className='w-full rounded-[8px] border border-gray-200 py-2 pl-9 pr-4 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary'
+            className='flex-1 w-full text-sm text-gray-700 outline-none placeholder:text-[#D1D1D1] bg-transparent'
           />
         </div>
-        <button
-          type='button'
-          className='flex items-center gap-2 rounded-[8px] border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
-        >
-          <Filter className='h-4 w-4' />
-          Filter
-        </button>
-        <button
-          type='button'
-          className='flex items-center gap-2 rounded-[8px] border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
-        >
-          <ArrowUpDown className='h-4 w-4' />
-          Sort
-        </button>
+        <div className='flex items-center gap-4'>
+          <button
+            type='button'
+            className='flex items-center gap-2 rounded-[8px] border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
+          >
+            <Filter className='h-4 w-4' />
+            Filter
+          </button>
+          <button
+            type='button'
+            className='flex items-center gap-2 rounded-[8px] border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
+          >
+            <ArrowUpDown className='h-4 w-4' />
+            Sort
+          </button>
+        </div>
       </div>
 
       <motion.div
@@ -220,7 +221,7 @@ export function ClientsTable({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onPageChange(displayPage - 1)}
                   disabled={displayPage <= 1 || isLoading}
-                  className='flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
+                  className='flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                   aria-label='Previous page'
                 >
                   <ChevronLeft className='h-4 w-4' />
@@ -231,14 +232,14 @@ export function ClientsTable({
                     return (
                       <span
                         key={`ellipsis-${index}`}
-                        className='flex h-9 w-9 items-center justify-center text-gray-500'
+                        className='flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center text-gray-500'
                       >
                         …
                       </span>
-                    )
+                    );
                   }
-                  const pageNumber = item as number
-                  const isActive = displayPage === pageNumber
+                  const pageNumber = item as number;
+                  const isActive = displayPage === pageNumber;
                   return (
                     <motion.button
                       key={pageNumber}
@@ -247,7 +248,7 @@ export function ClientsTable({
                       whileTap={{ scale: 0.95 }}
                       onClick={() => onPageChange(pageNumber)}
                       disabled={isLoading}
-                      className={`relative flex h-9 w-9 items-center justify-center rounded-[6px] text-sm font-medium transition-colors ${
+                      className={`relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[6px] text-sm font-medium transition-colors ${
                         isActive
                           ? 'text-white'
                           : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
@@ -266,7 +267,7 @@ export function ClientsTable({
                       )}
                       <span className='relative z-10'>{pageNumber}</span>
                     </motion.button>
-                  )
+                  );
                 })}
 
                 <motion.button
@@ -274,7 +275,7 @@ export function ClientsTable({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onPageChange(displayPage + 1)}
                   disabled={displayPage >= totalPages || isLoading}
-                  className='flex h-9 w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
+                  className='flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-[6px] border border-gray-200 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50'
                   aria-label='Next page'
                 >
                   <ChevronRight className='h-4 w-4' />
@@ -285,5 +286,5 @@ export function ClientsTable({
         )}
       </motion.div>
     </>
-  )
+  );
 }

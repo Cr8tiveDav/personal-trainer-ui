@@ -328,6 +328,7 @@ export const mapBackendSessionToSession = (
 
   return {
     id: readString(session.id, readString(session.session_id, "")),
+    clientId: readString(session.client_id, ""),
     client: readPerson(session, "client"),
     trainer: readPerson(session, "trainer"),
     type: mapType(

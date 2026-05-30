@@ -11,13 +11,22 @@ export interface SessionStats {
   no_show_rate_change: string;
 }
 
+// api/types/sessions.ts
 export interface BackendSession {
-  id: string;
-  clientName?: string;
-  client_name?: string;
-  type: string;
-  date: string;
-  status: string;
+  id: string
+  session_id: string
+  client_id: string        
+  client_name: string
+  client_email: string
+  trainer_id: string
+  trainer_name: string
+  trainer_email: string
+  booking_status: string
+  scheduled_start: string
+  scheduled_end: string
+  session_platform: string
+  timezone: string
+  zoom_meeting_link?: string
 }
 
 export type SessionsListResponse = ApiEnvelope<BackendSession[]>;

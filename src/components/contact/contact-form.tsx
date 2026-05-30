@@ -83,7 +83,7 @@ export function ContactForm() {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col gap-5"
         >
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <FormField
               control={form.control}
               name="fullName"

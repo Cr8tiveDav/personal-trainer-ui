@@ -5,13 +5,13 @@ import { useState } from 'react'
 import {
   Settings,
   ChevronRight,
-  LineChart,
   X,
   Video,
   PhoneCall,
 } from 'lucide-react'
 import { SidebarItem } from './sidebarItem'
 import { cn } from '~/utils'
+import { AnimatePresence, motion } from 'motion/react'
 import {
   DashboardIcon,
   TrainersIcon,
@@ -49,7 +49,6 @@ const NAV_SECTIONS = [
   {
     label: 'PLATFORM',
     items: [
-      { label: 'Analytics', href: '/admin/analytics', icon: LineChart },
       { label: 'Media Content', href: '/admin/media', icon: Video },
       { label: 'Settings', href: '/admin/settings', icon: Settings },
     ],
@@ -113,7 +112,7 @@ function SidebarInner({
             )}
             <div className='flex flex-col gap-1'>
               {section.items.map((item) => (
-                <SidebarItem key={item.href} {...item} collapsed={collapsed} />
+                <SidebarItem key={item.href} {...item} collapsed={collapsed} onClick={onMobileClose} />
               ))}
             </div>
           </div>
@@ -159,22 +158,37 @@ export function Sidebar({ userName, userEmail, userAvatar, mobileOpen, onMobileC
         />
       </aside>
 
-      {mobileOpen && (
-        <div className='fixed inset-0 z-50 md:hidden'>
-          <div className='absolute inset-0 bg-black/40' onClick={onMobileClose} />
-          <aside className='relative flex h-full w-[280px] flex-col border-r border-gray-100 bg-white px-4 py-6'>
-            <SidebarInner
-              userName={userName}
-              userEmail={userEmail}
-              userAvatar={userAvatar}
-              collapsed={false}
-              onCollapse={() => {}}
-              onMobileClose={onMobileClose}
-              isMobile
+      <AnimatePresence>
+        {mobileOpen && (
+          <div className='fixed inset-0 z-50 md:hidden'>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className='absolute inset-0 bg-black/40'
+              onClick={onMobileClose}
             />
-          </aside>
-        </div>
-      )}
+            <motion.aside
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className='relative flex h-full w-[280px] flex-col border-r border-gray-100 bg-white px-4 py-6'
+            >
+              <SidebarInner
+                userName={userName}
+                userEmail={userEmail}
+                userAvatar={userAvatar}
+                collapsed={false}
+                onCollapse={() => {}}
+                onMobileClose={onMobileClose}
+                isMobile
+              />
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
     </>
   )
 }

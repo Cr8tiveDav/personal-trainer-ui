@@ -75,9 +75,10 @@ export function useClientSessions(clientId: string) {
     queryKey: ["client-sessions", clientId],
     queryFn: async () => {
       const response = await getRequest<SessionsListResponse>({
-        url: `${API_ENDPOINTS.ADMIN.SESSIONS}?client_id=${clientId}&page=1&limit=100`,
+        url: `${API_ENDPOINTS.ADMIN.SESSIONS}?page=1&limit=100`,
       });
-      return mapBackendSessionsResponse(response);
+      const all = mapBackendSessionsResponse(response);
+      return all.filter((s) => s.clientId === clientId)  // ← filter here
     },
     enabled: !!clientId,
     staleTime: 30_000,

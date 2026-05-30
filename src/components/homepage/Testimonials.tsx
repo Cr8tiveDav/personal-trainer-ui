@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 
 const Testimonials = () => {
   return (
-    <section className="relative w-full overflow-hidden bg-[#F7F7F7] py-20">
+    <section className="relative w-full overflow-hidden bg-[#F7F7F7] py-12 md:py-20">
       <div className="container relative mx-auto px-4">
         <SectionHeader
           badge="OUR TESTIMONIAL"

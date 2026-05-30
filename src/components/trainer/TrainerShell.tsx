@@ -33,13 +33,13 @@ export function TrainerShell({
         onMobileClose={() => setMobileOpen(false)}
       />
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-        {!isDashboard && (
+      
           <TrainerHeader
             userName={userName}
             userAvatar={userAvatar}
             onMenuClick={() => setMobileOpen(true)}
           />
-        )}
+       
         <main
           className={
             isDashboard
