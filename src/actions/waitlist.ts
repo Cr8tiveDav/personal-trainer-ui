@@ -10,8 +10,8 @@ export async function waitlistAction(prevState: any, formData: FormData) {
   const location = formData.get('location') as string
 
   try {
-    await joinWaitlist({ name, email, phone_number, location })
-    return { success: true }
+    const { alreadyExists } = await joinWaitlist({ name, email, phone_number, location })
+    return { success: true, alreadyExists }
   } catch (error: any) {
     return { success: false, error: error.message }
   }
