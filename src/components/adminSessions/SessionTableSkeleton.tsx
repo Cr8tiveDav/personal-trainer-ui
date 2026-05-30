@@ -42,13 +42,22 @@ export function SessionTableSkeleton() {
             </div>
           </td>
           <td className='px-4 py-5 whitespace-nowrap'>
+            <Skeleton className='h-6 w-16 rounded-[9999px]' />
+          </td>
+          <td className='px-4 py-5 whitespace-nowrap'>
             <Skeleton className='h-4 w-28' />
           </td>
           <td className='px-4 py-5 whitespace-nowrap'>
             <Skeleton className='h-4 w-12' />
           </td>
           <td className='px-4 py-5 whitespace-nowrap'>
+            <Skeleton className='h-4 w-10' />
+          </td>
+          <td className='px-4 py-5 whitespace-nowrap'>
             <Skeleton className='h-6 w-16 rounded-[9999px]' />
+          </td>
+          <td className='px-4 py-5 whitespace-nowrap'>
+            <Skeleton className='h-6 w-20 rounded-[9999px]' />
           </td>
           <td className='px-4 py-5 whitespace-nowrap text-right'>
             <Skeleton className='ml-auto h-8 w-8 rounded-[8px]' />

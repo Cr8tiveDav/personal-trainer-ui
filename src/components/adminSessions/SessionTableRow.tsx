@@ -48,6 +48,10 @@ const formatSessionId = (id: string) => {
   return `${id.slice(0, 8)}...${id.slice(-4)}`
 }
 
+const DEFAULT_SESSION_TYPE = 'Monthly'
+const DEFAULT_SESSION_AMOUNT = '$20'
+const DEFAULT_SESSION_STATE = 'Scheduled'
+
 export function SessionTableRow({
   session,
   index = 0,
@@ -135,11 +139,21 @@ export function SessionTableRow({
         </div>
       </td>
 
+      <td className='px-4 py-3.5'>
+        <span className='inline-flex rounded-[9999px] bg-[#eef6ff] px-2 py-0.5 text-[10px] font-semibold text-[#0b4d8d]'>
+          {DEFAULT_SESSION_TYPE}
+        </span>
+      </td>
+
       <td className='px-4 py-3.5 text-[11px] font-medium text-gray-600'>
         {session.scheduled}
       </td>
       <td className='px-4 py-3.5 text-[11px] font-medium text-gray-400'>
         {session.duration}
+      </td>
+
+      <td className='px-4 py-3.5 text-[11px] font-semibold text-gray-700'>
+        {DEFAULT_SESSION_AMOUNT}
       </td>
 
       <td className='px-4 py-3.5'>
@@ -150,6 +164,12 @@ export function SessionTableRow({
             <span className={`h-1.5 w-1.5 rounded-[9999px] ${dotStyle(session.clientConf)}`} />
           )}
           {session.clientConf}
+        </span>
+      </td>
+
+      <td className='px-4 py-3.5'>
+        <span className='inline-flex rounded-[9999px] bg-[#edf6ff] px-2 py-0.5 text-[11px] font-semibold text-[#2272ad]'>
+          {DEFAULT_SESSION_STATE}
         </span>
       </td>
 

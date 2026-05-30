@@ -1,17 +1,9 @@
 'use client'
 
-import { CalendarX, ChevronLeft, ChevronRight, MoreVertical } from 'lucide-react'
-import Image from 'next/image'
+import { CalendarX, ChevronLeft, ChevronRight } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Session } from './session'
-import { SessionTableRow, sessionRowVariants } from './SessionTableRow'
+import { SessionTableRow } from './SessionTableRow'
 import { SessionTableSkeleton } from './SessionTableSkeleton'
 import {
   EMPTY_STATE_IMAGE_PATHS,
@@ -29,20 +21,44 @@ interface TableProps {
   totalSessions: number
   totalPages: number
   onPageChange: (page: number) => void
-  onForceConfirm?: (session: Session) => void
-  onMarkMissed?: (id: string) => void
   onSelectDetails: (id: string) => void
   onSelectReschedule: (id: string) => void
   /** Re-triggers row entrance when filters or tab change */
   listKey?: string
 }
 
-const formatSessionId = (id: string) => {
-  if (id.length <= 12) return id
-  return `${id.slice(0, 8)}...${id.slice(-4)}`
-}
-
 type SessionsTableBodyProps = Omit<TableProps, 'listKey'>
+
+const imageEmptyStates: Partial<
+  Record<
+    NonNullable<TableProps['variant']>,
+    {
+      imageSrc: string
+      imageAlt: string
+      title: string
+      description: string
+    }
+  >
+> = {
+  manual: {
+    imageSrc: EMPTY_STATE_IMAGE_PATHS.manualEntry,
+    imageAlt: 'No manual sessions',
+    title: 'No manual sessions yet.',
+    description: 'Manually logged sessions will appear here after you add them.',
+  },
+  confirmation: {
+    imageSrc: EMPTY_STATE_IMAGE_PATHS.confirmationQueue,
+    imageAlt: 'No sessions needing confirmation',
+    title: 'No sessions need confirmation.',
+    description: 'Sessions requiring admin review will appear here.',
+  },
+  missed: {
+    imageSrc: EMPTY_STATE_IMAGE_PATHS.missedSessions,
+    imageAlt: 'No missed sessions',
+    title: 'No missed sessions yet.',
+    description: 'Missed sessions will appear here when they are reported.',
+  },
+}
 
 function SessionsTableBody({
   sessions,
@@ -55,8 +71,6 @@ function SessionsTableBody({
   totalSessions,
   totalPages,
   onPageChange,
-  onForceConfirm,
-  onMarkMissed,
   onSelectDetails,
   onSelectReschedule,
 }: SessionsTableBodyProps) {
@@ -72,6 +86,7 @@ function SessionsTableBody({
     : variant === 'manual'
       ? 'Manually logged sessions will appear here after you add them.'
       : 'Sessions booked by clients will appear here once they are available.'
+  const imageEmptyState = !isFiltered ? imageEmptyStates[variant] : undefined
   const startResult = totalSessions === 0 ? 0 : (currentPage - 1) * pageSize + 1
   const endResult = Math.min(currentPage * pageSize, totalSessions)
   const maxVisiblePages = 5
@@ -84,49 +99,8 @@ function SessionsTableBody({
     { length: Math.min(totalPages, maxVisiblePages) },
     (_, index) => pageWindowStart + index,
   )
-  const isConfirmationQueue = variant === 'confirmation'
-  const tableColSpan = 7
+  const tableColSpan = 10
   const rowsAnimationKey = `page-${currentPage}`
-
-  const renderPerson = (person: Session['client'], fallbackClassName: string) => (
-    <div className='flex items-center gap-2'>
-      {'avatar' in person && person.avatar ? (
-        <Image
-          src={person.avatar}
-          alt={person.name}
-          width={32}
-          height={32}
-          className='h-8 w-8 shrink-0 rounded-[9999px] bg-gray-100 object-cover'
-        />
-      ) : (
-        <div
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[9999px] text-[11px] font-semibold uppercase ${fallbackClassName}`}
-        >
-          {person.name
-            .split(' ')
-            .map((part) => part.charAt(0))
-            .join('')
-            .slice(0, 2)}
-        </div>
-      )}
-      <div>
-        <p className='text-xs font-bold text-gray-900'>{person.name}</p>
-        <p className='text-[10px] font-medium uppercase text-gray-500'>{person.country}</p>
-      </div>
-    </div>
-  )
-
-  const confStyle = (val: string) => {
-    if (val === 'Yes') return 'bg-[#e7f6ec] text-[#0f973d]'
-    if (val === 'Pending') return 'bg-gray-50 text-gray-500'
-    return 'bg-[#f2f4f7] text-gray-400'
-  }
-
-  const dotStyle = (val: string) => {
-    if (val === 'Yes') return 'bg-[#0f973d]'
-    if (val === 'Pending') return 'bg-gray-500'
-    return ''
-  }
 
   return (
     <motion.div
@@ -136,30 +110,19 @@ function SessionsTableBody({
       className='w-full bg-white'
     >
       <div className='w-full overflow-x-auto'>
-        <table className='w-full border-collapse text-left'>
+        <table className='w-full min-w-[1120px] border-collapse text-left'>
           <thead>
             <tr className='border-b border-gray-100 bg-gray-50/70 text-[11px] font-bold uppercase tracking-wider text-gray-500'>
-              {isConfirmationQueue ? (
-                <>
-                  <th className='px-4 py-3.5 font-bold'>ID</th>
-                  <th className='px-4 py-3.5 font-bold'>Client</th>
-                  <th className='px-4 py-3.5 font-bold'>Trainer</th>
-                  <th className='px-4 py-3.5 font-bold'>Scheduled</th>
-                  <th className='px-4 py-3.5 font-bold'>Client Conf.</th>
-                  <th className='px-4 py-3.5 font-bold'>Overdue</th>
-                  <th className='px-4 py-3.5 text-right font-bold'>Actions</th>
-                </>
-              ) : (
-                <>
-                  <th className='px-4 py-3.5 font-bold'>ID</th>
-                  <th className='px-4 py-3.5 font-bold'>Client</th>
-                  <th className='px-4 py-3.5 font-bold'>Trainer</th>
-                  <th className='px-4 py-3.5 font-bold'>Scheduled</th>
-                  <th className='px-4 py-3.5 font-bold'>Duration</th>
-                  <th className='px-4 py-3.5 font-bold'>Client Conf.</th>
-                  <th className='px-4 py-3.5 text-right font-bold'>Actions</th>
-                </>
-              )}
+              <th className='px-4 py-3.5 font-bold'>ID</th>
+              <th className='px-4 py-3.5 font-bold'>Client</th>
+              <th className='px-4 py-3.5 font-bold'>Trainer</th>
+              <th className='px-4 py-3.5 font-bold'>Type</th>
+              <th className='px-4 py-3.5 font-bold'>Scheduled</th>
+              <th className='px-4 py-3.5 font-bold'>Duration</th>
+              <th className='px-4 py-3.5 font-bold'>Amount</th>
+              <th className='px-4 py-3.5 font-bold'>Client Conf.</th>
+              <th className='px-4 py-3.5 font-bold'>State</th>
+              <th className='px-4 py-3.5 text-right font-bold'>Actions</th>
             </tr>
           </thead>
           <tbody className='divide-y divide-gray-100'>
@@ -183,73 +146,7 @@ function SessionsTableBody({
                     </td>
                   </motion.tr>
                 ) : sessions.length > 0 ? (
-                  sessions.map((session, index) =>
-                    isConfirmationQueue ? (
-                      <motion.tr
-                        key={session.id}
-                        variants={sessionRowVariants}
-                        initial='hidden'
-                        animate='visible'
-                        exit='exit'
-                        custom={index}
-                        className='border-b border-gray-100 text-xs text-[#111111] transition-colors hover:bg-gray-50/50'
-                      >
-                        <td className='px-4 py-5 text-xs font-medium text-gray-900'>
-                          <span title={`#${session.id}`}>#{formatSessionId(session.id)}</span>
-                        </td>
-                        <td className='px-4 py-5'>
-                          {renderPerson(session.client, 'bg-[#0b4d8d]/10 text-[#0b4d8d]')}
-                        </td>
-                        <td className='px-4 py-5'>
-                          {renderPerson(session.trainer, 'bg-gray-100 text-gray-500')}
-                        </td>
-                        <td className='px-4 py-5 text-xs font-medium text-gray-700'>
-                          {session.scheduled}
-                        </td>
-                        <td className='px-4 py-5'>
-                          <span
-                            className={`inline-flex items-center gap-1.5 rounded-[9999px] px-2 py-0.5 text-[11px] font-semibold ${confStyle(session.clientConf)}`}
-                          >
-                            {session.clientConf !== 'N/A' && (
-                              <span
-                                className={`h-1.5 w-1.5 rounded-[9999px] ${dotStyle(session.clientConf)}`}
-                              />
-                            )}
-                            {session.clientConf}
-                          </span>
-                        </td>
-                        <td className='px-4 py-5 text-xs font-medium text-gray-400'>-</td>
-                        <td className='px-4 py-5 text-right'>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant='ghost'
-                                className='h-8 w-8 rounded-[8px] p-0 text-gray-400 shadow-none hover:bg-gray-100/80 hover:text-gray-700 focus:ring-0'
-                              >
-                                <MoreVertical className='h-4 w-4' />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align='end'
-                              className='z-50 w-48 rounded-[12px] border border-gray-100 bg-white p-1.5 shadow-xl'
-                            >
-                              <DropdownMenuItem
-                                onClick={() => onForceConfirm?.(session)}
-                                className='cursor-pointer rounded-[8px] bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
-                              >
-                                Force Confirm
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => onMarkMissed?.(session.id)}
-                                className='cursor-pointer rounded-[8px] px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:bg-gray-50'
-                              >
-                                Mark as Missed Session
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </td>
-                      </motion.tr>
-                    ) : (
+                  sessions.map((session, index) => (
                       <SessionTableRow
                         key={session.id}
                         session={session}
@@ -257,8 +154,7 @@ function SessionsTableBody({
                         onViewDetails={onSelectDetails}
                         onReschedule={onSelectReschedule}
                       />
-                    ),
-                  )
+                  ))
                 ) : (
                   <motion.tr
                     key='empty'
@@ -268,12 +164,12 @@ function SessionsTableBody({
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
                     <td colSpan={tableColSpan} className='p-0'>
-                      {variant === 'manual' && !isFiltered ? (
+                      {imageEmptyState ? (
                         <EmptyState
-                          imageSrc={EMPTY_STATE_IMAGE_PATHS.manualEntry}
-                          imageAlt='No manual sessions'
-                          title={emptyMessage}
-                          description={emptyDescription}
+                          imageSrc={imageEmptyState.imageSrc}
+                          imageAlt={imageEmptyState.imageAlt}
+                          title={imageEmptyState.title}
+                          description={imageEmptyState.description}
                           className='min-h-[280px] py-12'
                         />
                       ) : (

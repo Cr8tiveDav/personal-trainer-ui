@@ -3,11 +3,11 @@
 import { useState } from 'react'
 import { Search, ChevronDown } from 'lucide-react'
 import { motion } from 'motion/react'
-import { useAdminSessions } from '@/api/sessions'
+import { useAdminSessions, useRescheduleSession } from '@/api/sessions'
 import { ReusableTabs } from '@/components/ui/ReusableTabs'
 import { SessionsTable } from './SessionsTable'
+import { SessionsStatsSection } from './SessionsStatCard'
 import { SessionDetailsDrawer } from './modals/SessionDetails'
-import { ForceConfirmContext, ForceConfirmSessionModal } from './modals/ForceConfirmSession'
 import { RescheduleSessionModal } from './modals/Reschecdule'
 import { Session } from './session'
 
@@ -19,14 +19,20 @@ interface SessionsListProps {
 
 const TABS = [
   { key: 'all', label: 'All Sessions' },
+  { key: 'confirmation', label: 'Confirmation Queue' },
+  { key: 'missed', label: 'Missed Sessions' },
   { key: 'manual', label: 'Manual Entry' },
 ] as const
 
 type TabKey = (typeof TABS)[number]['key']
 const ROWS_PER_PAGE = 11
+const DISPLAY_SESSION_STATE = 'Scheduled'
 
 const filterSessionsByTab = (sessions: Session[], tab: TabKey) => {
   switch (tab) {
+    case 'confirmation':
+    case 'missed':
+      return []
     case 'manual':
       return sessions.filter((session) => session.id.startsWith('S-MAN-'))
     case 'all':
@@ -36,6 +42,53 @@ const filterSessionsByTab = (sessions: Session[], tab: TabKey) => {
 }
 
 const normalizeSearchValue = (value: string) => value.trim().toLowerCase().replace(/^#/, '')
+
+const parseTimeParts = (time: string) => {
+  const match = time.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/i)
+  if (!match) return null
+
+  let hour = Number(match[1])
+  const minute = Number(match[2])
+  const meridiem = match[3]?.toUpperCase()
+
+  if (!Number.isFinite(hour) || !Number.isFinite(minute)) return null
+  if (meridiem === 'PM' && hour < 12) hour += 12
+  if (meridiem === 'AM' && hour === 12) hour = 0
+
+  return { hour, minute }
+}
+
+const parseSessionDurationMinutes = (duration: string | undefined) => {
+  if (!duration) return 60
+
+  const normalized = duration.toLowerCase()
+  const hourMatch = normalized.match(/(\d+(?:\.\d+)?)\s*h/)
+  const minuteMatch = normalized.match(/(\d+(?:\.\d+)?)\s*m/)
+
+  const hours = hourMatch ? Number(hourMatch[1]) : 0
+  const minutes = minuteMatch ? Number(minuteMatch[1]) : 0
+  const total = hours * 60 + minutes
+
+  return Number.isFinite(total) && total > 0 ? total : 60
+}
+
+const buildSessionDate = (date: string, time: string) => {
+  const timeParts = parseTimeParts(time)
+  if (!timeParts) return null
+
+  const [year, month, day] = date.split('-').map(Number)
+  if (!year || !month || !day) return null
+
+  return new Date(year, month - 1, day, timeParts.hour, timeParts.minute)
+}
+
+const formatScheduledDate = (date: Date) =>
+  date.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
 
 const sortSessionsNewestFirst = (sessions: Session[]) =>
   [...sessions].sort((a, b) => {
@@ -52,15 +105,17 @@ export default function SessionsList({
 }: SessionsListProps) {
   const [search, setSearch] = useState('')
   const [selectedTrainer, setSelectedTrainer] = useState('all')
+  const [selectedState, setSelectedState] = useState<'all' | 'scheduled'>('all')
   const [isTrainerMenuOpen, setIsTrainerMenuOpen] = useState(false)
+  const [isStateMenuOpen, setIsStateMenuOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<TabKey>('all')
   const [currentPage, setCurrentPage] = useState(1)
   const [selectedSession, setSelectedSession] = useState<Session | null>(null)
-  const [forceConfirmSession, setForceConfirmSession] = useState<Session | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false)
 
   const { data, isError, isLoading } = useAdminSessions()
+  const rescheduleSession = useRescheduleSession()
 
   const baseSessions: Session[] = data ?? []
   const sessions: Session[] = sortSessionsNewestFirst(
@@ -71,6 +126,8 @@ export default function SessionsList({
   )
   const tabCounts: Record<TabKey, number> = {
     all: sessions.length,
+    confirmation: 0,
+    missed: 0,
     manual: filterSessionsByTab(sessions, 'manual').length,
   }
 
@@ -90,36 +147,31 @@ export default function SessionsList({
     }
   }
 
-  const formatRescheduledTime = (newDate: string, newTime: string) => {
-    const date = new Date(`${newDate}T00:00:00`)
-    const formattedDate = Number.isNaN(date.getTime())
-      ? newDate
-      : date.toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-        })
+  const handleConfirmReschedule = async (id: string, newDate: string, newTime: string) => {
+    const scheduledStart = buildSessionDate(newDate, newTime)
+    if (!scheduledStart || Number.isNaN(scheduledStart.getTime())) {
+      throw new Error('Please select a valid date and time slot.')
+    }
 
-    return `${formattedDate}, ${newTime}`
-  }
+    const durationMinutes = parseSessionDurationMinutes(selectedSession?.duration)
+    const scheduledEnd = new Date(scheduledStart.getTime() + durationMinutes * 60_000)
+    const displayScheduled = formatScheduledDate(scheduledStart)
 
-  const handleConfirmReschedule = (id: string, newDate: string, newTime: string) => {
-    onUpdateSession(id, {
-      scheduled: formatRescheduledTime(newDate, newTime),
-      state: 'Scheduled',
+    if (id.startsWith('S-MAN-')) {
+      onUpdateSession(id, {
+        scheduled: displayScheduled,
+        state: 'Scheduled',
+        sortTimestamp: scheduledStart.getTime(),
+      })
+      return
+    }
+
+    await rescheduleSession.mutateAsync({
+      sessionId: id,
+      scheduledStart: scheduledStart.toISOString(),
+      scheduledEnd: scheduledEnd.toISOString(),
+      displayScheduled,
     })
-  }
-
-  const handleForceConfirmSession = (sessionId: string, context: ForceConfirmContext) => {
-    onUpdateSession(sessionId, {
-      state: 'Completed',
-      clientConf: 'Yes',
-      trainerConf: 'Yes',
-      forceConfirmation: {
-        ...context,
-        confirmedAt: new Date().toISOString(),
-      },
-    })
-    setForceConfirmSession(null)
   }
 
   const tabSessions = filterSessionsByTab(sessions, activeTab)
@@ -131,10 +183,11 @@ export default function SessionsList({
     )
   ).sort((a, b) => a.localeCompare(b))
   const normalizedSearch = normalizeSearchValue(search)
-  const isFiltered = Boolean(normalizedSearch) || selectedTrainer !== 'all'
+  const isFiltered = Boolean(normalizedSearch) || selectedTrainer !== 'all' || selectedState !== 'all'
   const filteredSessions = tabSessions.filter(
     (session) =>
       (selectedTrainer === 'all' || session.trainer.name === selectedTrainer) &&
+      (selectedState === 'all' || DISPLAY_SESSION_STATE.toLowerCase() === selectedState) &&
       (
         !normalizedSearch ||
         normalizeSearchValue(session.id).includes(normalizedSearch) ||
@@ -160,8 +213,10 @@ export default function SessionsList({
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className='w-full space-y-0 text-xs text-muted-foreground'
+      className='w-full space-y-6 text-xs text-muted-foreground'
     >
+      <SessionsStatsSection totalSessions={sessions.length} />
+
       <div className='border-b border-gray-200 bg-white px-4'>
         <ReusableTabs
           tabs={sessionTabs}
@@ -169,7 +224,9 @@ export default function SessionsList({
           onTabChange={(tab) => {
             setActiveTab(tab)
             setSelectedTrainer('all')
+            setSelectedState('all')
             setIsTrainerMenuOpen(false)
+            setIsStateMenuOpen(false)
             setCurrentPage(1)
           }}
           layoutId='sessions-filter-tabs'
@@ -179,7 +236,7 @@ export default function SessionsList({
 
       <div className='space-y-4 pt-4'>
         <div className='flex flex-wrap items-center justify-between gap-3'>
-          <div className='relative flex-1 min-w-[280px] max-w-md'>
+          <div className='relative min-w-[280px] flex-1'>
             <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400' />
             <input
               type='text'
@@ -197,8 +254,43 @@ export default function SessionsList({
             <div className='relative'>
               <button
                 type='button'
+                onClick={() => setIsStateMenuOpen((isOpen) => !isOpen)}
+                className='flex h-10 min-w-[116px] items-center justify-between gap-1.5 rounded-[8px] border border-gray-200 bg-white px-3 font-medium text-gray-700 transition-colors hover:bg-gray-50'
+              >
+                {selectedState === 'all' ? 'All States' : DISPLAY_SESSION_STATE}
+                <ChevronDown className='h-3.5 w-3.5 text-gray-400' />
+              </button>
+
+              {isStateMenuOpen && (
+                <div className='absolute right-0 top-11 z-30 w-40 overflow-hidden rounded-[12px] border border-gray-100 bg-white py-1.5 shadow-xl'>
+                  {[
+                    { value: 'all', label: 'All States' },
+                    { value: 'scheduled', label: DISPLAY_SESSION_STATE },
+                  ].map((option) => (
+                    <button
+                      key={option.value}
+                      type='button'
+                      onClick={() => {
+                        setSelectedState(option.value as 'all' | 'scheduled')
+                        setIsStateMenuOpen(false)
+                        setCurrentPage(1)
+                      }}
+                      className={`block w-full px-3 py-2 text-left text-xs font-semibold transition-colors hover:bg-gray-50 ${
+                        selectedState === option.value ? 'text-[#0b4d8d]' : 'text-gray-600'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className='relative'>
+              <button
+                type='button'
                 onClick={() => setIsTrainerMenuOpen((isOpen) => !isOpen)}
-                className='flex h-10 items-center gap-1.5 rounded-[8px] border border-gray-200 bg-white px-3 font-medium text-gray-700 transition-colors hover:bg-gray-50'
+                className='flex h-10 min-w-[128px] items-center justify-between gap-1.5 rounded-[8px] border border-gray-200 bg-white px-3 font-medium text-gray-700 transition-colors hover:bg-gray-50'
               >
                 {selectedTrainer === 'all' ? 'All Trainers' : selectedTrainer}
                 <ChevronDown className='h-3.5 w-3.5 text-gray-400' />
@@ -268,8 +360,6 @@ export default function SessionsList({
             totalSessions={filteredSessions.length}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
-            onForceConfirm={setForceConfirmSession}
-            onMarkMissed={(id) => onUpdateSession(id, { state: 'Missed' })}
             onSelectDetails={handleOpenDetails}
             onSelectReschedule={handleOpenReschedule}
           />
@@ -291,14 +381,10 @@ export default function SessionsList({
         onClose={() => setIsRescheduleOpen(false)}
         sessionId={selectedSession?.id ?? null}
         currentScheduledTime={selectedSession?.scheduled}
+        isSubmitting={rescheduleSession.isPending}
         onConfirmReschedule={handleConfirmReschedule}
       />
 
-      <ForceConfirmSessionModal
-        session={forceConfirmSession}
-        onClose={() => setForceConfirmSession(null)}
-        onConfirm={handleForceConfirmSession}
-      />
     </motion.div>
   )
 }
