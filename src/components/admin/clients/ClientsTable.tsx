@@ -18,7 +18,6 @@ const TABLE_COLUMNS = [
   'CLIENT',
   'SESSIONS',
   'JOINED',
-  'REVENUE',
   'STATUS',
   'ACTIONS',
 ] as const;

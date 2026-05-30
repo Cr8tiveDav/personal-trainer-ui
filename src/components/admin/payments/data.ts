@@ -15,13 +15,6 @@ export const paymentSummaries: PaymentSummary[] = [
     helperText: 'Vs Previous month',
     helperTone: 'positive',
   },
-  {
-    id: 'trainer-revenue',
-    label: 'Revenue Generated (Trainers)',
-    value: '\u20a6400k',
-    helperText: 'Vs Previous month',
-    helperTone: 'positive',
-  },
 ];
 
 export const withdrawalRequests: WithdrawalRequest[] = [

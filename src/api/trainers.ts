@@ -315,14 +315,37 @@ export function useDeleteTrainer() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) =>
-      deleteRequest({
+    mutationFn: async (id: string) => {
+      try {
+        // Deactivate user account via DELETE request
+        await deleteRequest({
+          url: API_ENDPOINTS.TRAINERS.DETAIL(id),
+        });
+      } catch (error) {
+        const err = error as {
+          response?: { status?: number; data?: { message?: string } };
+          message?: string;
+        };
+        const status = err.response?.status;
+        const msg = err.response?.data?.message || err.message || '';
+        const isAlreadyDeactivated =
+          status === 409 || msg.toLowerCase().includes('already deactivated');
+
+        if (!isAlreadyDeactivated) {
+          throw error;
+        }
+      }
+
+      // 2. Sync onboarding_status to 'suspended' using PATCH request
+      await patchRequest<UpdateTrainerResponse, UpdateTrainerPayload>({
         url: API_ENDPOINTS.TRAINERS.DETAIL(id),
-      }),
+        payload: { onboarding_status: 'suspended' },
+      });
+    },
     mutationKey: ['delete-trainer'],
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: trainerQueryKeys.all });
-      showSuccessToast('Trainer deleted');
+      showSuccessToast('Trainer deactivated');
     },
     onError(error) {
       displayError(error);
