@@ -13,6 +13,7 @@ export interface Session {
     | "Completed"
     | "Unconfirmed"
     | "Scheduled"
+    | "Cancelled"
     | "Settled"
     | "Disputed"
     | "Missed";

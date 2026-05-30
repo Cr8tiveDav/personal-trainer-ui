@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef, type KeyboardEvent } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -13,6 +14,7 @@ interface DrawerProps {
   onClose: () => void
   session: Session | null
   onReschedule?: (id: string) => void
+  onCancel?: (id: string) => void
 }
 
 const formatSessionId = (id: string) => {
@@ -22,10 +24,41 @@ const formatSessionId = (id: string) => {
 
 const DEFAULT_SESSION_TYPE = 'Monthly'
 const DEFAULT_SESSION_AMOUNT = '$20'
-const DEFAULT_SESSION_STATE = 'Scheduled'
 
-export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }: DrawerProps) {
+const getStateBadgeStyles = (state: Session['state']) => {
+  switch (state) {
+    case 'Completed':
+    case 'Settled':
+      return 'bg-[#ECFDF5] text-[#14561C]'
+    case 'Scheduled':
+    case 'Unconfirmed':
+      return 'bg-[#edf6ff] text-[#2272ad]'
+    case 'Cancelled':
+    case 'Missed':
+      return 'bg-[#FEF0EF] text-[#9C1E1C]'
+    case 'Disputed':
+      return 'bg-[#FEF6E1] text-[#A86908]'
+    default:
+      return 'bg-gray-100 text-gray-600'
+  }
+}
+
+export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule, onCancel }: DrawerProps) {
+  const scrollAreaRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const focusTimer = window.setTimeout(() => {
+      scrollAreaRef.current?.focus()
+    }, 0)
+
+    return () => window.clearTimeout(focusTimer)
+  }, [isOpen, session?.id])
+
   if (!isOpen || !session) return null
+  const isCancelled = session.state === 'Cancelled'
+  const isCompleted = session.state === 'Completed'
 
   const confStyle = (val: string) => {
     if (val === 'Yes') return 'bg-[#e7f6ec] text-[#0f973d]'
@@ -68,8 +101,8 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }:
     {
       label: 'State',
       value: (
-        <span className='inline-flex rounded-[9999px] bg-[#edf6ff] px-2 py-0.5 text-[11px] font-semibold text-[#2272ad]'>
-          {DEFAULT_SESSION_STATE}
+        <span className={`inline-flex rounded-[9999px] px-2 py-0.5 text-[11px] font-semibold ${getStateBadgeStyles(session.state)}`}>
+          {session.state}
         </span>
       ),
     },
@@ -95,6 +128,34 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }:
     },
   ]
 
+  const handleScrollAreaKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const scrollArea = scrollAreaRef.current
+    if (!scrollArea) return
+
+    const scrollDistance = 72
+    const pageDistance = scrollArea.clientHeight * 0.85
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      scrollArea.scrollBy({ top: scrollDistance, behavior: 'smooth' })
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      scrollArea.scrollBy({ top: -scrollDistance, behavior: 'smooth' })
+    } else if (event.key === 'PageDown') {
+      event.preventDefault()
+      scrollArea.scrollBy({ top: pageDistance, behavior: 'smooth' })
+    } else if (event.key === 'PageUp') {
+      event.preventDefault()
+      scrollArea.scrollBy({ top: -pageDistance, behavior: 'smooth' })
+    } else if (event.key === 'Home') {
+      event.preventDefault()
+      scrollArea.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (event.key === 'End') {
+      event.preventDefault()
+      scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' })
+    }
+  }
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => {
       if (!open) onClose()
@@ -106,7 +167,13 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }:
           </DialogTitle>
         </DialogHeader>
 
-        <div className='hide_scrollbar min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-6'>
+        <div
+          ref={scrollAreaRef}
+          tabIndex={0}
+          onKeyDown={handleScrollAreaKeyDown}
+          aria-label='Session details'
+          className='hide_scrollbar min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-6 outline-none'
+        >
           <div className='rounded-[14px] border border-gray-100 p-5'>
             <div className='space-y-5 text-xs text-gray-600'>
               {details.map((item) => (
@@ -134,23 +201,26 @@ export function SessionDetailsDrawer({ isOpen, onClose, session, onReschedule }:
           </div>
         </div>
 
-        <div className='flex items-center justify-end gap-3 border-t border-gray-100 px-6 py-5'>
-          <button
-            type='button'
-            onClick={() => onReschedule?.(session.id)}
-            className='h-9 min-w-36 rounded-[8px] border border-[#d8a21c] bg-[#fffaf0] px-4 text-xs font-semibold text-[#b7791f] transition-colors hover:bg-[#fff4da]'
-          >
-            Re-schedule
-          </button>
-          <button
-            type='button'
-            disabled
-            title='Coming soon'
-            className='h-9 min-w-36 cursor-not-allowed rounded-[8px] border border-[#f0a8b2] bg-white px-4 text-xs font-semibold text-[#c7374a] opacity-70'
-          >
-            Cancel Session
-          </button>
-        </div>
+        {!isCancelled && (
+          <div className='flex items-center justify-end gap-3 border-t border-gray-100 px-6 py-5'>
+            <button
+              type='button'
+              onClick={() => onReschedule?.(session.id)}
+              disabled={isCompleted}
+              className='h-9 min-w-36 rounded-[8px] border border-[#d8a21c] bg-[#fffaf0] px-4 text-xs font-semibold text-[#b7791f] transition-colors hover:bg-[#fff4da] disabled:cursor-not-allowed disabled:opacity-60'
+            >
+              Re-schedule
+            </button>
+            <button
+              type='button'
+              onClick={() => onCancel?.(session.id)}
+              disabled={isCompleted}
+              className='h-9 min-w-36 rounded-[8px] border border-[#f0a8b2] bg-white px-4 text-xs font-semibold text-[#c7374a] transition-colors hover:bg-[#fff5f6] disabled:cursor-not-allowed disabled:opacity-60'
+            >
+              Cancel Session
+            </button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   )

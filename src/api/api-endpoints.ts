@@ -90,6 +90,7 @@ MEDIA: {
     CLIENT_DETAIL: (id: string) => `/admin/clients/${id}`,
     SESSIONS: "/admin/sessions",
     SESSION_RESCHEDULE: (id: string) => `/admin/sessions/${id}/reschedule`,
+    SESSION_CANCEL: (id: string) => `/admin/sessions/${id}/cancel`,
     SESSIONS_STATS: "/admin/sessions/stats",
     ACTIVITIES: "/admin/activities",
     TOP_TRAINERS: "/admin/top-trainers",
