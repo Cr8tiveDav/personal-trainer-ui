@@ -18,7 +18,6 @@ const GotoTop = () => {
 
   useEffect(() => {
     let previousScrollpos = window.scrollY
-    // console.log("PREV", prevScrollpos);
     window.addEventListener('scroll', () => {
       const currentScrollPos = window.scrollY
 

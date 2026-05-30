@@ -41,6 +41,7 @@ export const trainerRowVariants: Variants = {
 
 const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
   const router = useRouter();
+  const isSuspended = trainer.status === "Suspended";
   let availabilityColor = "bg-[#D9D9D9]";
   if (trainer.availability === "Available") availabilityColor = "bg-[#14561C]";
   if (trainer.availability === "Busy") availabilityColor = "bg-[#A86908]";
@@ -52,10 +53,20 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
       animate="visible"
       exit="exit"
       custom={index}
-      onClick={() => router.push(`/admin/trainers/${trainer.id}`)}
-      className="group border-b border-gray-100 cursor-pointer"
+      onClick={() => {
+        if (isSuspended) return;
+        router.push(`/admin/trainers/${trainer.id}`);
+      }}
+      className={cn(
+        "group border-b border-gray-100 transition-opacity duration-200",
+        isSuspended ? "cursor-default opacity-50" : "cursor-pointer"
+      )}
     >
-      <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
+      <td
+        className={cn("py-4 px-6 transition-colors", {
+          "group-hover:bg-gray-50/80": !isSuspended,
+        })}
+      >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 shrink-0">
             {trainer.avatarUrl ? (
@@ -82,23 +93,43 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
           </div>
         </div>
       </td>
-      <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
+      <td
+        className={cn("py-4 px-6 transition-colors", {
+          "group-hover:bg-gray-50/80": !isSuspended,
+        })}
+      >
         <StatusBadge type="specialty" value={trainer.specialty} />
       </td>
-      <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
+      <td
+        className={cn("py-4 px-6 transition-colors", {
+          "group-hover:bg-gray-50/80": !isSuspended,
+        })}
+      >
         <StatusBadge type="status" value={trainer.status} />
       </td>
-      <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
+      <td
+        className={cn("py-4 px-6 transition-colors", {
+          "group-hover:bg-gray-50/80": !isSuspended,
+        })}
+      >
         <span className="text-sm text-gray-600 font-medium">
           {trainer.sessions !== null ? trainer.sessions : "-"}
         </span>
       </td>
-      <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
+      <td
+        className={cn("py-4 px-6 transition-colors", {
+          "group-hover:bg-gray-50/80": !isSuspended,
+        })}
+      >
         <span className="text-sm text-gray-900 font-medium">
           ${trainer.earnings.toLocaleString()}
         </span>
       </td>
-      <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
+      <td
+        className={cn("py-4 px-6 transition-colors", {
+          "group-hover:bg-gray-50/80": !isSuspended,
+        })}
+      >
         <div className="flex items-center gap-2">
           <div className={cn("h-2 w-2 rounded-[9999px]", availabilityColor)} />
           <span
@@ -112,10 +143,18 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
           </span>
         </div>
       </td>
-      <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
+      <td
+        className={cn("py-4 px-6 transition-colors", {
+          "group-hover:bg-gray-50/80": !isSuspended,
+        })}
+      >
         <span className="text-sm text-gray-500">{trainer.dateAdded}</span>
       </td>
-      <td className="py-4 px-6 transition-colors group-hover:bg-gray-50/80">
+      <td
+        className={cn("py-4 px-6 transition-colors", {
+          "group-hover:bg-gray-50/80": !isSuspended,
+        })}
+      >
         <TrainerTableActions trainer={trainer} />
       </td>
     </motion.tr>

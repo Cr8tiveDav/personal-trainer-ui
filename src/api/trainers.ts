@@ -315,14 +315,36 @@ export function useDeleteTrainer() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) =>
-      deleteRequest({
+    mutationFn: async (id: string) => {
+      try {
+        // Deactivate user account via DELETE request
+        await deleteRequest({
+          url: API_ENDPOINTS.TRAINERS.DETAIL(id),
+        });
+      } catch (error: any) {
+        // If the backend returns a 409 Conflict indicating that the trainer
+        // is already deactivated, we catch the error and proceed to sync
+        // the onboarding status to 'suspended' to self-heal the out-of-sync DB state.
+        const status = error?.response?.status;
+        const msg = error?.response?.data?.message || error?.message || '';
+        const isAlreadyDeactivated =
+          status === 409 || msg.toLowerCase().includes('already deactivated');
+
+        if (!isAlreadyDeactivated) {
+          throw error;
+        }
+      }
+
+      // 2. Sync onboarding_status to 'suspended' using PATCH request
+      await patchRequest<UpdateTrainerResponse, UpdateTrainerPayload>({
         url: API_ENDPOINTS.TRAINERS.DETAIL(id),
-      }),
+        payload: { onboarding_status: 'suspended' },
+      });
+    },
     mutationKey: ['delete-trainer'],
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: trainerQueryKeys.all });
-      showSuccessToast('Trainer deleted');
+      showSuccessToast('Trainer deactivated');
     },
     onError(error) {
       displayError(error);

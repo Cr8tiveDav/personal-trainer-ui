@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, Mail, MoreVertical, Pencil, Trash2 } from "lucide-react";
-import { useDeleteTrainer, useResendTrainerSetup } from "@/api/trainers";
+import { Eye, Mail, MoreVertical, Pencil, Ban, CheckCircle } from "lucide-react";
+import { useUpdateTrainer, useDeleteTrainer, useResendTrainerSetup } from "@/api/trainers";
 import type { Trainer } from "@/components/admin/trainers/types";
 import { EditTrainerDialog } from "./EditTrainerDialog";
 import { Button } from "@/components/ui/button";
@@ -29,10 +29,14 @@ type TrainerTableActionsProps = {
 
 export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
   const router = useRouter();
+  const updateTrainer = useUpdateTrainer(trainer.id);
   const deleteTrainer = useDeleteTrainer();
   const resendSetup = useResendTrainerSetup();
-  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deactivateOpen, setDeactivateOpen] = useState(false);
+  const [activateOpen, setActivateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+
+  const isSuspended = trainer.status === "Suspended";
 
   function handleResendSetup() {
     if (!trainer.email?.trim()) return;
@@ -43,10 +47,19 @@ export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
     router.push(`/admin/trainers/${trainer.id}`);
   }
 
-  function handleDelete() {
+  function handleDeactivate() {
     deleteTrainer.mutate(trainer.id, {
-      onSuccess: () => setDeleteOpen(false),
+      onSuccess: () => setDeactivateOpen(false),
     });
+  }
+
+  function handleActivate() {
+    updateTrainer.mutate(
+      { onboarding_status: "approved" },
+      {
+        onSuccess: () => setActivateOpen(false),
+      }
+    );
   }
 
   return (
@@ -91,13 +104,23 @@ export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
             {resendSetup.isPending ? "Sending…" : "Resend email"}
           </DropdownMenuItem>
           <DropdownMenuSeparator className="my-1 border-gray-100" />
-          <DropdownMenuItem
-            onSelect={() => setDeleteOpen(true)}
-            className="rounded-[8px] px-3 py-2 text-xs font-semibold text-red-600 cursor-pointer hover:bg-red-50 focus:bg-red-50 focus:text-red-700 data-[highlighted]:bg-red-50 data-[highlighted]:text-red-700"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-            Delete
-          </DropdownMenuItem>
+          {isSuspended ? (
+            <DropdownMenuItem
+              onSelect={() => setActivateOpen(true)}
+              className="rounded-[8px] px-3 py-2 text-xs font-semibold text-green-600 cursor-pointer hover:bg-green-50 focus:bg-green-50 focus:text-green-700 data-[highlighted]:bg-green-50 data-[highlighted]:text-green-700"
+            >
+              <CheckCircle className="h-3.5 w-3.5" />
+              Activate
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem
+              onSelect={() => setDeactivateOpen(true)}
+              className="rounded-[8px] px-3 py-2 text-xs font-semibold text-amber-600 cursor-pointer hover:bg-amber-50/80 focus:bg-amber-50/80 focus:text-amber-700 data-[highlighted]:bg-amber-50/80 data-[highlighted]:text-amber-700"
+            >
+              <Ban className="h-3.5 w-3.5" />
+              Deactivate
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -107,35 +130,65 @@ export function TrainerTableActions({ trainer }: TrainerTableActionsProps) {
         onOpenChange={setEditOpen}
       />
 
-      <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+      <Dialog open={deactivateOpen} onOpenChange={setDeactivateOpen}>
         <DialogContent
           className="bg-white"
           onClick={(e) => e.stopPropagation()}
         >
           <DialogHeader>
-            <DialogTitle>Delete trainer?</DialogTitle>
+            <DialogTitle>Deactivate trainer?</DialogTitle>
             <DialogDescription>
-              This permanently removes {trainer.name} from the platform. This
-              action cannot be undone.
+              This will deactivate {trainer.name} and restrict their access to the platform.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
             <Button
               type="button"
               variant="outline"
-              className="mt-0"
-              onClick={() => setDeleteOpen(false)}
+              className="mt-0 rounded-[8px]"
+              onClick={() => setDeactivateOpen(false)}
             >
               Cancel
             </Button>
             <Button
               type="button"
-              variant="destructive"
-              className="mt-0"
+              className="mt-0 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-[8px]"
               disabled={deleteTrainer.isPending}
-              onClick={handleDelete}
+              onClick={handleDeactivate}
             >
-              {deleteTrainer.isPending ? "Deleting…" : "Delete trainer"}
+              {deleteTrainer.isPending ? "Deactivating…" : "Deactivate trainer"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={activateOpen} onOpenChange={setActivateOpen}>
+        <DialogContent
+          className="bg-white"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <DialogHeader>
+            <DialogTitle>Activate trainer?</DialogTitle>
+            <DialogDescription>
+              This will reactivate {trainer.name} and restore their access to the platform.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button
+              type="button"
+              variant="outline"
+              className="mt-0 rounded-[8px]"
+              onClick={() => setActivateOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              className="mt-0 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-[8px]"
+              disabled={updateTrainer.isPending}
+              onClick={handleActivate}
+            >
+              {updateTrainer.isPending ? "Activating…" : "Activate trainer"}
             </Button>
           </DialogFooter>
         </DialogContent>
