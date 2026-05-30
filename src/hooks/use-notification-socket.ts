@@ -17,14 +17,26 @@ import { ensureValidAccessToken } from "@/lib/http";
 const SOCKET_RECONNECT_INITIAL_MS = 1_500;
 const SOCKET_RECONNECT_MAX_MS = 30_000;
 
+function isNotificationSocketEnabled() {
+  return process.env.NEXT_PUBLIC_ENABLE_NOTIFICATIONS_WS !== "false";
+}
+
+function normalizeNotificationWsBase(url: string) {
+  return url.replace(/\/$/, "").replace(/\/api\/v1$/, "");
+}
+
 function getDefaultNotificationWsUrl() {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   if (!apiUrl) return null;
 
-  return `${apiUrl.replace(/^http/, "ws").replace(/\/$/, "")}/api/v1/notifications/ws`;
+  const wsBaseUrl = normalizeNotificationWsBase(apiUrl).replace(/^http/, "ws");
+
+  return `${wsBaseUrl}/api/v1/notifications/ws`;
 }
 
 function getNotificationWsUrl() {
+  if (!isNotificationSocketEnabled()) return null;
+
   return (
     process.env.NEXT_PUBLIC_NOTIFICATION_WS_URL?.trim() ||
     getDefaultNotificationWsUrl()
