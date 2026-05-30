@@ -67,9 +67,8 @@ export async function fetchMediaDetail(id: string): Promise<MediaItem> {
 }
 
 export async function deleteMedia(id: string) {
-  return deleteRequest({ url: `${API_ENDPOINTS.MEDIA.LIST}/${id}` });
+  return deleteRequest({ url: API_ENDPOINTS.MEDIA.DELETE_MEDIA(id) });
 }
-
 export function useMediaList(params?: MediaListParams) {
   return useQuery({
     queryKey: mediaQueryKeys.list(params),
