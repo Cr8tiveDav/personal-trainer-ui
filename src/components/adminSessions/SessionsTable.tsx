@@ -21,8 +21,9 @@ interface TableProps {
   totalSessions: number
   totalPages: number
   onPageChange: (page: number) => void
-  onSelectDetails: (id: string) => void
-  onSelectReschedule: (id: string) => void
+  onSelectDetails: (session: Session) => void
+  onSelectReschedule: (session: Session) => void
+  onSelectCancel: (session: Session) => void
   /** Re-triggers row entrance when filters or tab change */
   listKey?: string
 }
@@ -73,6 +74,7 @@ function SessionsTableBody({
   onPageChange,
   onSelectDetails,
   onSelectReschedule,
+  onSelectCancel,
 }: SessionsTableBodyProps) {
   const emptyMessage = isFiltered
     ? 'No matching sessions found.'
@@ -153,6 +155,7 @@ function SessionsTableBody({
                         index={index}
                         onViewDetails={onSelectDetails}
                         onReschedule={onSelectReschedule}
+                        onCancel={onSelectCancel}
                       />
                   ))
                 ) : (

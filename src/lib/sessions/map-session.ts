@@ -289,9 +289,11 @@ const mapConfirmation = (value: unknown): Session["clientConf"] => {
   return "Pending";
 };
 
-const mapState = (value: unknown): Session["state"] => {
+export const mapState = (value: unknown): Session["state"] => {
   const normalized = typeof value === "string" ? value.toLowerCase() : "";
   if (normalized === "completed") return "Completed";
+  if (normalized === "cancelled" || normalized === "canceled")
+    return "Cancelled";
   if (normalized === "settled") return "Settled";
   if (normalized === "disputed") return "Disputed";
   if (normalized === "missed") return "Missed";
@@ -335,7 +337,7 @@ export const mapBackendSessionToSession = (
         session.trainer_confirmation ??
         session.trainer_joined,
     ),
-    state: mapState(session.status ?? session.state),
+    state: mapState(session.booking_status ?? session.status ?? session.state),
     sortTimestamp: getSessionSortTimestamp(session),
   };
 };

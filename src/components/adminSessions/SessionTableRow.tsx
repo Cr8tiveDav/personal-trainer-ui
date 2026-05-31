@@ -11,12 +11,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Session } from './session'
+import { formatSessionId, getStateBadgeStyles } from './session-display'
 
 interface RowProps {
   session: Session
   index?: number
-  onViewDetails: (id: string) => void
-  onReschedule?: (id: string) => void
+  onViewDetails: (session: Session) => void
+  onReschedule?: (session: Session) => void
+  onCancel?: (session: Session) => void
 }
 
 export const sessionRowVariants: Variants = {
@@ -43,22 +45,19 @@ export const sessionRowVariants: Variants = {
   },
 }
 
-const formatSessionId = (id: string) => {
-  if (id.length <= 12) return id
-  return `${id.slice(0, 8)}...${id.slice(-4)}`
-}
-
 const DEFAULT_SESSION_TYPE = 'Monthly'
 const DEFAULT_SESSION_AMOUNT = '$20'
-const DEFAULT_SESSION_STATE = 'Scheduled'
 
 export function SessionTableRow({
   session,
   index = 0,
   onViewDetails,
   onReschedule,
+  onCancel,
 }: RowProps) {
   const isClientConfirmed = session.clientConf === 'Yes'
+  const isCancelled = session.state === 'Cancelled'
+  const isCompleted = session.state === 'Completed'
 
   const confStyle = (val: string) => {
     if (val === 'Yes') return 'bg-[#e7f6ec] text-[#0f973d]'
@@ -168,8 +167,8 @@ export function SessionTableRow({
       </td>
 
       <td className='px-4 py-3.5'>
-        <span className='inline-flex rounded-[9999px] bg-[#edf6ff] px-2 py-0.5 text-[11px] font-semibold text-[#2272ad]'>
-          {DEFAULT_SESSION_STATE}
+        <span className={`inline-flex rounded-[9999px] px-2 py-0.5 text-[11px] font-semibold ${getStateBadgeStyles(session.state)}`}>
+          {session.state}
         </span>
       </td>
 
@@ -189,7 +188,14 @@ export function SessionTableRow({
           >
             {isClientConfirmed ? (
               <DropdownMenuItem
-                onClick={() => onViewDetails(session.id)}
+                onClick={() => onViewDetails(session)}
+                className='cursor-pointer rounded-[8px] bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
+              >
+                View detail
+              </DropdownMenuItem>
+            ) : isCancelled ? (
+              <DropdownMenuItem
+                onClick={() => onViewDetails(session)}
                 className='cursor-pointer rounded-[8px] bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
               >
                 View detail
@@ -197,16 +203,24 @@ export function SessionTableRow({
             ) : (
               <>
                 <DropdownMenuItem
-                  onClick={() => onViewDetails(session.id)}
+                  onClick={() => onViewDetails(session)}
                   className='cursor-pointer rounded-[8px] bg-[#0b4d8d] px-3 py-2 text-xs font-semibold text-white focus:bg-[#0b4d8d] focus:text-white'
                 >
                   View detail
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => onReschedule?.(session.id)}
+                  onClick={() => onReschedule?.(session)}
+                  disabled={isCompleted}
                   className='cursor-pointer rounded-[8px] px-3 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-50 focus:bg-gray-50'
                 >
                   Reschedule
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => onCancel?.(session)}
+                  disabled={isCompleted}
+                  className='cursor-pointer rounded-[8px] px-3 py-2 text-xs font-semibold text-[#c7374a] hover:bg-[#fff5f6] focus:bg-[#fff5f6] disabled:cursor-not-allowed disabled:opacity-50'
+                >
+                  Cancel Session
                 </DropdownMenuItem>
               </>
             )}

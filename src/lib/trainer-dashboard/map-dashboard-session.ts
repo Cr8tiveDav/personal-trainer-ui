@@ -38,7 +38,7 @@ function mapSessionStatus(state: Session['state']): SessionStatus {
   if (normalized === 'completed' || normalized === 'settled') {
     return 'Completed'
   }
-  if (normalized === 'missed' || normalized === 'disputed') {
+  if (normalized === 'cancelled' || normalized === 'missed' || normalized === 'disputed') {
     return 'Cancelled'
   }
   return 'Upcoming'
