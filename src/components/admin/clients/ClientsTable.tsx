@@ -2,8 +2,6 @@
 
 import {
   Search,
-  Filter,
-  ArrowUpDown,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -115,7 +113,7 @@ export function ClientsTable({
             className='flex-1 w-full text-sm text-gray-700 outline-none placeholder:text-[#D1D1D1] bg-transparent'
           />
         </div>
-        <div className='flex items-center gap-4'>
+        {/* <div className='flex items-center gap-4'>
           <button
             type='button'
             className='flex items-center gap-2 rounded-[8px] border border-gray-200 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50'
@@ -130,7 +128,7 @@ export function ClientsTable({
             <ArrowUpDown className='h-4 w-4' />
             Sort
           </button>
-        </div>
+        </div> */}
       </div>
 
       <motion.div

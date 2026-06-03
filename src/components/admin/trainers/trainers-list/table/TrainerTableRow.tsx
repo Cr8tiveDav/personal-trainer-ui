@@ -42,9 +42,6 @@ export const trainerRowVariants: Variants = {
 const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
   const router = useRouter();
   const isSuspended = trainer.status === "Suspended";
-  let availabilityColor = "bg-[#D9D9D9]";
-  if (trainer.availability === "Available") availabilityColor = "bg-[#14561C]";
-  if (trainer.availability === "Busy") availabilityColor = "bg-[#A86908]";
 
   return (
     <motion.tr
@@ -125,24 +122,7 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
           ${trainer.earnings.toLocaleString()}
         </span>
       </td>
-      <td
-        className={cn("py-4 px-6 transition-colors", {
-          "group-hover:bg-gray-50/80": !isSuspended,
-        })}
-      >
-        <div className="flex items-center gap-2">
-          <div className={cn("h-2 w-2 rounded-[9999px]", availabilityColor)} />
-          <span
-            className={cn("text-sm font-medium", {
-              "text-[#14561C]": trainer.availability === "Available",
-              "text-[#5C5C5C]": trainer.availability === "Offline",
-              "text-[#A86908]": trainer.availability === "Busy",
-            })}
-          >
-            {trainer.availability}
-          </span>
-        </div>
-      </td>
+
       <td
         className={cn("py-4 px-6 transition-colors", {
           "group-hover:bg-gray-50/80": !isSuspended,

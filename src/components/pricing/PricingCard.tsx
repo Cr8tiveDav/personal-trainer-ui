@@ -39,8 +39,10 @@ const PricingCard = ({ plan }: PricingCardProps) => {
 
   return (
     <div
-      className={`relative flex h-fit flex-col rounded-[16px] border bg-white p-8 transition-all ${
-        isHighlighted ? 'border-[#2272AD] shadow-lg' : 'border-[#D1D1D1]'
+      className={`relative flex flex-col rounded-[16px] border bg-white p-8 transition-all ${
+        isHighlighted
+          ? 'h-full lg:self-start border-[#2272AD] shadow-lg'
+          : 'h-full lg:h-[calc(100%-32px)] lg:self-start border-[#D1D1D1]'
       }`}
     >
       {isHighlighted && (

@@ -47,6 +47,7 @@ export const trainerQueryKeys = {
   ) => ['admin-trainers', page, perPage, onboardingStatus, searchQuery] as const,
   summary: (onboardingStatus?: string) =>
     ['admin-trainers', 'summary', onboardingStatus] as const,
+  summaryCounts: () => ['admin-trainers', 'summary-counts'] as const,
   detail: (id: string) => ['trainer', id] as const,
 };
 
@@ -145,7 +146,7 @@ export function useAdminTrainersSummary(onboardingStatus?: string) {
 
 export function useTrainerStatusCounts() {
   const { data, isLoading } = useQuery({
-    queryKey: ['admin-trainers-summary-counts'],
+    queryKey: trainerQueryKeys.summaryCounts(),
     queryFn: async () => {
       const response = await getRequest<TrainersListResponse>({
         url: `${API_ENDPOINTS.TRAINERS.LIST}?limit=100`,

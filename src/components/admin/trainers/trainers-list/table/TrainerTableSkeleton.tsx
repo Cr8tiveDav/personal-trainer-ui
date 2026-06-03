@@ -39,12 +39,7 @@ const TrainerTableSkeleton = () => {
           <td className="py-4 px-6 whitespace-nowrap">
             <Skeleton className="h-4 w-16" />
           </td>
-          <td className="py-4 px-6 whitespace-nowrap">
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-2 w-2 rounded-[9999px]" />
-              <Skeleton className="h-4 w-16" />
-            </div>
-          </td>
+
           <td className="py-4 px-6 whitespace-nowrap">
             <Skeleton className="h-4 w-24" />
           </td>

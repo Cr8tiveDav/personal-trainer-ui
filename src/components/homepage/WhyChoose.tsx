@@ -49,12 +49,16 @@ const WhyChoose = () => {
         <SectionHeader
           badge='WHY CHOOSE FITCALL?'
           title='Coaching that fits your lifestyle'
-          className='mb-6 md:mb-10'
+          className='mb-1 md:mb-2'
           align='center'
-          description='Every session has sets, reps, rest times, and a video demo. No gym floor confusion — open the app and follow.'
+          description='Lose weight, get stronger, build confidence, and stay on track with personalised coaching and live accountability.
+'
         />
+        <p className='text-center text-sm text-muted mb-6 md:mb-10'>
+          Every session has sets, reps, rest times, and a video demo. No gym
+          floor confusion, just open the app and follow.
+        </p>
         <div className='flex flex-col items-center gap-8 md:flex-row md:items-stretch md:gap-12'>
-          
           {/* Left Side: Phone Image */}
           <div className='relative h-[350px] w-full sm:h-[450px] md:h-[550px] md:w-1/2'>
             <AnimatePresence mode='wait'>
@@ -124,7 +128,6 @@ const WhyChoose = () => {
               })}
             </div>
           </div>
-
         </div>
       </div>
     </section>
