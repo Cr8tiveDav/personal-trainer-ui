@@ -122,7 +122,6 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
           ${trainer.earnings.toLocaleString()}
         </span>
       </td>
-
       <td
         className={cn("py-4 px-6 transition-colors", {
           "group-hover:bg-gray-50/80": !isSuspended,
