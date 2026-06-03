@@ -40,7 +40,7 @@ const beliefs = [
 
 const WhatWeBelieve = () => {
   return (
-    <section className='w-full bg-white'>
+    <section className='w-full bg-white py-16 md:py-0'>
       <div className='container mx-auto min-h-172.5 px-4 py-8 flex flex-col items-center justify-center'>
         <h2 className='mb-6 font-semibold text-[32px]'>What we believe</h2>
 
