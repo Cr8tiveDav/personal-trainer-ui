@@ -5,6 +5,38 @@ import Link from 'next/link';
 import { Button } from '../ui/button';
 
 const Hero = () => {
+  const handleDownloadRedirect = (platform: 'ios' | 'android') => {
+    const userAgent = navigator.userAgent || navigator.vendor;
+
+    const iosLink = 'https://apps.apple.com/app/your-app-id';
+    const androidLink =
+      'https://play.google.com/store/apps/details?id=your.package.id';
+
+    const isIOS =
+      /iPad|iPhone|iPod/.test(userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+    const isAndroid = /android/i.test(userAgent);
+
+    if (platform === 'ios') {
+      if (isIOS) {
+        window.open(iosLink, '_blank', 'noopener,noreferrer');
+      } else {
+        alert(
+          'Please visit this page on your mobile device to download the app.'
+        );
+      }
+    } else {
+      if (isAndroid) {
+        window.open(androidLink, '_blank', 'noopener,noreferrer');
+      } else {
+        alert(
+          'Please visit this page on your mobile device to download the app.'
+        );
+      }
+    }
+  };
+
   return (
     <section className='relative w-full overflow-hidden pt-[122px] md:pt-[154px]'>
       <div
@@ -26,8 +58,7 @@ const Hero = () => {
           </div>
 
           <h1 className='mb-6 max-w-4xl text-3xl font-bold tracking-tight text-muted-foreground sm:text-5xl md:text-6xl lg:text-[69px]'>
-            Fitness that actually{' '}
-            <span className='text-[#0F4690]'>keeps you</span> consistent.
+            Fitness that actually <span className='text-[#0F4690]'>keeps you</span> consistent.
           </h1>
 
           <p className='mb-10 max-w-2xl text-lg leading-relaxed text-muted md:text-xl'>
@@ -55,54 +86,44 @@ const Hero = () => {
           </div>
 
           {/* Mobile */}
-          <div className=' flex md:hidden flex-col items-center sm:flex-row'>
-            <Button asChild size='lg' className='h-14 w-full max-w-65 px-6'>
-              <Link
-                href='#'
-                // target='_blank'
-                rel='noopener noreferrer'
-                className='flex items-center justify-center gap-3'
-              >
-                <Image
-                  src='/images/landing-page/apple.svg'
-                  alt='Apple'
-                  width={24}
-                  height={24}
-                  style={{ width: 'auto', height: 'auto' }}
-                />
-                <div className='text-left'>
-                  <p className='text-[14px] font-bold leading-none opacity-80'>
-                    Download on App Store
-                  </p>
-                </div>
-              </Link>
+          <div className=' flex md:hidden flex-col items-center sm:flex-row gap-4'>
+            <Button
+              size='lg'
+              onClick={() => handleDownloadRedirect('ios')}
+              className='h-14 w-full max-w-65 px-6 flex items-center justify-center gap-3 cursor-pointer'
+            >
+              <Image
+                src='/images/landing-page/apple.svg'
+                alt='Apple'
+                width={24}
+                height={24}
+                style={{ width: 'auto', height: 'auto' }}
+              />
+              <div className='text-left'>
+                <p className='text-[14px] font-bold leading-none opacity-80'>
+                  Download on App Store
+                </p>
+              </div>
             </Button>
 
             <Button
-              asChild
               variant='outline'
               size='lg'
-              className='h-14 w-full max-w-65 border-[#A3A3A3] bg-transparent px-6'
+              onClick={() => handleDownloadRedirect('android')}
+              className='h-14 w-full max-w-65 border-[#A3A3A3] bg-transparent px-6 flex items-center justify-center gap-3 cursor-pointer'
             >
-              <Link
-                href='#'
-                // target='_blank'
-                rel='noopener noreferrer'
-                className='flex items-center justify-center gap-3'
-              >
-                <Image
-                  src='/images/landing-page/google-play.svg'
-                  alt='Playstore'
-                  width={24}
-                  height={24}
-                  style={{ width: 'auto', height: 'auto' }}
-                />
-                <div className='text-left'>
-                  <p className='text-[14px] font-bold leading-none opacity-80'>
-                    Download on PlayStore
-                  </p>
-                </div>
-              </Link>
+              <Image
+                src='/images/landing-page/google-play.svg'
+                alt='Playstore'
+                width={24}
+                height={24}
+                style={{ width: 'auto', height: 'auto' }}
+              />
+              <div className='text-left'>
+                <p className='text-[14px] font-bold leading-none opacity-80'>
+                  Download on PlayStore
+                </p>
+              </div>
             </Button>
           </div>
 

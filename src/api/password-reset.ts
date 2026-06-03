@@ -1,22 +1,22 @@
-'use client'
+'use client';
 
-import { useMutation } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
-import { postRequest } from '~/lib/http'
-import { displayError, showSuccessToast } from '~/lib/utils'
-import { API_ENDPOINTS } from './api-endpoints'
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { postRequest } from '~/lib/http';
+import { displayError, showSuccessToast } from '~/lib/utils';
+import { API_ENDPOINTS } from './api-endpoints';
 import type {
   ForgotPasswordPayload,
   ForgotPasswordResponse,
   ResetPasswordPayload,
   ResetPasswordResponse,
-} from './types/password-reset'
+} from './types/password-reset';
 
 export const FORGOT_PASSWORD_SUCCESS_MESSAGE =
-  'If an admin account exists for this email, a 6-digit reset code has been sent. Check your inbox.'
+  'If a trainer account exists for this email, a 6-digit reset code has been sent. Check your inbox.';
 
 export const RESET_PASSWORD_SUCCESS_MESSAGE =
-  'Your password has been reset. Sign in with your new password.'
+  'Your password has been reset. Sign in with your new password.';
 
 export function useForgotPassword() {
   return useMutation({
@@ -27,16 +27,19 @@ export function useForgotPassword() {
         payload,
       }),
     onSuccess() {
-      showSuccessToast(FORGOT_PASSWORD_SUCCESS_MESSAGE)
+      showSuccessToast(FORGOT_PASSWORD_SUCCESS_MESSAGE);
     },
     onError(error) {
-      displayError(error, 'Unable to process your request. Please try again later.')
+      displayError(
+        error,
+        'Unable to process your request. Please try again later.'
+      );
     },
-  })
+  });
 }
 
 export function useResetPassword({ type }: { type: 'admin' | 'trainer' }) {
-  const router = useRouter()
+  const router = useRouter();
 
   return useMutation({
     mutationKey: ['reset-password'],
@@ -46,11 +49,14 @@ export function useResetPassword({ type }: { type: 'admin' | 'trainer' }) {
         payload,
       }),
     onSuccess() {
-      showSuccessToast(RESET_PASSWORD_SUCCESS_MESSAGE)
-      router.push(type === 'admin' ? '/admin/login' : '/trainer/login')
+      showSuccessToast(RESET_PASSWORD_SUCCESS_MESSAGE);
+      router.push(type === 'admin' ? '/admin/login' : '/trainer/login');
     },
     onError(error) {
-      displayError(error, 'Unable to reset your password. Check the code and try again.')
+      displayError(
+        error,
+        'Unable to reset your password. Check the code and try again.'
+      );
     },
-  })
+  });
 }

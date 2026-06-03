@@ -85,7 +85,7 @@ const Footer = () => {
               <ul className='space-y-3 text-sm text-muted'>
                 <li>
                   <Link
-                    href='#'
+                    href='/terms-of-service'
                     className='transition-colors hover:text-primary'
                   >
                     Terms of Service
@@ -93,7 +93,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href='#'
+                    href='/privacy-policy'
                     className='transition-colors hover:text-primary'
                   >
                     Privacy Policy
@@ -101,7 +101,15 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href='#'
+                    href='/trainer-code-of-conduct'
+                    className='transition-colors hover:text-primary'
+                  >
+                    Trainer Code of Conduct
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/help-centre'
                     className='transition-colors hover:text-primary'
                   >
                     Help Centre
