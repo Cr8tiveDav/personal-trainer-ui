@@ -27,7 +27,11 @@ import {
   type TrainerSpecialization,
 } from "@/api/types/trainers";
 import { PhoneInputField } from "@/components/ui/phone-input";
-import { isPossiblePhoneNumber } from 'react-phone-number-input';
+import {
+  PHONE_NUMBER_ERROR,
+  isStrongPhoneNumber,
+  normalizePhoneNumber,
+} from '@/lib/phone-number';
 
 const GENDERS = ['Male', 'Female', 'Other'] as const;
 
@@ -49,8 +53,8 @@ const step1Schema = z.object({
     .string()
     .min(1, 'Phone number is required')
     .refine(
-      (val) => isPossiblePhoneNumber(val),
-      'Enter a valid phone number for the selected country'
+      (val) => isStrongPhoneNumber(val),
+      PHONE_NUMBER_ERROR
     ),
   gender: z.enum(GENDERS, { message: "Gender is required" }),
   specialization: z.enum(TRAINER_SPECIALIZATIONS, {
@@ -70,7 +74,11 @@ export type BasicInfoValues = Omit<Step1FormValues, 'specialization'> & {
 
 function toBasicInfoValues(values: Step1FormValues): BasicInfoValues {
   const { specialization, ...rest } = values;
-  return { ...rest, specializations: [specialization] };
+  return {
+    ...rest,
+    phone_number: normalizePhoneNumber(rest.phone_number) ?? rest.phone_number,
+    specializations: [specialization],
+  };
 }
 
 function toStep1DefaultValues(
