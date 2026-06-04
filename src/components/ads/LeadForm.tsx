@@ -1,14 +1,20 @@
 'use client'
 
 import { type FormEvent, useState } from 'react'
+import type { Country } from 'react-phone-number-input'
 import { toast } from 'sonner'
 
 import { waitlistAction } from '@/actions/waitlist'
+import {
+  PHONE_NUMBER_ERROR,
+  isStrongPhoneNumber,
+  normalizePhoneNumber,
+} from '@/lib/phone-number'
 
 type FormValues = {
   name: string
   email: string
-  country: string
+  country: Country
   phone: string
 }
 
@@ -33,7 +39,6 @@ const validateForm = (values: FormValues) => {
   const trimmedName = values.name.trim()
   const trimmedEmail = values.email.trim()
   const trimmedPhone = values.phone.trim()
-  const phoneDigits = values.phone.replace(/\D/g, '')
 
   if (!trimmedName) {
     errors.name = 'Full name is required.'
@@ -53,10 +58,8 @@ const validateForm = (values: FormValues) => {
 
   if (!trimmedPhone) {
     errors.phone = 'Phone number is required.'
-  } else if (!/^\+?[\d\s().-]+$/.test(trimmedPhone)) {
-    errors.phone = 'Enter a valid phone number.'
-  } else if (phoneDigits.length < 7 || phoneDigits.length > 15) {
-    errors.phone = 'Enter a valid phone number.'
+  } else if (!isStrongPhoneNumber(trimmedPhone, values.country)) {
+    errors.phone = PHONE_NUMBER_ERROR
   }
 
   return errors
@@ -91,10 +94,20 @@ const LeadForm = ({
 
     if (Object.keys(nextErrors).length > 0) return
 
+    const phoneNumber = normalizePhoneNumber(values.phone, values.country)
+    if (!phoneNumber) {
+      setErrors((currentErrors) => ({
+        ...currentErrors,
+        phone: PHONE_NUMBER_ERROR,
+      }))
+      return
+    }
+
     const formData = new FormData()
     formData.append('name', values.name.trim())
     formData.append('email', values.email.trim())
-    formData.append('phone_number', values.phone.trim())
+    formData.append('phone_number', phoneNumber)
+    formData.append('phone_country', values.country)
     formData.append('location', `get-fit:${formId}`)
 
     setIsSubmitting(true)
@@ -203,7 +216,9 @@ const LeadForm = ({
             value={values.country}
             disabled={isSubmitting}
             aria-invalid={Boolean(errors.country)}
-            onChange={(event) => updateField('country', event.target.value)}
+            onChange={(event) =>
+              updateField('country', event.target.value as Country)
+            }
             className="border-r border-[#E6E6E6] bg-transparent px-2 text-xs text-[#8B8B8B] outline-none"
           >
             <option value="US">US</option>
