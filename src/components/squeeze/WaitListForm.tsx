@@ -78,12 +78,15 @@ export const WaitlistForm = () => {
   }
 
   return (
-    <div className="relative w-full max-w-lg">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-3">
+    <div className='relative w-full max-w-lg'>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className='flex w-full flex-col gap-3'
+      >
         <div>
           <input
-            type="text"
-            placeholder="Full name"
+            type='text'
+            placeholder='Full name'
             {...register('name')}
             className={inputStyles}
             disabled={isSubmitting}
@@ -93,18 +96,20 @@ export const WaitlistForm = () => {
 
         <div>
           <input
-            type="email"
-            placeholder="johndoe@example.com"
+            type='email'
+            placeholder='johndoe@example.com'
             {...register('email')}
             className={inputStyles}
             disabled={isSubmitting}
           />
-          {errors.email && <p className={errorStyles}>{errors.email.message}</p>}
+          {errors.email && (
+            <p className={errorStyles}>{errors.email.message}</p>
+          )}
         </div>
 
         <div>
           <Controller
-            name="phone_number"
+            name='phone_number'
             control={control}
             render={({ field }) => (
               <PhoneInputField
@@ -117,21 +122,25 @@ export const WaitlistForm = () => {
               />
             )}
           />
-          {errors.phone_number && <p className={errorStyles}>{errors.phone_number.message}</p>}
+          {errors.phone_number && (
+            <p className={errorStyles}>{errors.phone_number.message}</p>
+          )}
         </div>
 
         <div>
           <input
-            type="text"
-            placeholder="Location (e.g. Lagos, Nigeria)"
+            type='text'
+            placeholder='Location (e.g. California, USA)'
             {...register('location')}
             className={inputStyles}
             disabled={isSubmitting}
           />
-          {errors.location && <p className={errorStyles}>{errors.location.message}</p>}
+          {errors.location && (
+            <p className={errorStyles}>{errors.location.message}</p>
+          )}
         </div>
 
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type='submit' disabled={isSubmitting}>
           {isSubmitting ? 'Processing...' : 'Join the Waitlist'}
         </Button>
       </form>

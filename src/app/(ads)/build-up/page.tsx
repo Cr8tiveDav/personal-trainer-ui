@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
-import BuildUp from '@/components/ads/squeeze 2/BuildUp'
+import BuildUp from '@/components/ads/squeeze 2/BuildUp';
 
 export const metadata: Metadata = {
   title: 'Never Miss a Workout Session | FitCall',
   description:
-    'Find a vetted Nigerian fitness trainer who calls you at your scheduled time and keeps your workouts consistent.',
+    'Find a vetted fitness trainer who calls you at your scheduled time and keeps your workouts consistent.',
   alternates: {
     canonical: '/build-up',
   },
@@ -32,10 +32,10 @@ export const metadata: Metadata = {
       'Find a vetted trainer who calls you at your scheduled workout time.',
     images: ['/images/ads/athlete_desk.jpg'],
   },
-}
+};
 
 const BuildUpPage = () => {
-  return <BuildUp />
-}
+  return <BuildUp />;
+};
 
-export default BuildUpPage
+export default BuildUpPage;
