@@ -4,14 +4,15 @@ export const pricingPlans = [
     sessions: '1 session',
     price: '$12',
     description:
-      'First start with our personal trainers with a single session. Experience the power of accountability.',
+      'Start your free trial and get your first session for $12 with expert guidance.',
     features: [
       '1 guided session',
       'Trained expert guidance',
       'Workout reminder',
+      'Cancel anytime',
     ],
-    action: 'Choose Plan',
-    note: 'Subscribe to a single session.',
+    action: 'Start Free Trial',
+    note: 'Renews for $12/month. Cancel anytime',
   },
   {
     name: 'The Committed',

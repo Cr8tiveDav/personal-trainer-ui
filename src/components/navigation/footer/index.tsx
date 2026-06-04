@@ -119,8 +119,10 @@ const Footer = () => {
             </div>
           </div>
         </div>
+      </div>
 
-        <div className='flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-8 md:flex-row'>
+      <div className='w-full border-t border-gray-100'>
+        <div className='flex flex-col items-center justify-between gap-6 px-6 py-8 md:flex-row md:px-10 lg:px-16'>
           <p className='order-2 text-sm text-muted-foreground md:order-1'>
             © {currentYear} Fitcall. All rights reserved.
           </p>

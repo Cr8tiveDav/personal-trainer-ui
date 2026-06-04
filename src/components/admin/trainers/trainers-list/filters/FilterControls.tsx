@@ -39,10 +39,6 @@ const FilterControls = ({
             className='flex-1 w-full text-sm text-gray-700 outline-none placeholder:text-[#D1D1D1] bg-transparent'
           />
         </div>
-        {/* <div className='flex items-center gap-4'>
-          <FilterDropdown />
-          <SortDropdown />
-        </div> */}
       </div>
     </section>
   );

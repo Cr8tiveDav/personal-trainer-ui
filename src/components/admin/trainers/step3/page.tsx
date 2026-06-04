@@ -63,11 +63,11 @@ export function Step3ReviewAndCreate({
             { label: 'Bio', value: basicInfo.bio?.trim() || '—' },
             { label: 'Profile image', value: hasImage ? 'Included' : 'None' },
           ].map(({ label, value, capitalize }) => (
-            <div key={label} className='flex items-center justify-between gap-4'>
+            <div key={label} className='flex items-start justify-between gap-4'>
               <p className='text-sm text-gray-500 shrink-0'>{label}</p>
               <p
                 className={cn(
-                  'text-sm font-medium text-gray-900 text-right',
+                  'text-sm font-medium text-gray-900 text-right min-w-0 break-words',
                   capitalize && 'capitalize'
                 )}
               >

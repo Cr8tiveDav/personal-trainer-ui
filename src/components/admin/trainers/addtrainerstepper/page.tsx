@@ -34,8 +34,8 @@ export function AddTrainerStepper({ currentStep, onStepClick }: StepperProps) {
         const isActive = currentStep === step.number
 
         return (
-          <div key={step.number} className={cn('flex items-center', index < STEPS.length - 1 ? 'flex-1' : 'flex-none')}>
-            <div className='flex items-center gap-3'>
+          <div key={step.number} className={cn('flex items-center min-w-0', index < STEPS.length - 1 ? 'flex-1' : 'flex-none')}>
+            <div className='flex items-center gap-3 min-w-0'>
               <motion.div
                 layout
                 transition={{ type: 'spring', stiffness: 400, damping: 28 }}
@@ -55,16 +55,16 @@ export function AddTrainerStepper({ currentStep, onStepClick }: StepperProps) {
               >
                 {isCompleted ? <Check className='h-4 w-4' /> : step.number}
               </motion.div>
-              <div className='hidden sm:block'>
+              <div className='hidden sm:block min-w-0'>
                 <p
                   className={cn(
-                    'text-sm font-semibold',
+                    'text-sm font-semibold truncate',
                     isActive || isCompleted ? 'text-muted-foreground' : 'text-muted'
                   )}
                 >
                   {step.title}
                 </p>
-                <p className='text-xs text-muted'>{step.subtitle}</p>
+                <p className='text-xs text-muted truncate'>{step.subtitle}</p>
               </div>
             </div>
             {index < STEPS.length - 1 && (
