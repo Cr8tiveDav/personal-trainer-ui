@@ -1,51 +1,84 @@
 'use client'
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { forwardRef } from 'react'
+import PhoneInput, { getCountryCallingCode } from 'react-phone-number-input'
+import type { Country } from 'react-phone-number-input'
+import 'react-phone-number-input/style.css'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/utils'
 
-const COUNTRIES = [
-  { code: 'NG', flag: '🇳🇬', name: 'Nigeria', dial: '234' },
-  { code: 'US', flag: '🇺🇸', name: 'United States', dial: '1' },
-  { code: 'GB', flag: '🇬🇧', name: 'United Kingdom', dial: '44' },
-  { code: 'GH', flag: '🇬🇭', name: 'Ghana', dial: '233' },
-  { code: 'KE', flag: '🇰🇪', name: 'Kenya', dial: '254' },
-  { code: 'ZA', flag: '🇿🇦', name: 'South Africa', dial: '27' },
-  { code: 'CA', flag: '🇨🇦', name: 'Canada', dial: '1' },
-  { code: 'AU', flag: '🇦🇺', name: 'Australia', dial: '61' },
-  { code: 'DE', flag: '🇩🇪', name: 'Germany', dial: '49' },
-  { code: 'FR', flag: '🇫🇷', name: 'France', dial: '33' },
-  { code: 'IN', flag: '🇮🇳', name: 'India', dial: '91' },
-  { code: 'AE', flag: '🇦🇪', name: 'UAE', dial: '971' },
-]
+// Number input — uses our existing Input, no border/shadow so it blends in
+const CustomInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
+  (props, ref) => (
+    <Input
+      {...props}
+      ref={ref}
+      className='border-0 rounded-none shadow-none focus-visible:ring-0 flex-1 min-w-0 placeholder:text-gray-400'
+    />
+  )
+)
+CustomInput.displayName = 'CustomInput'
 
-interface PhoneInputProps {
+// Country select — native <select> hidden underneath, flag + dial code shown on top
+interface CountrySelectProps {
+  value?: Country
+  onChange: (country: Country) => void
+  options: Array<{ value: Country | undefined; label: string }>
+  iconComponent: React.ComponentType<{ country: Country; label: string }>
+  disabled?: boolean
+}
+
+function CountrySelectWithDialCode({
+  value,
+  onChange,
+  options,
+  iconComponent: FlagIcon,
+  disabled,
+}: CountrySelectProps) {
+  const callingCode = value ? `+${getCountryCallingCode(value)}` : ''
+
+  return (
+    <div className='relative flex items-center gap-1.5 pl-3 pr-2 border-r border-input bg-gray-50 h-full shrink-0'>
+      {/* Invisible native select — handles all country picking + keyboard nav */}
+      <select
+        value={value ?? ''}
+        onChange={(e) => onChange(e.target.value as Country)}
+        disabled={disabled}
+        aria-label='Phone number country'
+        className='absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10'
+      >
+        {options.map((opt) => (
+          <option key={opt.value ?? 'ZZ'} value={opt.value ?? ''}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+
+      {/* Visual layer: flag + dial code + chevron */}
+      <span className='pointer-events-none flex items-center gap-1.5 text-sm select-none'>
+        {value && <FlagIcon country={value} label={value} />}
+        <span className='text-muted-foreground'>{callingCode}</span>
+        <svg
+          className='h-3 w-3 text-gray-400'
+          fill='none'
+          viewBox='0 0 24 24'
+          stroke='currentColor'
+          strokeWidth={2}
+        >
+          <path strokeLinecap='round' strokeLinejoin='round' d='M19 9l-7 7-7-7' />
+        </svg>
+      </span>
+    </div>
+  )
+}
+
+interface PhoneInputFieldProps {
   value?: string
-  onChange: (e164: string) => void
+  onChange: (value: string) => void
   onBlur?: () => void
   hasError?: boolean
   disabled?: boolean
   name?: string
-}
-
-/**
- * Splits an E.164 string back into { dialCode, local }.
- * e.g. "+2349131404048" → { dialCode: "234", local: "9131404048" }
- */
-function parseE164(value: string): { dialCode: string; local: string } {
-  if (!value) return { dialCode: '234', local: '' }
-  const stripped = value.startsWith('+') ? value.slice(1) : value
-  const match = COUNTRIES.find((c) => stripped.startsWith(c.dial))
-  if (match) {
-    return { dialCode: match.dial, local: stripped.slice(match.dial.length) }
-  }
-  return { dialCode: '234', local: stripped }
 }
 
 export function PhoneInputField({
@@ -55,66 +88,27 @@ export function PhoneInputField({
   hasError,
   disabled,
   name,
-}: PhoneInputProps) {
-  // Fully controlled — derive display values directly from value prop.
-  // This ensures back navigation and form resets always reflect current state.
-  const { dialCode, local } = parseE164(value)
-  const selected = COUNTRIES.find((c) => c.dial === dialCode) ?? COUNTRIES[0]
-
-  const handleDialChange = (code: string) => {
-    const country = COUNTRIES.find((c) => c.code === code)
-    if (!country) return
-    const digits = local.replace(/\D/g, '')
-    onChange(digits ? `+${country.dial}${digits}` : '')
-  }
-
-  const handleLocalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const digits = e.target.value.replace(/\D/g, '')
-    onChange(digits ? `+${dialCode}${digits}` : '')
-  }
-
+}: PhoneInputFieldProps) {
   return (
-    <div className={cn('flex rounded-md border bg-white transition-colors overflow-hidden',
-      hasError ? 'border-destructive' : 'border-input',
-      'focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary'
-    )}>
-      {/* Country code selector */}
-      <Select
-        value={selected.code}
-        onValueChange={handleDialChange}
-        disabled={disabled}
-      >
-        <SelectTrigger className='w-fit shrink-0 border-0 border-r rounded-none shadow-none focus:ring-0 bg-gray-50 px-3 gap-1'>
-          <SelectValue>
-            <span className='flex items-center gap-1.5 text-sm'>
-              <span>{selected.flag}</span>
-              <span className='text-muted-foreground'>+{selected.dial}</span>
-            </span>
-          </SelectValue>
-        </SelectTrigger>
-        <SelectContent>
-          {COUNTRIES.map((c) => (
-            <SelectItem key={c.code} value={c.code}>
-              <span className='flex items-center gap-2'>
-                <span>{c.flag}</span>
-                <span>{c.name}</span>
-                <span className='text-muted-foreground'>+{c.dial}</span>
-              </span>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-
-      {/* Local number input */}
-      <Input
-        type='tel'
-        name={name}
-        value={local}
-        onChange={handleLocalChange}
+    <div
+      className={cn(
+        'flex h-10 rounded-md border bg-white transition-colors overflow-hidden',
+        hasError ? 'border-destructive' : 'border-input',
+        'focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary',
+        '[&_.PhoneInput]:flex [&_.PhoneInput]:w-full [&_.PhoneInput]:items-center [&_.PhoneInput]:h-full',
+        disabled && 'opacity-50 cursor-not-allowed'
+      )}
+    >
+      <PhoneInput
+        defaultCountry='NG'
+        value={value || undefined}
+        onChange={(val) => onChange(val ?? '')}
         onBlur={onBlur}
         disabled={disabled}
-        placeholder='8012345678'
-        className='border-0 rounded-none shadow-none focus-visible:ring-0 flex-1 min-w-0 placeholder:text-gray-400'
+        name={name}
+        inputComponent={CustomInput}
+        countrySelectComponent={CountrySelectWithDialCode}
+        addInternationalOption={false}
       />
     </div>
   )
