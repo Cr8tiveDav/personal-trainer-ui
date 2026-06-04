@@ -27,7 +27,7 @@ import {
   type TrainerSpecialization,
 } from "@/api/types/trainers";
 import { PhoneInputField } from "@/components/ui/phone-input";
-import { isValidPhoneNumber } from 'react-phone-number-input';
+import { isPossiblePhoneNumber } from 'react-phone-number-input';
 
 const GENDERS = ['Male', 'Female', 'Other'] as const;
 
@@ -49,7 +49,7 @@ const step1Schema = z.object({
     .string()
     .min(1, 'Phone number is required')
     .refine(
-      (val) => isValidPhoneNumber(val),
+      (val) => isPossiblePhoneNumber(val),
       'Enter a valid phone number for the selected country'
     ),
   gender: z.enum(GENDERS, { message: "Gender is required" }),
