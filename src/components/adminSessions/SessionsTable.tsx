@@ -12,7 +12,7 @@ import {
 
 interface TableProps {
   sessions: Session[]
-  variant?: 'all' | 'confirmation' | 'missed' | 'manual'
+  variant?: 'all' | 'confirmation' | 'missed'
   isError?: boolean
   isLoading?: boolean
   isFiltered?: boolean
@@ -41,12 +41,6 @@ const imageEmptyStates: Partial<
     }
   >
 > = {
-  manual: {
-    imageSrc: EMPTY_STATE_IMAGE_PATHS.manualEntry,
-    imageAlt: 'No manual sessions',
-    title: 'No manual sessions yet.',
-    description: 'Manually logged sessions will appear here after you add them.',
-  },
   confirmation: {
     imageSrc: EMPTY_STATE_IMAGE_PATHS.confirmationQueue,
     imageAlt: 'No sessions needing confirmation',
@@ -78,16 +72,12 @@ function SessionsTableBody({
 }: SessionsTableBodyProps) {
   const emptyMessage = isFiltered
     ? 'No matching sessions found.'
-    : isError && variant !== 'manual'
+    : isError
       ? 'Sessions could not be loaded.'
-      : variant === 'manual'
-        ? 'No manual sessions yet.'
-        : 'No sessions available yet.'
+      : 'No sessions available yet.'
   const emptyDescription = isFiltered
     ? 'Try adjusting your search or trainer filter to find a session.'
-    : variant === 'manual'
-      ? 'Manually logged sessions will appear here after you add them.'
-      : 'Sessions booked by clients will appear here once they are available.'
+    : 'Sessions booked by clients will appear here once they are available.'
   const imageEmptyState = !isFiltered ? imageEmptyStates[variant] : undefined
   const startResult = totalSessions === 0 ? 0 : (currentPage - 1) * pageSize + 1
   const endResult = Math.min(currentPage * pageSize, totalSessions)

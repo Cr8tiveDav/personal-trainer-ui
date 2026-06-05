@@ -1,32 +1,40 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { X, Plus } from 'lucide-react'
+import { useState } from 'react';
+import { X, Plus } from 'lucide-react';
 
-const DEFAULT_CATEGORIES = ['Strength', 'Yoga', 'HIIT', 'Pilates', 'Endurance', 'Weight loss', 'Mobility']
+const DEFAULT_CATEGORIES = [
+  'Strength',
+  'Yoga',
+  'HIIT',
+  'Pilates',
+  'Endurance',
+  'Weight loss',
+  'Mobility',
+];
 
 export function SettingsForm() {
-  const [sessionDuration, setSessionDuration] = useState('60')
-  const [maxTrainers, setMaxTrainers] = useState('6')
-  const [requireVideo, setRequireVideo] = useState(true)
-  const [autoAssign, setAutoAssign] = useState(false)
-  const [categories, setCategories] = useState(DEFAULT_CATEGORIES)
-  const [newCategory, setNewCategory] = useState('')
+  const [sessionDuration, setSessionDuration] = useState('60');
+  const [maxTrainers, setMaxTrainers] = useState('6');
+  const [requireVideo, setRequireVideo] = useState(true);
+  const [autoAssign, setAutoAssign] = useState(false);
+  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  const [newCategory, setNewCategory] = useState('');
 
   function removeCategory(cat: string) {
-    setCategories((prev) => prev.filter((c) => c !== cat))
+    setCategories((prev) => prev.filter((c) => c !== cat));
   }
 
   function addCategory() {
-    const trimmed = newCategory.trim()
+    const trimmed = newCategory.trim();
     if (trimmed && !categories.includes(trimmed)) {
-      setCategories((prev) => [...prev, trimmed])
-      setNewCategory('')
+      setCategories((prev) => [...prev, trimmed]);
+      setNewCategory('');
     }
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
-    if (e.key === 'Enter') addCategory()
+    if (e.key === 'Enter') addCategory();
   }
 
   return (
@@ -34,22 +42,30 @@ export function SettingsForm() {
       <div className='flex items-start justify-between gap-4'>
         <div>
           <h1 className='text-2xl font-bold text-gray-900'>Settings</h1>
-          <p className='mt-1 text-sm text-gray-500'>Configure how FitCall handles bookings, trainers, and content.</p>
+          <p className='mt-1 text-sm text-gray-500'>
+            Configure how FitCall handles bookings, trainers, and content.
+          </p>
         </div>
-        <button className='shrink-0 rounded-[8px] bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90'>
+        <button className='shrink-0 rounded-[8px] bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90 cursor-pointer'>
           Save Changes
         </button>
       </div>
 
       <div className='rounded-[16px] border border-gray-100 bg-white p-6 shadow-sm'>
         <h2 className='text-base font-bold text-gray-900'>General</h2>
-        <p className='mt-0.5 text-sm text-gray-400'>Defaults applied to every booking and listing.</p>
+        <p className='mt-0.5 text-sm text-gray-400'>
+          Defaults applied to every booking and listing.
+        </p>
 
         <div className='mt-5 space-y-5'>
           <div className='flex items-center justify-between gap-6'>
             <div>
-              <p className='text-sm font-medium text-gray-900'>Default Session Duration</p>
-              <p className='mt-0.5 text-xs text-gray-400'>Used when a client doesn&apos;t specify a length.</p>
+              <p className='text-sm font-medium text-gray-900'>
+                Default Session Duration
+              </p>
+              <p className='mt-0.5 text-xs text-gray-400'>
+                Used when a client doesn&apos;t specify a length.
+              </p>
             </div>
             <div className='relative'>
               <select
@@ -63,7 +79,9 @@ export function SettingsForm() {
                 <option value='90'>90 minutes</option>
                 <option value='120'>120 minutes</option>
               </select>
-              <span className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>▾</span>
+              <span className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+                ▾
+              </span>
             </div>
           </div>
 
@@ -71,8 +89,12 @@ export function SettingsForm() {
 
           <div className='flex items-center justify-between gap-6'>
             <div>
-              <p className='text-sm font-medium text-gray-900'>Max Trainers Displayed</p>
-              <p className='mt-0.5 text-xs text-gray-400'>Maximum trainers shown on the client discovery page.</p>
+              <p className='text-sm font-medium text-gray-900'>
+                Max Trainers Displayed
+              </p>
+              <p className='mt-0.5 text-xs text-gray-400'>
+                Maximum trainers shown on the client discovery page.
+              </p>
             </div>
             <div className='relative'>
               <select
@@ -81,10 +103,14 @@ export function SettingsForm() {
                 className='w-44 appearance-none rounded-[8px] border border-gray-200 px-4 py-2 pr-8 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary/20'
               >
                 {['3', '4', '5', '6', '8', '10', '12'].map((n) => (
-                  <option key={n} value={n}>{n}</option>
+                  <option key={n} value={n}>
+                    {n}
+                  </option>
                 ))}
               </select>
-              <span className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>▾</span>
+              <span className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+                ▾
+              </span>
             </div>
           </div>
         </div>
@@ -92,13 +118,19 @@ export function SettingsForm() {
 
       <div className='rounded-[16px] border border-gray-100 bg-white p-6 shadow-sm'>
         <h2 className='text-base font-bold text-gray-900'>Trainer Rules</h2>
-        <p className='mt-0.5 text-sm text-gray-400'>Control which trainers are eligible to be listed and assigned.</p>
+        <p className='mt-0.5 text-sm text-gray-400'>
+          Control which trainers are eligible to be listed and assigned.
+        </p>
 
         <div className='mt-5 space-y-5'>
           <div className='flex items-center justify-between gap-6'>
             <div>
-              <p className='text-sm font-medium text-gray-900'>Require video before listing</p>
-              <p className='mt-0.5 text-xs text-gray-400'>Hide any trainer that does not have an active intro video.</p>
+              <p className='text-sm font-medium text-gray-900'>
+                Require video before listing
+              </p>
+              <p className='mt-0.5 text-xs text-gray-400'>
+                Hide any trainer that does not have an active intro video.
+              </p>
             </div>
             <button
               onClick={() => setRequireVideo((prev) => !prev)}
@@ -118,8 +150,12 @@ export function SettingsForm() {
 
           <div className='flex items-center justify-between gap-6'>
             <div>
-              <p className='text-sm font-medium text-gray-900'>Auto-assign trainer</p>
-              <p className='mt-0.5 text-xs text-gray-400'>Automatically match new requests to the best available trainer.</p>
+              <p className='text-sm font-medium text-gray-900'>
+                Auto-assign trainer
+              </p>
+              <p className='mt-0.5 text-xs text-gray-400'>
+                Automatically match new requests to the best available trainer.
+              </p>
             </div>
             <button
               onClick={() => setAutoAssign((prev) => !prev)}
@@ -139,7 +175,9 @@ export function SettingsForm() {
 
       <div className='rounded-[16px] border border-gray-100 bg-white p-6 shadow-sm'>
         <h2 className='text-base font-bold text-gray-900'>Categories</h2>
-        <p className='mt-0.5 text-sm text-gray-400'>Specialties available for trainers and client requests.</p>
+        <p className='mt-0.5 text-sm text-gray-400'>
+          Specialties available for trainers and client requests.
+        </p>
 
         <div className='mt-5 flex flex-wrap gap-2'>
           {categories.map((cat) => (
@@ -148,7 +186,10 @@ export function SettingsForm() {
               className='flex items-center gap-1.5 rounded-[9999px] border border-gray-200 bg-white px-3 py-1 text-sm text-gray-700'
             >
               {cat}
-              <button onClick={() => removeCategory(cat)} className='text-gray-400 hover:text-gray-600'>
+              <button
+                onClick={() => removeCategory(cat)}
+                className='text-gray-400 hover:text-gray-600'
+              >
                 <X className='h-3.5 w-3.5' />
               </button>
             </span>
@@ -175,5 +216,5 @@ export function SettingsForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }
