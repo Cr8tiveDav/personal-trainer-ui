@@ -14,6 +14,7 @@ import type {
   DiscoverySlotPayload,
   DiscoverySlotResponse,
   DiscoverySlotsListResponse,
+  DiscoveryBooking,
 } from './types/discovery-slots'
 
 export const discoverySlotsQueryKeys = {
@@ -150,4 +151,82 @@ export function useDeleteDiscoverySlot() {
   })
 }
 
-export type { DiscoverySlot, DiscoverySlotPayload }
+function extractBookings(response: unknown): DiscoveryBooking[] {
+  if (!response || typeof response !== 'object') return []
+
+  if (Array.isArray(response)) {
+    return response as DiscoveryBooking[]
+  }
+
+  const obj = response as Record<string, unknown>
+
+  // Check data envelope
+  if ('data' in obj && obj.data) {
+    const data = obj.data
+    if (Array.isArray(data)) {
+      return data as DiscoveryBooking[]
+    }
+    if (data && typeof data === 'object') {
+      const dataObj = data as Record<string, unknown>
+      if ('bookings' in dataObj && Array.isArray(dataObj.bookings)) {
+        return dataObj.bookings as DiscoveryBooking[]
+      }
+      if ('items' in dataObj && Array.isArray(dataObj.items)) {
+        return dataObj.items as DiscoveryBooking[]
+      }
+      for (const key of Object.keys(dataObj)) {
+        const val = dataObj[key]
+        if (Array.isArray(val)) {
+          return val as DiscoveryBooking[]
+        }
+      }
+    }
+  }
+
+  // Check root keys directly
+  if ('bookings' in obj && Array.isArray(obj.bookings)) {
+    return obj.bookings as DiscoveryBooking[]
+  }
+  if ('items' in obj && Array.isArray(obj.items)) {
+    return obj.items as DiscoveryBooking[]
+  }
+
+  for (const key of Object.keys(obj)) {
+    const val = obj[key]
+    if (Array.isArray(val)) {
+      return val as DiscoveryBooking[]
+    }
+  }
+
+  return []
+}
+
+export function useDiscoveryBookings(page = 1, perPage = 10) {
+  return useQuery({
+    queryKey: ['discovery-bookings', page, perPage],
+    queryFn: async () => {
+      const response = await getRequest<unknown>({
+        url: `/admin/discovery-bookings?page=${page}&per_page=${perPage}`,
+      })
+      const bookings = extractBookings(response)
+
+      let meta = undefined
+      if (response && typeof response === 'object') {
+        const obj = response as Record<string, unknown>
+        if ('meta' in obj && obj.meta && typeof obj.meta === 'object') {
+          meta = obj.meta as {
+            page: number
+            per_page: number
+            total_pages: number
+            total_count: number
+          }
+        }
+      }
+
+      return { bookings, meta }
+    },
+    staleTime: 30_000,
+  })
+}
+
+export type { DiscoverySlot, DiscoverySlotPayload, DiscoveryBooking }

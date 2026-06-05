@@ -30,7 +30,7 @@ function SessionStatCard({ label, value, subtext, valueColor = 'default', isLoad
 
 export function SessionsStatsSection({ totalSessions }: { totalSessions: number }) {
   return (
-    <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5'>
+    <div className='grid grid-cols-2 gap-3'>
       <SessionStatCard
         label='Total Sessions'
         value={totalSessions}
@@ -41,22 +41,6 @@ export function SessionsStatsSection({ totalSessions }: { totalSessions: number 
         value={0}
         subtext='0 awaiting resolution'
         valueColor='amber'
-      />
-      <SessionStatCard
-        label='Open Disputes'
-        value={0}
-        subtext='0 awaiting resolution'
-        valueColor='red'
-      />
-      <SessionStatCard
-        label='Trial to Paid Rate'
-        value='0%'
-        subtext={<><span className='text-[#0f973d]'>0pt</span> this month</>}
-      />
-      <SessionStatCard
-        label='No-Show Rate'
-        value='0%'
-        subtext={<><span className='text-[#0f973d]'>0pt</span> vs last month</>}
       />
     </div>
   )

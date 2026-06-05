@@ -23,7 +23,6 @@ const TABS = [
   { key: 'all', label: 'All Sessions' },
   { key: 'confirmation', label: 'Confirmation Queue' },
   { key: 'missed', label: 'Missed Sessions' },
-  { key: 'manual', label: 'Manual Entry' },
 ] as const
 
 type TabKey = (typeof TABS)[number]['key']
@@ -37,8 +36,6 @@ const filterSessionsByTab = (sessions: Session[], tab: TabKey) => {
     case 'confirmation':
     case 'missed':
       return []
-    case 'manual':
-      return sessions.filter((session) => session.id.startsWith('S-MAN-'))
     case 'all':
     default:
       return sessions
@@ -154,7 +151,6 @@ export default function SessionsList({
     all: sessions.length,
     confirmation: 0,
     missed: 0,
-    manual: filterSessionsByTab(sessions, 'manual').length,
   }
 
   const handleOpenDetails = (session: Session) => {
