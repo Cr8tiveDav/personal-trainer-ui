@@ -16,7 +16,7 @@ export function getTrainerSessionStats(sessions: Session[]): TrainerSessionStats
         acc.upcoming++
       } else if (state === 'completed' || state === 'settled') {
         acc.completed++
-      } else if (state === 'missed' || state === 'disputed') {
+      } else if (state === 'cancelled' || state === 'missed' || state === 'disputed') {
         acc.cancelled++
       }
 

@@ -26,8 +26,8 @@ const experience = [
 
 const Experience = () => {
   return (
-    <section className='w-full bg-white md:py-24'>
-      <div className='container mx-auto max-w-4xl py-8 flex flex-col items-center justify-center'>
+    <section className='w-full bg-white py-16 md:py-24'>
+      <div className='container mx-auto max-w-4xl px-4 py-8 flex flex-col items-center justify-center'>
         <SectionHeader
           badge='Experience'
           title='Simple enough to use every day.'
@@ -62,7 +62,7 @@ const Experience = () => {
           ))}
         </div>
 
-        <div className='container mx-auto max-w-5xl px-0! grid grid-cols-1 md:grid-cols-2 md:py-8 gap-6 lg:gap-8 items-stretch'>
+        <div className='container mx-auto max-w-5xl px-4 md:px-0! grid grid-cols-1 md:grid-cols-2 md:py-8 gap-6 lg:gap-8 items-stretch'>
           <div className='w-full rounded-[8px] overflow-hidden h-81 md:h-140.5'>
             <Image
               src='/images/features/woman-planking.png'

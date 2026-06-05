@@ -8,6 +8,7 @@ import {
   X,
   Video,
   PhoneCall,
+  ClipboardList,
 } from 'lucide-react'
 import { SidebarItem } from './sidebarItem'
 import { cn } from '~/utils'
@@ -38,6 +39,7 @@ const NAV_SECTIONS = [
         href: '/admin/discovery-slots',
         icon: PhoneCall,
       },
+      { label: 'Waitlist', href: '/admin/waitlist', icon: ClipboardList },
     ],
   },
   {

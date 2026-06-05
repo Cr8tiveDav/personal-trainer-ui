@@ -1,14 +1,16 @@
 'use client'
 
 import { useState } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { Search, ChevronDown } from 'lucide-react'
 import { motion } from 'motion/react'
-import { useAdminSessions, useRescheduleSession } from '@/api/sessions'
+import { useAdminSessions, useCancelSession, useRescheduleSession } from '@/api/sessions'
 import { ReusableTabs } from '@/components/ui/ReusableTabs'
 import { SessionsTable } from './SessionsTable'
 import { SessionsStatsSection } from './SessionsStatCard'
 import { SessionDetailsDrawer } from './modals/SessionDetails'
 import { RescheduleSessionModal } from './modals/Reschecdule'
+import { CancelSessionModal } from './modals/CancelSession'
 import { Session } from './session'
 
 interface SessionsListProps {
@@ -21,20 +23,19 @@ const TABS = [
   { key: 'all', label: 'All Sessions' },
   { key: 'confirmation', label: 'Confirmation Queue' },
   { key: 'missed', label: 'Missed Sessions' },
-  { key: 'manual', label: 'Manual Entry' },
 ] as const
 
 type TabKey = (typeof TABS)[number]['key']
 const ROWS_PER_PAGE = 11
 const DISPLAY_SESSION_STATE = 'Scheduled'
+const DISPLAY_CANCELLED_STATE = 'Cancelled'
+type StateFilter = 'all' | 'scheduled' | 'cancelled'
 
 const filterSessionsByTab = (sessions: Session[], tab: TabKey) => {
   switch (tab) {
     case 'confirmation':
     case 'missed':
       return []
-    case 'manual':
-      return sessions.filter((session) => session.id.startsWith('S-MAN-'))
     case 'all':
     default:
       return sessions
@@ -103,19 +104,41 @@ export default function SessionsList({
   sessionUpdates = {},
   onUpdateSession
 }: SessionsListProps) {
-  const [search, setSearch] = useState('')
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const search = searchParams.get('sessionSearch') ?? ''
   const [selectedTrainer, setSelectedTrainer] = useState('all')
-  const [selectedState, setSelectedState] = useState<'all' | 'scheduled'>('all')
+  const [selectedState, setSelectedState] = useState<StateFilter>('all')
   const [isTrainerMenuOpen, setIsTrainerMenuOpen] = useState(false)
   const [isStateMenuOpen, setIsStateMenuOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<TabKey>('all')
-  const [currentPage, setCurrentPage] = useState(1)
+  const [pagination, setPagination] = useState({ page: 1, search })
   const [selectedSession, setSelectedSession] = useState<Session | null>(null)
   const [isDetailsOpen, setIsDetailsOpen] = useState(false)
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false)
+  const [isCancelOpen, setIsCancelOpen] = useState(false)
 
   const { data, isError, isLoading } = useAdminSessions()
   const rescheduleSession = useRescheduleSession()
+  const cancelSession = useCancelSession()
+  const currentPage = pagination.search === search ? pagination.page : 1
+  const setCurrentPage = (page: number) => {
+    setPagination({ page, search })
+  }
+
+  const handleSearchChange = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (value) {
+      params.set('sessionSearch', value)
+    } else {
+      params.delete('sessionSearch')
+    }
+
+    const query = params.toString()
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+  }
 
   const baseSessions: Session[] = data ?? []
   const sessions: Session[] = sortSessionsNewestFirst(
@@ -128,23 +151,21 @@ export default function SessionsList({
     all: sessions.length,
     confirmation: 0,
     missed: 0,
-    manual: filterSessionsByTab(sessions, 'manual').length,
   }
 
-  const handleOpenDetails = (id: string) => {
-    const target = sessions.find((s) => s.id === id)
-    if (target) {
-      setSelectedSession(target)
-      setIsDetailsOpen(true)
-    }
+  const handleOpenDetails = (session: Session) => {
+    setSelectedSession(session)
+    setIsDetailsOpen(true)
   }
 
-  const handleOpenReschedule = (id: string) => {
-    const target = sessions.find((s) => s.id === id)
-    if (target) {
-      setSelectedSession(target)
-      setIsRescheduleOpen(true)
-    }
+  const handleOpenReschedule = (session: Session) => {
+    setSelectedSession(session)
+    setIsRescheduleOpen(true)
+  }
+
+  const handleOpenCancel = (session: Session) => {
+    setSelectedSession(session)
+    setIsCancelOpen(true)
   }
 
   const handleConfirmReschedule = async (id: string, newDate: string, newTime: string) => {
@@ -174,6 +195,22 @@ export default function SessionsList({
     })
   }
 
+  const handleConfirmCancel = async (id: string, reason: string) => {
+    if (id.startsWith('S-MAN-')) {
+      onUpdateSession(id, { state: 'Cancelled' })
+      return
+    }
+
+    await cancelSession.mutateAsync({
+      sessionId: id,
+      reason,
+      targetSortTimestamp: selectedSession?.sortTimestamp,
+      targetScheduled: selectedSession?.scheduled,
+      targetClientName: selectedSession?.client.name,
+      targetTrainerName: selectedSession?.trainer.name,
+    })
+  }
+
   const tabSessions = filterSessionsByTab(sessions, activeTab)
   const trainerNames = Array.from(
     new Set(
@@ -187,7 +224,7 @@ export default function SessionsList({
   const filteredSessions = tabSessions.filter(
     (session) =>
       (selectedTrainer === 'all' || session.trainer.name === selectedTrainer) &&
-      (selectedState === 'all' || DISPLAY_SESSION_STATE.toLowerCase() === selectedState) &&
+      (selectedState === 'all' || session.state.toLowerCase() === selectedState) &&
       (
         !normalizedSearch ||
         normalizeSearchValue(session.id).includes(normalizedSearch) ||
@@ -241,10 +278,7 @@ export default function SessionsList({
             <input
               type='text'
               value={search}
-              onChange={(e) => {
-                setSearch(e.target.value)
-                setCurrentPage(1)
-              }}
+              onChange={(e) => handleSearchChange(e.target.value)}
               placeholder='Search by client, trainer, or session ID'
               className='w-full h-10 pl-9 pr-4 rounded-[8px] border border-gray-200 text-xs bg-white placeholder-gray-400 focus:outline-none focus:border-[#0b4d8d]'
             />
@@ -257,7 +291,11 @@ export default function SessionsList({
                 onClick={() => setIsStateMenuOpen((isOpen) => !isOpen)}
                 className='flex h-10 min-w-[116px] items-center justify-between gap-1.5 rounded-[8px] border border-gray-200 bg-white px-3 font-medium text-gray-700 transition-colors hover:bg-gray-50'
               >
-                {selectedState === 'all' ? 'All States' : DISPLAY_SESSION_STATE}
+                {selectedState === 'all'
+                  ? 'All States'
+                  : selectedState === 'cancelled'
+                    ? DISPLAY_CANCELLED_STATE
+                    : DISPLAY_SESSION_STATE}
                 <ChevronDown className='h-3.5 w-3.5 text-gray-400' />
               </button>
 
@@ -266,12 +304,13 @@ export default function SessionsList({
                   {[
                     { value: 'all', label: 'All States' },
                     { value: 'scheduled', label: DISPLAY_SESSION_STATE },
+                    { value: 'cancelled', label: DISPLAY_CANCELLED_STATE },
                   ].map((option) => (
                     <button
                       key={option.value}
                       type='button'
                       onClick={() => {
-                        setSelectedState(option.value as 'all' | 'scheduled')
+                        setSelectedState(option.value as StateFilter)
                         setIsStateMenuOpen(false)
                         setCurrentPage(1)
                       }}
@@ -362,6 +401,7 @@ export default function SessionsList({
             onPageChange={setCurrentPage}
             onSelectDetails={handleOpenDetails}
             onSelectReschedule={handleOpenReschedule}
+            onSelectCancel={handleOpenCancel}
           />
         </motion.div>
       </div>
@@ -372,7 +412,11 @@ export default function SessionsList({
         session={selectedSession}
         onReschedule={(id) => {
           setIsDetailsOpen(false)
-          handleOpenReschedule(id)
+          if (selectedSession?.id === id) handleOpenReschedule(selectedSession)
+        }}
+        onCancel={(id) => {
+          setIsDetailsOpen(false)
+          if (selectedSession?.id === id) handleOpenCancel(selectedSession)
         }}
       />
 
@@ -383,6 +427,14 @@ export default function SessionsList({
         currentScheduledTime={selectedSession?.scheduled}
         isSubmitting={rescheduleSession.isPending}
         onConfirmReschedule={handleConfirmReschedule}
+      />
+
+      <CancelSessionModal
+        isOpen={isCancelOpen}
+        onClose={() => setIsCancelOpen(false)}
+        sessionId={selectedSession?.id ?? null}
+        isSubmitting={cancelSession.isPending}
+        onConfirmCancel={handleConfirmCancel}
       />
 
     </motion.div>

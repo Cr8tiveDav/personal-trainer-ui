@@ -39,7 +39,7 @@ const PricingCard = ({ plan }: PricingCardProps) => {
 
   return (
     <div
-      className={`relative flex h-fit flex-col rounded-[16px] border bg-white p-8 transition-all ${
+      className={`relative flex h-full flex-col rounded-[16px] border bg-white p-8 transition-all ${
         isHighlighted ? 'border-[#2272AD] shadow-lg' : 'border-[#D1D1D1]'
       }`}
     >

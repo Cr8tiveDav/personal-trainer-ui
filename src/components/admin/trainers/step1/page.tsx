@@ -27,6 +27,11 @@ import {
   type TrainerSpecialization,
 } from "@/api/types/trainers";
 import { PhoneInputField } from "@/components/ui/phone-input";
+import {
+  PHONE_NUMBER_ERROR,
+  isStrongPhoneNumber,
+  normalizePhoneNumber,
+} from '@/lib/phone-number';
 
 const GENDERS = ['Male', 'Female', 'Other'] as const;
 
@@ -46,9 +51,11 @@ const step1Schema = z.object({
   email: z.string().trim().email("Valid email is required"),
   phone_number: z
     .string()
-    .trim()
     .min(1, 'Phone number is required')
-    .regex(/^\+[1-9]\d{6,14}$/, 'Enter a valid phone number'),
+    .refine(
+      (val) => isStrongPhoneNumber(val),
+      PHONE_NUMBER_ERROR
+    ),
   gender: z.enum(GENDERS, { message: "Gender is required" }),
   specialization: z.enum(TRAINER_SPECIALIZATIONS, {
     message: 'Specialty is required',
@@ -67,7 +74,11 @@ export type BasicInfoValues = Omit<Step1FormValues, 'specialization'> & {
 
 function toBasicInfoValues(values: Step1FormValues): BasicInfoValues {
   const { specialization, ...rest } = values;
-  return { ...rest, specializations: [specialization] };
+  return {
+    ...rest,
+    phone_number: normalizePhoneNumber(rest.phone_number) ?? rest.phone_number,
+    specializations: [specialization],
+  };
 }
 
 function toStep1DefaultValues(

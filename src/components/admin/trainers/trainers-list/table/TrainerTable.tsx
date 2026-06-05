@@ -88,9 +88,6 @@ function TrainerTableBody({
               <th className="py-4 px-6 text-xs font-normal text-[#0F172A] uppercase tracking-wider">
                 Earnings
               </th>
-              <th className="py-4 px-6 text-xs font-normal text-[#0F172A] uppercase tracking-wider">
-                Availability
-              </th>
               <th className="py-4 px-6 text-xs font-normal text-[#0F172A] uppercase tracking-wider whitespace-nowrap">
                 Date Added
               </th>
@@ -113,7 +110,7 @@ function TrainerTableBody({
                     transition={{ duration: 0.3 }}
                   >
                     <td
-                      colSpan={8}
+                      colSpan={7}
                       className="py-12 text-center text-sm text-red-500"
                     >
                       Error loading trainers. Please try again.
@@ -127,7 +124,7 @@ function TrainerTableBody({
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <td colSpan={8} className="p-0">
+                    <td colSpan={7} className="p-0">
                       <EmptyState
                         imageSrc={EMPTY_STATE_IMAGE_PATHS.trainer}
                         imageAlt="No trainers"

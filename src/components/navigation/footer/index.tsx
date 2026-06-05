@@ -85,7 +85,7 @@ const Footer = () => {
               <ul className='space-y-3 text-sm text-muted'>
                 <li>
                   <Link
-                    href='#'
+                    href='/terms-of-service'
                     className='transition-colors hover:text-primary'
                   >
                     Terms of Service
@@ -93,7 +93,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href='#'
+                    href='/privacy-policy'
                     className='transition-colors hover:text-primary'
                   >
                     Privacy Policy
@@ -101,7 +101,15 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href='#'
+                    href='/trainer-code-of-conduct'
+                    className='transition-colors hover:text-primary'
+                  >
+                    Trainer Code of Conduct
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href='/help-centre'
                     className='transition-colors hover:text-primary'
                   >
                     Help Centre
@@ -111,8 +119,10 @@ const Footer = () => {
             </div>
           </div>
         </div>
+      </div>
 
-        <div className='flex flex-col items-center justify-between gap-6 border-t border-gray-100 pt-8 md:flex-row'>
+      <div className='w-full border-t border-gray-100'>
+        <div className='flex flex-col items-center justify-between gap-6 px-6 py-8 md:flex-row md:px-10 lg:px-16'>
           <p className='order-2 text-sm text-muted-foreground md:order-1'>
             © {currentYear} Fitcall. All rights reserved.
           </p>

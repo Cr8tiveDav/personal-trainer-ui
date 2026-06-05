@@ -1,4 +1,5 @@
 import type { TrainerSpecialization } from '@/api/types/trainers'
+import { PHONE_NUMBER_ERROR, normalizePhoneNumber } from '@/lib/phone-number'
 
 /** Fields for POST /api/v1/trainers (multipart/form-data) */
 export type CreateTrainerFormInput = {
@@ -22,8 +23,10 @@ export function buildCreateTrainerFormData(input: CreateTrainerFormInput): FormD
 
   body.append('email', input.email.trim())
   body.append('name', input.name.trim())
-  const rawPhone = input.phone_number.trim()
-  const formattedPhone = rawPhone.startsWith('+') ? rawPhone : `+${rawPhone}`
+  const formattedPhone = normalizePhoneNumber(input.phone_number)
+  if (!formattedPhone) {
+    throw new Error(PHONE_NUMBER_ERROR)
+  }
   body.append('phone_number', formattedPhone)
   body.append('gender', input.gender.trim())
 

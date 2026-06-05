@@ -31,3 +31,12 @@ export interface BackendSession {
 
 export type SessionsListResponse = ApiEnvelope<BackendSession[]>;
 export type SessionStatsResponse = ApiEnvelope<SessionStats>;
+
+export interface CancelSessionData {
+  id: string
+  booking_status: string
+  cancellation_reason?: string
+  cancelled_at?: string
+}
+
+export type CancelSessionResponse = ApiEnvelope<CancelSessionData>;

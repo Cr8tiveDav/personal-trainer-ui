@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Menu, LogOut } from 'lucide-react'
+import { Menu, LogOut, Search } from 'lucide-react'
 import Image from 'next/image'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useLogout } from '@/api/auth'
 import { NotificationBell } from '@/components/notifications/NotificationBell'
 
@@ -21,6 +22,11 @@ export function AdminHeader({
 }: AdminHeaderProps) {
   const [notifOpen, setNotifOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const isSessionsPage = pathname === '/admin/sessions'
+  const sessionSearch = searchParams.get('sessionSearch') ?? ''
 
   const notifRef = useRef<HTMLDivElement>(null)
   const profileRef = useRef<HTMLDivElement>(null)
@@ -39,6 +45,19 @@ export function AdminHeader({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const handleSessionSearch = (value: string) => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (value) {
+      params.set('sessionSearch', value)
+    } else {
+      params.delete('sessionSearch')
+    }
+
+    const query = params.toString()
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+  }
+
   return (
     <header className='flex h-[75px] shrink-0 items-center gap-4 border border-gray-100 bg-white px-4 md:px-6'>
       <div className='flex flex-1 items-center gap-2'>
@@ -48,6 +67,19 @@ export function AdminHeader({
         >
           <Menu className='h-5 w-5 text-gray-500' />
         </button>
+        {isSessionsPage && (
+          <div className='relative ml-0 w-full max-w-3xl md:ml-2'>
+            <Search className='absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-300' />
+            <input
+              type='search'
+              value={sessionSearch}
+              onChange={(e) => handleSessionSearch(e.target.value)}
+              aria-label='Search sessions'
+              placeholder='Search'
+              className='h-11 w-full rounded-[8px] border border-gray-200 bg-white pl-10 pr-4 text-sm font-medium text-gray-700 placeholder:text-gray-300 focus:border-[#0b4d8d] focus:outline-none focus:ring-1 focus:ring-[#0b4d8d]'
+            />
+          </div>
+        )}
       </div>
 
       <div className='ml-auto flex items-center gap-3'>

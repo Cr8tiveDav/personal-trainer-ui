@@ -3,8 +3,6 @@
 import React from 'react';
 import FilterTabs from './FilterTabs';
 import { Search } from 'lucide-react';
-import FilterDropdown from './FilterDropdown';
-import SortDropdown from './SortDropdown';
 import { TabType } from '../../types';
 
 interface FilterControlsProps {
@@ -40,10 +38,6 @@ const FilterControls = ({
             placeholder='Search by name or email'
             className='flex-1 w-full text-sm text-gray-700 outline-none placeholder:text-[#D1D1D1] bg-transparent'
           />
-        </div>
-        <div className='flex items-center gap-4'>
-          <FilterDropdown />
-          <SortDropdown />
         </div>
       </div>
     </section>
