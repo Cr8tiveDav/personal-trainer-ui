@@ -33,7 +33,7 @@ export function UpcomingSessions({
   return (
     <div
       className={cn(
-        "flex h-full min-h-0 flex-col pb-20 rounded-[12px] border border-gray-100 bg-white shadow-sm",
+        "flex h-full min-h-0 flex-col pb-20 rounded-[12px] border border-gray-100 bg-white",
         className,
       )}
     >
