@@ -1,11 +1,6 @@
 import Link from 'next/link';
-import {
-  Users,
-  Megaphone,
-  LucideIcon,
-  Dumbbell,
-  LineChart,
-} from 'lucide-react';
+import { Users, LucideIcon, Dumbbell, LineChart } from 'lucide-react';
+import { SessionIcon } from '@/components/icons';
 
 interface QuickAction {
   label: string;
@@ -16,7 +11,7 @@ interface QuickAction {
 const ACTIONS: QuickAction[] = [
   { label: 'Add Trainer', href: '/admin/trainers/new', icon: Dumbbell },
   { label: 'View Clients', href: '/admin/users', icon: Users },
-  { label: 'Broadcast', href: '/admin/media', icon: Megaphone },
+  { label: 'Sessions', href: '/admin/sessions', icon: SessionIcon },
   { label: 'Reports', href: '/admin/payments', icon: LineChart },
 ];
 
