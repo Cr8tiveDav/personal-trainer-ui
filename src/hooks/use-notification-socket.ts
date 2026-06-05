@@ -16,6 +16,7 @@ import { ensureValidAccessToken } from "@/lib/http";
 
 const SOCKET_RECONNECT_INITIAL_MS = 1_500;
 const SOCKET_RECONNECT_MAX_MS = 30_000;
+const SOCKET_MAX_IMMEDIATE_FAILURES = 5;
 
 function isNotificationSocketEnabled() {
   return process.env.NEXT_PUBLIC_ENABLE_NOTIFICATIONS_WS !== "false";
@@ -81,6 +82,7 @@ export function useNotificationSocket(enabled = true) {
     let socket: WebSocket | null = null;
     let reconnectTimer: ReturnType<typeof setTimeout> | null = null;
     let reconnectDelay = SOCKET_RECONNECT_INITIAL_MS;
+    let immediateFailureCount = 0;
     let disposed = false;
 
     const clearReconnectTimer = () => {
@@ -104,9 +106,12 @@ export function useNotificationSocket(enabled = true) {
       const token = await ensureValidAccessToken();
       if (disposed || !token) return;
 
+      let hasOpened = false;
       socket = new WebSocket(buildSocketUrl(wsUrl, token));
 
       socket.onopen = () => {
+        hasOpened = true;
+        immediateFailureCount = 0;
         reconnectDelay = SOCKET_RECONNECT_INITIAL_MS;
       };
 
@@ -131,6 +136,10 @@ export function useNotificationSocket(enabled = true) {
 
       socket.onclose = () => {
         socket = null;
+        if (!hasOpened) {
+          immediateFailureCount += 1;
+        }
+        if (immediateFailureCount >= SOCKET_MAX_IMMEDIATE_FAILURES) return;
         scheduleReconnect();
       };
     };
