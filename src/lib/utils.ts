@@ -39,6 +39,7 @@ export function getErrorMessage(error: unknown, fallback = 'Something went wrong
 }
 
 export function displayError(error: unknown, fallback?: string) {
+  console.error('[API Error]', error);
   toast.error(getErrorMessage(error, fallback));
 }
 

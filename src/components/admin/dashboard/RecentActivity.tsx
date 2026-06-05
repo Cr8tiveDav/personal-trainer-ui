@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useRecentActivity } from '@/api/dashboard';
 import {
   EMPTY_STATE_IMAGE_PATHS,
@@ -17,19 +16,16 @@ export function RecentActivity() {
         <h2 className='text-[24px] font-semibold text-gray-900'>
           Recent activity
         </h2>
-        <Link
-          href='/admin/sessions'
-          className='text-base font-semibold text-primary hover:underline'
-        >
-          View all
-        </Link>
       </div>
 
       <div className='flex-grow overflow-y-auto pr-1 min-h-0 show_scrollbar'>
         {isPending ? (
           <div className='divide-y divide-[#EBEBEB]'>
             {[...Array(4)].map((_, i) => (
-              <div key={i} className='flex items-center gap-4 py-4 animate-pulse'>
+              <div
+                key={i}
+                className='flex items-center gap-4 py-4 animate-pulse'
+              >
                 <div className='h-10 w-10 shrink-0 rounded-[9999px] bg-gray-200' />
                 <div className='flex-1 min-w-0'>
                   <div className='h-4 w-40 bg-gray-200 rounded' />
