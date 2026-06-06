@@ -98,17 +98,14 @@ export function TrainerDashboardClient() {
             <TrainerStatCard
               title="Total Clients (MAY)"
               value={clientCount}
-              subtext="+12% from last week"
             />
             <TrainerStatCard
               title="Upcoming Sessions"
               value={upcomingCount}
-              subtext="+2 from last week"
             />
             <TrainerStatCard
               title="Completed Sessions"
               value={completedCount}
-              subtext="+8 from last week"
             />
             <TrainerStatCard
               title="Total Reviews"
