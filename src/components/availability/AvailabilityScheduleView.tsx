@@ -282,13 +282,16 @@ export function AvailabilityScheduleView({
     if (!editRow) return
     
     if (next === null) {
-      let slotId = editSlot?.id || editSlot?.slot_id || (editSlot as Record<string, unknown>)?.uuid || (editSlot as Record<string, unknown>)?._id;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let slotId = editSlot?.id || editSlot?.slot_id || (editSlot as any)?.uuid || (editSlot as any)?._id;
       
       if (!slotId && editSlot) {
         const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
         for (const key of Object.keys(editSlot)) {
-          if (typeof (editSlot as Record<string, unknown>)[key] === 'string' && uuidRegex.test((editSlot as Record<string, unknown>)[key])) {
-            slotId = (editSlot as Record<string, unknown>)[key];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if (typeof (editSlot as any)[key] === 'string' && uuidRegex.test((editSlot as any)[key])) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            slotId = (editSlot as any)[key];
             break;
           }
         }
