@@ -44,7 +44,6 @@ export function useMyTrainerAvailability(enabled = true) {
       const response = await getRequest<any>({
         url: API_ENDPOINTS.TRAINERS.ME_AVAILABILITY,
       });
-      console.log("GET /trainers/me/availability RESPONSE:", response);
       const slots = normalizeAvailability(response);
       let isAvailable = slots.length > 0;
       if (response?.data && typeof response.data === 'object' && 'is_available' in response.data) {
@@ -122,7 +121,6 @@ export function useTrainerAvailabilityById(trainerId: string, enabled = true) {
       const response = await getRequest<any>({
         url: API_ENDPOINTS.TRAINERS.AVAILABILITY(trainerId),
       });
-      console.log(`GET /trainers/${trainerId}/availability RESPONSE:`, response);
       const slots = normalizeAvailability(response);
       let isAvailable = slots.length > 0;
       if (response?.data && typeof response.data === 'object' && 'is_available' in response.data) {

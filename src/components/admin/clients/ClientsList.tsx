@@ -8,25 +8,14 @@ import { ClientStatCards } from "./ClientStatCards";
 
 const PER_PAGE = 10;
 
-function getInactiveCount(allClientsTotal: number, activeTotal: number) {
-  return Math.max(0, allClientsTotal - activeTotal);
-}
-
-function getTabCount(
-  tab: ClientTab,
-  allClientsTotal: number,
-  activeTotal: number,
-) {
-  if (tab === "All") return allClientsTotal;
-  if (tab === "Active") return activeTotal;
-  if (tab === "Inactive") return getInactiveCount(allClientsTotal, activeTotal);
-  return 0;
-}
-
 function getListFilter(tab: ClientTab): { isActive?: boolean } | undefined {
   if (tab === "Active") return { isActive: true };
   if (tab === "Inactive") return { isActive: false };
   return undefined;
+}
+
+function getInactiveCount(allClientsTotal: number, activeTotal: number) {
+  return Math.max(0, allClientsTotal - activeTotal);
 }
 
 function getListTotalCount(
@@ -93,9 +82,9 @@ export function ClientsList() {
     let list = clients;
 
     if (activeTab === "Inactive") {
-      list = list.map((c) => ({ ...c, status: "Inactive" as const }));
+      list = list.filter((c) => c.status === "Inactive");
     } else if (activeTab === "Active") {
-      list = list.map((c) => ({ ...c, status: "Active" as const }));
+      list = list.filter((c) => c.status === "Active");
     }
 
     if (activeTab === "Paused") {
@@ -143,10 +132,10 @@ export function ClientsList() {
   }
 
   const tabCounts = {
-    all: getTabCount("All", allClientsTotal, activeTotal),
-    active: getTabCount("Active", allClientsTotal, activeTotal),
-    paused: getTabCount("Paused", allClientsTotal, activeTotal),
-    inactive: getTabCount("Inactive", allClientsTotal, activeTotal),
+    all: allClientsTotal,
+    active: activeTotal,
+    paused: 0,
+    inactive: getInactiveCount(allClientsTotal, activeTotal),
   };
 
   return (

@@ -27,7 +27,7 @@ import {
 import { displayError } from '@/lib/utils'
 
 const profileSchema = z.object({
-  bio: z.string().max(500, 'Bio is too long').optional(),
+  bio: z.string().max(400, 'Bio is too long').optional(),
   years_of_experience: z.number().min(0, 'Cannot be negative').optional(),
   specializations: z.array(z.string()).optional(),
   display_picture: z.string().url('Must be a valid URL').optional().or(z.literal('')),
@@ -192,7 +192,7 @@ export function EditProfileForm() {
                     <FormControl>
                       <Textarea
                         placeholder='Tell clients about yourself...'
-                        maxLength={500}
+                        maxLength={400}
                         className='min-h-[100px] placeholder:text-muted resize-none border-gray-200 focus-visible:ring-primary/20 rounded-md'
                         {...field}
                       />
