@@ -46,7 +46,10 @@ export function MediaUploadForm() {
         onProgress: setProgress,
       },
       {
-        onSuccess: () => router.push("/admin/media"),
+        onSuccess: () => {
+          router.push("/admin/media")
+          router.refresh()
+        },
       },
     );
   }

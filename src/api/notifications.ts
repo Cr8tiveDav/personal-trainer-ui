@@ -10,6 +10,7 @@ import type {
 import { getRequest } from "@/lib/http";
 
 export const notificationsQueryKey = ["notifications"] as const;
+const NOTIFICATIONS_REFETCH_INTERVAL_MS = 30_000;
 
 function isNotificationItem(value: unknown): value is NotificationItem {
   return (
@@ -62,6 +63,7 @@ export function useNotifications() {
     queryKey: notificationsQueryKey,
     queryFn: fetchNotifications,
     staleTime: 30_000,
+    refetchInterval: NOTIFICATIONS_REFETCH_INTERVAL_MS,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });

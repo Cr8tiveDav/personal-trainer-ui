@@ -30,14 +30,16 @@ export function VideoDetailView({ id }: { id: string }) {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-        <div className="relative bg-gray-900" style={{ aspectRatio: "16/9" }}>
-          {media.media_type === "video" ? (
+        {media.media_type === "video" ? (
+          <div className="relative bg-gray-900 flex justify-center items-center w-full">
             <video
               src={media.public_url}
               controls
-              className="h-full w-full object-cover"
+              className="w-full max-h-[600px] object-contain"
             />
-          ) : (
+          </div>
+        ) : (
+          <div className="relative bg-gray-900" style={{ aspectRatio: "16/9" }}>
             <Image
               src={media.public_url}
               alt={media.title}
@@ -45,8 +47,8 @@ export function VideoDetailView({ id }: { id: string }) {
               unoptimized
               className="object-cover"
             />
-          )}
-        </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-6 border-t border-gray-100 px-6 py-5">
           <div className="space-y-4">

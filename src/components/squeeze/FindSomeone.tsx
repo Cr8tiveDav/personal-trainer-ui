@@ -1,4 +1,3 @@
-import { Button } from '../ui/button';
 import { WaitlistForm } from './WaitListForm';
 
 const FindSomeoneSection = () => {
