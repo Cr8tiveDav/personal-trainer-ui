@@ -37,7 +37,7 @@ export function RecentReviews({
   return (
     <div
       className={cn(
-        'flex h-full  flex-col rounded-[12px] border border-gray-100 bg-white ',
+        'flex h-full  flex-col rounded-[12px] border border-gray-100 bg-white',
         className,
       )}
     >

@@ -32,28 +32,28 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
   }, [])
 
   return (
-    <header className='flex h-[75px] items-center gap-4 border border-gray-100 bg-white px-4 md:px-6'>
-      <div className='w-full flex items-center gap-2'>
+    <header className='flex h-[75px] items-center gap-2 border border-gray-100 bg-white px-3 sm:gap-4 sm:px-4 md:px-6'>
+      <div className='flex min-w-0 flex-1 items-center gap-2'>
         <button
           onClick={onMenuClick}
           aria-label='Open menu'
-          className='flex md:hidden h-12 w-9 items-center justify-center rounded-[8px] hover:bg-gray-100 transition-colors'
+          className='flex h-12 w-9 shrink-0 items-center justify-center rounded-[8px] transition-colors hover:bg-gray-100 md:hidden'
         >
           <Menu className='h-5 w-5 text-gray-500' />
         </button>
 
-        <div className='flex flex-1 items-center gap-2 rounded-[8px] border border-gray-200 bg-gray-50 px-3 py-2 max-w-4xl'>
+        <div className='flex min-w-0 flex-1 items-center gap-2 rounded-[8px] border border-gray-200 bg-gray-50 px-3 py-2 md:max-w-4xl'>
           <Search className='h-4 w-4 shrink-0 text-gray-400' />
           <input
             type='text'
             placeholder='Search'
             aria-label='Search'
-            className='flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400'
+            className='min-w-0 flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-400'
           />
         </div>
       </div>
 
-      <div className='flex items-center gap-3'>
+      <div className='flex shrink-0 items-center gap-2 sm:gap-3'>
         <div ref={notifRef} className='relative'>
           <NotificationBell
             isOpen={notifOpen}
@@ -66,7 +66,7 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
           <button
             onClick={() => { setProfileOpen(prev => !prev); setNotifOpen(false) }}
             aria-label='Profile menu'
-            className='flex h-9 w-9 items-center justify-center rounded-[9999px] overflow-hidden border-2 border-gray-200 hover:border-primary transition-colors'
+            className='flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[9999px] border-2 border-gray-200 transition-colors hover:border-primary'
           >
             {userAvatar && isValidImageSrc(userAvatar) ? (
               <Image src={userAvatar} alt={userName} width={36} height={36} className='object-cover' />

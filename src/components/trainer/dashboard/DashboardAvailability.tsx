@@ -94,7 +94,7 @@ export function DashboardAvailability({ className }: { className?: string }) {
   if (isError || !isSuccess || !hasSlots) {
     return (
       <div className={cn('flex h-full min-h-0 flex-col', className)}>
-        <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white '>
+        <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white'>
           <EmptyState
             imageSrc={EMPTY_STATE_IMAGE_PATHS.availability}
             imageAlt='No availability'
@@ -117,7 +117,7 @@ export function DashboardAvailability({ className }: { className?: string }) {
 
   return (
     <div className={cn('flex h-full min-h-0 flex-col gap-4', className)}>
-      <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white '>
+      <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white'>
         <div className='border-b border-gray-100 px-5 py-4'>
           <h3 className='text-sm font-semibold text-gray-900'>Set Your Availability</h3>
           <p className='mt-0.5 text-xs text-gray-500'>
@@ -158,7 +158,7 @@ export function DashboardAvailability({ className }: { className?: string }) {
         </div>
       </div>
 
-      <div className='shrink-0 rounded-[12px] border border-gray-100 bg-white '>
+      <div className='shrink-0 rounded-[12px] border border-gray-100 bg-white'>
         <div className='border-b border-gray-100 px-5 py-4'>
           <h3 className='text-sm font-semibold text-gray-900'>Set Your Availability</h3>
           <p className='mt-0.5 text-xs text-gray-500'>

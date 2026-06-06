@@ -31,7 +31,7 @@ export function AllSessionsTable({
   return (
     <div
       className={cn(
-        'flex h-full min-h-0 flex-col rounded-[12px] border border-gray-100 bg-white ',
+        'flex h-full min-h-0 flex-col rounded-[12px] border border-gray-100 bg-white',
         className,
       )}
     >
