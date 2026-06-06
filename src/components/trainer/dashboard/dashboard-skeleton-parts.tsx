@@ -5,7 +5,7 @@ import { cn } from '@/utils'
 
 export function StatCardSkeleton() {
   return (
-    <div className='rounded-[12px] border border-gray-100 bg-white px-5 py-4 shadow-sm'>
+    <div className='rounded-[12px] border border-gray-100 bg-white px-5 py-4 '>
       <Skeleton className='h-3 w-28' />
       <Skeleton className='mt-3 h-8 w-14' />
       <Skeleton className='mt-2 h-3 w-32' />
@@ -25,7 +25,7 @@ export function DashboardPanelSkeleton({
   return (
     <div
       className={cn(
-        'flex h-full min-h-0 flex-col rounded-[12px] border border-gray-100 bg-white shadow-sm',
+        'flex h-full min-h-0 flex-col rounded-[12px] border border-gray-100 bg-white ',
         className,
       )}
     >
@@ -53,7 +53,7 @@ export function DashboardChartSkeleton({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'flex h-full min-h-0 flex-col rounded-[12px] border border-gray-100 bg-white p-5 shadow-sm',
+        'flex h-full min-h-0 flex-col rounded-[12px] border border-gray-100 bg-white p-5 ',
         className,
       )}
     >
@@ -70,7 +70,7 @@ export function DashboardAvailabilitySidebarSkeleton({
 }) {
   return (
     <div className={cn('flex h-full min-h-0 flex-col gap-4', className)}>
-      <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white shadow-sm'>
+      <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white '>
         <div className='border-b border-gray-100 px-5 py-4'>
           <Skeleton className='h-4 w-40' />
           <Skeleton className='mt-2 h-3 w-56' />
@@ -84,7 +84,7 @@ export function DashboardAvailabilitySidebarSkeleton({
           ))}
         </div>
       </div>
-      <div className='shrink-0 rounded-[12px] border border-gray-100 bg-white p-5 shadow-sm'>
+      <div className='shrink-0 rounded-[12px] border border-gray-100 bg-white p-5 '>
         <Skeleton className='h-4 w-40' />
         <div className='mt-4 space-y-3'>
           {Array.from({ length: 4 }).map((_, i) => (

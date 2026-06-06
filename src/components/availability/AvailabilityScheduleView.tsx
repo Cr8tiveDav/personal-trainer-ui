@@ -156,7 +156,7 @@ function TimelineDayRow({
   const track = (
     <div
       className={cn(
-        'relative flex-1 h-10 min-w-0 rounded-[6px] overflow-visible bg-gray-50/80',
+        'relative flex-1 h-10 min-w-0 rounded-[6px] overflow-visible bg-gray-50/80 hover:z-50',
         editable && 'cursor-pointer',
       )}
       onClick={
@@ -249,14 +249,18 @@ type AvailabilityScheduleViewProps = {
   slots: AvailabilitySlot[]
   editable?: boolean
   onUpdate?: (availability: AvailabilitySlot[]) => void
+  onDeleteSlot?: (slotId: string) => void
   isSaving?: boolean
+  isOffline?: boolean
 }
 
 export function AvailabilityScheduleView({
   slots,
   editable = false,
   onUpdate,
+  onDeleteSlot,
   isSaving = false,
+  isOffline = false,
 }: AvailabilityScheduleViewProps) {
   const timezone = slots[0]?.timezone ?? 'Africa/Lagos'
   const activeDayCount = slots.length
@@ -275,7 +279,37 @@ export function AvailabilityScheduleView({
   function handleDaySave(
     next: Pick<AvailabilitySlot, 'start_time' | 'end_time' | 'timezone'> | null,
   ) {
-    if (!editRow || !onUpdate) return
+    if (!editRow) return
+    
+    if (next === null) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let slotId = editSlot?.id || editSlot?.slot_id || (editSlot as any)?.uuid || (editSlot as any)?._id;
+      
+      if (!slotId && editSlot) {
+        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+        for (const key of Object.keys(editSlot)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          if (typeof (editSlot as any)[key] === 'string' && uuidRegex.test((editSlot as any)[key])) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            slotId = (editSlot as any)[key];
+            break;
+          }
+        }
+      }
+
+      if (slotId && onDeleteSlot) {
+        onDeleteSlot(slotId)
+      } else if (onDeleteSlot && editSlot) {
+        alert("Failed to find slot ID! Please share this with your developer. Keys available: " + Object.keys(editSlot).join(', '));
+      } else if (onUpdate) {
+        const merged = mergeDayIntoSchedule(slots, editRow.dayOfWeek, next, timezone)
+        onUpdate(merged)
+      }
+      setEditOpen(false)
+      return
+    }
+
+    if (!onUpdate) return
     const merged = mergeDayIntoSchedule(slots, editRow.dayOfWeek, next, timezone)
     onUpdate(merged)
     setEditOpen(false)
@@ -294,17 +328,32 @@ export function AvailabilityScheduleView({
             </p>
           </div>
           <div className='flex items-center gap-2'>
-            <span className='w-2 h-2 rounded-[9999px] bg-[#0b4d8d]' />
-            <span className='text-xs text-gray-600'>Available days = {activeDayCount}</span>
+            {isOffline ? (
+              <span className='text-xs font-semibold text-yellow-600 bg-yellow-50 px-2.5 py-1 rounded-[6px] border border-yellow-200'>
+                Currently Offline
+              </span>
+            ) : (
+              <>
+                <span className='w-2 h-2 rounded-[9999px] bg-[#0b4d8d]' />
+                <span className='text-xs text-gray-600'>Available days = {activeDayCount}</span>
+              </>
+            )}
           </div>
         </div>
 
         <div className='flex flex-col lg:flex-row gap-6'>
-          <div className='flex-1 border border-gray-100 rounded-[12px] p-4 sm:p-6'>
+          <div className={cn('flex-1 border border-gray-100 rounded-[12px] p-4 sm:p-6 transition-opacity relative', isOffline && 'opacity-60 grayscale')}>
+            {isOffline && (
+              <div className='absolute inset-0 z-20 flex items-center justify-center pointer-events-none'>
+                <div className='bg-white/90 backdrop-blur-sm px-4 py-2 rounded-[8px] border border-gray-200 shadow-sm'>
+                  <span className='text-sm font-semibold text-gray-900'>Schedule Paused</span>
+                </div>
+              </div>
+            )}
             <AvailabilityTimelineGrid
               slots={slots}
-              editable={editable}
-              onDayClick={editable ? openDayEditor : undefined}
+              editable={editable && !isOffline}
+              onDayClick={editable && !isOffline ? openDayEditor : undefined}
             />
           </div>
 

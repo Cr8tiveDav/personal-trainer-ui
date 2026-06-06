@@ -91,6 +91,7 @@ export interface UpdateTrainerPayload {
   years_of_experience?: number;
   intro_video_url?: string;
   display_picture?: string;
+  phone_number?: string;
   onboarding_status?: string;
 }
 

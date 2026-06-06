@@ -60,7 +60,7 @@ function Toggle({
     >
       <span
         className={cn(
-          'absolute top-0.5 left-0.5 h-5 w-5 rounded-[9999px] bg-white shadow transition-transform',
+          'absolute top-0.5 left-0.5 h-5 w-5 rounded-[9999px] bg-white transition-transform',
           checked && 'translate-x-5',
         )}
       />
@@ -69,8 +69,9 @@ function Toggle({
 }
 
 export function DashboardAvailability({ className }: { className?: string }) {
-  const { data: slots = [], isLoading, isError, isSuccess } =
+  const { data, isLoading, isError, isSuccess } =
     useMyTrainerAvailability()
+  const slots = data?.slots || []
 
   const [platforms, setPlatforms] = useState<Record<string, boolean>>({
     whatsapp: true,

@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Trainer } from '../types';
 import { cn } from '@/utils';
+import { isValidImageSrc } from '@/lib/utils';
 
 interface ProfileHeaderProps {
   trainer: Trainer;
@@ -17,40 +18,21 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ trainer }) => {
           <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-white tracking-tight leading-tight'>
             {trainer.name}
           </h1>
-          <div
-            className={cn(
-              'flex items-center gap-1.5 px-2 py-1 md:px-3 md:py-1 rounded-[6px] border',
-              trainer.availability === 'Available'
-                ? 'border-[#2EA83A] bg-[#ECFDF5]'
-                : 'border-[#A3A3A3] bg-[#F5F5F5]'
-            )}
-          >
-            <div
-              className={cn(
-                'w-1.5 h-1.5 rounded-[9999px]',
-                trainer.availability === 'Available'
-                  ? 'bg-[#14561C]'
-                  : 'bg-gray-400'
-              )}
-            />
-            <span
-              className={cn(
-                'text-xs font-normal',
-                trainer.availability === 'Available'
-                  ? 'text-[#1E7829]'
-                  : 'text-[#5C5C5C]'
-              )}
-            >
-              {trainer.availability}
-            </span>
-          </div>
+          {trainer.availability === 'Available' && (
+            <div className='flex items-center gap-1.5 px-2 py-1 md:px-3 md:py-1 rounded-[6px] border border-[#2EA83A] bg-[#ECFDF5]'>
+              <div className='w-1.5 h-1.5 rounded-[9999px] bg-[#14561C]' />
+              <span className='text-xs font-normal text-[#1E7829]'>
+                Available
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Avatar */}
       <div className='absolute top-28.75 left-4 md:left-8 z-20'>
         <div className='h-25 w-25 md:h-42.5 md:w-42.5 rounded-[9999px] border-[3px] border-[#EBEBEB] overflow-hidden bg-gray-200 flex items-center justify-center'>
-          {trainer.avatarUrl ? (
+          {trainer.avatarUrl && isValidImageSrc(trainer.avatarUrl) ? (
             <Image
               src={trainer.avatarUrl}
               alt={trainer.name}

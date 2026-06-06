@@ -4,6 +4,7 @@ import type {
   TrainerAvailability,
   TrainerStatus,
 } from '@/components/admin/trainers/types';
+import { isValidImageSrc } from '@/lib/utils';
 
 /** Go sql.NullString-style rating from the API */
 type NullableString = { String: string; Valid: boolean };
@@ -80,7 +81,7 @@ export function mapBackendToFrontend(
     email,
     phoneNumber: backendTrainer.phone_number?.trim() || undefined,
     gender: formatGender(backendTrainer.gender),
-    avatarUrl: displayPicture || undefined,
+    avatarUrl: isValidImageSrc(displayPicture) ? displayPicture : undefined,
     specialty: formatList(specializations) || specializations[0] || 'General',
     specializations,
     trainingStyles: backendTrainer.training_styles ?? [],

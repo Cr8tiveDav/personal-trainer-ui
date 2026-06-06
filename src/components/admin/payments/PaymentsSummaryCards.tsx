@@ -20,11 +20,17 @@ function CurrencyFlag({ code }: { code: DisplayCurrency }) {
   if (code === 'USD') {
     return (
       <span
-        className='inline-flex h-4 w-6 overflow-hidden rounded-[4px] ring-1 ring-border'
+        className="relative inline-flex h-4 w-6 overflow-hidden rounded-[4px] ring-1 ring-border bg-white"
         aria-hidden
       >
-        <span className='flex-1 bg-[#B22234]' />
-        <span className='w-2 bg-[#3C3B6E]' />
+        <span className="absolute inset-0 flex flex-col justify-between py-[1px]">
+          <span className="h-[2px] w-full bg-[#B22234]" />
+          <span className="h-[2px] w-full bg-[#B22234]" />
+          <span className="h-[2px] w-full bg-[#B22234]" />
+          <span className="h-[2px] w-full bg-[#B22234]" />
+          <span className="h-[2px] w-full bg-[#B22234]" />
+        </span>
+        <span className="absolute top-0 left-0 w-[11px] h-[9px] bg-[#3C3B6E]" />
       </span>
     );
   }

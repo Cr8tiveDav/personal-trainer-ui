@@ -165,8 +165,8 @@ export default function LegalPageLayout({
             {/* Sections Content */}
             {sections
               .filter((section) => section.id !== 'introduction')
-              .map((section, idx) => {
-                const isLast = idx === sections.length - 2; // -2 because introduction is filtered out
+              .map((section, idx, arr) => {
+                const isLast = idx === arr.length - 1;
                 return (
                   <section
                     key={section.id}

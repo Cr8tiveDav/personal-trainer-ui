@@ -96,6 +96,7 @@ export function useAdminClients(
       const response = await getRequest<AdminClientsListResponse>({
         url: `${API_ENDPOINTS.ADMIN.CLIENTS}?${params.toString()}`,
       })
+      console.log('Admin Clients Response:', response)
       return normalizeClientsList(response)
     },
     staleTime: 60_000,

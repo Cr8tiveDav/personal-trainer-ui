@@ -10,7 +10,7 @@ export function TrainerClientsPageSkeleton() {
         <Skeleton className='mt-2 h-4 w-64' />
       </div>
 
-      <div className='rounded-[12px] border border-gray-100 bg-white shadow-sm'>
+      <div className='rounded-[12px] border border-gray-100 bg-white '>
         <div className='flex flex-col gap-4 border-b border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between'>
           <Skeleton className='h-10 w-full max-w-md' />
           <Skeleton className='h-10 w-48' />

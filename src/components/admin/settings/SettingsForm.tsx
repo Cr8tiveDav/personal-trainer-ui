@@ -2,34 +2,58 @@
 
 import { useState } from 'react';
 import { X, Plus } from 'lucide-react';
+import { useEffect } from 'react';
+import { useAdminSettings, useUpdateAdminSettings, useCreateAdminCategory, useDeleteAdminCategory, AdminCategory } from '@/api/settings';
 
-const DEFAULT_CATEGORIES = [
-  'Strength',
-  'Yoga',
-  'HIIT',
-  'Pilates',
-  'Endurance',
-  'Weight loss',
-  'Mobility',
-];
+
 
 export function SettingsForm() {
   const [sessionDuration, setSessionDuration] = useState('60');
   const [maxTrainers, setMaxTrainers] = useState('6');
   const [requireVideo, setRequireVideo] = useState(true);
   const [autoAssign, setAutoAssign] = useState(false);
-  const [categories, setCategories] = useState(DEFAULT_CATEGORIES);
+  
   const [newCategory, setNewCategory] = useState('');
 
-  function removeCategory(cat: string) {
-    setCategories((prev) => prev.filter((c) => c !== cat));
+  const { data: settingsData, isLoading } = useAdminSettings();
+  const updateSettings = useUpdateAdminSettings();
+  const createCategory = useCreateAdminCategory();
+  const deleteCategory = useDeleteAdminCategory();
+  
+  const categories: AdminCategory[] = settingsData?.categories || [];
+
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
+    if (settingsData) {
+      if (settingsData.default_session_duration_min) setSessionDuration(String(settingsData.default_session_duration_min));
+      if (settingsData.max_trainers_displayed) setMaxTrainers(String(settingsData.max_trainers_displayed));
+      if (settingsData.require_video_before_listing !== undefined) setRequireVideo(settingsData.require_video_before_listing);
+      if (settingsData.auto_assign_trainer !== undefined) setAutoAssign(settingsData.auto_assign_trainer);
+      
+    }
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [settingsData]);
+
+  function handleSave() {
+    updateSettings.mutate({
+      default_session_duration_min: Number(sessionDuration),
+      max_trainers_displayed: Number(maxTrainers),
+      require_video_before_listing: requireVideo,
+      auto_assign_trainer: autoAssign,
+    });
+  }
+
+  function removeCategory(id: string) {
+    deleteCategory.mutate(id);
   }
 
   function addCategory() {
     const trimmed = newCategory.trim();
-    if (trimmed && !categories.includes(trimmed)) {
-      setCategories((prev) => [...prev, trimmed]);
-      setNewCategory('');
+    if (trimmed && !categories.some(c => c.name.toLowerCase() === trimmed.toLowerCase())) {
+      const slug = trimmed.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      createCategory.mutate({ name: trimmed, slug }, {
+        onSuccess: () => setNewCategory('')
+      });
     }
   }
 
@@ -46,8 +70,12 @@ export function SettingsForm() {
             Configure how FitCall handles bookings, trainers, and content.
           </p>
         </div>
-        <button className='shrink-0 rounded-[8px] bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90 cursor-pointer'>
-          Save Changes
+        <button 
+          onClick={handleSave} 
+          disabled={updateSettings.isPending}
+          className='shrink-0 rounded-[8px] bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary/90 cursor-pointer disabled:opacity-50'
+        >
+          {updateSettings.isPending ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
 
@@ -182,12 +210,12 @@ export function SettingsForm() {
         <div className='mt-5 flex flex-wrap gap-2'>
           {categories.map((cat) => (
             <span
-              key={cat}
+              key={cat.id}
               className='flex items-center gap-1.5 rounded-[9999px] border border-gray-200 bg-white px-3 py-1 text-sm text-gray-700'
             >
-              {cat}
+              {cat.name}
               <button
-                onClick={() => removeCategory(cat)}
+                onClick={() => removeCategory(cat.id)}
                 className='text-gray-400 hover:text-gray-600'
               >
                 <X className='h-3.5 w-3.5' />

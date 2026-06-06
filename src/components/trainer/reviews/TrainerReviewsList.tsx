@@ -24,7 +24,7 @@ function StarRating({ rating }: { rating: number }) {
 
 function ReviewCard({ review }: { review: Review }) {
   return (
-    <article className="rounded-[12px] border border-gray-100 bg-white p-5 shadow-sm">
+    <article className="rounded-[12px] border border-gray-100 bg-white p-5 ">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">
           {review.clientAvatar ? (
@@ -92,7 +92,7 @@ export function TrainerReviewsList({
 
   if (reviews.length === 0) {
     return (
-      <div className="rounded-[12px] border border-gray-100 bg-white shadow-sm">
+      <div className="rounded-[12px] border border-gray-100 bg-white ">
         <EmptyState
           imageSrc={EMPTY_STATE_IMAGE_PATHS.reviews}
           imageAlt="No reviews"
