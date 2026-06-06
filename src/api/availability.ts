@@ -41,7 +41,7 @@ export function useMyTrainerAvailability(enabled = true) {
   return useQuery({
     queryKey: availabilityQueryKeys.me,
     queryFn: async () => {
-      const response = await getRequest<any>({
+      const response = await getRequest<Record<string, unknown>>({
         url: API_ENDPOINTS.TRAINERS.ME_AVAILABILITY,
       });
       const slots = normalizeAvailability(response);
@@ -118,7 +118,7 @@ export function useTrainerAvailabilityById(trainerId: string, enabled = true) {
   return useQuery({
     queryKey: availabilityQueryKeys.byTrainer(trainerId),
     queryFn: async () => {
-      const response = await getRequest<any>({
+      const response = await getRequest<Record<string, unknown>>({
         url: API_ENDPOINTS.TRAINERS.AVAILABILITY(trainerId),
       });
       const slots = normalizeAvailability(response);
@@ -196,7 +196,7 @@ export function useToggleMyTrainerAvailability() {
   return useMutation({
     mutationFn: async (isAvailable: boolean) => {
       const { data } = await patchRequest<
-        { data: any; message: string; code: string },
+        { data: Record<string, unknown>; message: string; code: string },
         { is_available: boolean }
       >({
         url: API_ENDPOINTS.TRAINERS.ME_AVAILABILITY_TOGGLE,
@@ -224,7 +224,7 @@ export function useToggleTrainerAvailabilityById(trainerId: string) {
   return useMutation({
     mutationFn: async (isAvailable: boolean) => {
       const { data } = await patchRequest<
-        { data: any; message: string; code: string },
+        { data: Record<string, unknown>; message: string; code: string },
         { is_available: boolean }
       >({
         url: API_ENDPOINTS.TRAINERS.AVAILABILITY_TOGGLE(trainerId),
@@ -253,7 +253,7 @@ export function useDeleteMyTrainerAvailabilitySlot() {
 
   return useMutation({
     mutationFn: async (slotId: string) => {
-      const { data } = await deleteRequest<any>({
+      const { data } = await deleteRequest<Record<string, unknown>>({
         url: API_ENDPOINTS.TRAINERS.ME_AVAILABILITY_SLOT(slotId),
       });
       return data;
@@ -277,7 +277,7 @@ export function useDeleteTrainerAvailabilitySlotById(trainerId: string) {
 
   return useMutation({
     mutationFn: async (slotId: string) => {
-      const { data } = await deleteRequest<any>({
+      const { data } = await deleteRequest<Record<string, unknown>>({
         url: API_ENDPOINTS.TRAINERS.AVAILABILITY_SLOT(trainerId, slotId),
       });
       return data;

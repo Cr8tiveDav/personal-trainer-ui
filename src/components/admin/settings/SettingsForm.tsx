@@ -23,6 +23,7 @@ export function SettingsForm() {
   const categories: AdminCategory[] = settingsData?.categories || [];
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (settingsData) {
       if (settingsData.default_session_duration_min) setSessionDuration(String(settingsData.default_session_duration_min));
       if (settingsData.max_trainers_displayed) setMaxTrainers(String(settingsData.max_trainers_displayed));
@@ -30,6 +31,7 @@ export function SettingsForm() {
       if (settingsData.auto_assign_trainer !== undefined) setAutoAssign(settingsData.auto_assign_trainer);
       
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [settingsData]);
 
   function handleSave() {

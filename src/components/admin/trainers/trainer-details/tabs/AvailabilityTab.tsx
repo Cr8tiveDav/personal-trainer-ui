@@ -33,6 +33,7 @@ const AvailabilityTab = ({ trainerId, enabled = true }: AvailabilityTabProps) =>
 
   useEffect(() => {
     if (isSuccess && !hasInitialized) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsGloballyAvailable(initialGlobalState)
       setHasInitialized(true)
     }

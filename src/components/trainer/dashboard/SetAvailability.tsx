@@ -39,8 +39,10 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
     if (isSuccess && !hasInitialized) {
       const stored = localStorage.getItem('trainer-availability');
       if (stored !== null) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsGloballyAvailable(stored === 'true');
       } else {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsGloballyAvailable(initialGlobalState);
       }
       setHasInitialized(true);

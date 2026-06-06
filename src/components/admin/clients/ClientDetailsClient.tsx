@@ -20,7 +20,7 @@ export function ClientDetailsClient() {
 
   if (isError || !client) {
     const isForbidden =
-      (error as any)?.response?.status === 403 ||
+      (error as Record<string, unknown>)?.response?.status === 403 ||
       error?.message?.toLowerCase().includes('forbidden')
 
     if (isForbidden) {
