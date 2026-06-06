@@ -1,9 +1,12 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+
 import {
   useSetTrainerAvailabilityById,
   useTrainerAvailabilityById,
   useUpdateTrainerAvailabilityById,
+  useDeleteTrainerAvailabilitySlotById,
 } from '@/api/availability'
 import { AvailabilitySetupPanel } from '@/components/availability/AvailabilitySetupPanel'
 import { AvailabilityScheduleView } from '@/components/availability/AvailabilityScheduleView'
@@ -15,10 +18,25 @@ interface AvailabilityTabProps {
 }
 
 const AvailabilityTab = ({ trainerId, enabled = true }: AvailabilityTabProps) => {
-  const { data: slots = [], isLoading, isError } =
+  const { data, isLoading, isError, isSuccess } =
     useTrainerAvailabilityById(trainerId, enabled)
+  const slots = data?.slots || []
+  const initialGlobalState = data?.isAvailable ?? false
+
   const setAvailability = useSetTrainerAvailabilityById(trainerId)
   const updateAvailability = useUpdateTrainerAvailabilityById(trainerId)
+  const deleteAvailabilitySlot = useDeleteTrainerAvailabilitySlotById(trainerId)
+
+  // We don't have the true backend toggle state, so we infer it visually.
+  const [isGloballyAvailable, setIsGloballyAvailable] = useState<boolean>(true)
+  const [hasInitialized, setHasInitialized] = useState(false)
+
+  useEffect(() => {
+    if (isSuccess && !hasInitialized) {
+      setIsGloballyAvailable(initialGlobalState)
+      setHasInitialized(true)
+    }
+  }, [isSuccess, initialGlobalState, hasInitialized])
 
   const formKey =
     slots.length > 0
@@ -61,6 +79,7 @@ const AvailabilityTab = ({ trainerId, enabled = true }: AvailabilityTabProps) =>
           existingSlots={slots}
           onSave={(availability) => updateAvailability.mutate(availability)}
           isSaving={updateAvailability.isPending}
+          isGloballyAvailable={isGloballyAvailable}
         />
       </div>
 
@@ -68,7 +87,9 @@ const AvailabilityTab = ({ trainerId, enabled = true }: AvailabilityTabProps) =>
         slots={slots}
         editable
         onUpdate={(availability) => updateAvailability.mutate(availability)}
-        isSaving={updateAvailability.isPending}
+        onDeleteSlot={(slotId) => deleteAvailabilitySlot.mutate(slotId)}
+        isSaving={updateAvailability.isPending || deleteAvailabilitySlot.isPending}
+        isOffline={!isGloballyAvailable}
       />
     </div>
   )

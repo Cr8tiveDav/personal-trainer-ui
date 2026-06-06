@@ -60,7 +60,7 @@ function Toggle({
     >
       <span
         className={cn(
-          'absolute top-0.5 left-0.5 h-5 w-5 rounded-[9999px] bg-white shadow transition-transform',
+          'absolute top-0.5 left-0.5 h-5 w-5 rounded-[9999px] bg-white transition-transform',
           checked && 'translate-x-5',
         )}
       />
@@ -69,8 +69,9 @@ function Toggle({
 }
 
 export function DashboardAvailability({ className }: { className?: string }) {
-  const { data: slots = [], isLoading, isError, isSuccess } =
+  const { data, isLoading, isError, isSuccess } =
     useMyTrainerAvailability()
+  const slots = data?.slots || []
 
   const [platforms, setPlatforms] = useState<Record<string, boolean>>({
     whatsapp: true,
@@ -93,7 +94,7 @@ export function DashboardAvailability({ className }: { className?: string }) {
   if (isError || !isSuccess || !hasSlots) {
     return (
       <div className={cn('flex h-full min-h-0 flex-col', className)}>
-        <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white shadow-sm'>
+        <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white '>
           <EmptyState
             imageSrc={EMPTY_STATE_IMAGE_PATHS.availability}
             imageAlt='No availability'
@@ -116,7 +117,7 @@ export function DashboardAvailability({ className }: { className?: string }) {
 
   return (
     <div className={cn('flex h-full min-h-0 flex-col gap-4', className)}>
-      <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white shadow-sm'>
+      <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white '>
         <div className='border-b border-gray-100 px-5 py-4'>
           <h3 className='text-sm font-semibold text-gray-900'>Set Your Availability</h3>
           <p className='mt-0.5 text-xs text-gray-500'>
@@ -157,7 +158,7 @@ export function DashboardAvailability({ className }: { className?: string }) {
         </div>
       </div>
 
-      <div className='shrink-0 rounded-[12px] border border-gray-100 bg-white shadow-sm'>
+      <div className='shrink-0 rounded-[12px] border border-gray-100 bg-white '>
         <div className='border-b border-gray-100 px-5 py-4'>
           <h3 className='text-sm font-semibold text-gray-900'>Set Your Availability</h3>
           <p className='mt-0.5 text-xs text-gray-500'>

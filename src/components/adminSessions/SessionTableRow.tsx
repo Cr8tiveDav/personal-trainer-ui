@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Session } from './session'
 import { formatSessionId, getStateBadgeStyles } from './session-display'
+import { isValidImageSrc } from '@/lib/utils'
 
 interface RowProps {
   session: Session
@@ -86,7 +87,7 @@ export function SessionTableRow({
 
       <td className='px-4 py-3.5'>
         <div className='flex items-center gap-2'>
-          {session.client.avatar ? (
+          {session.client.avatar && isValidImageSrc(session.client.avatar) ? (
             <Image
               src={session.client.avatar}
               alt={session.client.name}
@@ -113,7 +114,7 @@ export function SessionTableRow({
 
       <td className='px-4 py-3.5'>
         <div className='flex items-center gap-2'>
-          {session.trainer.avatar ? (
+          {session.trainer.avatar && isValidImageSrc(session.trainer.avatar) ? (
             <Image
               src={session.trainer.avatar}
               alt={session.trainer.name}

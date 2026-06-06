@@ -9,12 +9,13 @@ import {
   Clock,
   // MessageSquare,
   Star,
-  // Settings,
+  Settings,
   ChevronRight,
   X,
 } from "lucide-react";
 import { TrainerSidebarItem } from "./sidebarItem";
 import { cn } from "~/utils";
+import { isValidImageSrc } from "@/lib/utils";
 import { AnimatePresence, motion } from "motion/react";
 
 const NAV_ITEMS = [
@@ -24,7 +25,7 @@ const NAV_ITEMS = [
   { label: "Availability", href: "/trainer/availability", icon: Clock },
   // { label: "Messages", href: "/trainer/messages", icon: MessageSquare },
   { label: "Reviews", href: "/trainer/reviews", icon: Star },
-  // { label: "Settings", href: "/trainer/settings", icon: Settings },
+  { label: "Settings", href: "/trainer/settings", icon: Settings },
 ];
 
 interface TrainerSidebarProps {
@@ -112,7 +113,7 @@ function SidebarInner({
           collapsed && "justify-center",
         )}
       >
-        {userAvatar ? (
+        {userAvatar && isValidImageSrc(userAvatar) ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={userAvatar}

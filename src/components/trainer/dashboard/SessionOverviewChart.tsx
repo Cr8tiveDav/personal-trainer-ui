@@ -39,7 +39,7 @@ export function SessionOverviewChart({
   return (
     <div
       className={cn(
-        "flex h-full min-h-0 flex-col rounded-[12px] border border-gray-100 bg-white shadow-sm",
+        "flex h-full min-h-0 flex-col rounded-[12px] border border-gray-100 bg-white ",
         className,
       )}
     >
@@ -56,7 +56,7 @@ export function SessionOverviewChart({
               className={cn(
                 "rounded-[6px] px-3 py-1 text-xs font-medium capitalize transition-colors",
                 tab === key
-                  ? "bg-white text-gray-900 shadow-sm"
+                  ? "bg-white text-gray-900 "
                   : "text-gray-500 hover:text-gray-700",
               )}
             >

@@ -91,6 +91,8 @@ type AvailabilitySetupPanelProps = {
   initialSlots?: AvailabilitySlot[];
   onSave: (availability: AvailabilitySlot[]) => void;
   isSaving?: boolean;
+  onToggle?: (isAvailable: boolean) => void;
+  isGloballyAvailable?: boolean;
 };
 
 export function AvailabilitySetupPanel({
@@ -98,6 +100,8 @@ export function AvailabilitySetupPanel({
   initialSlots = [],
   onSave,
   isSaving = false,
+  onToggle,
+  isGloballyAvailable = true,
 }: AvailabilitySetupPanelProps) {
   const persistedDays = useMemo(
     () => new Set(existingSlots.map((s) => s.day_of_week)),
@@ -109,56 +113,65 @@ export function AvailabilitySetupPanel({
   const [daySchedules, setDaySchedules] = useState<DaySchedules>(
     initial.daySchedules,
   );
-  const [selectedDay, setSelectedDay] = useState<number | null>(
-    initial.selectedDay,
-  );
   const [timezone, setTimezone] = useState(initial.timezone);
-  const [isCurrentlyAvailable, setIsCurrentlyAvailable] = useState(
-    initial.isCurrentlyAvailable,
-  );
   const [editingTimezone, setEditingTimezone] = useState(false);
 
-  const selectedDayMeta = WEEK_DAYS.find((d) => d.value === selectedDay);
-  const selectedSchedule =
-    selectedDay !== null ? daySchedules[selectedDay] : null;
-  const isSelectedPersisted =
-    selectedDay !== null && persistedDays.has(selectedDay);
+  const firstEnabledDay = WEEK_DAYS.find(
+    (d) => daySchedules[d.value].enabled && !persistedDays.has(d.value)
+  );
+  const selectedDayMeta = firstEnabledDay;
+  const selectedSchedule = firstEnabledDay ? daySchedules[firstEnabledDay.value] : null;
 
   function handleDayClick(dayValue: number) {
     if (persistedDays.has(dayValue)) return;
 
-    const schedule = daySchedules[dayValue];
+    setDaySchedules((prev) => {
+      const isCurrentlyEnabled = prev[dayValue].enabled;
+      
+      if (isCurrentlyEnabled) {
+        return {
+          ...prev,
+          [dayValue]: { enabled: false, startTime: "", endTime: "" },
+        };
+      }
+      
+      let inheritStartTime = "";
+      let inheritEndTime = "";
+      
+      const existing = Object.values(prev).find(
+        (s) => s.enabled && (s.startTime || s.endTime)
+      );
+      if (existing) {
+        inheritStartTime = existing.startTime;
+        inheritEndTime = existing.endTime;
+      }
 
-    if (schedule.enabled && selectedDay === dayValue) {
-      setDaySchedules((prev) => ({
+      return {
         ...prev,
-        [dayValue]: { enabled: false, startTime: "", endTime: "" },
-      }));
-      setSelectedDay(null);
-      return;
-    }
-
-    if (schedule.enabled) {
-      setSelectedDay(dayValue);
-      return;
-    }
-
-    setDaySchedules((prev) => ({
-      ...prev,
-      [dayValue]: { ...prev[dayValue], enabled: true },
-    }));
-    setSelectedDay(dayValue);
+        [dayValue]: { 
+          ...prev[dayValue], 
+          enabled: true,
+          startTime: inheritStartTime,
+          endTime: inheritEndTime
+        },
+      };
+    });
   }
 
   function updateSelectedDayTime(
     field: "startTime" | "endTime",
     value: string,
   ) {
-    if (selectedDay === null || persistedDays.has(selectedDay)) return;
-    setDaySchedules((prev) => ({
-      ...prev,
-      [selectedDay]: { ...prev[selectedDay], [field]: value },
-    }));
+    setDaySchedules((prev) => {
+      const next = { ...prev };
+      Object.keys(next).forEach((key) => {
+        const day = Number(key);
+        if (next[day].enabled && !persistedDays.has(day)) {
+          next[day] = { ...next[day], [field]: value };
+        }
+      });
+      return next;
+    });
   }
 
   function handleSave() {
@@ -206,12 +219,23 @@ export function AvailabilitySetupPanel({
             : "Turn a day on, then set its hours. Each day can have different times."}
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-6">
+        {!isGloballyAvailable && hasExisting && (
+          <div className="mb-6 rounded-[8px] border border-yellow-200 bg-yellow-50 p-3">
+            <p className="text-sm font-medium text-yellow-800">
+              Your schedule is currently paused.
+            </p>
+            <p className="text-xs text-yellow-700 mt-0.5">
+              Clients cannot book sessions with you. Toggle availability back on to receive bookings.
+            </p>
+          </div>
+        )}
+
+        <div className={cn("flex flex-wrap gap-2 mb-6 transition-opacity", !isGloballyAvailable && hasExisting && "opacity-60 pointer-events-none grayscale")}>
           {WEEK_DAYS.map((day) => {
             const schedule = daySchedules[day.value];
             const isPersisted = persistedDays.has(day.value);
             const isActive = isPersisted || schedule.enabled;
-            const isSelected = selectedDay === day.value && !isPersisted;
+            const isSelected = !isPersisted && schedule.enabled;
 
             return (
               <button
@@ -258,12 +282,15 @@ export function AvailabilitySetupPanel({
         </div>
 
         {selectedSchedule?.enabled &&
-        selectedDayMeta &&
-        !isSelectedPersisted ? (
-          <div className="rounded-[8px] border border-gray-100 bg-gray-50/80 p-4 mb-6">
-            <p className="text-xs font-semibold text-gray-700 mb-4">
-              Hours for {selectedDayMeta.label}
-            </p>
+        selectedDayMeta ? (
+          <div className="rounded-[8px] border border-gray-100 bg-gray-50/80 p-4 mb-6 relative">
+            <div className="flex items-center justify-between mb-4">
+              <p className="text-xs font-semibold text-gray-700">
+                {Object.values(daySchedules).filter((s) => s.enabled).length > 1 
+                  ? "Hours for selected days" 
+                  : `Hours for ${selectedDayMeta.label}`}
+              </p>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-xl">
               <div>
                 <label
@@ -320,36 +347,41 @@ export function AvailabilitySetupPanel({
       </div>
 
       <div className="w-full lg:w-[280px] shrink-0 p-6 bg-white flex flex-col gap-8 border-t lg:border-t-0 border-gray-100">
-        <div>
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900">
-                Currently available
-              </h3>
-              <p className="text-xs text-gray-500 mt-1">
-                Toggle off to mark unavailable.
-              </p>
-            </div>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={isCurrentlyAvailable}
-              onClick={() => setIsCurrentlyAvailable((v) => !v)}
-              className={cn(
-                "relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-[9999px] transition-colors focus:outline-none",
-                isCurrentlyAvailable ? "bg-gray-900" : "bg-gray-200",
-              )}
-            >
-              <span className="sr-only">Toggle availability</span>
-              <span
+        {onToggle && (
+          <div>
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold text-gray-900">
+                  Currently available
+                </h3>
+                <p className="text-xs text-gray-500 mt-1">
+                  Toggle off to mark unavailable.
+                </p>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={isGloballyAvailable}
+                onClick={() => {
+                  const newValue = !isGloballyAvailable;
+                  onToggle(newValue);
+                }}
                 className={cn(
-                  "inline-block h-4 w-4 transform rounded-[9999px] bg-white shadow transition-transform",
-                  isCurrentlyAvailable ? "translate-x-6" : "translate-x-1",
+                  "relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-[9999px] transition-colors focus:outline-none",
+                  isGloballyAvailable ? "bg-gray-900" : "bg-gray-200",
                 )}
-              />
-            </button>
+              >
+                <span className="sr-only">Toggle availability</span>
+                <span
+                  className={cn(
+                    "inline-block h-4 w-4 transform rounded-[9999px] bg-white shadow transition-transform",
+                    isGloballyAvailable ? "translate-x-6" : "translate-x-1",
+                  )}
+                />
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         <div>
           <h3 className="text-sm font-semibold text-gray-900 mb-2">

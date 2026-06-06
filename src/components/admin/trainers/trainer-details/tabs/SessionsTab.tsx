@@ -8,6 +8,7 @@ import { useTrainerSessions } from '@/api/sessions'
 import type { Session } from '@/components/adminSessions/session'
 import { sessionRowVariants } from '@/components/adminSessions/SessionTableRow'
 import { getTrainerSessionStats } from '@/lib/sessions/trainer-session-stats'
+import { isValidImageSrc } from '@/lib/utils'
 import {
   EMPTY_STATE_IMAGE_PATHS,
   EmptyState,
@@ -146,7 +147,7 @@ const SessionsTab = ({ trainerId }: SessionsTabProps) => {
                     >
                       <td className='px-6 py-4'>
                         <div className='flex items-center gap-3'>
-                          {session.client.avatar ? (
+                          {session.client.avatar && isValidImageSrc(session.client.avatar) ? (
                             <Image
                               src={session.client.avatar}
                               alt={session.client.name}

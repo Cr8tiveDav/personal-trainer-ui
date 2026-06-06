@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Trainer } from '../types';
 import { cn } from '@/utils';
+import { isValidImageSrc } from '@/lib/utils';
 
 interface ProfileHeaderProps {
   trainer: Trainer;
@@ -50,7 +51,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ trainer }) => {
       {/* Avatar */}
       <div className='absolute top-28.75 left-4 md:left-8 z-20'>
         <div className='h-25 w-25 md:h-42.5 md:w-42.5 rounded-[9999px] border-[3px] border-[#EBEBEB] overflow-hidden bg-gray-200 flex items-center justify-center'>
-          {trainer.avatarUrl ? (
+          {trainer.avatarUrl && isValidImageSrc(trainer.avatarUrl) ? (
             <Image
               src={trainer.avatarUrl}
               alt={trainer.name}

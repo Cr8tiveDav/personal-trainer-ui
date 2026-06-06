@@ -36,7 +36,7 @@ function TrainerSessionsContent() {
   }
 
   return (
-    <div className="px-10 py-6">
+    <div className="space-y-6">
       <div>
         <h1 className="text-xl font-bold text-gray-900">Sessions</h1>
         <p className="mt-1 text-sm text-gray-500">

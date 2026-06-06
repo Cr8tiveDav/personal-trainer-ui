@@ -115,6 +115,14 @@ const Footer = () => {
                     Help Centre
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    href='/account-deletion-policy'
+                    className='transition-colors hover:text-primary'
+                  >
+                    Account Deletion Policy
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

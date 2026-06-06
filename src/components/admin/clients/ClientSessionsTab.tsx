@@ -9,6 +9,7 @@ import { sessionRowVariants } from '@/components/adminSessions/SessionTableRow'
 import { getTrainerSessionStats } from '@/lib/sessions/trainer-session-stats'
 import { TrainerSessionsTabSkeleton } from '@/components/admin/trainers/trainer-details/tabs/TrainerSessionsTabSkeleton'
 import StatCard from '@/components/admin/trainers/analytics/StatCard'
+import { isValidImageSrc } from '@/lib/utils'
 
 const getStateBadgeStyles = (state: Session['state']) => {
   switch (state) {
@@ -144,7 +145,7 @@ export function ClientSessionsTab({ clientId }: ClientSessionsTabProps) {
                     >
                       <td className='px-6 py-4'>
                         <div className='flex items-center gap-3'>
-                          {session.trainer.avatar ? (
+                          {session.trainer.avatar && isValidImageSrc(session.trainer.avatar) ? (
                             <Image
                               src={session.trainer.avatar}
                               alt={session.trainer.name}

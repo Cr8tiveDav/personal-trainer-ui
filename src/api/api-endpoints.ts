@@ -22,6 +22,10 @@ export const API_ENDPOINTS = {
     TRAINER_SESSIONS: "/trainers/sessions",
     REVIEWS: (id: string) => `/trainers/${id}/reviews`,
     AVAILABILITY: (id: string) => `/trainers/${id}/availability`,
+    /** DELETE /trainers/{id}/availability/{slot_id} */
+    AVAILABILITY_SLOT: (id: string, slotId: string) => `/trainers/${id}/availability/${slotId}`,
+    /** PATCH /trainers/{id}/availability/toggle */
+    AVAILABILITY_TOGGLE: (id: string) => `/trainers/${id}/availability/toggle`,
     IMAGES: (id: string) => `/trainers/${id}/images`,
     IMAGE: (id: string, imageId: string) => `/trainers/${id}/images/${imageId}`,
     INTRO_VIDEO: (id: string) => `/trainers/${id}/intro-video`,
@@ -30,8 +34,14 @@ export const API_ENDPOINTS = {
     ME_CLIENTS: "/trainers/me/clients",
     /** GET|POST /trainers/me/availability */
     ME_AVAILABILITY: "/trainers/me/availability",
+    /** DELETE /trainers/me/availability/{slot_id} */
+    ME_AVAILABILITY_SLOT: (slotId: string) => `/trainers/me/availability/${slotId}`,
+    /** PATCH /trainers/me/availability/toggle */
+    ME_AVAILABILITY_TOGGLE: "/trainers/me/availability/toggle",
     /** GET authenticated trainer profile */
     ME: "/trainers/me",
+    /** PATCH authenticated trainer profile */
+    ME_EDIT_PROFILE: "/trainers/me/edit-profile",
 
 
 },

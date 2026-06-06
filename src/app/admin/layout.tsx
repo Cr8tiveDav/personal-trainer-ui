@@ -1,5 +1,6 @@
 import { AdminShell } from "@/components/admin/dashboard/AdminShell";
 import { cookies } from "next/headers";
+import { isValidImageSrc } from "@/lib/utils";
 
 export default async function AdminDashboardLayout({
   children,
@@ -19,7 +20,7 @@ export default async function AdminDashboardLayout({
       const user = JSON.parse(profileCookie);
       userName = user.name || userName;
       userEmail = user.email || userEmail;
-      userAvatar = user.avatar_url || undefined;
+      userAvatar = isValidImageSrc(user.avatar_url) ? user.avatar_url : undefined;
     } catch (e) {
       console.error("Failed to parse user_profile cookie inside layout:", e);
     }

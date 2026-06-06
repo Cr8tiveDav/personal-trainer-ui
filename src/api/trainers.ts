@@ -29,6 +29,7 @@ import {
   type UpdateTrainerFormInput,
 } from '@/lib/trainers/build-update-trainer-form-data';
 import { mapBackendToFrontend } from '@/lib/trainers/map-trainer';
+import { getStoredTrainerId } from '@/lib/auth/trainer-profile';
 
 export type AdminTrainersFilters = {
   onboardingStatus?: string;
@@ -375,6 +376,53 @@ export function useGetApprovedTrainers() {
         url: `${API_ENDPOINTS.TRAINERS.LIST}?onboarding_status=approved&limit=100`,
       });
       return Array.isArray(response.data) ? response.data : [];
+    },
+  });
+}
+
+export function useTrainerMe() {
+  return useQuery({
+    queryKey: ['trainer-me'] as const,
+    queryFn: async () => {
+      const trainerId = getStoredTrainerId();
+      if (trainerId) {
+        try {
+          const response = await getRequest<TrainerDetailResponse>({
+            url: API_ENDPOINTS.TRAINERS.DETAIL(trainerId),
+          });
+          return { data: mapBackendToFrontend(response.data) };
+        } catch (error) {
+          console.error("Failed to fetch trainer by ID, falling back to /me", error);
+        }
+      }
+
+      const response = await getRequest<TrainerDetailResponse>({
+        url: API_ENDPOINTS.TRAINERS.ME,
+      });
+      return { data: mapBackendToFrontend(response.data) };
+    },
+    staleTime: 60_000,
+  });
+}
+
+export function useEditTrainerProfile() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (payload: Partial<UpdateTrainerPayload>) => {
+      const response = await patchRequest<UpdateTrainerResponse, Partial<UpdateTrainerPayload>>({
+        url: API_ENDPOINTS.TRAINERS.ME_EDIT_PROFILE,
+        payload,
+      });
+      return response.data;
+    },
+    mutationKey: ['edit-trainer-profile'],
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['trainer-me'] });
+      showSuccessToast('Profile updated successfully');
+    },
+    onError(error) {
+      displayError(error);
     },
   });
 }

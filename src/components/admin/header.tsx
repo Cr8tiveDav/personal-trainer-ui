@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useLogout } from '@/api/auth'
 import { NotificationBell } from '@/components/notifications/NotificationBell'
+import { isValidImageSrc } from '@/lib/utils'
 
 interface AdminHeaderProps {
   userName: string
@@ -103,7 +104,7 @@ export function AdminHeader({
             }}
             className='flex h-9 w-9 items-center justify-center rounded-[9999px] overflow-hidden border-2 border-gray-200 hover:border-primary transition-colors'
           >
-            {userAvatar ? (
+            {userAvatar && isValidImageSrc(userAvatar) ? (
               <Image
                 src={userAvatar}
                 alt={userName}

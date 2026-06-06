@@ -2,8 +2,8 @@ import {
   isValidPhoneNumber,
   isSupportedCountry,
   parsePhoneNumber,
-  type Country,
-} from 'react-phone-number-input'
+  type CountryCode as Country,
+} from 'libphonenumber-js'
 
 export const PHONE_NUMBER_ERROR = 'Enter a valid phone number.'
 export const DEFAULT_PHONE_COUNTRY: Country = 'NG'

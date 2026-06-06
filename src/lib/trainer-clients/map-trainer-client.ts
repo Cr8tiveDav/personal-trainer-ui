@@ -1,6 +1,7 @@
 import { format } from 'date-fns'
 import type { BackendTrainerClientResponse } from '@/api/types/trainer-clients'
 import type { TrainerClient } from '@/components/trainer/clients/types'
+import { isValidImageSrc } from '@/lib/utils'
 
 function formatGoals(goals: string[] | undefined): string {
   if (!goals?.length) return '—'
@@ -28,7 +29,7 @@ export function mapBackendToTrainerClient(
     id: row.client_id,
     name: row.client_name?.trim() || 'Unknown client',
     email: row.client_email?.trim() || '—',
-    avatarUrl: row.client_avatar?.trim() || undefined,
+    avatarUrl: isValidImageSrc(row.client_avatar?.trim()) ? row.client_avatar?.trim() : undefined,
     gender: row.client_gender?.trim() || undefined,
     goals: formatGoals(row.client_fitness_goals),
     fitnessLevel: formatFitnessLevel(row.client_fitness_level),

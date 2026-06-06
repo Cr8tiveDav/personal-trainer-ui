@@ -5,7 +5,7 @@ import { motion, type Variants } from "motion/react";
 import StatusBadge from "./StatusBadge";
 import { Trainer } from "../../types";
 import { cn } from "@/utils";
-import { formatDisplayName, TruncateEmail } from "@/lib/utils";
+import { formatDisplayName, TruncateEmail, isValidImageSrc } from "@/lib/utils";
 import { TrainerTableActions } from "./TrainerTableActions";
 
 import { useRouter } from "next/navigation";
@@ -66,7 +66,7 @@ const TrainerTableRow = ({ trainer, index = 0 }: TrainerTableRowProps) => {
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 shrink-0">
-            {trainer.avatarUrl ? (
+            {trainer.avatarUrl && isValidImageSrc(trainer.avatarUrl) ? (
               <Image
                 src={trainer.avatarUrl}
                 alt={trainer.name}

@@ -1,9 +1,13 @@
 'use client'
 
+import { useState, useEffect } from 'react'
+
 import {
   useMyTrainerAvailability,
   useSetMyTrainerAvailability,
   useUpdateMyTrainerAvailability,
+  useToggleMyTrainerAvailability,
+  useDeleteMyTrainerAvailabilitySlot,
 } from '@/api/availability'
 import { AvailabilitySetupPanel } from '@/components/availability/AvailabilitySetupPanel'
 import { AvailabilityScheduleView } from '@/components/availability/AvailabilityScheduleView'
@@ -19,10 +23,40 @@ type SetAvailabilityProps = {
 }
 
 export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps) {
-  const { data: slots = [], isLoading, isError, isSuccess } =
+  const { data, isLoading, isError, isSuccess } =
     useMyTrainerAvailability()
+  const slots = data?.slots || []
+  const initialGlobalState = data?.isAvailable ?? false
   const setAvailability = useSetMyTrainerAvailability()
   const updateAvailability = useUpdateMyTrainerAvailability()
+  const toggleMutation = useToggleMyTrainerAvailability()
+  const deleteAvailabilitySlot = useDeleteMyTrainerAvailabilitySlot()
+
+  const [isGloballyAvailable, setIsGloballyAvailable] = useState<boolean>(true);
+  const [hasInitialized, setHasInitialized] = useState(false);
+
+  useEffect(() => {
+    if (isSuccess && !hasInitialized) {
+      const stored = localStorage.getItem('trainer-availability');
+      if (stored !== null) {
+        setIsGloballyAvailable(stored === 'true');
+      } else {
+        setIsGloballyAvailable(initialGlobalState);
+      }
+      setHasInitialized(true);
+    }
+  }, [isSuccess, initialGlobalState, hasInitialized]);
+
+  const handleToggle = (val: boolean) => {
+    setIsGloballyAvailable(val);
+    localStorage.setItem('trainer-availability', String(val));
+    toggleMutation.mutate(val, {
+      onError: () => {
+        setIsGloballyAvailable(!val);
+        localStorage.setItem('trainer-availability', String(!val));
+      }
+    });
+  };
 
   const formKey =
     slots.length > 0
@@ -35,7 +69,7 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
 
   if (isError || !isSuccess) {
     return (
-      <div className='rounded-[12px] border border-gray-100 bg-white shadow-sm'>
+      <div className='rounded-[12px] border border-gray-100 bg-white '>
         <EmptyState
           imageSrc={EMPTY_STATE_IMAGE_PATHS.availability}
           imageAlt='Availability unavailable'
@@ -49,7 +83,7 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
 
   if (slots.length === 0) {
     return (
-      <div className='rounded-[12px] border border-gray-100 bg-white shadow-sm overflow-hidden'>
+      <div className='rounded-[12px] border border-gray-100 bg-white overflow-hidden'>
         <EmptyState
           imageSrc={EMPTY_STATE_IMAGE_PATHS.availability}
           imageAlt='No availability set'
@@ -88,6 +122,8 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
           existingSlots={slots}
           onSave={(availability) => updateAvailability.mutate(availability)}
           isSaving={updateAvailability.isPending}
+          onToggle={handleToggle}
+          isGloballyAvailable={isGloballyAvailable}
         />
       </div>
 
@@ -95,7 +131,9 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
         slots={slots}
         editable
         onUpdate={(availability) => updateAvailability.mutate(availability)}
-        isSaving={updateAvailability.isPending}
+        onDeleteSlot={(slotId) => deleteAvailabilitySlot.mutate(slotId)}
+        isSaving={updateAvailability.isPending || deleteAvailabilitySlot.isPending}
+        isOffline={!isGloballyAvailable}
       />
     </div>
   )

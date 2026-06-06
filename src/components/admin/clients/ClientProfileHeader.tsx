@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { Mail } from 'lucide-react'
 import type { Client } from './types'
 import { ClientStatusBadge } from './ClientStatusBadge'
+import { isValidImageSrc } from '@/lib/utils'
 
 function formatRevenue(amount: number) {
   return new Intl.NumberFormat('en-US', {
@@ -29,7 +30,7 @@ export function ClientProfileHeader({ client }: ClientProfileHeaderProps) {
 
         <div className='absolute left-6 top-[112px] z-10'>
           <div className='relative h-32 w-32 overflow-hidden rounded-[9999px] border-4 border-white shadow-md'>
-            {client.avatar ? (
+            {client.avatar && isValidImageSrc(client.avatar) ? (
               <Image
                 src={client.avatar}
                 alt={client.name}

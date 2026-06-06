@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useLogout } from '@/api/auth'
 import { TRAINER_LOGIN_PATH } from '@/lib/auth/trainer-routes'
 import { NotificationBell } from '@/components/notifications/NotificationBell'
+import { isValidImageSrc } from '@/lib/utils'
 
 interface TrainerHeaderProps {
   userName: string
@@ -67,7 +68,7 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
             aria-label='Profile menu'
             className='flex h-9 w-9 items-center justify-center rounded-[9999px] overflow-hidden border-2 border-gray-200 hover:border-primary transition-colors'
           >
-            {userAvatar ? (
+            {userAvatar && isValidImageSrc(userAvatar) ? (
               <Image src={userAvatar} alt={userName} width={36} height={36} className='object-cover' />
             ) : (
               <div className='flex h-full w-full items-center justify-center bg-primary text-sm font-semibold text-white'>
@@ -76,7 +77,7 @@ export function TrainerHeader({ userName, userAvatar, onMenuClick }: TrainerHead
             )}
           </button>
           {profileOpen && (
-            <div className='absolute right-0 top-11 z-50 w-[200px] rounded-[12px] border border-gray-100 bg-white p-4 shadow-lg'>
+            <div className='absolute right-0 top-11 z-50 w-[200px] rounded-[12px] border border-gray-100 bg-white p-4 '>
               <p className='text-sm font-semibold text-gray-900'>{userName}</p>
               <p className='mt-0.5 mb-4 text-xs text-gray-400'>Trainer</p>
               <button

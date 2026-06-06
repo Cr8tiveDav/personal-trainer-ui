@@ -12,20 +12,52 @@ export function ClientDetailsClient() {
   const router = useRouter()
   const id = typeof params.id === 'string' ? params.id : ''
 
-  const { data: client, isLoading, isError } = useAdminClient(id)
+  const { data: client, isLoading, isError, error } = useAdminClient(id)
 
   if (isLoading) {
     return <ClientDetailsSkeleton />
   }
 
   if (isError || !client) {
+    const isForbidden =
+      (error as any)?.response?.status === 403 ||
+      error?.message?.toLowerCase().includes('forbidden')
+
+    if (isForbidden) {
+      return (
+        <div className='flex min-h-[60vh] w-full flex-col items-center justify-center px-4 py-12 text-center'>
+          <div className='flex w-full max-w-2xl flex-col items-center'>
+            <p className='mb-4 text-sm font-semibold uppercase tracking-widest text-primary'>
+              Access Restricted
+            </p>
+            <h1 className='mb-6 text-4xl font-black leading-none text-muted-foreground md:text-5xl lg:text-6xl'>
+              Not Authorized
+            </h1>
+            <p className='mb-10 max-w-md text-base leading-relaxed text-muted'>
+              You do not have permission to view client details. Super admin access is required.
+            </p>
+            <button
+              onClick={() => router.push('/admin/users')}
+              className='inline-block rounded-[9999px] bg-primary px-8 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90'
+            >
+              Back to clients
+            </button>
+          </div>
+        </div>
+      )
+    }
+
+    const errorMessage = error?.message || 'Failed to load client details.'
+
     return (
       <div className='mx-auto w-full max-w-[1400px] px-4 py-12 text-center'>
-        <p className='mb-4 text-red-500'>Failed to load client details.</p>
+        <p className='mb-4 font-medium text-red-500'>
+          {errorMessage}
+        </p>
         <button
           type='button'
           onClick={() => router.push('/admin/users')}
-          className='text-primary hover:underline'
+          className='text-primary hover:underline font-semibold'
         >
           Back to Clients
         </button>

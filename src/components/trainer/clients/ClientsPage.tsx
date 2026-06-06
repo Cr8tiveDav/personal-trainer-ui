@@ -124,7 +124,7 @@ export function ClientsPage() {
         </p>
       </div>
 
-      <div className='rounded-[12px] border border-gray-100 bg-white shadow-sm'>
+      <div className='rounded-[12px] border border-gray-100 bg-white '>
         <div className='flex flex-col gap-4 border-b border-gray-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between'>
           <p className='text-sm text-gray-500'>
             {totalCount === 0
