@@ -16,7 +16,7 @@ const BuildUpFinalCta = () => {
   })
   const { props: mobileImageProps } = getImageProps({
     ...commonImageProps,
-    src: '/images/ads/footer_mob.png',
+    src: '/images/ads/footer_desk.png',
     width: 1376,
     height: 768,
   })
