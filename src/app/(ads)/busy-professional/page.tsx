@@ -126,7 +126,7 @@ export default function BusyProfessionalPage() {
 
       <section className="w-full bg-[#F7F7F7] py-12 md:py-20">
         <div className="container mx-auto px-4 text-center">
-          <div className="mx-auto space-y-5 text-center max-w-4xl">
+          <div className="mx-auto space-y-5 max-w-4xl">
             <h2 className="text-3xl font-bold tracking-tight text-muted-foreground lg:text-4xl lg:leading-[1.1]">
               You know what&apos;s on your calendar right now.
             </h2>
@@ -233,7 +233,7 @@ export default function BusyProfessionalPage() {
                   className="flex items-start text-sm text-muted md:text-base"
                   key={reason}
                 >
-                    <Image
+                  <Image
                     alt=""
                     className="mr-3 mt-0.5 shrink-0"
                     height={20}

@@ -50,14 +50,7 @@ export default function TestSqueeze1Page() {
   ]
 
   return (
-    <main
-      className="fitcall-figma-test-screen overflow-hidden bg-white text-muted-foreground"
-      data-figma-id="test-squeeze-1"
-    >
-      <style>
-        {`body:has(.fitcall-figma-test-screen) nav,body:has(.fitcall-figma-test-screen) footer,body:has(.fitcall-figma-test-screen) [role="button"].fixed{display:none!important}`}
-      </style>
-
+    <main className="overflow-hidden bg-white text-muted-foreground">
       <section className="relative w-full overflow-hidden pb-12 pt-10 md:pb-20 md:pt-16">
         <div className="absolute inset-0 z-0 bg-[linear-gradient(#000_1px,transparent_1px),linear-gradient(90deg,#000_1px,transparent_1px)] bg-[length:40px_40px] opacity-[0.03]" />
         <div className="absolute -left-20 top-0 h-200 w-150 rounded-[9999px] bg-[#C2DCFF]/30 blur-[120px]" />
