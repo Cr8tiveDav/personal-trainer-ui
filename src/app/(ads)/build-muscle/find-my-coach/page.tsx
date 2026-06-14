@@ -9,14 +9,14 @@ import ProgressSection from '~/components/squeeze/Progress'
 import SqueezeFooter from '~/components/squeeze/SqueezeFooter'
 import TrainerReady from '~/components/squeeze/TrainerReady'
 
-const WaitList = () => {
+const FindMyCoachPage = () => {
   return (
     <main className="w-full pt-28 md:pt-48">
       <Hero
-        badge="Live trainer accountability"
-        headline="Never miss a workout session"
-        description="Connect with vetted fitness trainers who call you at your scheduled time — live, on video. Join the waitlist for exclusive early access to FitCall."
-        ctaLabel="Join the Waitlist"
+        badge="Strength builder"
+        headline="Same numbers. Same plateau. Same excuses. One call fixes all three."
+        description="Work with a coach who helps you train smarter, stay consistent, and finally push past your limits."
+        ctaLabel="Build More Strength"
       />
       <IntegrationsBar />
       <section className="bg-secondary py-6">
@@ -32,4 +32,4 @@ const WaitList = () => {
   )
 }
 
-export default WaitList
+export default FindMyCoachPage

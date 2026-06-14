@@ -5,7 +5,19 @@ import { A11y, Autoplay, Pagination, Scrollbar } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { WaitlistForm } from './WaitListForm';
 
-const Hero = () => {
+type HeroProps = {
+  badge: string
+  headline: string
+  description: string
+  ctaLabel: string
+}
+
+const Hero = ({
+  badge,
+  headline,
+  description,
+  ctaLabel,
+}: HeroProps) => {
   return (
     <section className='mb-16 w-full overflow-hidden'>
       <div className='container'>
@@ -13,20 +25,18 @@ const Hero = () => {
           <div className='w-full min-w-0 lg:w-1/2'>
             <div className='mb-4 inline-flex max-w-full flex-wrap items-center rounded-[9999px] bg-primarybadge px-4 py-2 text-xs font-medium text-primary'>
               <span className='mr-2 h-2 w-2 animate-pulse rounded-[9999px] bg-primary'></span>
-              Live trainer accountability
+              {badge}
             </div>
 
             <h1 className='mb-6 wrap-break-word text-left text-4xl font-bold leading-tight tracking-tight text-muted-foreground sm:text-5xl md:text-6xl'>
-              Never miss a workout session
+              {headline}
             </h1>
 
             <p className='mb-8 max-w-full wrap-break-word text-left text-base leading-relaxed text-muted'>
-              Connect with vetted fitness trainers who call you at your
-              scheduled time — live, on video. Join the waitlist for exclusive
-              early access to FitCall.
+              {description}
             </p>
 
-            <WaitlistForm />
+            <WaitlistForm ctaLabel={ctaLabel} />
           </div>
 
           <div className='flex w-full min-w-0 justify-center lg:w-1/2'>
