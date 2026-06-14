@@ -85,6 +85,12 @@ These routes use `src/app/(main)/(landing-routes)/layout.tsx`, which renders the
 
 - `/get-fit` -> `src/app/(ads)/get-fit/page.tsx`
 - `/build-up` -> `src/app/(ads)/build-up/page.tsx`
+- `/busy-professional` -> `src/app/(ads)/busy-professional/page.tsx`
+- `/busy-professional/find-my-coach` -> `src/app/(ads)/busy-professional/find-my-coach/page.tsx`
+- `/lose-weight` -> `src/app/(ads)/lose-weight/page.tsx`
+- `/lose-weight/find-my-coach` -> `src/app/(ads)/lose-weight/find-my-coach/page.tsx`
+- `/build-muscle` -> `src/app/(ads)/build-muscle/page.tsx`
+- `/build-muscle/find-my-coach` -> `src/app/(ads)/build-muscle/find-my-coach/page.tsx`
 - `/burn-out-professional` -> `src/app/(ads)/burn-out-professional/page.tsx`
 - `/gym-shy` -> `src/app/(ads)/gym-shy/page.tsx`
 - `/midlife-wellness` -> `src/app/(ads)/midlife-wellness/page.tsx`
