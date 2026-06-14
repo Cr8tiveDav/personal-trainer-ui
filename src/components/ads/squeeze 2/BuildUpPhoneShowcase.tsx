@@ -14,7 +14,7 @@ const phones = [
       'left-[73%] top-[14%] z-10 w-[32%] -translate-x-1/2 md:left-[69%] md:top-[13%] md:w-[28%]',
   },
   {
-    src: '/images/ads/mid_phone.png',
+    src: '/images/ads/left_phone.png',
     alt: 'FitCall trainer search screen',
     className: 'left-1/2 top-0 z-20 w-[37%] -translate-x-1/2 md:w-[32%]',
   },

@@ -33,7 +33,11 @@ const inputStyles =
 
 const errorStyles = 'mt-1 text-xs text-red-500'
 
-export const WaitlistForm = () => {
+type WaitlistFormProps = {
+  ctaLabel?: string
+}
+
+export const WaitlistForm = ({ ctaLabel = 'Join the Waitlist' }: WaitlistFormProps) => {
   const [isSubmitting, startTransition] = useTransition()
 
   const {
@@ -141,7 +145,7 @@ export const WaitlistForm = () => {
         </div>
 
         <Button type='submit' disabled={isSubmitting}>
-          {isSubmitting ? 'Processing...' : 'Join the Waitlist'}
+          {isSubmitting ? 'Processing...' : ctaLabel}
         </Button>
       </form>
     </div>

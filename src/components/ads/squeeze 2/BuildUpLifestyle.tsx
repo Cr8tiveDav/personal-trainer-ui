@@ -16,7 +16,7 @@ const BuildUpLifestyle = () => {
         <div className="mx-auto mt-7 w-full overflow-hidden rounded-[16px] md:mt-10 md:rounded-[18px]">
           <picture>
             <source
-              srcSet="/images/ads/spread_mob.png"
+              srcSet="/images/ads/spread_desk.png"
               media="(max-width: 767px)"
             />
             <Image
