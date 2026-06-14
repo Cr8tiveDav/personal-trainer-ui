@@ -88,7 +88,7 @@ export default function TestSqueeze2Page() {
             <div className="relative mx-auto w-full max-w-[560px]">
               <div className="absolute inset-x-8 bottom-0 top-12 rounded-[8px] bg-primary" />
               <Image
-                alt=""
+                alt="Weight loss coaching client training with FitCall support"
                 className="relative z-10 mx-auto h-auto max-h-[620px] w-full rounded-[8px] object-contain"
                 height={640}
                 priority
@@ -129,7 +129,7 @@ export default function TestSqueeze2Page() {
         <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-2 lg:items-center">
           <div className="relative aspect-[1.2] overflow-hidden rounded-[8px] bg-[#F7F7F7]">
             <Image
-              alt=""
+              alt="Coach supporting a client through a sustainable weight loss plan"
               className="object-cover"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -147,13 +147,13 @@ export default function TestSqueeze2Page() {
               You&apos;ll be matched with a coach who:
             </p>
             <ul className="space-y-4 text-left">
-              {differenceItems.map((item, index) => (
+              {differenceItems.map((item) => (
                 <li
                   className="flex items-start text-sm text-muted md:text-base"
                   key={item}
                 >
                   <Image
-                    alt={`check ${index + 1}`}
+                    alt=""
                     className="mr-3 mt-0.5 shrink-0"
                     height={20}
                     src="/images/features/check.svg"
@@ -198,7 +198,7 @@ export default function TestSqueeze2Page() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div className="relative hidden aspect-[1.2] overflow-hidden rounded-[8px] bg-[#F7F7F7] lg:block">
               <Image
-                alt=""
+                alt="Person building sustainable fitness habits for weight loss"
                 className="object-cover"
                 fill
                 sizes="50vw"
@@ -206,13 +206,13 @@ export default function TestSqueeze2Page() {
               />
             </div>
             <ul className="space-y-4">
-              {audienceItems.map((item, index) => (
+              {audienceItems.map((item) => (
                 <li
                   className="flex items-start text-sm text-muted md:text-base"
                   key={item}
                 >
                   <Image
-                    alt={`check ${index + 1}`}
+                    alt=""
                     className="mr-3 mt-0.5 shrink-0"
                     height={20}
                     src="/images/features/check.svg"
@@ -250,7 +250,7 @@ export default function TestSqueeze2Page() {
 
       <section className="relative min-h-[460px] overflow-hidden px-4 py-20 text-white md:px-10">
         <Image
-          alt=""
+          alt="Weight loss coaching lifestyle background"
           className="object-cover"
           fill
           sizes="100vw"

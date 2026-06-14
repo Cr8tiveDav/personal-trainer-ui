@@ -10,16 +10,19 @@ export default function TestSqueeze1Page() {
       title: 'Structured training',
       body: 'Every session has the sets, reps, tempo, and rest times you need with a video demo so there is zero guesswork.',
       image: 'card-1.png',
+      imageAlt: 'Trainer reviewing a structured strength workout plan',
     },
     {
       title: 'Live accountability',
       body: 'Your trainer calls you at your booked time to train with you, push your last rep, and keep your session honest.',
       image: 'card-2.png',
+      imageAlt: 'Personal trainer coaching a live strength session',
     },
     {
       title: 'Progressive overload',
       body: 'Structured, tracked, intentional training that builds week on week so your effort actually adds up.',
       image: 'card-3.png',
+      imageAlt: 'Athlete tracking strength progress between workouts',
     },
   ]
   const benefits = [
@@ -79,7 +82,7 @@ export default function TestSqueeze1Page() {
             <div className="relative mx-auto w-full max-w-[520px]">
               <div className="absolute inset-x-8 bottom-0 top-16 rounded-[8px] bg-primary" />
               <Image
-                alt=""
+                alt="Strength athlete holding dumbbells during a focused workout"
                 className="relative z-10 mx-auto h-auto max-h-[640px] w-full rounded-[8px] object-contain"
                 height={760}
                 priority
@@ -132,7 +135,7 @@ export default function TestSqueeze1Page() {
               >
                 <div className="relative aspect-[1.1] overflow-hidden rounded-[8px] bg-[#F7F7F7]">
                   <Image
-                    alt=""
+                    alt={card.imageAlt}
                     className="object-cover"
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
@@ -173,7 +176,7 @@ export default function TestSqueeze1Page() {
         <div className="container mx-auto grid gap-10 px-4 lg:grid-cols-2 lg:items-center">
           <div className="relative aspect-[1.15] overflow-hidden rounded-[8px] bg-white">
             <Image
-              alt=""
+              alt="Trainer leading a live accountability workout session"
               className="object-cover"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
@@ -257,7 +260,7 @@ export default function TestSqueeze1Page() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div className="relative hidden aspect-[1.2] overflow-hidden rounded-[8px] bg-[#F7F7F7] lg:block">
               <Image
-                alt=""
+                alt="Strength trainer supporting a client with structured coaching"
                 className="object-cover"
                 fill
                 sizes="50vw"
@@ -265,13 +268,13 @@ export default function TestSqueeze1Page() {
               />
             </div>
             <ul className="space-y-4">
-              {benefits.map((benefit, index) => (
+              {benefits.map((benefit) => (
                 <li
                   className="flex items-start text-sm text-muted md:text-base"
                   key={benefit}
                 >
                   <Image
-                    alt={`check ${index + 1}`}
+                    alt=""
                     className="mr-3 mt-0.5 shrink-0"
                     height={20}
                     src="/images/features/check.svg"
@@ -287,7 +290,7 @@ export default function TestSqueeze1Page() {
 
       <section className="relative min-h-[460px] overflow-hidden px-4 py-20 text-white md:px-10">
         <Image
-          alt=""
+          alt="Strength training session background"
           className="object-cover"
           fill
           sizes="100vw"
