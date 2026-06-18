@@ -117,7 +117,7 @@ export default function TestSqueeze1Page() {
         <div className="container mx-auto px-4">
           <SectionHeader
             title="Progress in strength doesn't come from trying harder."
-            description="It comes from progressive overload. structured, tracked, intentional training that builds week on week."
+            description="It comes from progressive overload: structured, tracked, intentional training that builds week on week."
             align="center"
           />
           <div className="grid gap-6 md:grid-cols-3">

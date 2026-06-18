@@ -7,18 +7,19 @@ import { Button } from '@/components/ui/button'
 
 export default function TestSqueeze2Page() {
   const differenceItems = [
-    'Understands your goals',
-    'Builds a realistic plan',
+    'Understands your weight loss goals',
+    'Creates a plan that fits your lifestyle',
+    'Checks in regularly',
     'Keeps you accountable',
-    'Helps you stay on track',
-    'Celebrates your wins',
+    'Helps you stay consistent when motivation fades',
+    'Celebrates every win along the way',
   ]
   const audienceItems = [
-    'Busy professionals',
-    'Men and women 25+',
-    'People who have tried before',
-    'People who are tired of starting over',
-    'Anyone ready for sustainable change',
+    'Men and women looking to lose weight sustainably',
+    'Busy professionals with little time to spare',
+    'People who have tried diets, workouts and fitness apps before',
+    'Anyone tired of starting over every Monday',
+    'Anyone ready to make this their last restart',
   ]
   const testimonials = [
     {
@@ -41,19 +42,19 @@ export default function TestSqueeze2Page() {
       value: 'item-1',
       question: "What if I'm a complete beginner?",
       answer:
-        'Every session is tailored to where you are right now — not where you think you should be. Your trainer builds up with you.',
+        'Perfect. Every plan is built around where you are today, not where you think you should be. Your coach guides you step by step.',
     },
     {
       value: 'item-2',
-      question: "What if I've failed at this before?",
+      question: "What if I've failed before?",
       answer:
-        "That's exactly who FitCall was built for. The trainer's job is to make failure harder, not blame you for it.",
+        'Most of our clients have. FitCall was built for people who struggle with consistency. Your coach helps make success easier and quitting harder.',
     },
     {
       value: 'item-3',
       question: "What if I can't afford a personal trainer?",
       answer:
-        'FitCall makes professional training accessible. Your first session is free. Paid plans are priced for everyday people — not gym memberships with hidden fees.',
+        'FitCall makes professional coaching accessible without the high cost of traditional personal training. Your first session is completely free.',
     },
   ]
 
@@ -67,14 +68,13 @@ export default function TestSqueeze2Page() {
           <div className="grid gap-12 pt-12 text-center lg:grid-cols-2 lg:items-center lg:text-left">
             <div className="space-y-6">
               <h1 className="wrap-break-word text-4xl font-bold leading-tight tracking-tight text-muted-foreground sm:text-5xl md:text-6xl">
-                Lose Weight Without Starting Over Again.
+                STOP STARTING OVER
               </h1>
               <p className="mx-auto max-w-full wrap-break-word text-base leading-relaxed text-muted lg:mx-0 lg:text-lg">
-                Get matched with a coach who helps you stay accountable, stay
-                consistent, and finally build habits that last.
+                Because another diet isn&apos;t what you need. Support is.
               </p>
               <Button asChild className="mt-0" size="xl">
-                <Link href="/lose-weight/find-my-coach">START MY JOURNEY</Link>
+                <Link href="/lose-weight/find-my-coach">FIND MY COACH</Link>
               </Button>
             </div>
 
@@ -96,23 +96,26 @@ export default function TestSqueeze2Page() {
       <section className="w-full bg-[#F7F7F7] py-12 md:py-20">
         <div className="container mx-auto max-w-5xl px-4 text-center">
           <div className="space-y-5">
-            <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-              Because another diet isn&apos;t the answer. Support is.
-            </p>
             <h2 className="text-3xl font-bold tracking-tight text-muted-foreground lg:text-4xl lg:leading-[1.1]">
-              The real reason most people struggle
+              If losing weight was just about knowing what to do, you&apos;d
+              already be where you want to be.
             </h2>
-            <div className="text-base leading-relaxed text-muted lg:text-lg">
+            <div className="space-y-4 text-base leading-relaxed text-muted lg:text-lg">
               <p>
-                It&apos;s not because they&apos;re lazy or because they
-                don&apos;t care. It&apos;s because staying consistent alone is
-                hard.
+                You know the foods, you know the workouts, you&apos;ve saved the
+                plans, you&apos;ve promised yourself that this time will be
+                different.
               </p>
               <p>
-                Motivation disappears, life gets busy, progress slows and people
-                quit.
+                Then, work gets busy, you miss a few days, progress slows,
+                motivation disappears and before you know it, you&apos;re back
+                at square one.
               </p>
-              <p>That&apos;s where Fitcall comes in.</p>
+              <p>
+                The truth is, most people don&apos;t struggle because
+                they&apos;re lazy. They struggle because doing it alone is hard
+                and that&apos;s where FitCall comes in.
+              </p>
             </div>
           </div>
         </div>
@@ -131,13 +134,14 @@ export default function TestSqueeze2Page() {
           </div>
           <div className="space-y-6 text-center lg:text-left">
             <SectionHeader
-              badge="WHAT MAKES FITCALL DIFFERENT"
-              title="Most fitness apps give you information but Fitcall gives you support."
-              align="left"
-              className="mb-0"
+              badge="WHY FITCALL WORKS"
+              title="Most fitness apps give you workouts. FitCall gives you a real person."
+              align="center"
+              className="mb-3 md:mb-4 lg:items-start lg:text-left"
             />
             <p className="text-base leading-relaxed text-muted lg:text-lg">
-              You&apos;ll be matched with a coach who:
+              When you join FitCall, you&apos;re matched with a dedicated coach
+              who:
             </p>
             <ul className="space-y-4 text-left">
               {differenceItems.map((item) => (
@@ -156,6 +160,10 @@ export default function TestSqueeze2Page() {
                 </li>
               ))}
             </ul>
+            <p className="text-base leading-relaxed text-muted lg:text-lg">
+              Real change doesn&apos;t happen from information. It happens
+              through support.
+            </p>
           </div>
         </div>
       </section>
@@ -164,17 +172,16 @@ export default function TestSqueeze2Page() {
         <div className="container mx-auto px-4 text-center">
           <div className="space-y-5 max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold tracking-tight text-muted-foreground lg:text-4xl lg:leading-[1.1]">
-              Real change takes consistency
+              IMAGINE THIS...
             </h2>
             <div className="space-y-2 text-base leading-relaxed text-muted lg:text-lg">
               <p>
-                Imagine feeling confident in photos, having more energy, feeling
-                comfortable in your clothes or walking into a room feeling good
-                about yourself again.
-              </p>
-              <p>
-                That starts with consistency and consistency starts with
-                support.
+                Looking in the mirror and feeling proud of what you see, having
+                the energy to keep up with your kids, feeling comfortable in
+                your clothes again, taking photos without hiding behind everyone
+                else or walking into a room with confidence. Not because you
+                found a magic diet, but because you finally stayed consistent
+                long enough to see results.
               </p>
             </div>
           </div>
@@ -185,17 +192,17 @@ export default function TestSqueeze2Page() {
         <div className="container mx-auto px-4">
           <div className="mx-auto mb-10 max-w-4xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-muted-foreground lg:text-4xl lg:leading-[1.1]">
-              Who this is for
+              Who FitCall is for
             </h2>
           </div>
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div className="relative hidden aspect-[1.2] overflow-hidden rounded-[8px] bg-[#F7F7F7] lg:block">
               <Image
-                alt="Person building sustainable fitness habits for weight loss"
-                className="object-cover"
+                alt="Person running outdoors while building sustainable fitness habits"
+                className="object-cover object-top"
                 fill
                 sizes="50vw"
-                src="/images/ads/lose-weight-lifestyle.png"
+                src="/images/ads/athlete_desk.jpg"
               />
             </div>
             <ul className="space-y-4">
@@ -222,6 +229,7 @@ export default function TestSqueeze2Page() {
       <section className="relative w-full overflow-hidden bg-[#F7F7F7] py-12 md:py-20">
         <div className="container relative mx-auto px-4">
           <SectionHeader
+            badge="SUCCESS STORIES"
             title="See what our clients are saying:"
             align="center"
           />
@@ -252,11 +260,19 @@ export default function TestSqueeze2Page() {
         <div className="absolute inset-0 bg-black/55" />
         <div className="relative z-10 mx-auto flex min-h-[300px] max-w-3xl flex-col items-center justify-center gap-5 text-center">
           <h2 className="text-3xl font-bold tracking-tight lg:text-4xl lg:leading-[1.1]">
-            You&apos;ve waited long enough.
+            READY TO DO THIS DIFFERENTLY?
           </h2>
-          <p className="text-base leading-relaxed opacity-90 md:text-lg">
-            Let&apos;s make this the time it finally sticks.
-          </p>
+          <div className="space-y-3 text-base leading-relaxed opacity-90 md:text-lg">
+            <p>You&apos;ve tried doing it alone.</p>
+            <p>
+              Maybe what you&apos;ve been missing isn&apos;t another plan. Maybe
+              you&apos;ve been missing support.
+            </p>
+            <p>
+              One free call. One real coach. One chance to finally stop starting
+              over.
+            </p>
+          </div>
           <Button asChild size="xl">
             <Link href="/lose-weight/find-my-coach">FIND MY COACH</Link>
           </Button>
