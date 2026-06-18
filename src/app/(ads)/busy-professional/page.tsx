@@ -138,7 +138,7 @@ export default function BusyProfessionalPage() {
               <p>
                 Somewhere in there, go to the gym has been on your to-do list
                 for six weeks. It keeps getting bumped. Not because you
-                don&apos;t care, but because by the time you have a free slot,
+                don&apos;t care, because by the time you have a free slot,
                 you&apos;re too drained to use it wisely.
               </p>
               <p>
