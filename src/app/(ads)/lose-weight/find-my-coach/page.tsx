@@ -13,7 +13,7 @@ const FindMyCoachPage = () => {
   const ctaLabel = 'Start Losing Weight Smarter'
 
   return (
-    <main className="w-full pt-28 md:pt-48">
+    <main className="w-full pt-28">
       <Hero
         badge="Weight loss"
         headline="You didn't fail every plan you tried. Every plan left you alone. FitCall doesn't."

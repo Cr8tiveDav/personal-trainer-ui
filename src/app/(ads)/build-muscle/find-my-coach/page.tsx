@@ -13,7 +13,7 @@ const FindMyCoachPage = () => {
   const ctaLabel = 'Build More Strength'
 
   return (
-    <main className="w-full pt-28 md:pt-48">
+    <main className="w-full pt-28">
       <Hero
         badge="Strength builder"
         headline="Same numbers. Same plateau. Same excuses. One call fixes all three."

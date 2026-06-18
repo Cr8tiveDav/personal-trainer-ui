@@ -13,7 +13,7 @@ const FindMyCoachPage = () => {
   const ctaLabel = 'Find My Coach'
 
   return (
-    <main className="w-full pt-28 md:pt-48">
+    <main className="w-full pt-28">
       <Hero
         badge="Busy professional"
         headline="No time for the gym? Your trainer comes to your schedule. Literally."
