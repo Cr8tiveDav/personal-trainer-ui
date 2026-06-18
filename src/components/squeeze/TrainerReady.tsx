@@ -1,6 +1,10 @@
 import { WaitlistForm } from './WaitListForm'
 
-const TrainerReady = () => {
+type TrainerReadyProps = {
+  ctaLabel?: string
+}
+
+const TrainerReady = ({ ctaLabel }: TrainerReadyProps) => {
   return (
     <section className="w-full py-14">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,7 +18,7 @@ const TrainerReady = () => {
               Kindly Fill the form and download FitCall today.
             </p>
           </div>
-          <WaitlistForm />
+          <WaitlistForm ctaLabel={ctaLabel} />
         </div>
       </div>
     </section>

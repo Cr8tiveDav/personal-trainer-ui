@@ -10,23 +10,25 @@ import SqueezeFooter from '~/components/squeeze/SqueezeFooter'
 import TrainerReady from '~/components/squeeze/TrainerReady'
 
 const FindMyCoachPage = () => {
+  const ctaLabel = 'Find My Coach'
+
   return (
     <main className="w-full pt-28 md:pt-48">
       <Hero
         badge="Busy professional"
         headline="No time for the gym? Your trainer comes to your schedule. Literally."
         description="Build strength, lose weight, and stay consistent with coaching designed around your work, meetings, and real life."
-        ctaLabel="Find My Coach"
+        ctaLabel={ctaLabel}
       />
       <IntegrationsBar />
       <section className="bg-secondary py-6">
         <Testimonials />
-        <ProgressSection />
+        <ProgressSection showForm={false} />
       </section>
       <SuccessStory />
-      <FindSomeoneSection />
+      <FindSomeoneSection showForm={false} />
       <FitnessLifestyle />
-      <TrainerReady />
+      <TrainerReady ctaLabel={ctaLabel} />
       <SqueezeFooter />
     </main>
   )

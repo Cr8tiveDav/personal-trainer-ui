@@ -74,7 +74,7 @@ const faqs = [
     value: 'item-3',
     question: 'Is this suitable for beginners?',
     answer:
-      'Absolutely. Many Fitcall members are restarting their fitness journey.',
+      'Absolutely. Many FitCall members are restarting their fitness journey.',
   },
   {
     value: 'item-4',
@@ -133,12 +133,12 @@ export default function BusyProfessionalPage() {
             <div className="space-y-3 text-base leading-relaxed text-muted lg:text-lg">
               <p>
                 Meetings. Deadlines. School runs. Emails you haven&apos;t
-                replied to from three days ago.
+                replied to.
               </p>
               <p>
                 Somewhere in there, go to the gym has been on your to-do list
                 for six weeks. It keeps getting bumped. Not because you
-                don&apos;t care, because by the time you have a free slot,
+                don&apos;t care, but because by the time you have a free slot,
                 you&apos;re too drained to use it wisely.
               </p>
               <p>
@@ -220,11 +220,11 @@ export default function BusyProfessionalPage() {
           <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
             <div className="relative hidden aspect-[1.2] overflow-hidden rounded-[8px] bg-[#F7F7F7] lg:block">
               <Image
-                alt="Client training with FitCall support around a busy schedule"
+                alt="Client building consistency with FitCall coaching"
                 className="object-cover"
                 fill
                 sizes="50vw"
-                src="/images/ads/busy-professional-feature.png"
+                src="/images/ads/spread_desk.png"
               />
             </div>
             <ul className="space-y-4">
@@ -296,6 +296,10 @@ export default function BusyProfessionalPage() {
           </h2>
           <p className="text-base leading-relaxed opacity-90 md:text-lg">
             Get matched with your coach today.
+          </p>
+          <p className="max-w-2xl text-base leading-relaxed opacity-90 md:text-lg">
+            Just one call and the chance to finally feel what showing up
+            actually feels like.
           </p>
           <Button asChild size="xl">
             <Link href="/busy-professional/find-my-coach">FIND MY COACH</Link>
