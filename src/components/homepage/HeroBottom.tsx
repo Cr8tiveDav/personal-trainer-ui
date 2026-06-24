@@ -7,10 +7,10 @@ interface IntegrationsBarProps {
 
 const IntegrationsBar = ({ className }: IntegrationsBarProps) => {
   const tools = [
-    '/images/zoom.svg',
-    '/images/whatsapp.svg',
-    '/images/meet.svg',
-    '/images/facebook-logo.svg',
+    { src: '/images/zoom.svg', name: 'Zoom' },
+    { src: '/images/whatsapp.svg', name: 'WhatsApp' },
+    { src: '/images/meet.svg', name: 'Google Meet' },
+    { src: '/images/facebook-logo.svg', name: 'Facebook' },
   ]
 
   return (
@@ -24,12 +24,12 @@ const IntegrationsBar = ({ className }: IntegrationsBarProps) => {
           <div className="flex min-w-max items-center gap-8 pb-2 md:gap-10 md:pb-0">
             {tools.map((tool) => (
               <span
-                key={tool}
+                key={tool.src}
                 className="cursor-default whitespace-nowrap text-sm font-semibold text-muted-foreground transition-colors hover:text-primary"
               >
                 <Image
-                  src={tool}
-                  alt="Integration tool"
+                  src={tool.src}
+                  alt={tool.name}
                   width={100}
                   height={24}
                   className="h-6 w-auto object-contain"
