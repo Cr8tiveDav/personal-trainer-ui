@@ -1,10 +1,22 @@
-const IntegrationsBar = () => {
-  const tools = ['Zoom', 'WhatsApp', 'Google Meet', 'Twitter', 'Facebook']
+import { cn } from '@/utils'
+import Image from 'next/image'
+
+interface IntegrationsBarProps {
+  className?: string
+}
+
+const IntegrationsBar = ({ className }: IntegrationsBarProps) => {
+  const tools = [
+    '/images/zoom.svg',
+    '/images/whatsapp.svg',
+    '/images/meet.svg',
+    '/images/facebook-logo.svg',
+  ]
 
   return (
-    <section className="mb-10 border-y border-gray-100 py-8">
+    <section className={cn('mb-10 border-y border-gray-100 py-4', className)}>
       <div className="container flex flex-col items-center justify-between gap-6 md:flex-row">
-        <p className="shrink-0 text-sm font-medium text-muted">
+        <p className="shrink-0 text-lg text-muted">
           Works with the tools you already use
         </p>
 
@@ -15,7 +27,13 @@ const IntegrationsBar = () => {
                 key={tool}
                 className="cursor-default whitespace-nowrap text-sm font-semibold text-muted-foreground transition-colors hover:text-primary"
               >
-                {tool}
+                <Image
+                  src={tool}
+                  alt="Integration tool"
+                  width={100}
+                  height={24}
+                  className="h-6 w-auto object-contain"
+                />
               </span>
             ))}
           </div>

@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import React, { useState } from "react";
-import { useLogin, type LoginType } from "@/api/auth";
+import Image from 'next/image'
+import React, { useState } from 'react'
+import { useLogin, type LoginType } from '@/api/auth'
 import {
   Form,
   FormControl,
@@ -10,38 +10,38 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "~/components/ui/form";
-import { LoginSchema } from "~/schemas";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import FramerButton from "../ui/framer-button";
-import Link from "next/link";
-import { Eye, EyeOff, Asterisk } from "lucide-react";
-import { Input } from "../ui/input";
-import { cn } from "~/utils";
+} from '~/components/ui/form'
+import { LoginSchema } from '~/schemas'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
+import FramerButton from '../ui/framer-button'
+import Link from 'next/link'
+import { Eye, EyeOff, Asterisk } from 'lucide-react'
+import { Input } from '../ui/input'
+import { cn } from '~/utils'
 interface LoginProps {
-  type: LoginType;
+  type: LoginType
 }
 
 const Login = ({ type }: LoginProps) => {
-  const login = useLogin({ type });
-  const [showPassword, setShowPassword] = useState(false);
+  const login = useLogin({ type })
+  const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-  });
+  })
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     login.mutate({
       email: values.email,
       password: values.password,
-    });
-  };
+    })
+  }
 
   return (
     <section className="min-h-screen bg-secondary flex items-center justify-center py-6 sm:py-8">
@@ -56,7 +56,7 @@ const Login = ({ type }: LoginProps) => {
             />
           </article>
 
-          <article className="relative z-30 md:right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12">
+          <article className="relative z-30 right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12">
             <Image
               src="/images/trainer/logo.svg"
               alt="Logo"
@@ -66,7 +66,7 @@ const Login = ({ type }: LoginProps) => {
             />
 
             <h2 className="mb-8 text-xl font-medium">
-              {type === "admin" ? "Login as an Admin" : "Login as a Trainer"}
+              {type === 'admin' ? 'Login as an Admin' : 'Login as a Trainer'}
             </h2>
 
             <Form {...form}>
@@ -93,8 +93,8 @@ const Login = ({ type }: LoginProps) => {
                           placeholder="johndoe@example.com"
                           {...field}
                           className={cn(
-                            "login-input text-sm h-[44px] sm:text-base",
-                            form.formState.errors.email && "login-input--error",
+                            'login-input text-sm h-[44px] sm:text-base',
+                            form.formState.errors.email && 'login-input--error',
                           )}
                         />
                       </FormControl>
@@ -121,13 +121,13 @@ const Login = ({ type }: LoginProps) => {
                         <FormControl>
                           <Input
                             disabled={login.isPending}
-                            type={showPassword ? "text" : "password"}
+                            type={showPassword ? 'text' : 'password'}
                             placeholder="Enter Password"
                             {...field}
                             className={cn(
-                              "login-input pr-10 h-[44px] text-sm sm:text-base",
+                              'login-input pr-10 h-[44px] text-sm sm:text-base',
                               form.formState.errors.password &&
-                                "login-input--error",
+                                'login-input--error',
                             )}
                           />
                         </FormControl>
@@ -165,11 +165,7 @@ const Login = ({ type }: LoginProps) => {
 
                 <div className="!mt-2 flex justify-end">
                   <Link
-                    href={
-                      type === "admin"
-                        ? "/admin/forgot-password"
-                        : "/trainer/forgot-password"
-                    }
+                    href="/admin/forgot-password"
                     className="cursor-pointer text-xs font-semibold text-red-800 sm:text-sm"
                   >
                     Forgot Password?
@@ -181,7 +177,7 @@ const Login = ({ type }: LoginProps) => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

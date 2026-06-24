@@ -3,33 +3,20 @@
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
+const APP_STORE_URL = 'https://apps.apple.com/app/fitcall/id123456789'; // TODO: replace with real App Store ID
+const PLAY_STORE_URL =
+  'https://play.google.com/store/apps/details?id=net.emerj.fitcall';
+
 const CTASection = ({ className }: { className?: string }) => {
-  const handleDownloadRedirect = () => {
-    const userAgent = navigator.userAgent || navigator.vendor;
-
-    // Store links
-    const iosLink = 'https://apps.apple.com/app/your-app-id';
-    const androidLink =
-      'https://play.google.com/store/apps/details?id=your.package.id';
-
-    // Check for iPhone/iPad
+  const handleDownload = () => {
+    const ua = navigator.userAgent;
     const isIOS =
-      /iPad|iPhone|iPod/.test(userAgent) ||
+      /iPad|iPhone|iPod/.test(ua) ||
       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-    // Check for Android
-    const isAndriod = /android/i.test(userAgent);
-
-    if (isIOS) {
-      window.open(iosLink, '_blank', 'noopener,noreferrer');
-    } else if (isAndriod) {
-      window.open(androidLink, '_blank', 'noopener,noreferrer');
-    } else {
-      // Handle desktop or unsupported platforms
-      alert(
-        'Please visit this page on your mobile device to download the app.'
-      );
-    }
+    // iOS → App Store, everything else (Android + desktop) → Play Store
+    const url = isIOS ? APP_STORE_URL : PLAY_STORE_URL;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -47,7 +34,7 @@ const CTASection = ({ className }: { className?: string }) => {
             </p>
 
             <Button
-              onClick={handleDownloadRedirect}
+              onClick={handleDownload}
               className='mt-10 h-auto min-h-11 w-full max-w-75 bg-white px-6 py-3 font-bold text-primary transition-transform hover:scale-105 hover:bg-blue-50 hover:text-blue-900 active:scale-95 sm:w-auto sm:min-w-75'
             >
               Download FitCall
