@@ -140,7 +140,7 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
                   </button>
                 ))}
               </div>
-              
+
               <div className="relative w-full flex-1 overflow-hidden rounded-[8px]">
                 <Image
                   src="/images/landing-page/ste1.png"

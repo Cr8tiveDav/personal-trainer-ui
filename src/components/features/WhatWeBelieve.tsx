@@ -1,4 +1,5 @@
-import Image from 'next/image';
+import Image from 'next/image'
+import { cn } from '@/lib/utils'
 
 const beliefs = [
   {
@@ -36,34 +37,39 @@ const beliefs = [
     content:
       'Track your sessions, celebrate wins, and stay motivated through visible progress.',
   },
-];
+]
 
-const WhatWeBelieve = () => {
+interface WhatWeBelieveProps {
+  className?: string
+  containerClassName?: string
+}
+
+const WhatWeBelieve = ({ className, containerClassName }: WhatWeBelieveProps) => {
   return (
-    <section className='w-full bg-white py-16 md:py-0'>
-      <div className='container mx-auto min-h-172.5 px-4 py-8 flex flex-col items-center justify-center'>
-        <h2 className='mb-6 font-semibold text-[32px]'>What we believe</h2>
+    <section className={cn("w-full bg-white py-16 md:py-0", className)}>
+      <div className={cn("container mx-auto min-h-172.5 px-4 py-8 flex flex-col items-center justify-center", containerClassName)}>
+        <h2 className="mb-6 font-semibold text-[32px]">What we believe</h2>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {beliefs.map((item, index) => (
             <div
               key={index}
-              className='rounded-[16px] border border-[#EBEBEB] bg-white p-6'
+              className="rounded-[16px] border border-[#EBEBEB] bg-white p-6"
             >
-              <div className='mb-6 flex h-12 w-12 items-center justify-center rounded-[12px] bg-primarybadge'>
+              <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-[12px] bg-primarybadge">
                 <Image
                   src={item.icon}
                   alt={item.title}
                   width={24}
-                  sizes='24px'
+                  sizes="24px"
                   height={24}
-                  className='h-6 w-6'
+                  className="h-6 w-6"
                 />
               </div>
-              <h3 className='mb-3 text-lg font-semibold text-muted-foreground'>
+              <h3 className="mb-3 text-lg font-semibold text-muted-foreground">
                 {item.title}
               </h3>
-              <p className='text-sm leading-relaxed text-muted md:text-base'>
+              <p className="text-sm leading-relaxed text-muted md:text-base">
                 {item.content}
               </p>
             </div>
@@ -71,7 +77,7 @@ const WhatWeBelieve = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default WhatWeBelieve;
+export default WhatWeBelieve
