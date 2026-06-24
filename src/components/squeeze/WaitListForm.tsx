@@ -82,7 +82,7 @@ export const WaitlistForm = ({
           toast.success("You're on the list! We'll be in touch soon.")
           reset()
           sessionStorage.setItem('waitlistSubmitted', 'true')
-          window.location.replace('/us/thank-you')
+          window.location.replace('/thank-you')
         }
       } else {
         toast.error(result?.error || 'Something went wrong. Please try again.')
