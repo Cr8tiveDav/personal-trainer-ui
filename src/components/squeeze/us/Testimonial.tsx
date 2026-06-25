@@ -86,7 +86,7 @@ const Testimonial = () => {
 
         {/* Emily Story */}
         <div className="flex flex-col items-center mb-4">
-          <p className="text-lg md:text-2xl font-muted">
+          <p className="text-lg md:text-2xl text-muted">
             Emily&apos;s Personal Story
           </p>
           <h2 className="text-xl md:text-4xl font-semibold text-muted-foreground">
@@ -108,7 +108,6 @@ const Testimonial = () => {
               Emily Carter, 36 - San Diego, California
             </h3>
 
-            {/* Text paragraphs here 👇🏼 */}
             <div className="flex flex-col gap-4 text-base md:text-2xl text-muted leading-7">
               <p>
                 For most of my adult life, fitness was always something I

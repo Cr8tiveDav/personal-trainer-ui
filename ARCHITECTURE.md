@@ -24,7 +24,7 @@ FitCall is a **Next.js 16 App Router** frontend for a personal training platform
 | HTTP client (browser)  | Axios (`src/lib/http.ts`)                     |
 | HTTP client (server)   | native `fetch` (`src/lib/http/server.ts`)     |
 | Form validation        | React Hook Form + Zod                         |
-| Auth                   | Custom cookie-based auth (`httpOnly` cookies) |
+| Auth                   | Custom cookie-based auth (mixed cookie model) |
 | Package manager        | pnpm                                          |
 
 ---
@@ -143,7 +143,7 @@ src/components/
 | --------------------------- | ---------------------------------------------------------------------------------- |
 | Server data (async, cached) | TanStack Query (`useQuery`, `useMutation`)                                         |
 | Form state                  | React Hook Form + Zod schemas (`src/schemas/`)                                     |
-| Auth session                | httpOnly cookies (read server-side); browser helpers in `src/lib/get-token.ts`     |
+| Auth session                | Mixed cookie model — `refresh_token` and `session_token` are `httpOnly` (server-only); `access_token` is a regular cookie readable by client-side Axios via `src/lib/get-token.ts` |
 | Local UI state              | React `useState` / `useReducer`                                                    |
 | Cross-page signals          | `sessionStorage` (e.g. waitlist submission guard for `/thank-you`)                 |
 | Notifications               | WebSocket hook in `src/hooks/` (toggled via `NEXT_PUBLIC_ENABLE_NOTIFICATIONS_WS`) |
@@ -157,7 +157,6 @@ src/components/
 | `NEXT_PUBLIC_API_URL`                 | Browser + server API base URL |
 | `API_URL`                             | Server-only fallback API base |
 | `NEXT_PUBLIC_APP_URL`                 | Metadata, robots.txt, sitemap |
-
 | `NEXT_PUBLIC_ENABLE_NOTIFICATIONS_WS` | Toggle notification websocket |
 | `NEXT_PUBLIC_NOTIFICATION_WS_URL`     | WebSocket URL override        |
 
@@ -168,7 +167,7 @@ See `.env.example` for the full inventory.
 ## Security
 
 - All protected routes are guarded at the middleware level (`src/proxy.ts`) before any page renders.
-- `httpOnly` cookies prevent client-side token access.
+- `refresh_token` and `session_token` are `httpOnly` — inaccessible to JavaScript. `access_token` is a regular cookie intentionally readable by client-side Axios for bearer auth headers.
 - Axios interceptor auto-refreshes access tokens and signs users out when refresh is unusable.
 - `next.config.ts` limits remote image hosts to `i.pravatar.cc`, `api.staging.fitcall.me`, and `api.fitcall.me`.
 - Server Action body size is capped at `10mb`.
