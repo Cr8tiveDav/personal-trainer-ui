@@ -52,25 +52,29 @@ const Hero = () => {
               className="h-[305px] md:h-[751px] rounded-[24px] object-cover"
             />
           </div>
-          <div className="md:hidden flex items-center gap-4 mt-auto">
-            <Image
-              src="/images/ads/us/hero-2.png"
-              alt="Squeeze Page Image 2"
-              width={200}
-              height={399}
-              priority
-              loading="eager"
-              className="flex-1 h-[210px] md:h-[399px] rounded-[24px] object-cover"
-            />
-            <Image
-              src="/images/ads/us/hero-3.png"
-              alt="Squeeze Page Image 3"
-              width={200}
-              height={399}
-              priority
-              loading="eager"
-              className="flex-1 h-[210px] md:h-[399px] rounded-[24px] object-cover"
-            />
+          <div className="md:hidden flex items-center gap-4 mt-auto overflow-hidden">
+            <div className="flex-1 min-w-0">
+              <Image
+                src="/images/ads/us/hero-2.png"
+                alt="Squeeze Page Image 2"
+                width={200}
+                height={399}
+                priority
+                loading="eager"
+                className="w-full h-[210px] rounded-[24px] object-cover"
+              />
+            </div>
+            <div className="flex-1 min-w-0">
+              <Image
+                src="/images/ads/us/hero-3.png"
+                alt="Squeeze Page Image 3"
+                width={200}
+                height={399}
+                priority
+                loading="eager"
+                className="w-full h-[210px] rounded-[24px] object-cover"
+              />
+            </div>
           </div>
         </div>
 

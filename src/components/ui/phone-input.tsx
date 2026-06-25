@@ -108,7 +108,7 @@ export function PhoneInputField({
   return (
     <div
       className={cn(
-        'flex h-12 rounded-[6px] border bg-transparent transition-colors overflow-hidden',
+        'flex h-12 text-muted rounded-[16px] border bg-transparent transition-colors overflow-hidden',
         hasError ? 'border-destructive' : 'border-gray-300',
         'focus-within:border-primary',
         '[&_.PhoneInput]:flex [&_.PhoneInput]:w-full [&_.PhoneInput]:items-center [&_.PhoneInput]:h-full',

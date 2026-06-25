@@ -35,7 +35,7 @@ const waitlistSchema = z.object({
 type WaitlistValues = z.infer<typeof waitlistSchema>
 
 const inputStyles =
-  'min-h-12 w-full rounded-[6px] border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary transition-all'
+  'min-h-12 w-full rounded-[16px] border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary transition-all'
 
 const errorStyles = 'mt-1 text-xs text-red-500'
 
@@ -153,7 +153,11 @@ export const WaitlistForm = ({
           )}
         </div>
 
-        <Button type="submit" disabled={isSubmitting} className="h-[44px]">
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="h-[44px] rounded-[16px]"
+        >
           {isSubmitting ? 'Processing...' : ctaLabel}
         </Button>
       </form>

@@ -3,14 +3,6 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import WaitlistSection from './WaitlistSection'
 
-const categories = [
-  { label: 'Yoga', image: '/images/ads/us/yoga.svg' },
-  { label: 'Mobility', image: '/images/ads/us/mobility.svg' },
-  { label: 'Cardio', image: '/images/ads/us/cardio.svg' },
-  { label: 'Endurance', image: '/images/ads/us/endurance.svg' },
-  { label: 'Strength', image: '/images/ads/us/strength.svg' },
-]
-
 const steps = [
   {
     id: 'STEP 01',
@@ -30,7 +22,6 @@ const steps = [
 ]
 
 const HowItWorks = () => {
-  const [activeCategory, setActiveCategory] = useState<number>(0)
   return (
     <section className="w-full py-4">
       <div className="container mx-auto max-w-4xl px-4">
@@ -44,48 +35,14 @@ const HowItWorks = () => {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Card 1 — Trainer Discovery */}
           <div className="flex flex-col">
-            <div className="mb-6 flex h-72 md:w-[426px] md:h-80 lg:h-96 flex-col overflow-hidden rounded-[24px] border border-[#D1D1D1] bg-[#FCFCFC] p-10">
-              {/* Circular image categories */}
-              <div className="hide_scrollbar mb-4 flex justify-between gap-3 overflow-x-auto">
-                {categories.map((cat, i) => (
-                  <button
-                    key={cat.label}
-                    onClick={() => setActiveCategory(i)}
-                    className="flex shrink-0 flex-col items-center gap-1"
-                  >
-                    <div
-                      className={`relative h-10 w-10 overflow-hidden rounded-[9999px] border-2 transition-all ${
-                        activeCategory === i
-                          ? 'border-primary'
-                          : 'border-transparent'
-                      }`}
-                    >
-                      <Image
-                        src={cat.image}
-                        alt={cat.label}
-                        fill
-                        sizes="40px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <span
-                      className={`text-[9.28px] font-medium ${
-                        activeCategory === i ? 'text-primary' : 'text-[#5C5C5C]'
-                      }`}
-                    >
-                      {cat.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
+            <div className="mb-6 h-72 md:w-[426px] md:h-80 lg:h-96 flex flex-col items-center overflow-hidden rounded-[24px] border border-[#D1D1D1] bg-[#FCFCFC] p-10">
               <div className="relative w-full flex-1 overflow-hidden rounded-[8px]">
                 <Image
                   src="/images/ads/us/trainers-card.png"
                   alt={steps[0].title}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-contain object-left-top"
+                  className="object-contain"
                 />
               </div>
             </div>
