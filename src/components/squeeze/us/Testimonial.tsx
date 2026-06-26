@@ -86,8 +86,10 @@ const Testimonial = () => {
 
         {/* Emily Story */}
         <div className="flex flex-col items-center mb-4">
-          <p className="text-2xl font-muted">Emily&apos;s Personal Story</p>
-          <h2 className="text-4xl font-semibold text-muted-foreground">
+          <p className="text-lg md:text-2xl text-muted">
+            Emily&apos;s Personal Story
+          </p>
+          <h2 className="text-xl md:text-4xl font-semibold text-muted-foreground">
             From Struggling to Strong
           </h2>
         </div>
@@ -101,11 +103,76 @@ const Testimonial = () => {
             className="w-full h-auto"
           />
 
-          <h3 className="text-4xl font-semibold text-muted-foreground mt-6 mb-4">
-            Emily Carter, 36 - San Diego, California
-          </h3>
+          <div className="md:px-6">
+            <h3 className="text-base md:text-4xl font-semibold text-muted-foreground mt-6 mb-4">
+              Emily Carter, 36 - San Diego, California
+            </h3>
 
-          {/* Text paragraphs here 👇🏼 */}
+            <div className="flex flex-col gap-4 text-base md:text-2xl text-muted leading-7">
+              <p>
+                For most of my adult life, fitness was always something I
+                planned to start &quot;next week.&quot;
+              </p>
+              <p>
+                I wasn&apos;t severely overweight, but I wasn&apos;t healthy
+                either. I spent most of my days working from home, sitting in
+                front of a computer for hours. By the end of each day, I felt
+                exhausted, had tense energy and often found myself ordering
+                takeout instead of cooking. I knew I needed to make a change,
+                but every time I tried, I quickly lost motivation after a few
+                weeks.
+              </p>
+              <p>
+                I joined gyms, followed fitness influencers, and downloaded
+                countless workout apps. Nothing seemed to work because I always
+                felt like I was doing it alone.
+              </p>
+              <p>
+                Then I discovered FitCall app. What immediately stood out was
+                the opportunity to work directly with a real trainer who would
+                guide me and hold me accountable. After signing up, I was
+                matched with a trainer who took the time to understand my goals,
+                lifestyle, and challenges.
+              </p>
+              <p>
+                Instead of putting me on an extreme diet or intense workout
+                routine, my trainer created a realistic plan that fit my
+                schedule. We started with simple workouts, healthier eating
+                habits, and weekly progress check-ins.
+              </p>
+              <p>
+                The accountability changed everything. On days when I wanted to
+                skip a workout, my trainer would message me. When I felt
+                discouraged, she reminded me how much progress I had already
+                made. Every small victory was celebrated, which kept me
+                motivated to continue.
+              </p>
+              <p>
+                After three months, I noticed significant changes. I had more
+                energy throughout the day, my clothes fit, and I felt stronger
+                than I had in years. Friends and coworkers began asking what I
+                was doing differently.
+              </p>
+              <p>
+                Six months later, I had lost 32 pounds, improved my confidence,
+                and developed habits that finally felt sustainable. For the
+                first time, fitness wasn&apos;t something I was forcing myself
+                to do &mdash; it had become part of my lifestyle.
+              </p>
+              <p>
+                Today, I wake up feeling energized, enjoy being active, and no
+                longer avoid taking photos because I&apos;m uncomfortable with
+                how I look. More importantly, I&apos;ve learned that real
+                transformation isn&apos;t about being perfect. It&apos;s about
+                being consistent.
+              </p>
+              <p>
+                FitCall didn&apos;t just help me get fit &mdash; it gave me the
+                support, accountability, and confidence I needed to become the
+                healthiest version of myself.
+              </p>
+            </div>
+          </div>
         </div>
 
         <WaitlistSection text="How many times have you promised yourself you'd get serious about fitness? FitCall helps break the cycle by connecting you with a trainer who provides the guidance, encouragement, and accountability needed to keep going when motivation disappears. Kindly fill the form, download FitCall and begin your fitness journey.">

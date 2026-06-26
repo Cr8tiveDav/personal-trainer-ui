@@ -10,50 +10,64 @@ const CountdownTimer = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prev) => {
-        let { days, hrs, mins } = prev;
-        mins--;
-        if (mins < 0) { mins = 59; hrs--; }
-        if (hrs < 0) { hrs = 23; days--; }
-        if (days < 0) { days = 0; hrs = 0; mins = 0; }
-        return { days, hrs, mins };
-      });
-    }, 60000);
-    return () => clearInterval(interval);
-  }, []);
+        let { days, hrs, mins } = prev
+        mins--
+        if (mins < 0) {
+          mins = 59
+          hrs--
+        }
+        if (hrs < 0) {
+          hrs = 23
+          days--
+        }
+        if (days < 0) {
+          days = 0
+          hrs = 0
+          mins = 0
+        }
+        return { days, hrs, mins }
+      })
+    }, 60000)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
-    <div className='flex h-full flex-col items-center justify-center gap-4'>
-      <div className='flex w-full max-w-xs flex-col items-center gap-4 rounded-[16px] border border-[#EBEBEB] bg-white px-8 py-6 shadow-sm'>
-        <div className='flex items-center gap-2 text-sm text-[#5C5C5C]'>
+    <div className="flex h-full flex-col items-center justify-center gap-4">
+      <div className="flex w-full max-w-xs flex-col items-center gap-4 rounded-[16px] border border-[#EBEBEB] bg-white px-8 py-6 shadow-sm">
+        <div className="flex items-center gap-2 text-sm text-[#5C5C5C]">
           <Image
-            src='/images/landing-page/icons/noti.png'
-            alt='Notification'
+            src="/images/landing-page/icons/noti.png"
+            alt="Notification"
             width={20}
             height={20}
-            className='object-contain'
+            className="object-contain"
           />
           <span>Starts in</span>
         </div>
-        <div className='flex items-center gap-3'>
+        <div className="flex items-center gap-3">
           {[
             { value: time.days, label: 'Days' },
             { value: time.hrs, label: 'hrs' },
             { value: time.mins, label: 'mins' },
           ].map((item, i) => (
             <React.Fragment key={item.label}>
-              <div className='flex flex-col items-center'>
-                <span className='text-4xl font-bold leading-none text-[#1C1C1C]'>
+              <div className="flex flex-col items-center">
+                <span className="text-4xl font-bold leading-none text-[#1C1C1C]">
                   {String(item.value).padStart(2, '0')}
                 </span>
-                <span className='mt-1 text-xs text-[#5C5C5C]'>{item.label}</span>
+                <span className="mt-1 text-xs text-[#5C5C5C]">
+                  {item.label}
+                </span>
               </div>
               {i < 2 && (
-                <span className='mb-4 text-2xl font-bold text-[#1C1C1C]'>:</span>
+                <span className="mb-4 text-2xl font-bold text-[#1C1C1C]">
+                  :
+                </span>
               )}
             </React.Fragment>
           ))}
         </div>
-        <p className='text-center text-sm text-[#5C5C5C]'>
+        <p className="text-center text-sm text-[#5C5C5C]">
           You will be reminded of your session an hour before time
         </p>
       </div>
@@ -68,7 +82,7 @@ const categories = [
   { label: 'Yoga', image: '/images/landing-page/tra4.jpg' },
   { label: 'Cardio', image: '/images/landing-page/tra5.jpg' },
   { label: 'Mobility', image: '/images/landing-page/tra6.jpg' },
-   { label: 'Fat loss', image: '/images/landing-page/tra3.jpg' },
+  { label: 'Fat loss', image: '/images/landing-page/tra3.jpg' },
   { label: 'Mind', image: '/images/landing-page/tra4.jpg' },
   { label: 'Body', image: '/images/landing-page/tra5.jpg' },
   { label: 'HIIT', image: '/images/landing-page/tra6.jpg' },
@@ -100,16 +114,15 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
   const [activeCategory, setActiveCategory] = useState(0)
 
   return (
-    <section className={cn("w-full py-12 md:py-20", className)}>
+    <section className={cn('w-full py-12 md:py-20', className)}>
       <div className="container flex flex-col">
         <SectionHeader
-          badge='HOW IT WORKS'
-          title='Not another workout plan, a system built for you'
-          align='center'
-          className='max-w-3xl mx-auto mb-8 md:mb-14'
+          badge="HOW IT WORKS"
+          title="Not another workout plan, a system built for you"
+          align="center"
+          className="max-w-3xl mx-auto mb-8 md:mb-14"
         />
         <div className="grid grid-cols-1 gap-8 px-2 md:grid-cols-3">
-
           {/* Card 1 — Trainer Discovery */}
           <div className="flex flex-col">
             <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col overflow-hidden rounded-[12px] border border-[#EBEBEB] bg-[#F7F7F7] p-10">
@@ -121,9 +134,13 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
                     onClick={() => setActiveCategory(i)}
                     className="flex shrink-0 flex-col items-center gap-1"
                   >
-                    <div className={`relative h-10 w-10 overflow-hidden rounded-[9999px] border-2 transition-all ${
-                      activeCategory === i ? 'border-primary' : 'border-transparent'
-                    }`}>
+                    <div
+                      className={`relative h-10 w-10 overflow-hidden rounded-[9999px] border-2 transition-all ${
+                        activeCategory === i
+                          ? 'border-primary'
+                          : 'border-transparent'
+                      }`}
+                    >
                       <Image
                         src={cat.image}
                         alt={cat.label}
@@ -132,9 +149,11 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
                         className="object-cover"
                       />
                     </div>
-                    <span className={`text-[9px] font-medium ${
-                      activeCategory === i ? 'text-primary' : 'text-[#5C5C5C]'
-                    }`}>
+                    <span
+                      className={`text-[9px] font-medium ${
+                        activeCategory === i ? 'text-primary' : 'text-[#5C5C5C]'
+                      }`}
+                    >
                       {cat.label}
                     </span>
                   </button>
@@ -205,7 +224,6 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
               </p>
             </div>
           </div>
-
         </div>
       </div>
     </section>
