@@ -1,7 +1,45 @@
+'use client'
+
 import SectionHeader from '@/components/ui/SectionHeader'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useState, useEffect, startTransition } from 'react'
 import WaitlistSection from './WaitlistSection'
+
+/** Cyclic countdown — resets to CYCLE_SECONDS when it reaches zero */
+const CYCLE_SECONDS = 3 * 24 * 60 * 60 // 3 days
+const STORAGE_KEY = 'fitcall_countdown_target'
+
+function getRemainingSeconds(): number {
+  if (typeof window === 'undefined') return CYCLE_SECONDS
+  const stored = sessionStorage.getItem(STORAGE_KEY)
+  const target = stored ? Number(stored) : Date.now() + CYCLE_SECONDS * 1000
+  if (!stored) sessionStorage.setItem(STORAGE_KEY, String(target))
+  const remaining = Math.floor((target - Date.now()) / 1000)
+  if (remaining <= 0) {
+    const next = Date.now() + CYCLE_SECONDS * 1000
+    sessionStorage.setItem(STORAGE_KEY, String(next))
+    return CYCLE_SECONDS
+  }
+  return remaining
+}
+
+function useCountdown() {
+  const [seconds, setSeconds] = useState(CYCLE_SECONDS)
+
+  useEffect(() => {
+    startTransition(() => setSeconds(getRemainingSeconds()))
+    const id = setInterval(() => {
+      setSeconds(getRemainingSeconds())
+    }, 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  const days = Math.floor(seconds / 86400)
+  const hrs = Math.floor((seconds % 86400) / 3600)
+  const mins = Math.floor((seconds % 3600) / 60)
+
+  return { days, hrs, mins }
+}
 
 const steps = [
   {
@@ -22,12 +60,14 @@ const steps = [
 ]
 
 const HowItWorks = () => {
+  const { days, hrs, mins } = useCountdown()
+
   return (
     <section className="w-full py-4">
       <div className="container mx-auto max-w-4xl px-4">
         <SectionHeader
           badge="HOW IT WORKS"
-          title="Not another workout plan"
+          title="Not just another workout plan"
           align="center"
           className="max-w-3xl mx-auto mb-8 md:mb-14"
         />
@@ -76,23 +116,29 @@ const HowItWorks = () => {
                   </span>
                 </div>
 
-                <div className="mb-4 flex items-end gap-5.5">
+                <div className="mb-4 flex items-end justify-center gap-5.5">
                   <div className="flex flex-col items-center">
-                    <span className="text-[32px] font-bold">2</span>
+                    <span className="text-[32px] font-bold">
+                      {String(days).padStart(2, '0')}
+                    </span>
                     <span className="text-xs md:text-sm text-[#5C5C5C] mt-0.5">
                       Days
                     </span>
                   </div>
-                  <span className="mb-4 text-[32px] font-bold">:</span>
+                  <span className="mb-6 text-[32px] font-bold">:</span>
                   <div className="flex flex-col items-center">
-                    <span className="text-[32px] font-bold">14</span>
+                    <span className="text-[32px] font-bold">
+                      {String(hrs).padStart(2, '0')}
+                    </span>
                     <span className="text-xs md:text-sm text-[#5C5C5C] mt-0.5">
                       hrs
                     </span>
                   </div>
-                  <span className="mb-4 text-[32px] font-bold">:</span>
+                  <span className="mb-6 text-[32px] font-bold">:</span>
                   <div className="flex flex-col items-center">
-                    <span className="text-[32px] font-bold">22</span>
+                    <span className="text-[32px] font-bold">
+                      {String(mins).padStart(2, '0')}
+                    </span>
                     <span className="text-xs md:text-sm text-[#5C5C5C] mt-0.5">
                       mins
                     </span>
