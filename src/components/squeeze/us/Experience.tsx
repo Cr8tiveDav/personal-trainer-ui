@@ -8,17 +8,17 @@ const experience = [
   {
     icon: '/images/features/magnifying-glass.svg',
     title: 'Discover trainers',
-    content: 'Browse certified coaches by goal, style, and schedule.',
+    content: 'Browse certified trainers by goal, style, and schedule.',
   },
   {
     icon: '/images/features/calendar-check.svg',
     title: 'Book a session',
-    content: 'Pick a time that fits — mornings, lunch, or after work.',
+    content: 'Pick a time that fits you, morning, Noon, or evenings.',
   },
   {
     icon: '/images/features/phone-call.svg',
     title: 'Join the live call',
-    content: 'Train one-on-one over Zoom or WhatsApp, anywhere.',
+    content: 'Train one-on-one over google  meet, Facebook, WhatsApp or Zoom.',
   },
   {
     icon: '/images/features/trend-up.svg',

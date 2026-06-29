@@ -60,7 +60,7 @@ const ThankYouPage = () => {
               trainer who calls you for every session. Tap the button below to
               download the{' '}
               <span className="text-primary font-semibold">FitCall App</span>{' '}
-              from the Play Store or App Store and start using it right away.
+              from the Play Store or App Store and begin your fitness journey.
             </p>
           </div>
         </div>
