@@ -13,7 +13,7 @@ const experience = [
   {
     icon: '/images/features/calendar-check.svg',
     title: 'Book a session',
-    content: 'Pick a time that fits you, morning, afternoon, or evenings.',
+    content: 'Pick a time that fits you, morning, afternoon, or evening.',
   },
   {
     icon: '/images/features/phone-call.svg',
