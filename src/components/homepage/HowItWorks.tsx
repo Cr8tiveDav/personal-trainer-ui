@@ -1,35 +1,55 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, startTransition } from 'react'
 import Image from 'next/image'
 import SectionHeader from '../ui/SectionHeader'
 import { cn } from '@/lib/utils'
 
-const CountdownTimer = () => {
-  const [time, setTime] = useState({ days: 2, hrs: 14, mins: 22 })
+/** Cyclic countdown — resets to CYCLE_SECONDS when it reaches zero */
+const CYCLE_SECONDS = 3 * 24 * 60 * 60 // 3 days
+const STORAGE_KEY = 'fitcall_countdown_target'
+
+function getRemainingSeconds(): number {
+  if (typeof window === 'undefined') return CYCLE_SECONDS
+  const stored = sessionStorage.getItem(STORAGE_KEY)
+  const target = stored ? Number(stored) : Date.now() + CYCLE_SECONDS * 1000
+  if (!stored) sessionStorage.setItem(STORAGE_KEY, String(target))
+  const remaining = Math.floor((target - Date.now()) / 1000)
+  if (remaining <= 0) {
+    const next = Date.now() + CYCLE_SECONDS * 1000
+    sessionStorage.setItem(STORAGE_KEY, String(next))
+    return CYCLE_SECONDS
+  }
+  return remaining
+}
+
+function useCountdown() {
+  const [seconds, setSeconds] = useState(CYCLE_SECONDS)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((prev) => {
-        let { days, hrs, mins } = prev
-        mins--
-        if (mins < 0) {
-          mins = 59
-          hrs--
-        }
-        if (hrs < 0) {
-          hrs = 23
-          days--
-        }
-        if (days < 0) {
-          days = 0
-          hrs = 0
-          mins = 0
-        }
-        return { days, hrs, mins }
-      })
-    }, 60000)
-    return () => clearInterval(interval)
+    startTransition(() => setSeconds(getRemainingSeconds()))
+    const id = setInterval(() => {
+      setSeconds(getRemainingSeconds())
+    }, 1000)
+    return () => clearInterval(id)
   }, [])
+
+  const days = Math.floor(seconds / 86400)
+  const hrs = Math.floor((seconds % 86400) / 3600)
+  const mins = Math.floor((seconds % 3600) / 60)
+  const secs = seconds % 60
+
+  return { days, hrs, mins, secs }
+}
+
+const CountdownTimer = () => {
+  const { days, hrs, mins, secs } = useCountdown()
+
+  const units = [
+    { value: days, label: 'Days' },
+    { value: hrs, label: 'hrs' },
+    { value: mins, label: 'mins' },
+    { value: secs, label: 'secs' },
+  ]
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4">
@@ -45,11 +65,7 @@ const CountdownTimer = () => {
           <span>Starts in</span>
         </div>
         <div className="flex items-center gap-3">
-          {[
-            { value: time.days, label: 'Days' },
-            { value: time.hrs, label: 'hrs' },
-            { value: time.mins, label: 'mins' },
-          ].map((item, i) => (
+          {units.map((item, i) => (
             <React.Fragment key={item.label}>
               <div className="flex flex-col items-center">
                 <span className="text-4xl font-bold leading-none text-[#1C1C1C]">
@@ -59,7 +75,7 @@ const CountdownTimer = () => {
                   {item.label}
                 </span>
               </div>
-              {i < 2 && (
+              {i < units.length - 1 && (
                 <span className="mb-4 text-2xl font-bold text-[#1C1C1C]">
                   :
                 </span>
