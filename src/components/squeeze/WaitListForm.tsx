@@ -91,7 +91,7 @@ export const WaitlistForm = ({
   }
 
   return (
-    <div className="relative w-full max-w-lg">
+    <div className="relative w-full md:max-w-lg">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex w-full flex-col gap-3"

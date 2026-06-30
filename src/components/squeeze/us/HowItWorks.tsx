@@ -37,8 +37,9 @@ function useCountdown() {
   const days = Math.floor(seconds / 86400)
   const hrs = Math.floor((seconds % 86400) / 3600)
   const mins = Math.floor((seconds % 3600) / 60)
+  const secs = seconds % 60
 
-  return { days, hrs, mins }
+  return { days, hrs, mins, secs }
 }
 
 const steps = [
@@ -60,7 +61,7 @@ const steps = [
 ]
 
 const HowItWorks = () => {
-  const { days, hrs, mins } = useCountdown()
+  const { days, hrs, mins, secs } = useCountdown()
 
   return (
     <section className="w-full py-4">
@@ -72,10 +73,10 @@ const HowItWorks = () => {
           className="max-w-3xl mx-auto mb-8 md:mb-14"
         />
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {/* Card 1 — Trainer Discovery */}
           <div className="flex flex-col">
-            <div className="mb-6 h-72 md:w-[426px] md:h-80 lg:h-96 flex flex-col items-center overflow-hidden rounded-[24px] border border-[#D1D1D1] bg-[#FCFCFC] p-10">
+            <div className="mb-6 h-72 md:h-80 lg:h-96 flex flex-col items-center overflow-hidden rounded-[24px] border border-[#D1D1D1] bg-[#FCFCFC] p-10">
               <div className="relative w-full flex-1 overflow-hidden rounded-[8px]">
                 <Image
                   src="/images/ads/us/trainers-card.png"
@@ -101,7 +102,7 @@ const HowItWorks = () => {
 
           {/* Card 2 — Book Sessions */}
           <div className="flex flex-col">
-            <div className="mb-6 flex h-72 md:w-[426px] md:h-80 lg:h-96 flex-col items-center justify-center overflow-hidden rounded-[24px] border border-[#D1D1D1] bg-white p-6 lg:p-10">
+            <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col items-center justify-center overflow-hidden rounded-[24px] border border-[#D1D1D1] bg-white p-6 lg:p-10">
               <div className="flex w-full flex-col items-center rounded-2xl bg-white py-4 px-6 border border-[#EBEBEB]">
                 <div className="flex items-center gap-2 mb-4 text-sm text-[#5C5C5C]">
                   <Image
@@ -116,31 +117,46 @@ const HowItWorks = () => {
                   </span>
                 </div>
 
-                <div className="mb-4 flex items-end justify-center gap-5.5">
+                <div className="mb-4 flex items-end justify-center gap-2">
                   <div className="flex flex-col items-center">
-                    <span className="text-[32px] font-bold">
+                    <span className="text-[24px] sm:text-[32px] font-bold">
                       {String(days).padStart(2, '0')}
                     </span>
                     <span className="text-xs md:text-sm text-[#5C5C5C] mt-0.5">
                       Days
                     </span>
                   </div>
-                  <span className="mb-6 text-[32px] font-bold">:</span>
+                  <span className="mb-5 md:mb-6 text-[24px] sm:text-[32px] font-bold">
+                    :
+                  </span>
                   <div className="flex flex-col items-center">
-                    <span className="text-[32px] font-bold">
+                    <span className="text-[24px] sm:text-[32px] font-bold">
                       {String(hrs).padStart(2, '0')}
                     </span>
                     <span className="text-xs md:text-sm text-[#5C5C5C] mt-0.5">
                       hrs
                     </span>
                   </div>
-                  <span className="mb-6 text-[32px] font-bold">:</span>
+                  <span className="mb-5 md:mb-6 text-[24px] sm:text-[32px] font-bold">
+                    :
+                  </span>
                   <div className="flex flex-col items-center">
-                    <span className="text-[32px] font-bold">
+                    <span className="text-[24px] sm:text-[32px] font-bold">
                       {String(mins).padStart(2, '0')}
                     </span>
                     <span className="text-xs md:text-sm text-[#5C5C5C] mt-0.5">
                       mins
+                    </span>
+                  </div>
+                  <span className="mb-5 md:mb-6 text-[24px] sm:text-[32px] font-bold">
+                    :
+                  </span>
+                  <div className="flex flex-col items-center">
+                    <span className="text-[24px] sm:text-[32px] font-bold">
+                      {String(secs).padStart(2, '0')}
+                    </span>
+                    <span className="text-xs md:text-sm text-[#5C5C5C] mt-0.5">
+                      secs
                     </span>
                   </div>
                 </div>
@@ -164,8 +180,8 @@ const HowItWorks = () => {
           </div>
 
           {/* Card 3 — Train Live */}
-          <div className="flex flex-col">
-            <div className="relative mb-6 flex h-72 md:w-[426px] md:h-80 lg:h-96 w-full flex-col overflow-hidden rounded-[24px] border border-[#D1D1D1]">
+          <div className="flex flex-col md:col-span-2 lg:col-span-1">
+            <div className="relative mb-6 flex h-72 md:h-80 lg:h-96 w-full flex-col overflow-hidden rounded-[24px] border border-[#D1D1D1]">
               <Image
                 src="/images/ads/us/lady-step3.png"
                 alt={steps[2].title}
@@ -189,7 +205,7 @@ const HowItWorks = () => {
         </div>
 
         <WaitlistSection text="Motivation comes and goes. Accountability is what creates lasting change. FitCall pairs you with experienced trainers who help you stay committed, focused, and consistent until your goals become reality. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl md:text-4xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] md:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
             When Motivation <br className="hidden md:block" />
             Quits, Your Trainer <br className="hidden md:block" />
             Won&apos;t

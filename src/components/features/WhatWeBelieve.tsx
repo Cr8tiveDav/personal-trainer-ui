@@ -44,13 +44,21 @@ interface WhatWeBelieveProps {
   containerClassName?: string
 }
 
-const WhatWeBelieve = ({ className, containerClassName }: WhatWeBelieveProps) => {
+const WhatWeBelieve = ({
+  className,
+  containerClassName,
+}: WhatWeBelieveProps) => {
   return (
-    <section className={cn("w-full bg-white py-16 md:py-0", className)}>
-      <div className={cn("container mx-auto min-h-172.5 px-4 py-8 flex flex-col items-center justify-center", containerClassName)}>
+    <section className={cn('w-full bg-white py-16 md:py-0', className)}>
+      <div
+        className={cn(
+          'container mx-auto min-h-172.5 px-4 py-8 flex flex-col items-center justify-center',
+          containerClassName,
+        )}
+      >
         <h2 className="mb-6 font-semibold text-[32px]">What we believe</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {beliefs.map((item, index) => (
             <div
               key={index}

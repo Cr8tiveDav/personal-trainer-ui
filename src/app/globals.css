@@ -111,11 +111,6 @@
   padding: 0 1rem;
 }
 
-@media (min-width: 1024px) {
-  .container {
-    padding-inline: 0;
-  }
-}
 
 .custom-bullet {
   height: 8px !important;
