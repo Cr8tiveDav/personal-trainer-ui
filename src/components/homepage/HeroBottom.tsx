@@ -14,8 +14,10 @@ const IntegrationsBar = ({ className }: IntegrationsBarProps) => {
   ]
 
   return (
-    <section className={cn('mb-10 border-y border-gray-100 py-4', className)}>
-      <div className="container flex flex-col items-center justify-between gap-6 md:flex-row">
+    <section
+      className={cn('mb-10 border-y px-4 border-gray-100 py-4', className)}
+    >
+      <div className="container flex flex-col items-center justify-between gap-6 lg:flex-row">
         <p className="shrink-0 text-lg text-muted">
           Works with the tools you already use
         </p>
@@ -30,7 +32,7 @@ const IntegrationsBar = ({ className }: IntegrationsBarProps) => {
                 <Image
                   src={tool.src}
                   alt={tool.name}
-                  width={100}
+                  width={80}
                   height={24}
                   className={`${tool.imgClass} w-auto object-contain`}
                 />
