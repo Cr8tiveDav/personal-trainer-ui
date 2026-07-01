@@ -8,16 +8,16 @@ interface WaitlistSectionProps {
 
 const WaitlistSection = ({ text, children }: WaitlistSectionProps) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between gap-4 mt-6 mb-20">
-      <div className="w-full md:max-w-[701px]">
+    <div className="grid grid-cols-1 md:grid-cols-[55fr_45fr] gap-6 md:gap-8 mt-6 mb-20">
+      <div className="min-w-0">
         {children}
         {text && (
-          <p className="text-muted text-base md:text-[22px] md:tracking-wide leading-6 md:leading-7 md:pr-6">
+          <p className="text-muted text-base md:text-[22px] md:tracking-wide leading-6 md:leading-7">
             {text}
           </p>
         )}
       </div>
-      <div className="w-full md:w-[600px] mt-12 flex flex-col items-end">
+      <div className="w-full flex flex-col md:items-end">
         <WaitlistForm ctaLabel="Submit" />
       </div>
     </div>

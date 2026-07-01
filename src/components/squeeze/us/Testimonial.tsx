@@ -52,16 +52,16 @@ const Testimonial = () => {
           Real reviews from people having real lifestyle changes
         </p>
 
-        <div className="flex flex-col md:flex-row gap-4 justify-center items-center mt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
           {testimonials.map((testimonial, i) => {
             const { name, country, review, stars, avatar } = testimonial
             return (
               <div
                 key={i}
-                className="w-[310px] h-[300px] bg-white flex flex-col justify-between gap-2 py-4 px-5 border border-[#D1D1D1] rounded-[24px]"
+                className="w-full min-h-[300px] bg-white flex flex-col gap-2 py-4 px-5 border border-[#D1D1D1] rounded-[24px]"
               >
                 <Image src={stars} alt="Stars" width={120} height={24} />
-                <p className="text-base text-muted">{review}</p>
+                <p className="text-base text-muted flex-1">{review}</p>
                 <div className="flex items-center gap-2">
                   <Image src={avatar} alt={name} width={48} height={48} />
                   <div className="flex flex-col">
@@ -77,7 +77,7 @@ const Testimonial = () => {
         </div>
 
         <WaitlistSection text="Starting is easy. Staying committed is the hard part. With FitCall, you get a professional trainer who checks in, tracks your progress, and helps you stay on course long after the initial excitement wears off. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl md:text-4xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] md:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
             Your Goals Need <br className="hidden md:block" />
             More Than Good <br className="hidden md:block" />
             Intentions
@@ -176,7 +176,7 @@ const Testimonial = () => {
         </div>
 
         <WaitlistSection text="How many times have you promised yourself you'd get serious about fitness? FitCall helps break the cycle by connecting you with a trainer who provides the guidance, encouragement, and accountability needed to keep going when motivation disappears. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl md:text-4xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] md:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
             Stop Starting Over
           </h2>
         </WaitlistSection>

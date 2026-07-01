@@ -8,17 +8,17 @@ const experience = [
   {
     icon: '/images/features/magnifying-glass.svg',
     title: 'Discover trainers',
-    content: 'Browse certified coaches by goal, style, and schedule.',
+    content: 'Browse certified trainers by goal, style, and schedule.',
   },
   {
     icon: '/images/features/calendar-check.svg',
     title: 'Book a session',
-    content: 'Pick a time that fits — mornings, lunch, or after work.',
+    content: 'Pick a time that fits you, morning, afternoon, or evening.',
   },
   {
     icon: '/images/features/phone-call.svg',
     title: 'Join the live call',
-    content: 'Train one-on-one over Zoom or WhatsApp, anywhere.',
+    content: 'Train one-on-one over Google  Meet, Messenger, WhatsApp or Zoom.',
   },
   {
     icon: '/images/features/trend-up.svg',
@@ -42,7 +42,7 @@ const Experience = () => {
           overwhelming.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 mb-10 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mb-10 gap-4">
           {experience.map((item, index) => (
             <div
               key={index}
@@ -69,7 +69,7 @@ const Experience = () => {
         </div>
 
         <WaitlistSection text="Everyone has days when they want to quit. That's why FitCall connects you with trainers who support, challenge, and encourage you to stay committed to your goals, even when life gets busy. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl md:text-4xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] md:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
             Fitness Is Easier With <br className="hidden md:block" />
             Someone In Your <br className="hidden md:block" />
             Corner
@@ -79,7 +79,7 @@ const Experience = () => {
         <WhatWeBelieve className="py-0" containerClassName="min-h-0 py-0" />
 
         <WaitlistSection text="Workout plans are everywhere. What most people lack is someone to keep them consistent. FitCall bridges that gap by connecting you with dedicated trainers who help you stay focused. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl md:text-4xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] md:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
             A Real Trainer. Real <br className="hidden md:block" />
             Accountability. Real <br className="hidden md:block" />
             Results.
@@ -99,7 +99,7 @@ const Experience = () => {
         </p>
 
         <WaitlistSection text="Small actions repeated consistently create extraordinary results. FitCall helps you stay committed to those actions through personalized coaching, regular check-ins, and accountability that keeps you moving forward. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl md:text-4xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] md:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
             Your Future Self Will <br className="hidden md:block" />
             Thank You.
           </h2>

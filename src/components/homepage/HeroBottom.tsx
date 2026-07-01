@@ -7,10 +7,10 @@ interface IntegrationsBarProps {
 
 const IntegrationsBar = ({ className }: IntegrationsBarProps) => {
   const tools = [
-    { src: '/images/zoom.svg', name: 'Zoom' },
-    { src: '/images/whatsapp.svg', name: 'WhatsApp' },
-    { src: '/images/meet.svg', name: 'Google Meet' },
-    { src: '/images/facebook-logo.svg', name: 'Facebook' },
+    { src: '/images/zoom.svg', name: 'Zoom', imgClass: 'h-6' },
+    { src: '/images/whatsapp.svg', name: 'WhatsApp', imgClass: 'h-8' },
+    { src: '/images/meet.svg', name: 'Google Meet', imgClass: 'h-6' },
+    { src: '/images/facebook-logo.svg', name: 'Facebook', imgClass: 'h-6' },
   ]
 
   return (
@@ -34,7 +34,7 @@ const IntegrationsBar = ({ className }: IntegrationsBarProps) => {
                   alt={tool.name}
                   width={80}
                   height={24}
-                  className="h-6 w-auto object-contain"
+                  className={`${tool.imgClass} w-auto object-contain`}
                 />
               </span>
             ))}
