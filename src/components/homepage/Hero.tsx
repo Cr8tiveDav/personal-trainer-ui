@@ -1,41 +1,8 @@
-'use client';
-
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '../ui/button';
 
 const Hero = () => {
-  const handleDownloadRedirect = (platform: 'ios' | 'android') => {
-    const userAgent = navigator.userAgent || navigator.vendor;
-
-    const iosLink = 'https://apps.apple.com/app/your-app-id';
-    const androidLink =
-      'https://play.google.com/store/apps/details?id=your.package.id';
-
-    const isIOS =
-      /iPad|iPhone|iPod/.test(userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-
-    const isAndroid = /android/i.test(userAgent);
-
-    if (platform === 'ios') {
-      if (isIOS) {
-        window.open(iosLink, '_blank', 'noopener,noreferrer');
-      } else {
-        alert(
-          'Please visit this page on your mobile device to download the app.'
-        );
-      }
-    } else {
-      if (isAndroid) {
-        window.open(androidLink, '_blank', 'noopener,noreferrer');
-      } else {
-        alert(
-          'Please visit this page on your mobile device to download the app.'
-        );
-      }
-    }
-  };
-
   return (
     <section className='relative w-full overflow-hidden pt-28 md:pt-32 md:h-[1290px]'>
       <div
@@ -72,8 +39,8 @@ const Hero = () => {
           <div className='flex flex-col items-center gap-2 sm:flex-row'>
             <Button
               size='lg'
-              onClick={() => handleDownloadRedirect('ios')}
-              className='flex items-center gap-3 cursor-pointer'
+              disabled
+              className='flex items-center gap-3 opacity-50 cursor-not-allowed'
             >
               <Image
                 src='/images/landing-page/apple.svg'
@@ -81,22 +48,28 @@ const Hero = () => {
                 width={16}
                 height={16}
               />
-              Download on App Store
+              App Store Coming Soon
             </Button>
 
             <Button
               size='lg'
               variant='outline'
-              onClick={() => handleDownloadRedirect('android')}
-              className='flex items-center gap-3 cursor-pointer'
+              asChild
+              className='flex items-center gap-3'
             >
-              <Image
-                src='/images/landing-page/google-play.svg'
-                alt='Playstore'
-                width={16}
-                height={16}
-              />
-              Download on PlayStore
+              <Link
+                href='https://play.google.com/store/apps/details?id=net.emerj.fitcall'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <Image
+                  src='/images/landing-page/google-play.svg'
+                  alt='Playstore'
+                  width={16}
+                  height={16}
+                />
+                Download on PlayStore
+              </Link>
             </Button>
           </div>
 

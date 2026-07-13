@@ -8,15 +8,16 @@ import { Input } from '@/components/ui/input'
 import { cn } from '@/utils'
 
 // Number input — uses our existing Input, no border/shadow so it blends in
-const CustomInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
-  (props, ref) => (
-    <Input
-      {...props}
-      ref={ref}
-      className='border-0 rounded-none shadow-none focus-visible:ring-0 flex-1 min-w-0 placeholder:text-gray-400'
-    />
-  )
-)
+const CustomInput = forwardRef<
+  HTMLInputElement,
+  React.InputHTMLAttributes<HTMLInputElement>
+>((props, ref) => (
+  <Input
+    {...props}
+    ref={ref}
+    className="!border-0 !border-none !shadow-none !outline-none focus-visible:!ring-0 focus-visible:!ring-offset-0 rounded-none flex-1 h-full min-w-0 placeholder:text-gray-400 bg-transparent px-3"
+  />
+))
 CustomInput.displayName = 'CustomInput'
 
 // Country select — native <select> hidden underneath, flag + dial code shown on top
@@ -28,24 +29,31 @@ interface CountrySelectProps {
   disabled?: boolean
 }
 
+function countryCodeToEmoji(country: Country): string {
+  return country
+    .toUpperCase()
+    .split('')
+    .map((c) => String.fromCodePoint(0x1f1e6 + c.charCodeAt(0) - 65))
+    .join('')
+}
+
 function CountrySelectWithDialCode({
   value,
   onChange,
   options,
-  iconComponent: FlagIcon,
   disabled,
 }: CountrySelectProps) {
   const callingCode = value ? `+${getCountryCallingCode(value)}` : ''
 
   return (
-    <div className='relative flex items-center gap-1.5 pl-3 pr-2 border-r border-input bg-gray-50 h-full shrink-0'>
+    <div className="relative flex items-center gap-1.5 pl-3 pr-2 border-r border-input h-full shrink-0">
       {/* Invisible native select — handles all country picking + keyboard nav */}
       <select
         value={value ?? ''}
         onChange={(e) => onChange(e.target.value as Country)}
         disabled={disabled}
-        aria-label='Phone number country'
-        className='absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10'
+        aria-label="Phone number country"
+        className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
       >
         {options.map((opt) => (
           <option key={opt.value ?? 'ZZ'} value={opt.value ?? ''}>
@@ -54,18 +62,26 @@ function CountrySelectWithDialCode({
         ))}
       </select>
 
-      {/* Visual layer: flag + dial code + chevron */}
-      <span className='pointer-events-none flex items-center gap-1.5 text-sm select-none'>
-        {value && <FlagIcon country={value} label={value} />}
-        <span className='text-muted-foreground'>{callingCode}</span>
+      {/* Visual layer: emoji flag + dial code + chevron */}
+      <span className="pointer-events-none flex items-center gap-1.5 text-sm select-none">
+        {value && (
+          <span className="text-base leading-none" aria-hidden="true">
+            {countryCodeToEmoji(value)}
+          </span>
+        )}
+        <span className="text-muted-foreground">{callingCode}</span>
         <svg
-          className='h-3 w-3 text-gray-400'
-          fill='none'
-          viewBox='0 0 24 24'
-          stroke='currentColor'
+          className="h-3 w-3 text-gray-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
           strokeWidth={2}
         >
-          <path strokeLinecap='round' strokeLinejoin='round' d='M19 9l-7 7-7-7' />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </span>
     </div>
@@ -92,15 +108,15 @@ export function PhoneInputField({
   return (
     <div
       className={cn(
-        'flex h-10 rounded-md border bg-white transition-colors overflow-hidden',
-        hasError ? 'border-destructive' : 'border-input',
-        'focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary',
+        'flex h-12 text-muted rounded-[16px] border bg-transparent transition-colors overflow-hidden',
+        hasError ? 'border-destructive' : 'border-gray-300',
+        'focus-within:border-primary',
         '[&_.PhoneInput]:flex [&_.PhoneInput]:w-full [&_.PhoneInput]:items-center [&_.PhoneInput]:h-full',
-        disabled && 'opacity-50 cursor-not-allowed'
+        disabled && 'opacity-50 cursor-not-allowed',
       )}
     >
       <PhoneInput
-        defaultCountry='NG'
+        defaultCountry="US"
         value={value || undefined}
         onChange={(val) => onChange(val ?? '')}
         onBlur={onBlur}
@@ -109,6 +125,7 @@ export function PhoneInputField({
         inputComponent={CustomInput}
         countrySelectComponent={CountrySelectWithDialCode}
         addInternationalOption={false}
+        className="h-full border-none"
       />
     </div>
   )

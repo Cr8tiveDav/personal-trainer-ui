@@ -15,8 +15,14 @@ import {
 } from '@/lib/phone-number'
 
 const waitlistSchema = z.object({
-  name: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
-  email: z.string().min(1, { message: 'Email is required.' }).email({ message: 'Please enter a valid email address.' }).max(254, { message: 'Email address is too long.' }),
+  name: z
+    .string()
+    .min(2, { message: 'Full name must be at least 2 characters.' }),
+  email: z
+    .string()
+    .min(1, { message: 'Email is required.' })
+    .email({ message: 'Please enter a valid email address.' })
+    .max(254, { message: 'Email address is too long.' }),
   phone_number: z
     .string()
     .min(1, { message: 'Phone number is required.' })
@@ -29,7 +35,7 @@ const waitlistSchema = z.object({
 type WaitlistValues = z.infer<typeof waitlistSchema>
 
 const inputStyles =
-  'min-h-12 w-full rounded-[6px] border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary transition-all'
+  'min-h-12 w-full rounded-[16px] border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-muted outline-none focus:border-primary transition-all'
 
 const errorStyles = 'mt-1 text-xs text-red-500'
 
@@ -37,9 +43,10 @@ type WaitlistFormProps = {
   ctaLabel?: string
 }
 
-export const WaitlistForm = ({ ctaLabel = 'Join the Waitlist' }: WaitlistFormProps) => {
+export const WaitlistForm = ({
+  ctaLabel = 'Join the Waitlist',
+}: WaitlistFormProps) => {
   const [isSubmitting, startTransition] = useTransition()
-
   const {
     register,
     control,
@@ -74,6 +81,8 @@ export const WaitlistForm = ({ ctaLabel = 'Join the Waitlist' }: WaitlistFormPro
         } else {
           toast.success("You're on the list! We'll be in touch soon.")
           reset()
+          sessionStorage.setItem('waitlistSubmitted', 'true')
+          window.location.replace('/thank-you')
         }
       } else {
         toast.error(result?.error || 'Something went wrong. Please try again.')
@@ -82,15 +91,15 @@ export const WaitlistForm = ({ ctaLabel = 'Join the Waitlist' }: WaitlistFormPro
   }
 
   return (
-    <div className='relative w-full max-w-lg'>
+    <div className="relative w-full md:max-w-lg">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className='flex w-full flex-col gap-3'
+        className="flex w-full flex-col gap-3"
       >
         <div>
           <input
-            type='text'
-            placeholder='Full name'
+            type="text"
+            placeholder="Full name"
             {...register('name')}
             className={inputStyles}
             disabled={isSubmitting}
@@ -100,8 +109,8 @@ export const WaitlistForm = ({ ctaLabel = 'Join the Waitlist' }: WaitlistFormPro
 
         <div>
           <input
-            type='email'
-            placeholder='johndoe@example.com'
+            type="email"
+            placeholder="johndoe@example.com"
             {...register('email')}
             className={inputStyles}
             disabled={isSubmitting}
@@ -113,7 +122,7 @@ export const WaitlistForm = ({ ctaLabel = 'Join the Waitlist' }: WaitlistFormPro
 
         <div>
           <Controller
-            name='phone_number'
+            name="phone_number"
             control={control}
             render={({ field }) => (
               <PhoneInputField
@@ -133,8 +142,8 @@ export const WaitlistForm = ({ ctaLabel = 'Join the Waitlist' }: WaitlistFormPro
 
         <div>
           <input
-            type='text'
-            placeholder='Location (e.g. California, USA)'
+            type="text"
+            placeholder="Location (e.g. California, USA)"
             {...register('location')}
             className={inputStyles}
             disabled={isSubmitting}
@@ -144,7 +153,11 @@ export const WaitlistForm = ({ ctaLabel = 'Join the Waitlist' }: WaitlistFormPro
           )}
         </div>
 
-        <Button type='submit' disabled={isSubmitting}>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="h-[44px] rounded-[16px]"
+        >
           {isSubmitting ? 'Processing...' : ctaLabel}
         </Button>
       </form>
