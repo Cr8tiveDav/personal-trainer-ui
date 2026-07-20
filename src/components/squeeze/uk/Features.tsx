@@ -26,7 +26,7 @@ export default function Features() {
                 />
               </div>
 
-              <div className="flex max-w-137.5 w-full md:w-auto flex-col items-center justify-end pt-4 text-left md:pb-16 md:pt-0">
+              <div className="flex max-w-137.5 w-full md:w-auto flex-col items-start justify-end pt-4 text-left md:pb-16 md:pt-0">
                 <h3 className="mb-2 text-xl font-bold leading-tight text-muted-foreground md:text-3xl lg:text-4xl">
                   Trainer Discovery
                 </h3>
@@ -62,9 +62,9 @@ export default function Features() {
                 />
               </div>
 
-              <div className="flex max-w-137.5 w-full md:w-auto flex-col items-center justify-end pt-4 text-left md:pb-16 md:pt-0">
+              <div className="flex max-w-137.5 w-full md:w-auto flex-col items-start justify-end pt-4 text-left md:pb-16 md:pt-0">
                 <h3 className="mb-2 text-xl font-bold leading-tight text-muted-foreground md:text-3xl lg:text-[44px]">
-                  Session Booking
+                  Book Session
                 </h3>
                 <ul className="space-y-2">
                   {[

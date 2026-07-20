@@ -5,7 +5,7 @@ export function VideoSection() {
   return (
     <section className="px-4 py-12 md:px-8 md:py-20">
       <div className="mx-auto w-full max-w-[1320px]">
-        <div className="mx-auto max-w-[936px] text-center">
+        <div className="mx-auto max-w-xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-muted-foreground lg:text-4xl lg:leading-[1.1]">
             A fitness routine that respects your lifestyle
           </h2>

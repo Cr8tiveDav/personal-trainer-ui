@@ -19,7 +19,7 @@ const IntegrationsBar = ({ className }: IntegrationsBarProps) => {
     >
       <div className="container flex flex-col items-center justify-between gap-6 lg:flex-row">
         <p className="shrink-0 text-lg text-muted">
-          Works with the tools you already use
+          Work with the tools you already use
         </p>
 
         <div className="hide_scrollbar w-full overflow-x-auto md:w-auto">
