@@ -24,11 +24,11 @@ const testimonials = [
     avatar: '/images/ads/us/sophie.svg',
   },
   {
-    name: 'Jade M.',
+    name: 'Kyle A.',
     country: 'Manchester, UK',
     review:
       "I've tried countless fitness apps, but most of them felt like I was doing everything alone. FitCall was different because there was a real person invested in my success. Having that human connection made all the difference.",
-    avatar: '/images/ads/avatar-jade.png',
+    avatar: '/images/ads/avatar-kyle.png',
   },
 ]
 

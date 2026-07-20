@@ -2,7 +2,7 @@
 
 import { A11y, Autoplay, Navigation, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
-import {  ArrowLeft, ArrowRight} from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import SectionHeader from '../ui/SectionHeader'
 import TestimonialCard from './TestimonialCard'
 import { testimonials } from './testimonials-data'
@@ -15,7 +15,7 @@ const Testimonials = () => {
         <SectionHeader
           badge="OUR TESTIMONIAL"
           title="What people are saying"
-          description="Real reviews from people having real lifestyle changes"
+          description="Reviews from people having real lifestyle changes"
           align="center"
         />
 
@@ -56,7 +56,7 @@ const Testimonials = () => {
                       'w-full transition-all duration-500 ease-in-out',
                       isActive
                         ? 'z-10 scale-110 opacity-100'
-                        : 'scale-90 opacity-60 grayscale-[0.5]'
+                        : 'scale-90 opacity-60 grayscale-[0.5]',
                     )}
                   >
                     <TestimonialCard

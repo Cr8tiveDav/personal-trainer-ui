@@ -25,7 +25,7 @@ export function Hero() {
     <section className="px-4 py-12 md:px-8 lg:pb-6 lg:pt-12">
       <div className="mx-auto flex w-full max-w-[1320px] flex-col gap-10">
         <div className="flex flex-col lg:flex-row items-center gap-6">
-          <div className="lg:max-w-[700px] xl:min-w-120 text-center lg:text-left">
+          <div className="lg:max-w-175 w-full xl:min-w-120">
             <h1 className="wrap-break-word text-4xl font-bold leading-tight tracking-tight text-muted-foreground sm:text-5xl md:text-6xl">
               Get the Support <br className="hidden sm:block" />
               You Need

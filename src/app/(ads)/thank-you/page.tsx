@@ -52,15 +52,15 @@ const ThankYouPage = () => {
         <div className="container mx-auto mb-6 flex flex-col items-center justify-center">
           <div className="md:max-w-[985px]">
             <h2 className="text-[48px] md:text-6xl font-semibold md:font-bold text-muted-foreground text-center md:mb-2.5">
-              You’re all set!
+              You&apos;re all set!
             </h2>
             <p className="text-base md:text-3xl px-4 text-muted text-center leading-6 md:leading-10">
               Thank you for completing the form.{' '}
-              <br className="block md:hidden" /> FitCall pairs you with a real
-              trainer who calls you for every session. Tap the button below to
-              download the{' '}
+              <br className="block md:hidden" /> FitCall connects you with a
+              real trainer who calls you for every session. Tap the button below
+              to download the{' '}
               <span className="text-primary font-semibold">FitCall App</span>{' '}
-              from the Play Store or App Store and begin your fitness journey.
+              from the Play Store or App Store and start your fitness journey.
             </p>
           </div>
         </div>

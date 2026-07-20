@@ -142,47 +142,12 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
           {/* Card 1 — Trainer Discovery */}
           <div className="flex flex-col">
             <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col overflow-hidden rounded-[12px] border border-[#EBEBEB] bg-[#F7F7F7] p-10">
-              {/* Circular image categories */}
-              <div className="hide_scrollbar mb-4 flex gap-3 overflow-x-auto">
-                {categories.map((cat, i) => (
-                  <button
-                    key={cat.label}
-                    onClick={() => setActiveCategory(i)}
-                    className="flex shrink-0 flex-col items-center gap-1"
-                  >
-                    <div
-                      className={`relative h-10 w-10 overflow-hidden rounded-[9999px] border-2 transition-all ${
-                        activeCategory === i
-                          ? 'border-primary'
-                          : 'border-transparent'
-                      }`}
-                    >
-                      <Image
-                        src={cat.image}
-                        alt={cat.label}
-                        fill
-                        sizes="40px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <span
-                      className={`text-[9px] font-medium ${
-                        activeCategory === i ? 'text-primary' : 'text-[#5C5C5C]'
-                      }`}
-                    >
-                      {cat.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-
               <div className="relative w-full flex-1 overflow-hidden rounded-[8px]">
                 <Image
-                  src="/images/landing-page/ste1.png"
+                  src="/images/landing-page/step-1-trainers.webp"
                   alt={steps[0].title}
                   fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover"
+                  className="object-contain"
                 />
               </div>
             </div>
