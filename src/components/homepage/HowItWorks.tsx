@@ -53,7 +53,7 @@ const CountdownTimer = () => {
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4">
-      <div className="flex w-full max-w-xs flex-col items-center gap-4 rounded-[16px] border border-[#EBEBEB] bg-white px-8 py-6 shadow-sm">
+      <div className="flex w-full max-w-xs flex-col items-center gap-4 rounded-[16px] border border-[#EBEBEB] bg-white px-8 py-6">
         <div className="flex items-center gap-2 text-sm text-[#5C5C5C]">
           <Image
             src="/images/landing-page/icons/noti.png"
@@ -91,18 +91,7 @@ const CountdownTimer = () => {
   )
 }
 
-const categories = [
-  { label: 'All', image: '/images/landing-page/tra1.jpg' },
-  { label: 'Weight Loss', image: '/images/landing-page/tra2.png' },
-  { label: 'Strength', image: '/images/landing-page/tra3.jpg' },
-  { label: 'Yoga', image: '/images/landing-page/tra4.jpg' },
-  { label: 'Cardio', image: '/images/landing-page/tra5.jpg' },
-  { label: 'Mobility', image: '/images/landing-page/tra6.jpg' },
-  { label: 'Fat loss', image: '/images/landing-page/tra3.jpg' },
-  { label: 'Mind', image: '/images/landing-page/tra4.jpg' },
-  { label: 'Body', image: '/images/landing-page/tra5.jpg' },
-  { label: 'HIIT', image: '/images/landing-page/tra6.jpg' },
-]
+
 
 const steps = [
   {
@@ -127,7 +116,7 @@ interface HowItWorksProps {
 }
 
 const HowItWorks = ({ className }: HowItWorksProps) => {
-  const [activeCategory, setActiveCategory] = useState(0)
+
 
   return (
     <section className={cn('w-full py-12 md:py-20', className)}>
@@ -141,12 +130,13 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
         <div className="grid grid-cols-1 gap-8 px-2 md:grid-cols-3">
           {/* Card 1 — Trainer Discovery */}
           <div className="flex flex-col">
-            <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col overflow-hidden rounded-[12px] border border-[#EBEBEB] bg-[#F7F7F7] p-10">
+            <div className="mb-6 h-72 md:h-80 lg:h-96 flex flex-col items-center overflow-hidden rounded-[24px] border border-[#D1D1D1] bg-[#FCFCFC] p-10">
               <div className="relative w-full flex-1 overflow-hidden rounded-[8px]">
                 <Image
-                  src="/images/landing-page/step-1-trainers.webp"
+                  src="/images/ads/us/trainers-card.png"
                   alt={steps[0].title}
                   fill
+                  sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-contain"
                 />
               </div>
@@ -166,7 +156,7 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
 
           {/* Card 2 — Countdown Timer */}
           <div className="flex flex-col">
-            <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col items-center justify-center rounded-[12px] border border-[#EBEBEB] bg-[#F7F7F7] p-4">
+            <div className="mb-6 flex h-72 md:h-80 lg:h-96 flex-col items-center justify-center overflow-hidden rounded-[24px] border border-[#D1D1D1] bg-white p-6 lg:p-10">
               <CountdownTimer />
             </div>
             <div className="flex flex-col items-start">
@@ -184,7 +174,7 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
 
           {/* Card 3 — Photo */}
           <div className="flex flex-col">
-            <div className="relative mb-6 h-72 md:h-80 lg:h-96 overflow-hidden rounded-[12px] border border-[#EBEBEB]">
+            <div className="relative mb-6 h-72 md:h-80 lg:h-96 overflow-hidden rounded-[24px] border border-[#D1D1D1]">
               <Image
                 src="/images/landing-page/step-3.png"
                 alt={steps[2].title}
