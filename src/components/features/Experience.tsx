@@ -66,7 +66,7 @@ const Experience = () => {
           <div className="w-full rounded-[8px] overflow-hidden h-81 md:h-140.5">
             <Image
               src="/images/features/woman-preparing.png"
-              alt="Woman Planking"
+              alt="Woman Preparing"
               width={615}
               height={562}
               className="w-full h-full object-cover"
