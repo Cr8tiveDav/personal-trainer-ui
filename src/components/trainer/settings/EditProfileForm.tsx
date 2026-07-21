@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import Image from 'next/image'
@@ -107,11 +107,13 @@ export function EditProfileForm() {
     reader.readAsDataURL(file)
   }
 
+  const watchedAvatar = useWatch({ control: form.control, name: 'display_picture' })
+
   if (isLoadingProfile) {
     return <div className="p-8 text-center text-sm text-gray-500 animate-pulse">Loading profile...</div>
   }
 
-  const currentAvatar = localImage || form.watch('display_picture')
+  const currentAvatar = localImage || watchedAvatar
 
   return (
     <Form {...form}>

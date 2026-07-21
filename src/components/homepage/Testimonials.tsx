@@ -19,13 +19,21 @@ const Testimonials = () => {
           align="center"
         />
 
-        <div className="relative mx-auto mt-16 max-w-6xl">
-          <button className="swiper-button-prev-custom absolute -left-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-[9999px] border border-slate-100 bg-white shadow-md">
-            <ArrowLeft className="h-5 w-5 text-slate-400" />
+        <div className="relative mx-auto mt-16 max-w-6xl px-8 md:px-16">
+          <button
+            type="button"
+            aria-label="Previous"
+            className="swiper-button-prev-custom absolute left-0 md:left-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-[9999px] border border-slate-100 bg-white"
+          >
+            <ArrowLeft className="h-5 w-5 text-primary" />
           </button>
 
-          <button className="swiper-button-next-custom absolute -right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-[9999px] border border-slate-100 bg-white shadow-md">
-            <ArrowRight className="h-5 w-5 text-slate-400" />
+          <button
+            type="button"
+            aria-label="Next"
+            className="swiper-button-next-custom absolute right-0 md:right-4 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-[9999px] border border-slate-100 bg-white"
+          >
+            <ArrowRight className="h-5 w-5 text-primary" />
           </button>
           <Swiper
             modules={[Navigation, Pagination, A11y, Autoplay]}
@@ -43,19 +51,19 @@ const Testimonials = () => {
               nextEl: '.swiper-button-next-custom',
               prevEl: '.swiper-button-prev-custom',
             }}
-            className="py-10"
+            className="py-16 md:py-20 overflow-y-visible!"
           >
             {testimonials.map((item) => (
               <SwiperSlide
                 key={item.id}
-                className="flex items-center justify-center"
+                className="flex items-center justify-center py-6"
               >
                 {({ isActive }) => (
                   <div
                     className={cn(
                       'w-full transition-all duration-500 ease-in-out',
                       isActive
-                        ? 'z-10 scale-110 opacity-100'
+                        ? 'z-10 scale-105 opacity-100'
                         : 'scale-90 opacity-60 grayscale-[0.5]',
                     )}
                   >

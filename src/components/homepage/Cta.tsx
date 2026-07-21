@@ -1,25 +1,10 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { Button } from '../ui/button'
 import FitcallDownload from './FitcallDownload'
 
-const APP_STORE_URL = 'https://apps.apple.com/app/fitcall/id123456789' // TODO: replace with real App Store ID
-const PLAY_STORE_URL =
-  'https://play.google.com/store/apps/details?id=net.emerj.fitcall'
 
 const CTASection = ({ className }: { className?: string }) => {
-  const handleDownload = () => {
-    const ua = navigator.userAgent
-    const isIOS =
-      /iPad|iPhone|iPod/.test(ua) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
-
-    // iOS → App Store, everything else (Android + desktop) → Play Store
-    const url = isIOS ? APP_STORE_URL : PLAY_STORE_URL
-    window.open(url, '_blank', 'noopener,noreferrer')
-  }
-
   return (
     <section className={cn('bg-white py-20', className)}>
       <div className="container mx-auto px-4">
