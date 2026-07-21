@@ -114,6 +114,7 @@ export const WaitlistForm = ({
             control={control}
             render={({ field }) => (
               <EmailInput
+                ref={field.ref}
                 value={field.value}
                 onChange={field.onChange}
                 onBlur={field.onBlur}

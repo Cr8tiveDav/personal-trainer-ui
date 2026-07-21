@@ -60,6 +60,7 @@ export default function MobileNav() {
           <button
             onClick={() => setOpen(false)}
             className="rounded-[9999px] p-2"
+            aria-label="Close menu"
           >
             <X className="h-6 w-6 text-slate-700" />
           </button>

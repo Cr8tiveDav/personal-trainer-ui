@@ -11,9 +11,24 @@ const DEFAULT_DOMAINS = [
   'hotmail.com',
 ]
 
-export interface EmailInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface EmailInputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   domains?: string[]
   onSelectSuggestion?: (email: string) => void
+  /**
+   * Note: This handler receives a complete React.ChangeEvent during typing, but may receive
+   * a partial synthetic event (only containing target and currentTarget with value and name)
+   * when a domain suggestion is applied. This is limited to consumers like React Hook Form
+   * and must not be treated as a full React.ChangeEvent.
+   */
+  onChange?: (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | {
+          target: { value: string; name?: string }
+          currentTarget: { value: string; name?: string }
+        }
+  ) => void
 }
 
 export const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
@@ -39,6 +54,9 @@ export const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
     const [isOpen, setIsOpen] = React.useState(false)
     const [selectedIndex, setSelectedIndex] = React.useState(0)
     const containerRef = React.useRef<HTMLDivElement>(null)
+    const uniqueId = React.useId()
+    const listboxId = `email-listbox-${uniqueId}`
+    const getOptionId = (index: number) => `email-option-${uniqueId}-${index}`
 
     // Sync controlled value if passed
     React.useEffect(() => {
@@ -101,11 +119,10 @@ export const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
 
       // Trigger synthetic onChange for react-hook-form / controlled inputs
       if (onChange) {
-        const syntheticEvent = {
+        onChange({
           target: { value: fullEmail, name: props.name },
           currentTarget: { value: fullEmail, name: props.name },
-        } as React.ChangeEvent<HTMLInputElement>
-        onChange(syntheticEvent)
+        })
       }
     }
 
@@ -144,7 +161,7 @@ export const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
           )
           return
         }
-        if (e.key === 'Enter' || e.key === 'Tab') {
+        if (e.key === 'Enter' || (e.key === 'Tab' && !e.shiftKey)) {
           if (suggestions[selectedIndex]) {
             e.preventDefault()
             applySuggestion(suggestions[selectedIndex])
@@ -167,6 +184,15 @@ export const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
         <input
           ref={ref}
           type="email"
+          role="combobox"
+          aria-expanded={showDropdown}
+          aria-autocomplete="list"
+          aria-controls={showDropdown ? listboxId : undefined}
+          aria-activedescendant={
+            showDropdown && suggestions[selectedIndex]
+              ? getOptionId(selectedIndex)
+              : undefined
+          }
           value={inputValue}
           onChange={handleChange}
           onFocus={handleFocus}
@@ -180,13 +206,16 @@ export const EmailInput = React.forwardRef<HTMLInputElement, EmailInputProps>(
 
         {showDropdown && (
           <ul
+            id={listboxId}
             role="listbox"
             className="absolute left-0 right-0 top-[calc(100%+4px)] z-50 max-h-48 overflow-y-auto rounded-[16px] border border-gray-200 bg-white p-1.5 shadow-lg transition-all"
           >
             {suggestions.map((domain, index) => {
               const isSelected = index === selectedIndex
+              const optionId = getOptionId(index)
               return (
                 <li
+                  id={optionId}
                   key={domain}
                   role="option"
                   aria-selected={isSelected}
