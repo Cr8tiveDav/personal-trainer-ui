@@ -15,7 +15,7 @@ export function SettingsForm() {
   
   const [newCategory, setNewCategory] = useState('');
 
-  const { data: settingsData, isLoading } = useAdminSettings();
+  const { data: settingsData } = useAdminSettings();
   const updateSettings = useUpdateAdminSettings();
   const createCategory = useCreateAdminCategory();
   const deleteCategory = useDeleteAdminCategory();

@@ -42,7 +42,6 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsGloballyAvailable(stored === 'true');
       } else {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsGloballyAvailable(initialGlobalState);
       }
       setHasInitialized(true);
