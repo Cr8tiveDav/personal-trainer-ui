@@ -3,7 +3,6 @@
 import { cn } from '@/lib/utils'
 import FitcallDownload from './FitcallDownload'
 
-
 const CTASection = ({ className }: { className?: string }) => {
   return (
     <section className={cn('bg-white py-20', className)}>
@@ -15,7 +14,7 @@ const CTASection = ({ className }: { className?: string }) => {
             </h2>
 
             <p className="mx-auto mt-6 max-w-xl text-base text-blue-100 md:text-lg">
-              Your trainer will show up. So should you. Book your free session
+              Your trainer will show up. So should you. Book a discovery call
               and feel the difference one phone call makes.
             </p>
 

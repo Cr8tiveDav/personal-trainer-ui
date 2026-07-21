@@ -22,14 +22,14 @@ export const testimonials = [
   },
   {
     id: 4,
-    image: '/images/testimonial1.svg',
+    image: '/images/testimonial-image5.svg',
     stack: 'New York, NY',
     name: 'Sarah K.',
     content: `"I used to find every reason to skip the gym. Now, my sessions are the highlight of my day. The personalized approach really makes a world of difference."`,
   },
   {
     id: 5,
-    image: '/images/testimonial2.svg',
+    image: '/images/testimonial-image2.svg',
     stack: 'Toronto, CA',
     name: 'Marcus V.',
     content: `The consistency I've gained through this platform is incredible. It’s more than just a workout; it’s a complete shift in how I view my daily health.`,

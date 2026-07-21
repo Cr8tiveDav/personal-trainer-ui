@@ -8,6 +8,7 @@ import { Button } from '../ui/button'
 import { toast } from 'sonner'
 import { waitlistAction } from '@/actions/waitlist'
 import { PhoneInputField } from '@/components/ui/phone-input'
+import { EmailInput } from '../ui/email-input'
 import {
   PHONE_NUMBER_ERROR,
   isStrongPhoneNumber,
@@ -108,12 +109,20 @@ export const WaitlistForm = ({
         </div>
 
         <div>
-          <input
-            type="email"
-            placeholder="johndoe@example.com"
-            {...register('email')}
-            className={inputStyles}
-            disabled={isSubmitting}
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => (
+              <EmailInput
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                name={field.name}
+                placeholder="johndoe@example.com"
+                className={inputStyles}
+                disabled={isSubmitting}
+              />
+            )}
           />
           {errors.email && (
             <p className={errorStyles}>{errors.email.message}</p>
