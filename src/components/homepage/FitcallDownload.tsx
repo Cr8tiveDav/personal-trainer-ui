@@ -4,14 +4,14 @@ import Image from 'next/image'
 
 export default function FitcallDownload() {
   return (
-    <div className="flex flex-col items-center gap-2 sm:flex-row">
+    <div className="flex flex-col items-center gap-4 sm:flex-row">
       <Button
         size="lg"
         disabled
         className="flex items-center gap-3 opacity-50 cursor-not-allowed"
       >
         <Image
-          src="/images/landing-page/apple.svg"
+          src="/images/ads/us/app-store.svg"
           alt="Apple"
           width={16}
           height={16}

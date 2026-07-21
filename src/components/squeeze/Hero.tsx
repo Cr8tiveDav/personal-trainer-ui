@@ -19,7 +19,7 @@ const Hero = ({
   ctaLabel,
 }: HeroProps) => {
   return (
-    <section className='mb-16 w-full overflow-hidden'>
+    <section className='mb-16 w-full'>
       <div className='container'>
         <div className='flex flex-col-reverse items-center gap-12 px-2 sm:flex-row lg:items-center'>
           <div className='w-full min-w-0 lg:w-1/2'>

@@ -111,7 +111,6 @@
   padding: 0 1rem;
 }
 
-
 .custom-bullet {
   height: 8px !important;
   width: 8px !important;
@@ -242,6 +241,15 @@
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
   -webkit-text-fill-color: #111111 !important;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+  transition: background-color 5000s ease-in-out 0s !important;
 }
 
 .login-input::placeholder {
