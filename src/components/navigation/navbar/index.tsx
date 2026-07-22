@@ -21,13 +21,13 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScrollEvent)
   }, [])
 
+  const desktopLinks = NAV_LINKS.filter((item) => !item.hideOnDesktop)
+
   return (
     <nav
       className={cn(
         'fixed left-0 right-0 h-[88px] items-center flex  top-0 z-50 border-b border-gray-100 transition-all duration-300',
-        scrolling
-          ? 'bg-white/90  shadow-xs backdrop-blur-md'
-          : 'bg-white/20 '
+        scrolling ? 'bg-white/90  shadow-xs backdrop-blur-md' : 'bg-white/20 ',
       )}
     >
       <div className="container mx-auto flex items-center justify-between">
@@ -36,7 +36,7 @@ const Navbar = () => {
         </div>
 
         <div className="hidden items-center justify-center gap-x-2 md:flex lg:gap-x-4">
-          {NAV_LINKS.map((item, index) => {
+          {desktopLinks.map((item, index) => {
             const isActive = pathname === item.link
 
             return (
@@ -44,8 +44,8 @@ const Navbar = () => {
                 key={index}
                 href={item.link}
                 className={cn(
-                  'relative p-3 text-[16px] font-medium capitalize transition-all duration-300 hover:text-primary',
-                  isActive ? 'text-primary' : 'text-muted-foreground'
+                  'relative py-3 text-[16px] font-medium capitalize transition-all duration-300 hover:text-primary',
+                  isActive ? 'text-primary' : 'text-muted-foreground',
                 )}
               >
                 {item.route}
@@ -58,7 +58,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center">
-          <Button asChild size='lg' className="hidden md:inline-flex">
+          <Button asChild size="lg" className="hidden md:inline-flex">
             <Link href="/waitlist">Join Waitlist</Link>
           </Button>
           <div className="md:hidden">

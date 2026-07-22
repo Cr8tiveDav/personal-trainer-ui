@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import React, { useState } from 'react';
-import Image from 'next/image';
+import React, { useState } from 'react'
+import Image from 'next/image'
 
-import SectionHeader from '../ui/SectionHeader';
-import { AnimatePresence, motion } from 'motion/react';
+import SectionHeader from '../ui/SectionHeader'
+import { AnimatePresence, motion } from 'motion/react'
 
 interface Feature {
-  icon: string;
-  title: string;
-  description: string;
-  image: string;
+  icon: string
+  title: string
+  description: string
+  image: string
 }
 
 const features: Feature[] = [
@@ -38,65 +38,61 @@ const features: Feature[] = [
     description: 'Build healthy habits with support and accountability',
     image: '/images/landing-page/phone-frame4.png',
   },
-];
+]
 
 const WhyChoose = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0)
 
   return (
-    <section className='w-full py-12 md:py-20'>
-      <div className='container'>
+    <section className="w-full py-12 md:py-20">
+      <div className="container">
         <SectionHeader
-          badge='WHY CHOOSE FITCALL?'
-          title='Coaching that fits your lifestyle'
-          className='mb-1 md:mb-2'
-          align='center'
-          description='Lose weight, get stronger, build confidence, and stay on track with personalised coaching and live accountability.
-'
+          badge="WHY CHOOSE FITCALL?"
+          title="Coaching that fits your lifestyle"
+          className="mb-1 md:mb-2"
+          align="center"
+          description="Lose weight, get stronger, build confidence, and stay on track with personalised coaching and live accountability.
+"
         />
-        <p className='text-center text-sm text-muted mb-6 md:mb-10'>
-          Every session has sets, reps, rest times, and a video demo. No gym
-          floor confusion, just open the app and follow.
-        </p>
-        <div className='flex flex-col items-center gap-8 md:flex-row md:items-stretch md:gap-12'>
+        <div className="flex flex-col items-center gap-8 md:flex-row md:items-stretch md:gap-12 mt-6 md:mt-10">
           {/* Left Side: Phone Image */}
-          <div className='relative h-[350px] w-full sm:h-[450px] md:h-[550px] md:w-1/2'>
-            <AnimatePresence mode='wait'>
+          <div className="relative h-[350px] w-full sm:h-[450px] md:h-[550px] md:w-1/2">
+            <AnimatePresence mode="wait">
               <motion.div
                 key={activeIndex}
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.4, ease: 'easeOut' }}
-                className='relative h-full w-full'
+                className="relative h-full w-full"
               >
                 <Image
                   src={features[activeIndex].image}
                   alt={`App Interface ${activeIndex + 1}`}
                   fill
-                  sizes='(max-width: 768px) 100vw, 50vw'
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   priority
-                  className='object-contain object-center drop-shadow-2xl'
+                  className="object-contain object-center drop-shadow-2xl"
                 />
               </motion.div>
             </AnimatePresence>
           </div>
 
           {/* Right Side: Features List */}
-          <div className='w-full md:w-1/2 md:pl-12'>
-            <div className='flex flex-col gap-3 py-4'>
+          <div className="w-full md:w-1/2 md:pl-12">
+            <div className="flex flex-col gap-3 py-4">
               {features.map((feature, index) => {
-                const isActive = index === activeIndex;
+                const isActive = index === activeIndex
                 return (
                   <div
                     key={index}
                     onClick={() => setActiveIndex(index)}
-                    className='relative flex cursor-pointer items-center px-4'
+                    className="relative flex cursor-pointer items-center px-4"
                   >
                     {isActive && (
                       <motion.div
-                        layoutId='activeLine'
-                        className='absolute left-0 top-0 hidden h-full w-1 bg-primary md:block'
+                        layoutId="activeLine"
+                        className="absolute left-0 top-0 hidden h-full w-1 bg-primary md:block"
                         transition={{
                           type: 'spring',
                           stiffness: 300,
@@ -104,34 +100,34 @@ const WhyChoose = () => {
                         }}
                       />
                     )}
-                    <div className='flex w-full items-center gap-4 rounded-[16px] border border-[#EBEBEB] px-4 py-4 transition-all duration-300 md:px-5 md:py-6'>
-                      <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border border-[#EBEBEB]'>
+                    <div className="flex w-full items-center gap-4 rounded-[16px] border border-[#EBEBEB] px-4 py-4 transition-all duration-300 md:px-5 md:py-6">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] border border-[#EBEBEB]">
                         <Image
                           src={feature.icon}
                           alt={feature.title}
                           width={20}
                           height={20}
-                          className='object-contain'
+                          className="object-contain"
                         />
                       </div>
                       <div>
-                        <h4 className='mb-1 lg:text-lg font-semibold text-muted-foreground'>
+                        <h4 className="mb-1 lg:text-lg font-semibold text-muted-foreground">
                           {feature.title}
                         </h4>
-                        <p className='text-sm leading-snug text-muted'>
+                        <p className="text-sm leading-snug text-muted">
                           {feature.description}
                         </p>
                       </div>
                     </div>
                   </div>
-                );
+                )
               })}
             </div>
           </div>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default WhyChoose;
+export default WhyChoose

@@ -71,7 +71,7 @@ function Toggle({
 export function DashboardAvailability({ className }: { className?: string }) {
   const { data, isLoading, isError, isSuccess } =
     useMyTrainerAvailability()
-  const slots = data?.slots || []
+  const slots = useMemo(() => data?.slots || [], [data?.slots])
 
   const [platforms, setPlatforms] = useState<Record<string, boolean>>({
     whatsapp: true,

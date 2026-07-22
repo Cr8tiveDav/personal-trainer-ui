@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 import { Trainer } from '../types';
-import { cn } from '@/utils';
 import { isValidImageSrc } from '@/lib/utils';
 
 interface ProfileHeaderProps {
