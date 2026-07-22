@@ -94,7 +94,7 @@ jobs:
           cp -r public deploy/public
           cp package.json deploy/package.json
           cp pnpm-lock.yaml deploy/pnpm-lock.yaml
-          cp pnpm-workspace.yaml deploy/pnpm-workspace.yaml 2>/dev/null || true
+          cp pnpm-workspace.yaml deploy/pnpm-workspace.yaml
           cp next.config.* deploy/ 2>/dev/null || true
           cp .env.production deploy/.env.production
 
@@ -178,7 +178,7 @@ jobs:
           cp -r public deploy/public
           cp package.json deploy/package.json
           cp pnpm-lock.yaml deploy/pnpm-lock.yaml
-          cp pnpm-workspace.yaml deploy/pnpm-workspace.yaml 2>/dev/null || true
+          cp pnpm-workspace.yaml deploy/pnpm-workspace.yaml
           cp next.config.* deploy/ 2>/dev/null || true
           cp .env.production deploy/.env.production
 
