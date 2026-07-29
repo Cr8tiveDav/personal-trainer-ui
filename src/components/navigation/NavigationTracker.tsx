@@ -10,7 +10,7 @@ export function NavigationTracker() {
     if (pathname && pathname !== '/thank-you') {
       try {
         sessionStorage.setItem('lastVisitedPage', pathname + window.location.search)
-      } catch (e) {
+      } catch {
         // ignore storage errors
       }
     }

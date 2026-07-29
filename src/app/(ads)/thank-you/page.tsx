@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState, startTransition } from 'react'
+import { useEffect, useState, startTransition, useCallback } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import SqueezeFooter from '@/components/squeeze/us/SqueezeFooter'
 import { Button } from '@/components/ui/button'
@@ -11,7 +11,7 @@ const ThankYouPage = () => {
   const [isAuthorized, setIsAuthorized] = useState(false)
   const pathname = usePathname()
 
-  const getBounceRoute = (): string => {
+  const getBounceRoute = useCallback((): string => {
     let fallback = '/'
     if (typeof window !== 'undefined') {
       const lastPage = sessionStorage.getItem('lastVisitedPage')
@@ -28,13 +28,13 @@ const ThankYouPage = () => {
           ) {
             fallback = referrerUrl.pathname + referrerUrl.search
           }
-        } catch (e) {
+        } catch {
           // ignore
         }
       }
     }
     return fallback
-  }
+  }, [pathname])
 
   useEffect(() => {
     const submittedForm = sessionStorage.getItem('waitlistSubmitted')
@@ -59,7 +59,7 @@ const ThankYouPage = () => {
     return () => {
       sessionStorage.removeItem('lastWaitlistPage')
     }
-  }, [router, pathname])
+  }, [router, pathname, getBounceRoute])
 
   // Return nothing while checking — prevents content flash before redirect
   if (!isAuthorized) return null
