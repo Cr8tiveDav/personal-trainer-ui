@@ -95,6 +95,7 @@ interface PhoneInputFieldProps {
   hasError?: boolean
   disabled?: boolean
   name?: string
+  defaultCountry?: Country
 }
 
 export function PhoneInputField({
@@ -104,6 +105,7 @@ export function PhoneInputField({
   hasError,
   disabled,
   name,
+  defaultCountry = 'US',
 }: PhoneInputFieldProps) {
   return (
     <div
@@ -116,7 +118,7 @@ export function PhoneInputField({
       )}
     >
       <PhoneInput
-        defaultCountry="US"
+        defaultCountry={defaultCountry}
         value={value || undefined}
         onChange={(val) => onChange(val ?? '')}
         onBlur={onBlur}
