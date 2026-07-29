@@ -41,7 +41,7 @@ const testimonials = [
 const Testimonial = () => {
   return (
     <section className="w-full py-4">
-      <div className="container mx-auto max-w-4xl px-4">
+      <div className="container mx-auto px-4">
         <SectionHeader
           badge="OUR TESTIMONIAL"
           title="What people are saying"
@@ -77,7 +77,7 @@ const Testimonial = () => {
         </div>
 
         <WaitlistSection text="Starting is easy. Staying committed is the hard part. With FitCall, you get a professional trainer who checks in, tracks your progress, and helps you stay on course long after the initial excitement wears off. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-5xl">
             Your Goals Need <br className="hidden md:block" />
             More Than Good <br className="hidden md:block" />
             Intentions
@@ -89,7 +89,7 @@ const Testimonial = () => {
           <p className="text-lg md:text-2xl text-muted">
             Emily&apos;s Personal Story
           </p>
-          <h2 className="text-xl md:text-4xl font-semibold text-muted-foreground">
+          <h2 className="text-2xl md:text-4xl font-semibold text-muted-foreground">
             From Struggling to Strong
           </h2>
         </div>
@@ -104,11 +104,11 @@ const Testimonial = () => {
           />
 
           <div className="md:px-6">
-            <h3 className="text-base md:text-4xl font-semibold text-muted-foreground mt-6 mb-4">
+            <h3 className="text-lg md:text-4xl font-semibold text-muted-foreground mt-6 mb-4">
               Emily Carter, 36 - San Diego, California
             </h3>
 
-            <div className="flex flex-col gap-4 text-base md:text-2xl text-muted leading-7">
+            <div className="flex flex-col gap-4 text-base md:text-[22px] text-muted leading-7">
               <p>
                 For most of my adult life, fitness was always something I
                 planned to start &quot;next week.&quot;
@@ -176,7 +176,7 @@ const Testimonial = () => {
         </div>
 
         <WaitlistSection text="How many times have you promised yourself you'd get serious about fitness? FitCall helps break the cycle by connecting you with a trainer who provides the guidance, encouragement, and accountability needed to keep going when motivation disappears. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-5xl">
             Stop Starting Over
           </h2>
         </WaitlistSection>

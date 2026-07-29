@@ -5,14 +5,14 @@ import WaitlistSection from './WaitlistSection'
 const Hero = () => {
   return (
     <section className="relative w-full overflow-hidden pt-[122px] md:pt-[154px]">
-      <div className="container mx-auto max-w-4xl px-4">
+      <div className="container mx-auto px-4">
         <div className="flex flex-col gap-6 md:flex-row md:gap-8 mb-6">
           <div className="flex flex-1 flex-col overflow-hidden">
-            <h2 className="max-w-3xl text-4xl mb-4 font-bold leading-12 md:leading-tight xl:leading-16 text-muted-foreground md:text-3xl xl:text-5xl">
+            <h1 className="max-w-3xl text-4xl mb-4 font-bold leading-12 md:leading-tight xl:leading-16 text-muted-foreground md:text-5xl xl:text-[60px]">
               Transform Your Fitness Life with{' '}
               <span className="text-primary">FitCall</span>
-            </h2>
-            <p className="text-muted text-base mb-4 md:text-lg xl:text-2xl tracking-wide leading-6 xl:leading-7">
+            </h1>
+            <p className="text-muted text-base mb-4 md:text-[22px] tracking-wide leading-6 xl:leading-7">
               You already know fitness matters. The challenge is making it a
               habit. With FitCall, you&apos;ll have a professional trainer
               guiding your journey, and helping you stay on track even when life
@@ -87,7 +87,7 @@ const Hero = () => {
               progress no matter what life throws your way. Kindly fill the
               form, download FitCall and begin your fitness journey."
         >
-          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-5xl">
             Never Tackle Your <br className="hidden md:block" />
             Fitness Journey <br className="hidden md:block" />
             Alone
