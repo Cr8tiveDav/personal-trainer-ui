@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect, startTransition } from 'react'
+import { Fragment, useState, useEffect, startTransition } from 'react'
 import Image from 'next/image'
 import SectionHeader from '../ui/SectionHeader'
 import { cn } from '@/lib/utils'
@@ -41,7 +41,13 @@ function useCountdown() {
   return { days, hrs, mins, secs }
 }
 
-const CountdownTimer = () => {
+export const CountdownTimer = ({
+  className,
+  textCls,
+}: {
+  className?: string
+  textCls?: string
+}) => {
   const { days, hrs, mins, secs } = useCountdown()
 
   const units = [
@@ -53,7 +59,12 @@ const CountdownTimer = () => {
 
   return (
     <div className="flex h-full flex-col items-center justify-center gap-4">
-      <div className="flex w-full max-w-xs flex-col items-center gap-4 rounded-[16px] border border-[#EBEBEB] bg-white px-8 py-6">
+      <div
+        className={cn(
+          'flex w-full max-w-xs flex-col items-center gap-4 rounded-[16px] border border-[#EBEBEB] bg-white px-8 py-6',
+          className,
+        )}
+      >
         <div className="flex items-center gap-2 text-sm text-[#5C5C5C]">
           <Image
             src="/images/landing-page/icons/noti.png"
@@ -62,36 +73,46 @@ const CountdownTimer = () => {
             height={20}
             className="object-contain"
           />
-          <span>Starts in</span>
+          <span className={cn('text-base text-muted-foreground', textCls)}>
+            Starts in
+          </span>
         </div>
         <div className="flex items-center gap-3">
           {units.map((item, i) => (
-            <React.Fragment key={item.label}>
+            <Fragment key={item.label}>
               <div className="flex flex-col items-center">
-                <span className="text-4xl font-bold leading-none text-[#1C1C1C]">
+                <span
+                  className={cn(
+                    'text-[24px] sm:text-[32px] font-bold leading-none text-[#1C1C1C]',
+                    textCls,
+                  )}
+                >
                   {String(item.value).padStart(2, '0')}
                 </span>
-                <span className="mt-1 text-xs text-[#5C5C5C]">
+                <span className={cn('mt-1 text-xs text-[#5C5C5C]', textCls)}>
                   {item.label}
                 </span>
               </div>
               {i < units.length - 1 && (
-                <span className="mb-4 text-2xl font-bold text-[#1C1C1C]">
+                <span
+                  className={cn(
+                    'mb-4 text-2xl font-bold text-[#1C1C1C]',
+                    textCls,
+                  )}
+                >
                   :
                 </span>
               )}
-            </React.Fragment>
+            </Fragment>
           ))}
         </div>
-        <p className="text-center text-sm text-[#5C5C5C]">
+        <p className={cn('text-center text-sm text-[#5C5C5C]', textCls)}>
           You will be reminded of your session an hour before time
         </p>
       </div>
     </div>
   )
 }
-
-
 
 const steps = [
   {
@@ -116,14 +137,12 @@ interface HowItWorksProps {
 }
 
 const HowItWorks = ({ className }: HowItWorksProps) => {
-
-
   return (
     <section className={cn('w-full py-12 md:py-20', className)}>
       <div className="container flex flex-col">
         <SectionHeader
           badge="HOW IT WORKS"
-          title="Not another workout plan, a system built for you"
+          title="Not just another workout plan"
           align="center"
           className="max-w-3xl mx-auto mb-8 md:mb-14"
         />
