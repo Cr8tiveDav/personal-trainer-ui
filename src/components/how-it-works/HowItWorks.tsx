@@ -1,8 +1,8 @@
 import React from 'react'
-import SectionHeader from '../ui/SectionHeader'
+import SectionHeader from '@/components/ui/SectionHeader'
 import Image from 'next/image'
 import StepCard from './StepCard'
-import { CountdownTimer } from '../homepage/HowItWorks'
+import { CountdownTimer } from '@/components/homepage/HowItWorks'
 
 const bullets = {
   step1: [
@@ -55,7 +55,7 @@ const HowItWorks = () => {
             <StepCard
               badge="STEP 01"
               title="Choose your trainer"
-              desc="Select a trainer who aligns with your goals and motivates you every step of the way"
+              desc="Select a trainer who aligns with your goals and motivates you every step of the way."
               bullets={bullets.step1}
             />
           </div>
@@ -73,7 +73,7 @@ const HowItWorks = () => {
             <StepCard
               badge="STEP 02"
               title="Request a call"
-              desc="Select a trainer who aligns with your goals and motivates you every step of the way"
+              desc="Request a call to discuss your goals, ask questions, and get tailored advice."
               bullets={bullets.step2}
             />
           </div>
@@ -106,7 +106,7 @@ No rigid plans. No burnout. Just consistency."
             <StepCard
               badge="STEP 04"
               title="Start Session & Train Live"
-              desc="Request a call to discuss your goals, ask questions, and get tailored advice before you"
+              desc="At your session time, your trainer calls you. You show up, train, and stay accountable."
               bullets={bullets.step4}
             />
             <div className="relative w-full min-h-[300px] md:min-h-0 md:h-auto overflow-hidden rounded-[20px] border border-border">

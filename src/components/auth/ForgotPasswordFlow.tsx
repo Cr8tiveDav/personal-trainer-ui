@@ -21,11 +21,11 @@ import {
   FormMessage,
 } from '~/components/ui/form'
 import { AdminResetPasswordSchema, ForgotPasswordEmailSchema } from '~/schemas'
-import FramerButton from '../ui/framer-button'
-import { Input } from '../ui/input'
-import { VerificationCodeInput } from './VerificationCodeInput'
+import FramerButton from '@/components/ui/framer-button'
+import { Input } from '@/components/ui/input'
+import { VerificationCodeInput } from '@/components/auth/VerificationCodeInput'
 import { PASSWORD_HINT } from '~/schemas/password'
-import { PasswordRequirements } from './PasswordRequirements'
+import { PasswordRequirements } from '@/components/auth/PasswordRequirements'
 import { cn } from '~/utils'
 
 type Step = 'request' | 'reset' | 'sent'

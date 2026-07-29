@@ -54,11 +54,6 @@ const ThankYouPage = () => {
         router.replace(getBounceRoute())
       }
     }
-
-    // Clear the session variable when the component unmounts (user navigates away)
-    return () => {
-      sessionStorage.removeItem('lastWaitlistPage')
-    }
   }, [router, pathname, getBounceRoute])
 
   // Return nothing while checking — prevents content flash before redirect

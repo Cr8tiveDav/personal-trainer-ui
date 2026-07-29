@@ -130,7 +130,7 @@ const HowItWorks = () => {
                     :
                   </span>
                   <div className="flex flex-col items-center">
-                    <span className="text-[24px] font-bold">
+                    <span className="text-[24px] sm:text-[32px] font-bold">
                       {String(hrs).padStart(2, '0')}
                     </span>
                     <span className="text-xs md:text-sm text-[#5C5C5C] mt-0.5">

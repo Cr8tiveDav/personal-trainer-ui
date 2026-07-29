@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     siteName: "FitCall",
     images: [
       {
-        url: "/logo.svg",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "FitCall Logo",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: appName,
     description: "Personal Trainer — Your dedicated fitness companion for personalized workouts and professional guidance.",
-    images: ["/logo.svg"],
+    images: ["/logo.png"],
   },
 };
 
