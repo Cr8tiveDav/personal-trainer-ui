@@ -1,17 +1,17 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Asterisk, ArrowLeft, Eye, EyeOff } from "lucide-react";
-import * as z from "zod";
+import Image from 'next/image'
+import Link from 'next/link'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Asterisk, ArrowLeft, Eye, EyeOff } from 'lucide-react'
+import * as z from 'zod'
 import {
   useForgotPassword,
   useResetPassword,
   FORGOT_PASSWORD_SUCCESS_MESSAGE,
-} from "@/api/password-reset";
+} from '@/api/password-reset'
 import {
   Form,
   FormControl,
@@ -19,58 +19,58 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "~/components/ui/form";
-import { AdminResetPasswordSchema, ForgotPasswordEmailSchema } from "~/schemas";
-import FramerButton from "../ui/framer-button";
-import { Input } from "../ui/input";
-import { VerificationCodeInput } from "./VerificationCodeInput";
-import { PASSWORD_HINT } from "~/schemas/password";
-import { PasswordRequirements } from "./PasswordRequirements";
-import { cn } from "~/utils";
+} from '~/components/ui/form'
+import { AdminResetPasswordSchema, ForgotPasswordEmailSchema } from '~/schemas'
+import FramerButton from '../ui/framer-button'
+import { Input } from '../ui/input'
+import { VerificationCodeInput } from './VerificationCodeInput'
+import { PASSWORD_HINT } from '~/schemas/password'
+import { PasswordRequirements } from './PasswordRequirements'
+import { cn } from '~/utils'
 
-type Step = "request" | "reset" | "sent";
+type Step = 'request' | 'reset' | 'sent'
 
 interface ForgotPasswordFlowProps {
-  type: "admin" | "trainer";
+  type: 'admin' | 'trainer'
 }
 
 export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
-  const [step, setStep] = useState<Step>("request");
-  const [email, setEmail] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [step, setStep] = useState<Step>('request')
+  const [email, setEmail] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  const forgotPassword = useForgotPassword();
- const resetPassword = useResetPassword({ type })
-  const backHref = type === "admin" ? "/admin/login" : "/trainer/login";
+  const forgotPassword = useForgotPassword()
+  const resetPassword = useResetPassword({ type })
+  const backHref = type === 'admin' ? '/admin/login' : '/trainer/login'
   const emailForm = useForm<z.infer<typeof ForgotPasswordEmailSchema>>({
     resolver: zodResolver(ForgotPasswordEmailSchema),
-    defaultValues: { email: "" },
-  });
+    defaultValues: { email: '' },
+  })
 
   const resetForm = useForm<z.infer<typeof AdminResetPasswordSchema>>({
     resolver: zodResolver(AdminResetPasswordSchema),
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
-      email: "",
-      code: "",
-      new_password: "",
-      confirmPassword: "",
+      email: '',
+      code: '',
+      new_password: '',
+      confirmPassword: '',
     },
-  });
+  })
 
   function onRequestCode(values: z.infer<typeof ForgotPasswordEmailSchema>) {
     forgotPassword.mutate(
       { email: values.email },
       {
         onSuccess: () => {
-          setEmail(values.email);
-          resetForm.setValue("email", values.email);
-          setStep("sent");
+          setEmail(values.email)
+          resetForm.setValue('email', values.email)
+          setStep('sent')
         },
       },
-    );
+    )
   }
 
   function onResetPassword(values: z.infer<typeof AdminResetPasswordSchema>) {
@@ -78,22 +78,22 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
       email: values.email,
       code: values.code,
       new_password: values.new_password,
-    });
+    })
   }
 
   function goToResetStep() {
-    resetForm.setValue("email", email);
-    resetForm.setValue("code", "");
-    setStep("reset");
+    resetForm.setValue('email', email)
+    resetForm.setValue('code', '')
+    setStep('reset')
   }
 
   function resendCode() {
-    const targetEmail = resetForm.getValues("email") || email;
+    const targetEmail = resetForm.getValues('email') || email
     if (!targetEmail) {
-      setStep("request");
-      return;
+      setStep('request')
+      return
     }
-    forgotPassword.mutate({ email: targetEmail });
+    forgotPassword.mutate({ email: targetEmail })
   }
 
   return (
@@ -109,7 +109,7 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
             />
           </article>
 
-          <article className="relative z-30 right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12">
+          <article className="relative z-30 md:right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12">
             <Image
               src="/images/trainer/logo.svg"
               alt="Logo"
@@ -126,7 +126,7 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
               Back to login
             </Link>
 
-            {step === "request" && (
+            {step === 'request' && (
               <>
                 <h2 className="mb-2 text-xl font-medium text-gray-900">
                   Forgot password
@@ -161,9 +161,9 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
                               placeholder="admin@example.com"
                               {...field}
                               className={cn(
-                                "login-input h-[44px] text-sm sm:text-base",
+                                'login-input h-[44px] text-sm sm:text-base',
                                 emailForm.formState.errors.email &&
-                                  "login-input--error",
+                                  'login-input--error',
                               )}
                             />
                           </FormControl>
@@ -183,7 +183,7 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
               </>
             )}
 
-            {step === "sent" && (
+            {step === 'sent' && (
               <div className="space-y-6">
                 <h2 className="text-xl font-medium text-gray-900">
                   Check your email
@@ -192,7 +192,7 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
                   {FORGOT_PASSWORD_SUCCESS_MESSAGE}
                 </p>
                 <p className="text-sm text-gray-500">
-                  Sent to{" "}
+                  Sent to{' '}
                   <span className="font-medium text-gray-900">{email}</span>
                 </p>
                 <button
@@ -204,7 +204,7 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setStep("request")}
+                  onClick={() => setStep('request')}
                   className="w-full text-center text-sm font-medium text-gray-500 hover:text-[#0b4d8d]"
                 >
                   Use a different email
@@ -212,7 +212,7 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
               </div>
             )}
 
-            {step === "reset" && (
+            {step === 'reset' && (
               <>
                 <h2 className="mb-2 text-xl font-medium text-gray-900">
                   Reset password
@@ -246,9 +246,9 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
                               disabled={resetPassword.isPending}
                               {...field}
                               className={cn(
-                                "login-input h-[44px] text-sm sm:text-base",
+                                'login-input h-[44px] text-sm sm:text-base',
                                 resetForm.formState.errors.email &&
-                                  "login-input--error",
+                                  'login-input--error',
                               )}
                             />
                           </FormControl>
@@ -301,21 +301,21 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
                           <div className="relative">
                             <FormControl>
                               <Input
-                                type={showPassword ? "text" : "password"}
+                                type={showPassword ? 'text' : 'password'}
                                 autoComplete="new-password"
                                 disabled={resetPassword.isPending}
                                 placeholder="Enter new password"
                                 {...field}
                                 onChange={(e) => {
-                                  field.onChange(e);
-                                  if (resetForm.getValues("confirmPassword")) {
-                                    void resetForm.trigger("confirmPassword");
+                                  field.onChange(e)
+                                  if (resetForm.getValues('confirmPassword')) {
+                                    void resetForm.trigger('confirmPassword')
                                   }
                                 }}
                                 className={cn(
-                                  "login-input h-[44px] pr-10 text-sm sm:text-base",
+                                  'login-input h-[44px] pr-10 text-sm sm:text-base',
                                   resetForm.formState.errors.new_password &&
-                                    "login-input--error",
+                                    'login-input--error',
                                 )}
                               />
                             </FormControl>
@@ -352,15 +352,15 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
                           <div className="relative">
                             <FormControl>
                               <Input
-                                type={showConfirmPassword ? "text" : "password"}
+                                type={showConfirmPassword ? 'text' : 'password'}
                                 autoComplete="new-password"
                                 disabled={resetPassword.isPending}
                                 placeholder="Confirm new password"
                                 {...field}
                                 className={cn(
-                                  "login-input h-[44px] pr-10 text-sm sm:text-base",
+                                  'login-input h-[44px] pr-10 text-sm sm:text-base',
                                   resetForm.formState.errors.confirmPassword &&
-                                    "login-input--error",
+                                    'login-input--error',
                                 )}
                               />
                             </FormControl>
@@ -396,7 +396,7 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
                       onClick={resendCode}
                       className="w-full text-center text-sm font-medium text-gray-500 hover:text-[#0b4d8d] disabled:opacity-50"
                     >
-                      {forgotPassword.isPending ? "Sending…" : "Resend code"}
+                      {forgotPassword.isPending ? 'Sending…' : 'Resend code'}
                     </button>
                   </form>
                 </Form>
@@ -406,5 +406,5 @@ export function ForgotPasswordFlow({ type }: ForgotPasswordFlowProps) {
         </div>
       </div>
     </section>
-  );
+  )
 }
