@@ -146,7 +146,7 @@ const HowItWorks = ({ className }: HowItWorksProps) => {
           align="center"
           className="max-w-3xl mx-auto mb-8 md:mb-14"
         />
-        <div className="grid grid-cols-1 gap-8 px-2 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 px-2 lg:grid-cols-3">
           {/* Card 1 — Trainer Discovery */}
           <div className="flex flex-col">
             <div className="mb-6 h-72 md:h-80 lg:h-96 flex flex-col items-center overflow-hidden rounded-[24px] border border-[#D1D1D1] bg-[#FCFCFC] p-10">
