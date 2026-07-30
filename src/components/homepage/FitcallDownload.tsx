@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 export default function FitcallDownload() {
   return (
-    <div className="flex flex-col items-center gap-4 sm:flex-row">
+    <div className="flex flex-col items-center sm:gap-4 sm:flex-row">
       <Button
         size="lg"
         disabled

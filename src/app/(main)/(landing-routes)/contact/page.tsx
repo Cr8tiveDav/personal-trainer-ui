@@ -37,7 +37,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-24">
             <div className="flex flex-col justify-start">
               <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-[9999px] border border-[#D1E9FF] bg-primarybadge px-3 py-1">
-                <span className="h-2 w-2 rounded-[9999px] bg-primary" />
+                <span className="h-2 w-2 rounded-[9999px] bg-primary motion-safe:animate-pulse" />
                 <span className="text-sm font-medium text-primary">
                   We&apos;re online & happy to help
                 </span>

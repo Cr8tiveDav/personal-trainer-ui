@@ -1,6 +1,6 @@
 'use client'
-import { useEffect, useState, startTransition } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState, startTransition, useCallback } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
 import SqueezeFooter from '@/components/squeeze/us/SqueezeFooter'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
@@ -9,15 +9,52 @@ import Link from 'next/link'
 const ThankYouPage = () => {
   const router = useRouter()
   const [isAuthorized, setIsAuthorized] = useState(false)
+  const pathname = usePathname()
+
+  const getBounceRoute = useCallback((): string => {
+    let fallback = '/'
+    if (typeof window !== 'undefined') {
+      const lastPage = sessionStorage.getItem('lastVisitedPage')
+      if (lastPage) {
+        return lastPage
+      }
+
+      if (typeof document !== 'undefined' && document.referrer) {
+        try {
+          const referrerUrl = new URL(document.referrer)
+          if (
+            referrerUrl.origin === window.location.origin &&
+            referrerUrl.pathname !== pathname
+          ) {
+            fallback = referrerUrl.pathname + referrerUrl.search
+          }
+        } catch {
+          // ignore
+        }
+      }
+    }
+    return fallback
+  }, [pathname])
 
   useEffect(() => {
-    if (!sessionStorage.getItem('waitlistSubmitted')) {
-      router.replace('/us')
-    } else {
+    const submittedForm = sessionStorage.getItem('waitlistSubmitted')
+
+    if (submittedForm) {
+      // Store the page they submitted from in a session key so refreshes are allowed
+      sessionStorage.setItem('lastWaitlistPage', submittedForm)
       sessionStorage.removeItem('waitlistSubmitted')
       startTransition(() => setIsAuthorized(true))
+    } else {
+      // Check if they previously submitted in this session
+      const lastPage = sessionStorage.getItem('lastWaitlistPage')
+      if (lastPage) {
+        startTransition(() => setIsAuthorized(true))
+      } else {
+        // No submission in this session; bounce them back to where they came from
+        router.replace(getBounceRoute())
+      }
     }
-  }, [router])
+  }, [router, pathname, getBounceRoute])
 
   // Return nothing while checking — prevents content flash before redirect
   if (!isAuthorized) return null

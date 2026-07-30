@@ -1,14 +1,11 @@
-import CTASection from '@/components/homepage/Cta';
-import HowItWorks from '@/components/homepage/HowItWorks';
-import React from 'react';
+import HowItWorks from '@/components/how-it-works/HowItWorks'
 
 const HowItWorksPage = () => {
   return (
     <main className="w-full bg-secondary pt-24 md:pt-28">
-      <HowItWorks className="pt-8 md:pt-10" />
-      <CTASection/>
+      <HowItWorks />
     </main>
-  );
-};
+  )
+}
 
-export default HowItWorksPage;
+export default HowItWorksPage

@@ -30,7 +30,7 @@ const experience = [
 const Experience = () => {
   return (
     <section className="w-full py-4">
-      <div className="container mx-auto max-w-4xl px-4">
+      <div className="container mx-auto px-4">
         <SectionHeader
           badge="Experience"
           title="Simple enough to use every day."
@@ -69,7 +69,7 @@ const Experience = () => {
         </div>
 
         <WaitlistSection text="Everyone has days when they want to quit. That's why FitCall connects you with trainers who support, challenge, and encourage you to stay committed to your goals, even when life gets busy. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-5xl">
             Fitness Is Easier With <br className="hidden md:block" />
             Someone In Your <br className="hidden md:block" />
             Corner
@@ -79,7 +79,7 @@ const Experience = () => {
         <WhatWeBelieve className="py-0" containerClassName="min-h-0 py-0" />
 
         <WaitlistSection text="Workout plans are everywhere. What most people lack is someone to keep them consistent. FitCall bridges that gap by connecting you with dedicated trainers who help you stay focused. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-5xl">
             A Real Trainer. Real <br className="hidden md:block" />
             Accountability. Real <br className="hidden md:block" />
             Results.
@@ -99,7 +99,7 @@ const Experience = () => {
         </p>
 
         <WaitlistSection text="Small actions repeated consistently create extraordinary results. FitCall helps you stay committed to those actions through personalized coaching, regular check-ins, and accountability that keeps you moving forward. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-5xl">
             Your Future Self Will <br className="hidden md:block" />
             Thank You.
           </h2>

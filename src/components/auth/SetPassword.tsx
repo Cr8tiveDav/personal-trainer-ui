@@ -59,59 +59,64 @@ export function SetPassword({ token }: SetPasswordProps) {
             'Invalid or expired setup token. Please contact your admin.',
           )
         },
-      }
+      },
     )
   }
 
   return (
-    <section className='min-h-screen bg-secondary flex items-center py-6 sm:py-8'>
-      <div className='container px-4 sm:px-6'>
-        <div className='mx-auto grid max-w-[1201px] md:grid-cols-2'>
-          <article className='relative hidden w-full min-h-[678px] md:block'>
+    <section className="min-h-screen bg-secondary flex items-center py-6 sm:py-8">
+      <div className="container px-4 sm:px-6">
+        <div className="mx-auto grid max-w-[1201px] md:grid-cols-2">
+          <article className="relative hidden w-full min-h-[678px] md:block">
             <Image
-              src='/images/trainer/login-image.png'
+              src="/images/trainer/login-image.png"
               fill
-              alt='Set Password'
-              className='object-cover object-center rounded-[4px]'
+              alt="Set Password"
+              className="object-cover object-center rounded-[4px]"
             />
           </article>
 
-          <article className='relative z-30 right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12'>
+          <article className="relative z-30 md:right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12">
             <Image
-              src='/images/trainer/logo.svg'
-              alt='Logo'
+              src="/images/trainer/logo.svg"
+              alt="Logo"
               width={173}
               height={32}
-              className='mb-8 w-[130px] sm:w-[150px] md:mb-16 lg:mb-20'
+              className="mb-8 w-[130px] sm:w-[150px] md:mb-16 lg:mb-20"
             />
 
-            <h2 className='mb-2 text-xl font-medium'>Set your password</h2>
-            <p className='mb-8 text-sm text-gray-500'>
+            <h2 className="mb-2 text-xl font-medium">Set your password</h2>
+            <p className="mb-8 text-sm text-gray-500">
               Create a strong password to activate your trainer account.
             </p>
 
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-5'>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-5"
+              >
                 <FormField
                   control={form.control}
-                  name='password'
+                  name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className='flex items-center text-sm text-neutralColor-dark-2 sm:text-base'>
+                      <FormLabel className="flex items-center text-sm text-neutralColor-dark-2 sm:text-base">
                         New Password
                         <Asterisk
                           strokeWidth={2}
-                          className='relative -top-1 h-2.5 w-2.5 text-red-800 sm:h-3 sm:w-3'
+                          className="relative -top-1 h-2.5 w-2.5 text-red-800 sm:h-3 sm:w-3"
                         />
                       </FormLabel>
-                      <p className='-mt-1 text-xs text-gray-500'>{PASSWORD_HINT}</p>
-                      <div className='relative'>
+                      <p className="-mt-1 text-xs text-gray-500">
+                        {PASSWORD_HINT}
+                      </p>
+                      <div className="relative">
                         <FormControl>
                           <Input
                             disabled={isPending}
                             type={showPassword ? 'text' : 'password'}
-                            autoComplete='new-password'
-                            placeholder='Enter new password'
+                            autoComplete="new-password"
+                            placeholder="Enter new password"
                             {...field}
                             onChange={(e) => {
                               field.onChange(e)
@@ -121,20 +126,23 @@ export function SetPassword({ token }: SetPasswordProps) {
                             }}
                             className={cn(
                               'login-input pr-10 h-[44px] text-sm sm:text-base',
-                              form.formState.errors.password && 'login-input--error'
+                              form.formState.errors.password &&
+                                'login-input--error',
                             )}
                           />
                         </FormControl>
                         <button
-                          type='button'
+                          type="button"
                           onClick={() => setShowPassword((p) => !p)}
-                          className='absolute inset-y-0 right-0 flex items-center pr-3'
-                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                          className="absolute inset-y-0 right-0 flex items-center pr-3"
+                          aria-label={
+                            showPassword ? 'Hide password' : 'Show password'
+                          }
                         >
                           {showPassword ? (
-                            <Eye className='h-4 w-4 text-gray-400 sm:h-5 sm:w-5' />
+                            <Eye className="h-4 w-4 text-gray-400 sm:h-5 sm:w-5" />
                           ) : (
-                            <EyeOff className='h-4 w-4 text-gray-400 sm:h-5 sm:w-5' />
+                            <EyeOff className="h-4 w-4 text-gray-400 sm:h-5 sm:w-5" />
                           )}
                         </button>
                       </div>
@@ -146,40 +154,45 @@ export function SetPassword({ token }: SetPasswordProps) {
 
                 <FormField
                   control={form.control}
-                  name='confirmPassword'
+                  name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className='flex items-center text-sm text-neutralColor-dark-2 sm:text-base'>
+                      <FormLabel className="flex items-center text-sm text-neutralColor-dark-2 sm:text-base">
                         Confirm Password
                         <Asterisk
                           strokeWidth={2}
-                          className='relative -top-1 h-2.5 w-2.5 text-red-800 sm:h-3 sm:w-3'
+                          className="relative -top-1 h-2.5 w-2.5 text-red-800 sm:h-3 sm:w-3"
                         />
                       </FormLabel>
-                      <div className='relative'>
+                      <div className="relative">
                         <FormControl>
                           <Input
                             disabled={isPending}
                             type={showConfirm ? 'text' : 'password'}
-                            autoComplete='new-password'
-                            placeholder='Confirm your password'
+                            autoComplete="new-password"
+                            placeholder="Confirm your password"
                             {...field}
                             className={cn(
                               'login-input pr-10 h-[44px] text-sm sm:text-base',
-                              form.formState.errors.confirmPassword && 'login-input--error'
+                              form.formState.errors.confirmPassword &&
+                                'login-input--error',
                             )}
                           />
                         </FormControl>
                         <button
-                          type='button'
+                          type="button"
                           onClick={() => setShowConfirm((p) => !p)}
-                          className='absolute inset-y-0 right-0 flex items-center pr-3'
-                          aria-label={showConfirm ? 'Hide confirm password' : 'Show confirm password'}
+                          className="absolute inset-y-0 right-0 flex items-center pr-3"
+                          aria-label={
+                            showConfirm
+                              ? 'Hide confirm password'
+                              : 'Show confirm password'
+                          }
                         >
                           {showConfirm ? (
-                            <Eye className='h-4 w-4 text-gray-400 sm:h-5 sm:w-5' />
+                            <Eye className="h-4 w-4 text-gray-400 sm:h-5 sm:w-5" />
                           ) : (
-                            <EyeOff className='h-4 w-4 text-gray-400 sm:h-5 sm:w-5' />
+                            <EyeOff className="h-4 w-4 text-gray-400 sm:h-5 sm:w-5" />
                           )}
                         </button>
                       </div>
@@ -191,8 +204,8 @@ export function SetPassword({ token }: SetPasswordProps) {
                 <FramerButton
                   isLoading={isPending}
                   disabled={isPending || !form.formState.isValid}
-                  text='Set Password'
-                  className='bg-primary text-sm sm:text-base'
+                  text="Set Password"
+                  className="bg-primary text-sm sm:text-base"
                 />
               </form>
             </Form>

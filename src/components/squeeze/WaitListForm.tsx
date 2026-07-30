@@ -8,6 +8,7 @@ import { Button } from '../ui/button'
 import { toast } from 'sonner'
 import { waitlistAction } from '@/actions/waitlist'
 import { PhoneInputField } from '@/components/ui/phone-input'
+import type { Country } from 'react-phone-number-input'
 import { EmailInput } from '../ui/email-input'
 import {
   PHONE_NUMBER_ERROR,
@@ -42,10 +43,14 @@ const errorStyles = 'mt-1 text-xs text-red-500'
 
 type WaitlistFormProps = {
   ctaLabel?: string
+  defaultCountry?: Country
+  locationPlaceholder?: string
 }
 
 export const WaitlistForm = ({
   ctaLabel = 'Join the Waitlist',
+  defaultCountry = 'US',
+  locationPlaceholder = 'Location (e.g. California, USA)',
 }: WaitlistFormProps) => {
   const [isSubmitting, startTransition] = useTransition()
   const {
@@ -82,7 +87,7 @@ export const WaitlistForm = ({
         } else {
           toast.success("You're on the list! We'll be in touch soon.")
           reset()
-          sessionStorage.setItem('waitlistSubmitted', 'true')
+          sessionStorage.setItem('waitlistSubmitted', window.location.pathname)
           window.location.replace('/thank-you')
         }
       } else {
@@ -142,6 +147,7 @@ export const WaitlistForm = ({
                 name={field.name}
                 hasError={!!errors.phone_number}
                 disabled={isSubmitting}
+                defaultCountry={defaultCountry}
               />
             )}
           />
@@ -153,7 +159,7 @@ export const WaitlistForm = ({
         <div>
           <input
             type="text"
-            placeholder="Location (e.g. California, USA)"
+            placeholder={locationPlaceholder}
             {...register('location')}
             className={inputStyles}
             disabled={isSubmitting}

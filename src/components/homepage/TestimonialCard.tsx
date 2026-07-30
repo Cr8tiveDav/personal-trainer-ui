@@ -9,7 +9,7 @@ interface Properties {
 
 const TestimonialCard = (properties: Properties) => {
   return (
-    <div className="flex h-full min-h-70.75 flex-col justify-between rounded-[30.2px] border border-[#EBEBEB] bg-white p-6 lg:w-82.5">
+    <div className="flex w-full max-w-sm mx-auto h-full min-h-70.75 flex-col justify-between rounded-[30.2px] border border-[#EBEBEB] bg-white p-6">
       <div>
         <div className="mb-6 flex justify-start">
           <Image src="/quote.svg" alt="quote" width={40} height={40} />
