@@ -56,7 +56,7 @@ const Login = ({ type }: LoginProps) => {
             />
           </article>
 
-          <article className="relative z-30 right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12">
+          <article className="relative z-30 md:right-[20px] bg-white flex flex-col justify-center px-5 py-8 rounded-[16px] sm:px-8 sm:py-10 md:px-10 lg:px-12">
             <Image
               src="/images/trainer/logo.svg"
               alt="Logo"
@@ -163,7 +163,7 @@ const Login = ({ type }: LoginProps) => {
                   className="bg-primary text-sm sm:text-base"
                 />
 
-                <div className="!mt-2 flex justify-end">
+                <div className="mt-2! flex justify-end">
                   <Link
                     href={
                       type === 'admin'

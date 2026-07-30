@@ -31,6 +31,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        // Deep links: the Apple App Site Association file is served
+        // extension-less from public/.well-known, so force application/json.
+        source: '/.well-known/apple-app-site-association',
+        headers: [{ key: 'Content-Type', value: 'application/json' }],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

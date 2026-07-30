@@ -55,7 +55,8 @@ export function WaitlistPageClient() {
   const { data: response, isLoading, isError, isFetching } = useAdminWaitlist()
 
   const allEntries = useMemo(() => {
-    return Array.isArray(response?.data?.items) ? response.data.items : []
+    const items = Array.isArray(response?.data?.items) ? response.data.items : []
+    return [...items].reverse()
   }, [response])
 
   const filteredEntries = useMemo(() => {

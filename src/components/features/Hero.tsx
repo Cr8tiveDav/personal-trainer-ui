@@ -1,42 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
-import { Button } from '../ui/button'
 import FitcallDownload from '../homepage/FitcallDownload'
 
 const Hero = () => {
-  const handleDownloadRedirect = (platform: 'ios' | 'android') => {
-    const userAgent = navigator.userAgent || navigator.vendor
-
-    const iosLink = 'https://apps.apple.com/app/your-app-id'
-    const androidLink =
-      'https://play.google.com/store/apps/details?id=your.package.id'
-
-    const isIOS =
-      /iPad|iPhone|iPod/.test(userAgent) ||
-      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
-
-    const isAndroid = /android/i.test(userAgent)
-
-    if (platform === 'ios') {
-      if (isIOS) {
-        window.open(iosLink, '_blank', 'noopener,noreferrer')
-      } else {
-        alert(
-          'Please visit this page on your mobile device to download the app.',
-        )
-      }
-    } else {
-      if (isAndroid) {
-        window.open(androidLink, '_blank', 'noopener,noreferrer')
-      } else {
-        alert(
-          'Please visit this page on your mobile device to download the app.',
-        )
-      }
-    }
-  }
 
   return (
     <section className="relative w-full overflow-hidden pt-[122px] md:pt-[154px]">

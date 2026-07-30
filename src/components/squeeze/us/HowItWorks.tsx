@@ -65,7 +65,7 @@ const HowItWorks = () => {
 
   return (
     <section className="w-full py-4">
-      <div className="container mx-auto max-w-4xl px-4">
+      <div className="container mx-auto px-4">
         <SectionHeader
           badge="HOW IT WORKS"
           title="Not just another workout plan"
@@ -205,7 +205,7 @@ const HowItWorks = () => {
         </div>
 
         <WaitlistSection text="Motivation comes and goes. Accountability is what creates lasting change. FitCall pairs you with experienced trainers who help you stay committed, focused, and consistent until your goals become reality. Kindly fill the form, download FitCall and begin your fitness journey.">
-          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-[64px]">
+          <h2 className="text-3xl mb-6 font-semibold md:font-bold text-muted-foreground leading-[1.2] md:leading-[1.1] lg:text-4xl xl:text-5xl">
             When Motivation <br className="hidden md:block" />
             Quits, Your Trainer <br className="hidden md:block" />
             Won&apos;t
