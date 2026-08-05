@@ -9,7 +9,7 @@ const Logo = () => {
         alt="FitCall logo"
         width={132}
         height={40}
-        sizes='true'
+        sizes="132px"
         className="h-10 w-33 object-contain"
       />
     </Link>

@@ -8,7 +8,7 @@ const SqueezeFooter = () => {
         src="/images/squeeze-footer.png"
         alt="Squeeze Footer"
         fill
-        sizes="true"
+        sizes="100vw"
         priority
         className="object-cover object-[65%_center] md:object-center"
       />
