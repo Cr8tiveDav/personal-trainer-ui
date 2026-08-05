@@ -5,12 +5,14 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Logo from '@/components/global/main-logo'
 import { cn } from '@/lib/utils'
-import { NAV_LINKS } from './links'
+import { isActiveLink, NAV_LINKS } from './links'
 import MobileNav from './mobile-navbar'
 import { Button } from '@/components/ui/button'
 
+const desktopLinks = NAV_LINKS.filter((item) => !item.hideOnDesktop)
+
 const Navbar = () => {
-  const [scrolling, setIsScrolling] = useState<boolean>(false)
+  const [scrolling, setIsScrolling] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
@@ -18,17 +20,15 @@ const Navbar = () => {
       setIsScrolling(window.scrollY > 10)
     }
     handleScrollEvent() // Check initial scroll position on mount
-    window.addEventListener('scroll', handleScrollEvent)
+    window.addEventListener('scroll', handleScrollEvent, { passive: true })
     return () => window.removeEventListener('scroll', handleScrollEvent)
   }, [])
 
-  const desktopLinks = NAV_LINKS.filter((item) => !item.hideOnDesktop)
-
   return (
-    <nav
+    <header
       className={cn(
-        'fixed left-0 right-0 h-[88px] items-center flex  top-0 z-50 border-b border-gray-100 transition-all duration-300',
-        scrolling ? 'bg-white/90  shadow-xs backdrop-blur-md' : 'bg-white/20 ',
+        'fixed left-0 right-0 top-0 z-50 flex h-[88px] items-center border-b border-gray-100 transition-all duration-300',
+        scrolling ? 'bg-white/90 shadow-xs backdrop-blur-md' : 'bg-white/20',
       )}
     >
       <div className="container mx-auto flex items-center justify-between">
@@ -36,14 +36,18 @@ const Navbar = () => {
           <Logo />
         </div>
 
-        <div className="hidden items-center justify-center gap-x-2 md:flex lg:gap-x-4">
-          {desktopLinks.map((item, index) => {
-            const isActive = pathname === item.link
+        <nav
+          aria-label="Main navigation"
+          className="hidden items-center justify-center gap-x-2 md:flex lg:gap-x-4"
+        >
+          {desktopLinks.map((item) => {
+            const isActive = isActiveLink(pathname, item.link)
 
             return (
               <Link
-                key={index}
+                key={item.link}
                 href={item.link}
+                aria-current={isActive ? 'page' : undefined}
                 className={cn(
                   'relative py-3 text-[16px] font-medium capitalize transition-all duration-300 hover:text-primary',
                   isActive ? 'text-primary' : 'text-muted-foreground',
@@ -56,18 +60,18 @@ const Navbar = () => {
               </Link>
             )
           })}
-        </div>
+        </nav>
 
         <div className="flex items-center">
           <Button asChild size="lg" className="hidden md:inline-flex">
             <Link href="/waitlist">Join Waitlist</Link>
           </Button>
           <div className="md:hidden">
-            <MobileNav key={pathname} />
+            <MobileNav />
           </div>
         </div>
       </div>
-    </nav>
+    </header>
   )
 }
 
