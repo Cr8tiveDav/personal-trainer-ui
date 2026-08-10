@@ -1,39 +1,39 @@
-"use client";
+'use client'
 
-import { useMemo, useState } from "react";
-import { cn } from "@/utils";
-import type { AvailabilitySlot } from "@/api/availability";
-import { Time12HourSelect } from "@/components/availability/Time12HourSelect";
-import { normalizeTime24, snapToTimeOption } from "@/lib/availability/time-12h";
+import { useMemo, useState } from 'react'
+import { cn } from '@/utils'
+import type { AvailabilitySlot } from '@/api/availability'
+import { Time12HourSelect } from '@/components/availability/Time12HourSelect'
+import { normalizeTime24, snapToTimeOption } from '@/lib/availability/time-12h'
 
-import { WEEK_DAYS } from "@/lib/availability/week-days";
+import { WEEK_DAYS } from '@/lib/availability/week-days'
 
 type DaySchedule = {
-  enabled: boolean;
-  startTime: string;
-  endTime: string;
-};
+  enabled: boolean
+  startTime: string
+  endTime: string
+}
 
-type DaySchedules = Record<number, DaySchedule>;
+type DaySchedules = Record<number, DaySchedule>
 
 function getDefaultTimezone() {
-  if (typeof window === "undefined") return "Africa/Lagos";
-  return Intl.DateTimeFormat().resolvedOptions().timeZone || "Africa/Lagos";
+  if (typeof window === 'undefined') return 'Africa/Lagos'
+  return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Africa/Lagos'
 }
 
 function formatTimezoneLabel(timezone: string) {
-  if (!timezone) return "Not set";
+  if (!timezone) return 'Not set'
   try {
-    const parts = new Intl.DateTimeFormat("en-US", {
+    const parts = new Intl.DateTimeFormat('en-US', {
       timeZone: timezone,
-      timeZoneName: "long",
-    }).formatToParts(new Date());
-    const name = parts.find((p) => p.type === "timeZoneName")?.value;
-    const city = timezone.split("/").pop()?.replace(/_/g, " ");
-    if (name && city) return `${city} ${name}`;
-    return timezone.replace(/_/g, " ");
+      timeZoneName: 'long',
+    }).formatToParts(new Date())
+    const name = parts.find((p) => p.type === 'timeZoneName')?.value
+    const city = timezone.split('/').pop()?.replace(/_/g, ' ')
+    if (name && city) return `${city} ${name}`
+    return timezone.replace(/_/g, ' ')
   } catch {
-    return timezone.replace(/_/g, " ");
+    return timezone.replace(/_/g, ' ')
   }
 }
 
@@ -41,37 +41,37 @@ function createEmptyDaySchedules(): DaySchedules {
   return Object.fromEntries(
     WEEK_DAYS.map((d) => [
       d.value,
-      { enabled: false, startTime: "", endTime: "" },
+      { enabled: false, startTime: '', endTime: '' },
     ]),
-  ) as DaySchedules;
+  ) as DaySchedules
 }
 
 function slotsToDaySchedules(slots: AvailabilitySlot[]): DaySchedules {
-  const schedules = createEmptyDaySchedules();
+  const schedules = createEmptyDaySchedules()
   for (const slot of slots) {
     schedules[slot.day_of_week] = {
       enabled: true,
       startTime: snapToTimeOption(slot.start_time),
       endTime: snapToTimeOption(slot.end_time),
-    };
+    }
   }
-  return schedules;
+  return schedules
 }
 
 function getInitialState(
   initialSlots: AvailabilitySlot[],
   existingSlots: AvailabilitySlot[],
 ) {
-  const hasExisting = existingSlots.length > 0;
+  const hasExisting = existingSlots.length > 0
   const daySchedules = hasExisting
     ? createEmptyDaySchedules()
-    : slotsToDaySchedules(initialSlots);
+    : slotsToDaySchedules(initialSlots)
   const firstNew = WEEK_DAYS.find(
     (d) =>
       daySchedules[d.value].enabled &&
       !existingSlots.some((s) => s.day_of_week === d.value),
-  );
-  const firstEnabled = WEEK_DAYS.find((d) => daySchedules[d.value].enabled);
+  )
+  const firstEnabled = WEEK_DAYS.find((d) => daySchedules[d.value].enabled)
 
   return {
     daySchedules,
@@ -81,19 +81,19 @@ function getInitialState(
       initialSlots[0]?.timezone ||
       getDefaultTimezone(),
     isCurrentlyAvailable: hasExisting || initialSlots.length > 0,
-  };
+  }
 }
 
 type AvailabilitySetupPanelProps = {
   /** Days already saved — disabled here; edit on the calendar instead. */
-  existingSlots?: AvailabilitySlot[];
+  existingSlots?: AvailabilitySlot[]
   /** Pre-fill the form when there is no saved schedule yet. */
-  initialSlots?: AvailabilitySlot[];
-  onSave: (availability: AvailabilitySlot[]) => void;
-  isSaving?: boolean;
-  onToggle?: (isAvailable: boolean) => void;
-  isGloballyAvailable?: boolean;
-};
+  initialSlots?: AvailabilitySlot[]
+  onSave: (availability: AvailabilitySlot[]) => void
+  isSaving?: boolean
+  onToggle?: (isAvailable: boolean) => void
+  isGloballyAvailable?: boolean
+}
 
 export function AvailabilitySetupPanel({
   existingSlots = [],
@@ -106,76 +106,78 @@ export function AvailabilitySetupPanel({
   const persistedDays = useMemo(
     () => new Set(existingSlots.map((s) => s.day_of_week)),
     [existingSlots],
-  );
-  const hasExisting = existingSlots.length > 0;
+  )
+  const hasExisting = existingSlots.length > 0
 
-  const initial = getInitialState(initialSlots, existingSlots);
+  const initial = getInitialState(initialSlots, existingSlots)
   const [daySchedules, setDaySchedules] = useState<DaySchedules>(
     initial.daySchedules,
-  );
-  const [timezone, setTimezone] = useState(initial.timezone);
-  const [editingTimezone, setEditingTimezone] = useState(false);
+  )
+  const [timezone, setTimezone] = useState(initial.timezone)
+  const [editingTimezone, setEditingTimezone] = useState(false)
 
   const firstEnabledDay = WEEK_DAYS.find(
-    (d) => daySchedules[d.value].enabled && !persistedDays.has(d.value)
-  );
-  const selectedDayMeta = firstEnabledDay;
-  const selectedSchedule = firstEnabledDay ? daySchedules[firstEnabledDay.value] : null;
+    (d) => daySchedules[d.value].enabled && !persistedDays.has(d.value),
+  )
+  const selectedDayMeta = firstEnabledDay
+  const selectedSchedule = firstEnabledDay
+    ? daySchedules[firstEnabledDay.value]
+    : null
 
   function handleDayClick(dayValue: number) {
-    if (persistedDays.has(dayValue)) return;
+    if (persistedDays.has(dayValue)) return
 
     setDaySchedules((prev) => {
-      const isCurrentlyEnabled = prev[dayValue].enabled;
-      
+      const isCurrentlyEnabled = prev[dayValue].enabled
+
       if (isCurrentlyEnabled) {
         return {
           ...prev,
-          [dayValue]: { enabled: false, startTime: "", endTime: "" },
-        };
+          [dayValue]: { enabled: false, startTime: '', endTime: '' },
+        }
       }
-      
-      let inheritStartTime = "";
-      let inheritEndTime = "";
-      
+
+      let inheritStartTime = ''
+      let inheritEndTime = ''
+
       const existing = Object.values(prev).find(
-        (s) => s.enabled && (s.startTime || s.endTime)
-      );
+        (s) => s.enabled && (s.startTime || s.endTime),
+      )
       if (existing) {
-        inheritStartTime = existing.startTime;
-        inheritEndTime = existing.endTime;
+        inheritStartTime = existing.startTime
+        inheritEndTime = existing.endTime
       }
 
       return {
         ...prev,
-        [dayValue]: { 
-          ...prev[dayValue], 
+        [dayValue]: {
+          ...prev[dayValue],
           enabled: true,
           startTime: inheritStartTime,
-          endTime: inheritEndTime
+          endTime: inheritEndTime,
         },
-      };
-    });
+      }
+    })
   }
 
   function updateSelectedDayTime(
-    field: "startTime" | "endTime",
+    field: 'startTime' | 'endTime',
     value: string,
   ) {
     setDaySchedules((prev) => {
-      const next = { ...prev };
+      const next = { ...prev }
       Object.keys(next).forEach((key) => {
-        const day = Number(key);
+        const day = Number(key)
         if (next[day].enabled && !persistedDays.has(day)) {
-          next[day] = { ...next[day], [field]: value };
+          next[day] = { ...next[day], [field]: value }
         }
-      });
-      return next;
-    });
+      })
+      return next
+    })
   }
 
   function handleSave() {
-    if (!timezone) return;
+    if (!timezone) return
 
     const newDays: AvailabilitySlot[] = WEEK_DAYS.filter(
       (d) => daySchedules[d.value].enabled && !persistedDays.has(d.value),
@@ -186,28 +188,26 @@ export function AvailabilitySetupPanel({
         end_time: normalizeTime24(daySchedules[d.value].endTime),
         timezone,
       }))
-      .filter((slot) => slot.start_time && slot.end_time);
+      .filter((slot) => slot.start_time && slot.end_time)
 
-    if (newDays.length === 0) return;
+    if (newDays.length === 0) return
 
-    
-      const availability = newDays
+    const availability = newDays
 
-
-    onSave(availability);
+    onSave(availability)
   }
 
   const newDaysEnabled = WEEK_DAYS.filter(
     (d) => daySchedules[d.value].enabled && !persistedDays.has(d.value),
-  );
+  )
 
   const allNewHaveTimes = newDaysEnabled.every((d) => {
-    const s = daySchedules[d.value];
-    return !!s.startTime && !!s.endTime;
-  });
+    const s = daySchedules[d.value]
+    return !!s.startTime && !!s.endTime
+  })
 
   const canSave =
-    !isSaving && !!timezone && newDaysEnabled.length > 0 && allNewHaveTimes;
+    !isSaving && !!timezone && newDaysEnabled.length > 0 && allNewHaveTimes
 
   return (
     <div className="flex flex-col lg:flex-row gap-0 bg-white rounded-[12px] border border-gray-100 overflow-hidden">
@@ -215,8 +215,8 @@ export function AvailabilitySetupPanel({
         <h3 className="text-sm font-semibold text-gray-900">Working days</h3>
         <p className="text-xs text-gray-500 mt-1 mb-5">
           {hasExisting
-            ? "Add new days here. Days already set are locked — edit those on the calendar below."
-            : "Turn a day on, then set its hours. Each day can have different times."}
+            ? 'Add new days here. Days already set are locked — edit those on the calendar below.'
+            : 'Turn a day on, then set its hours. Each day can have different times.'}
         </p>
 
         {!isGloballyAvailable && hasExisting && (
@@ -225,17 +225,25 @@ export function AvailabilitySetupPanel({
               Your schedule is currently paused.
             </p>
             <p className="text-xs text-yellow-700 mt-0.5">
-              Clients cannot book sessions with you. Toggle availability back on to receive bookings.
+              Clients cannot book sessions with you. Toggle availability back on
+              to receive bookings.
             </p>
           </div>
         )}
 
-        <div className={cn("flex flex-wrap gap-2 mb-6 transition-opacity", !isGloballyAvailable && hasExisting && "opacity-60 pointer-events-none grayscale")}>
+        <div
+          className={cn(
+            'flex flex-wrap gap-2 mb-6 transition-opacity',
+            !isGloballyAvailable &&
+              hasExisting &&
+              'opacity-60 pointer-events-none grayscale',
+          )}
+        >
           {WEEK_DAYS.map((day) => {
-            const schedule = daySchedules[day.value];
-            const isPersisted = persistedDays.has(day.value);
-            const isActive = isPersisted || schedule.enabled;
-            const isSelected = !isPersisted && schedule.enabled;
+            const schedule = daySchedules[day.value]
+            const isPersisted = persistedDays.has(day.value)
+            const isActive = isPersisted || schedule.enabled
+            const isSelected = !isPersisted && schedule.enabled
 
             return (
               <button
@@ -244,21 +252,21 @@ export function AvailabilitySetupPanel({
                 disabled={isPersisted}
                 title={
                   isPersisted
-                    ? "Already set — edit on the calendar below"
+                    ? 'Already set — edit on the calendar below'
                     : undefined
                 }
                 onClick={() => handleDayClick(day.value)}
                 className={cn(
-                  "flex min-w-[72px] flex-col items-center justify-center rounded-[8px] border px-3 py-3 transition-all",
+                  'flex min-w-[72px] flex-col items-center justify-center rounded-[8px] border px-3 py-3 transition-all',
                   isPersisted &&
-                    "cursor-not-allowed border-[#0b4d8d]/30 bg-[#0b4d8d]/15 text-[#0b4d8d]",
+                    'cursor-not-allowed border-[#0b4d8d]/30 bg-[#0b4d8d]/15 text-[#0b4d8d]',
                   !isPersisted &&
                     isActive &&
-                    "bg-[#0b4d8d] border-[#0b4d8d] text-white shadow-sm",
+                    'bg-[#0b4d8d] border-[#0b4d8d] text-white shadow-sm',
                   !isPersisted &&
                     !isActive &&
-                    "bg-[#f5f5f5] border-transparent text-gray-700 hover:bg-gray-100",
-                  isSelected && "ring-2 ring-[#0b4d8d] ring-offset-2",
+                    'bg-[#f5f5f5] border-transparent text-gray-700 hover:bg-gray-100',
+                  isSelected && 'ring-2 ring-[#0b4d8d] ring-offset-2',
                 )}
               >
                 <span className="text-sm font-medium leading-none">
@@ -266,28 +274,27 @@ export function AvailabilitySetupPanel({
                 </span>
                 <span
                   className={cn(
-                    "text-xs mt-1.5",
+                    'text-xs mt-1.5',
                     isPersisted
-                      ? "text-[#0b4d8d]/80"
+                      ? 'text-[#0b4d8d]/80'
                       : isActive
-                        ? "text-white/90"
-                        : "text-gray-500",
+                        ? 'text-white/90'
+                        : 'text-gray-500',
                   )}
                 >
-                  {isPersisted ? "Set" : isActive ? "On" : "Off"}
+                  {isPersisted ? 'Set' : isActive ? 'On' : 'Off'}
                 </span>
               </button>
-            );
+            )
           })}
         </div>
 
-        {selectedSchedule?.enabled &&
-        selectedDayMeta ? (
+        {selectedSchedule?.enabled && selectedDayMeta ? (
           <div className="rounded-[8px] border border-gray-100 bg-gray-50/80 p-4 mb-6 relative">
             <div className="flex items-center justify-between mb-4">
               <p className="text-xs font-semibold text-gray-700">
-                {Object.values(daySchedules).filter((s) => s.enabled).length > 1 
-                  ? "Hours for selected days" 
+                {Object.values(daySchedules).filter((s) => s.enabled).length > 1
+                  ? 'Hours for selected days'
                   : `Hours for ${selectedDayMeta.label}`}
               </p>
             </div>
@@ -302,7 +309,7 @@ export function AvailabilitySetupPanel({
                 <Time12HourSelect
                   id="availability-from"
                   value={selectedSchedule.startTime}
-                  onChange={(v) => updateSelectedDayTime("startTime", v)}
+                  onChange={(v) => updateSelectedDayTime('startTime', v)}
                   maxTime={selectedSchedule.endTime || undefined}
                 />
               </div>
@@ -316,7 +323,7 @@ export function AvailabilitySetupPanel({
                 <Time12HourSelect
                   id="availability-until"
                   value={selectedSchedule.endTime}
-                  onChange={(v) => updateSelectedDayTime("endTime", v)}
+                  onChange={(v) => updateSelectedDayTime('endTime', v)}
                   minTime={selectedSchedule.startTime || undefined}
                 />
               </div>
@@ -325,8 +332,8 @@ export function AvailabilitySetupPanel({
         ) : (
           <p className="text-xs text-gray-500 mb-6">
             {hasExisting
-              ? "Choose an open day above to add hours, or click a bar on the calendar to edit."
-              : "Tap a day above to turn it on and set its hours."}
+              ? 'Choose an open day above to add hours, or click a bar on the calendar to edit.'
+              : 'Tap a day above to turn it on and set its hours.'}
           </p>
         )}
 
@@ -338,10 +345,10 @@ export function AvailabilitySetupPanel({
             className="rounded-[8px] bg-[#0b4d8d] px-8 py-2.5 text-sm font-semibold text-white hover:bg-[#093e72] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSaving
-              ? "Saving..."
+              ? 'Saving...'
               : hasExisting
-                ? "Add days"
-                : "Set Availability"}
+                ? 'Add days'
+                : 'Set Availability'}
           </button>
         </div>
       </div>
@@ -352,10 +359,14 @@ export function AvailabilitySetupPanel({
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="text-sm font-semibold text-gray-900">
-                  Currently available
+                  {isGloballyAvailable
+                    ? 'Currently available'
+                    : 'Currently unavailable'}
                 </h3>
                 <p className="text-xs text-gray-500 mt-1">
-                  Toggle off to mark unavailable.
+                  {isGloballyAvailable
+                    ? 'Toggle off to mark unavailable.'
+                    : 'Toggle on to mark available.'}
                 </p>
               </div>
               <button
@@ -363,19 +374,19 @@ export function AvailabilitySetupPanel({
                 role="switch"
                 aria-checked={isGloballyAvailable}
                 onClick={() => {
-                  const newValue = !isGloballyAvailable;
-                  onToggle(newValue);
+                  const newValue = !isGloballyAvailable
+                  onToggle(newValue)
                 }}
                 className={cn(
-                  "relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-[9999px] transition-colors focus:outline-none",
-                  isGloballyAvailable ? "bg-gray-900" : "bg-gray-200",
+                  'relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-[9999px] transition-colors focus:outline-none',
+                  isGloballyAvailable ? 'bg-gray-900' : 'bg-gray-200',
                 )}
               >
                 <span className="sr-only">Toggle availability</span>
                 <span
                   className={cn(
-                    "inline-block h-4 w-4 transform rounded-[9999px] bg-white shadow transition-transform",
-                    isGloballyAvailable ? "translate-x-6" : "translate-x-1",
+                    'inline-block h-4 w-4 transform rounded-[9999px] bg-white shadow transition-transform',
+                    isGloballyAvailable ? 'translate-x-6' : 'translate-x-1',
                   )}
                 />
               </button>
@@ -416,5 +427,5 @@ export function AvailabilitySetupPanel({
         </div>
       </div>
     </div>
-  );
+  )
 }

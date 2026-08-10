@@ -40,10 +40,6 @@ function AvailabilitySetupPanelSkeleton() {
 
       <div className='w-full lg:w-72 p-6 flex flex-col gap-8 bg-gray-50/30'>
         <div>
-          <Skeleton className='h-4 w-36 mb-3' />
-          <Skeleton className='h-6 w-11 rounded-[9999px]' />
-        </div>
-        <div>
           <Skeleton className='h-4 w-20 mb-3' />
           <Skeleton className='h-4 w-40' />
         </div>
@@ -122,6 +118,15 @@ export function AvailabilityTabSkeleton({
 
   return (
     <div className='flex flex-col gap-8'>
+      {/* Toggle availability card skeleton */}
+      <div className='bg-white rounded-[12px] border border-gray-100 p-5 flex items-center justify-between'>
+        <div className='space-y-2'>
+          <Skeleton className='h-4 w-32' />
+          <Skeleton className='h-3 w-56' />
+        </div>
+        <Skeleton className='h-6 w-11 rounded-[9999px]' />
+      </div>
+
       <div className='flex flex-col gap-3'>
         <div className='space-y-2'>
           <Skeleton className='h-4 w-32' />
