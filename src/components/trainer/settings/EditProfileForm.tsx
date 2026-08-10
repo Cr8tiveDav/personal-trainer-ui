@@ -5,8 +5,9 @@ import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import Image from 'next/image'
-import { Pencil, Camera, X, Plus } from 'lucide-react'
+import { Pencil, Camera, X } from 'lucide-react'
 import { useEditTrainerProfile, useTrainerMe } from '@/api/trainers'
+import { cn } from '@/utils'
 import {
   Form,
   FormControl,
@@ -25,6 +26,14 @@ import {
   normalizePhoneNumber,
 } from '@/lib/phone-number'
 import { displayError } from '@/lib/utils'
+
+const PREDEFINED_CATEGORIES = [
+  'Yoga',
+  'Speed',
+  'Cardio',
+  'Endurance',
+  'Strength',
+]
 
 const profileSchema = z.object({
   bio: z.string().max(400, 'Bio is too long').optional(),
@@ -49,7 +58,8 @@ export function EditProfileForm() {
   const trainer = response?.data
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [localImage, setLocalImage] = useState<string | null>(null)
-  const [newCategory, setNewCategory] = useState('')
+  const [isOpen, setIsOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -118,14 +128,14 @@ export function EditProfileForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
-        <div className="flex items-start justify-between mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-8 gap-4">
           <div>
             <h1 className="text-[28px] font-bold text-gray-900 tracking-tight">Settings</h1>
             <p className="text-gray-500 mt-1 text-[15px]">
               Configure your profile details, specialties, and contact information.
             </p>
           </div>
-          <Button type='submit' disabled={isPending} className="px-6 rounded-[8px] shrink-0 font-medium h-10">
+          <Button type='submit' disabled={!form.formState.isDirty || isPending} className="w-full sm:w-auto px-6 rounded-[8px] shrink-0 font-medium h-10">
             {isPending ? 'Saving...' : 'Save Changes'}
           </Button>
         </div>
@@ -142,7 +152,7 @@ export function EditProfileForm() {
               <div className="relative group">
                 <div className="h-25 w-25 md:h-42.5 md:w-42.5 rounded-[9999px] overflow-hidden border-[3px] border-[#EBEBEB] bg-gray-200 flex items-center justify-center relative">
                   {currentAvatar ? (
-                    <Image src={currentAvatar} alt="Avatar" fill className="object-cover" />
+                    <Image src={currentAvatar} alt="Avatar" fill className="object-cover object-top" />
                   ) : (
                     <Camera className="w-8 h-8 md:w-10 md:h-10 text-gray-400" />
                   )}
@@ -195,7 +205,7 @@ export function EditProfileForm() {
                       <Textarea
                         placeholder='Tell clients about yourself...'
                         maxLength={400}
-                        className='min-h-[100px] placeholder:text-muted resize-none border-gray-200 focus-visible:ring-primary/20 rounded-md'
+                        className='min-h-[120px] placeholder:text-gray-400 resize-none border-gray-300 focus:border-[#0b4d8d] focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[16px] bg-white px-4 py-3 text-sm text-gray-900 transition-colors'
                         {...field}
                       />
                     </FormControl>
@@ -215,11 +225,11 @@ export function EditProfileForm() {
                         <Input
                           type='number'
                           min={0}
-                          className='border-gray-200 focus-visible:ring-primary/20 rounded-md'
-                          value={field.value ?? ''}
+                          className='h-12 border-gray-300 focus:border-[#0b4d8d] focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[16px] bg-white px-4 text-sm text-gray-900 placeholder:text-gray-400 transition-colors'
+                          value={field.value === 0 || field.value === undefined || field.value === null ? '' : field.value}
                           onChange={(e) => {
                             const val = e.target.value
-                            field.onChange(val === '' ? undefined : Number(val))
+                            field.onChange(val === '' ? 0 : Number(val))
                           }}
                         />
                       </FormControl>
@@ -261,61 +271,168 @@ export function EditProfileForm() {
               name="specializations"
               render={({ field }) => {
                 const values = field.value || []
-
-                const handleAdd = () => {
-                  const val = newCategory.trim()
-                  if (!val) return
-                  // Prevent duplicates (case-insensitive)
-                  if (!values.some(v => v.toLowerCase() === val.toLowerCase())) {
-                    field.onChange([...values, val])
-                  }
-                  setNewCategory('')
-                }
+                const filteredCategories = PREDEFINED_CATEGORIES.filter((cat) =>
+                  cat.toLowerCase().includes(searchQuery.toLowerCase())
+                )
 
                 return (
                   <FormItem>
-                    <div className='mt-5 flex flex-wrap gap-2'>
-                      {values.map((item) => (
-                        <span
-                          key={item}
-                          className='flex items-center gap-1.5 rounded-[9999px] border border-gray-200 bg-white px-3 py-1 text-sm text-gray-700'
+                    <div className={cn(
+                      "w-full border border-gray-200 rounded-[16px] bg-white transition-all overflow-hidden mt-4",
+                      isOpen ? "border-[#0b4d8d] shadow-sm" : "hover:border-gray-300"
+                    )}>
+                      {/* Trigger / Header bar */}
+                      <div className="flex items-center justify-between min-h-[52px] px-4 py-2 gap-3">
+                        {/* Left Side: Pill Tags & Placeholder */}
+                        <div
+                          className="flex flex-wrap gap-1.5 items-center flex-1 cursor-pointer"
+                          onClick={() => setIsOpen(!isOpen)}
                         >
-                          <span className="capitalize">{item}</span>
+                          {values.length === 0 ? (
+                            <span className="text-sm text-gray-400 select-none">Select categories...</span>
+                          ) : (
+                            values.map((item) => (
+                              <span
+                                key={item}
+                                className='inline-flex items-center gap-1 rounded-full bg-gray-100 border border-gray-200 px-2.5 py-0.5 text-xs font-semibold text-gray-700'
+                              >
+                                <span className="capitalize">{item}</span>
+                                <button
+                                  type="button"
+                                  className='text-gray-450 hover:text-gray-600 focus:outline-none'
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    field.onChange(values.filter((v) => v !== item))
+                                  }}
+                                  aria-label={`Remove ${item}`}
+                                >
+                                  <X className='h-3 w-3' />
+                                </button>
+                              </span>
+                            ))
+                          )}
+                        </div>
+
+                        {/* Right Side Controls */}
+                        <div className="flex items-center gap-2.5 shrink-0 border-l border-gray-200 pl-3">
+                          {values.length > 0 && (
+                            <>
+                              <div className="flex h-5.5 min-w-[22px] items-center justify-center rounded-full bg-[#344054] px-1.5 text-[11px] font-bold text-white">
+                                {values.length}
+                              </div>
+                              <button
+                                type="button"
+                                className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                                onClick={() => field.onChange([])}
+                                aria-label="Clear all selections"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </>
+                          )}
                           <button
                             type="button"
-                            className='text-gray-400 hover:text-gray-600'
-                            onClick={() => field.onChange(values.filter((v) => v !== item))}
-                            aria-label={`Remove ${item}`}
+                            className="text-gray-450 hover:text-gray-600 focus:outline-none"
+                            onClick={() => setIsOpen(!isOpen)}
+                            aria-label={isOpen ? "Close menu" : "Open menu"}
                           >
-                            <X className='h-3.5 w-3.5' />
+                            <svg
+                              className={cn("h-4 w-4 transition-transform duration-205", isOpen && "rotate-180")}
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              stroke='currentColor'
+                              strokeWidth={2.5}
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin="round"
+                                d='M19 9l-7 7-7-7'
+                              />
+                            </svg>
                           </button>
-                        </span>
-                      ))}
-                    </div>
+                        </div>
+                      </div>
 
-                    <div className='mt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3'>
-                      <input
-                        type='text'
-                        placeholder='Add a category...'
-                        value={newCategory}
-                        onChange={(e) => setNewCategory(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            e.preventDefault()
-                            handleAdd()
-                          }
-                        }}
-                        className='flex-1 rounded-[8px] border border-gray-200 px-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20'
-                      />
-                      <button
-                        type="button"
-                        onClick={handleAdd}
-                        disabled={!newCategory.trim()}
-                        className='flex shrink-0 items-center justify-center gap-1.5 rounded-[8px] border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-40'
-                      >
-                        <Plus className='h-4 w-4' />
-                        Add category
-                      </button>
+                      {/* Dropdown Panel Content */}
+                      {isOpen && (
+                        <div className="border-t border-gray-200">
+                          {/* Search Input */}
+                          <div className="relative border-b border-gray-100 px-4 py-2 bg-gray-50/50">
+                            <input
+                              type="text"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              placeholder="Search..."
+                              className="w-full h-9 bg-transparent text-sm placeholder:text-gray-400 text-gray-900 focus:outline-none pr-8"
+                            />
+                            <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                              <svg
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2.5}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+
+                          {/* Checklist */}
+                          <div className="py-1 max-h-60 overflow-y-auto divide-y divide-gray-100">
+                            {filteredCategories.map((cat) => {
+                              const isChecked = values.some(
+                                (v) => v.toLowerCase() === cat.toLowerCase()
+                              )
+                              return (
+                                <div
+                                  key={cat}
+                                  onClick={() => {
+                                    if (isChecked) {
+                                      field.onChange(values.filter((v) => v.toLowerCase() !== cat.toLowerCase()))
+                                    } else {
+                                      field.onChange([...values, cat])
+                                    }
+                                  }}
+                                  className="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors select-none"
+                                >
+                                  <div className={cn(
+                                    "flex h-4.5 w-4.5 shrink-0 items-center justify-center rounded-[5px] border transition-colors duration-205",
+                                    isChecked
+                                      ? "border-[#0b4d8d] bg-[#0b4d8d] text-white"
+                                      : "border-gray-300 bg-white"
+                                  )}>
+                                    {isChecked && (
+                                      <svg
+                                        className="h-3 w-3 stroke-[3px]"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap='round'
+                                          strokeLinejoin="round"
+                                          d="M5 13l4 4L19 7"
+                                        />
+                                      </svg>
+                                    )}
+                                  </div>
+                                  <span>{cat}</span>
+                                </div>
+                              )
+                            })}
+                            {filteredCategories.length === 0 && (
+                              <div className="px-4 py-4 text-sm text-gray-400 text-center">
+                                No specialties found
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <FormMessage />
                   </FormItem>
