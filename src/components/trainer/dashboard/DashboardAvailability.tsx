@@ -116,7 +116,7 @@ export function DashboardAvailability({ className }: { className?: string }) {
   }
 
   return (
-    <div className={cn('flex h-full min-h-0 flex-col gap-4', className)}>
+    <div className={cn('flex h-full min-h-0 flex-col gap-3', className)}>
       <div className='flex min-h-0 flex-1 flex-col rounded-[12px] border border-gray-100 bg-white'>
         <div className='border-b border-gray-100 px-5 py-4'>
           <h3 className='text-sm font-semibold text-gray-900'>Set Your Availability</h3>

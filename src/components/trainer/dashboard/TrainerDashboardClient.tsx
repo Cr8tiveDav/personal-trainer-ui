@@ -5,10 +5,10 @@ import { format } from "date-fns";
 import { CalendarDays } from "lucide-react";
 import {
   useCurrentTrainerId,
-  useMyTrainerProfile,
   useMyTrainerReviews,
   useMyTrainerSessions,
 } from "@/api/trainer-dashboard";
+import { useTrainerMe } from "@/api/trainers";
 import { getTrainerProfileFromCookie } from "@/lib/auth/trainer-profile";
 import {
   averageRating,
@@ -24,12 +24,13 @@ import { UpcomingSessions } from "./UpcomingSessions";
 import { RecentReviews } from "./RecentReviews";
 import { DashboardAvailability } from "./DashboardAvailability";
 import { TrainerDashboardSkeleton } from "./TrainerDashboardSkeleton";
+import { IntroVideoCard } from "./IntroVideoCard";
 
 export function TrainerDashboardClient() {
   const profile = getTrainerProfileFromCookie();
 
   const { data: trainerId, isLoading: idLoading } = useCurrentTrainerId();
-  const { data: trainerRes, isLoading: profileLoading } = useMyTrainerProfile();
+  const { data: trainerRes, isLoading: profileLoading } = useTrainerMe();
   const {
     data: sessions = [],
     isLoading: sessionsLoading,
@@ -93,7 +94,7 @@ export function TrainerDashboardClient() {
         </button>
       </div>
       <div className="grid grid-cols-1 gap-3 xl:grid-cols-4 xl:items-stretch">
-        <div className="flex h-full min-h-0 flex-col xl:col-span-3">
+        <div className="flex flex-col xl:h-full xl:col-span-3">
           <div className="grid grid-cols-2 gap-1.5 lg:grid-cols-4">
             <TrainerStatCard
               title="Total Clients (MAY)"
@@ -115,8 +116,8 @@ export function TrainerDashboardClient() {
             />
           </div>
 
-          <div className="my-2.5 grid flex-1 grid-cols-1 gap-2.5 xl:grid-cols-12 xl:items-stretch">
-            <div className="flex h-full min-h-[520px] flex-col gap-2.5 xl:col-span-7 xl:min-h-[620px]">
+          <div className="my-2.5 grid grid-cols-1 gap-3 xl:flex-1 xl:grid-cols-12 xl:items-stretch">
+            <div className="flex flex-col gap-3 xl:h-full xl:col-span-7 xl:min-h-[620px]">
               <div className="min-h-0 flex-1">
                 <AllSessionsTable
                   sessions={tableSessions}
@@ -130,7 +131,7 @@ export function TrainerDashboardClient() {
               </div>
             </div>
 
-            <div className="flex h-full min-h-[520px] flex-col gap-2.5 xl:col-span-5 xl:min-h-[620px]">
+            <div className="flex flex-col gap-3 xl:h-full xl:col-span-5 xl:min-h-[620px]">
               <div className="min-h-0 flex-1">
                 <UpcomingSessions sessions={upcoming} className="h-full" />
               </div>
@@ -145,8 +146,9 @@ export function TrainerDashboardClient() {
             </div>
           </div>
         </div>
-        <div className="col-span-1 flex h-full min-h-0 flex-col">
-          <DashboardAvailability className="h-full min-h-0 flex-1" />
+        <div className="col-span-1 flex flex-col gap-3 xl:h-full">
+          <DashboardAvailability className="min-h-0 xl:flex-1" />
+          {trainer && <IntroVideoCard trainer={trainer} />}
         </div>
       </div>
     </div>
