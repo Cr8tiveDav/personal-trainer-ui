@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
 import { TrainerSidebar } from "./sidebar";
 import { TrainerHeader } from "./header";
 import { useTrainerMe } from "@/api/trainers";
@@ -21,8 +19,6 @@ export function TrainerShell({
   children,
 }: TrainerShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
-  const isDashboard = pathname === "/trainer/dashboard";
 
   // Dynamically fetch the trainer's latest profile to keep the avatar in sync
   const { data: response } = useTrainerMe();
@@ -53,16 +49,6 @@ export function TrainerShell({
           {children}
         </main>
       </div>
-      {isDashboard && (
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          className="fixed bottom-4 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-[9999px] bg-primary text-white md:hidden"
-          aria-label="Open menu"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-      )}
     </div>
   );
 }
