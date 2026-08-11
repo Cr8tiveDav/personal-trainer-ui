@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { cn } from '@/utils'
 
 import {
   useMyTrainerAvailability,
@@ -111,6 +112,37 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
 
   return (
     <div className='flex flex-col gap-6'>
+      <div className="bg-white rounded-[12px] border border-gray-100 p-5 flex items-center justify-between">
+        <div className="space-y-0.5">
+          <h3 className="text-sm font-semibold text-gray-900">
+            {isGloballyAvailable ? 'Currently available' : 'Currently unavailable'}
+          </h3>
+          <p className="text-xs text-gray-500">
+            {isGloballyAvailable
+              ? 'Toggle off to pause bookings. Clients will not be able to book sessions.'
+              : 'Toggle on to open bookings. Clients will be able to book sessions.'}
+          </p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={isGloballyAvailable}
+          onClick={() => handleToggle(!isGloballyAvailable)}
+          className={cn(
+            'relative inline-flex h-6 w-11 shrink-0 items-center rounded-[9999px] transition-colors focus:outline-none',
+            isGloballyAvailable ? 'bg-primary' : 'bg-gray-200',
+          )}
+        >
+          <span className="sr-only">Toggle availability</span>
+          <span
+            className={cn(
+              'inline-block h-4 w-4 transform rounded-[9999px] bg-white shadow transition-transform',
+              isGloballyAvailable ? 'translate-x-6' : 'translate-x-1',
+            )}
+          />
+        </button>
+      </div>
+
       <div className='flex flex-col gap-3'>
         <div>
           <h3 className='text-sm font-semibold text-gray-900'>Add availability</h3>
@@ -123,7 +155,6 @@ export function SetAvailability({ showSetupForm = false }: SetAvailabilityProps)
           existingSlots={slots}
           onSave={(availability) => updateAvailability.mutate(availability)}
           isSaving={updateAvailability.isPending}
-          onToggle={handleToggle}
           isGloballyAvailable={isGloballyAvailable}
         />
       </div>

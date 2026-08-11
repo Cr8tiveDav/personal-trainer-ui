@@ -42,7 +42,7 @@ export function EmptyState({
       <img
         src={imageSrc}
         alt={imageAlt}
-        className='mb-4 h-auto w-full max-w-[240px] object-contain'
+        className='mb-4 h-24 w-auto md:h-32 object-contain'
       />
       <h3 className='text-sm font-semibold text-gray-900'>{title}</h3>
       {description ? (

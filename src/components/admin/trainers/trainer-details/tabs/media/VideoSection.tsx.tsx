@@ -129,7 +129,13 @@ export function VideoDetailView({ video, onBack, onReplace, onRemove, uploading 
       </button>
 
       {video.url ? (
-        <video src={video.url} controls className='w-full rounded-[12px]' />
+        <div className="relative bg-gray-900 flex justify-center items-center w-full rounded-[12px] overflow-hidden">
+          <video
+            src={video.url}
+            controls
+            className="w-full max-h-[600px] object-contain"
+          />
+        </div>
       ) : (
         <div className='flex min-h-[200px] items-center justify-center rounded-[12px] border border-dashed border-gray-200 bg-gray-50 text-sm text-gray-500'>
           Video is processing. Check back in a few minutes.
