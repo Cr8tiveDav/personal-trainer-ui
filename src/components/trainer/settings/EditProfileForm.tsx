@@ -28,13 +28,6 @@ import {
 } from '@/lib/phone-number'
 import { displayError } from '@/lib/utils'
 
-const PREDEFINED_CATEGORIES = [
-  'Yoga',
-  'Speed',
-  'Cardio',
-  'Endurance',
-  'Strength',
-]
 
 const profileSchema = z.object({
   bio: z.string().max(400, 'Bio is too long').optional(),
@@ -55,7 +48,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>
 export function EditProfileForm() {
   const { data: response, isLoading: isLoadingProfile } = useTrainerMe()
   const { mutateAsync, isPending } = useEditTrainerProfile()
-  const { data: categories = [] } = useCategories()
+  const { data: categories, isLoading: isCategoriesLoading, isError: isCategoriesError } = useCategories()
 
   const trainer = response?.data
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -273,7 +266,9 @@ export function EditProfileForm() {
               name="specializations"
               render={({ field }) => {
                 const values = field.value || []
-                const categoriesList = categories.length > 0 ? categories.map((c) => c.name) : PREDEFINED_CATEGORIES
+                const isDisabled = isCategoriesLoading || isCategoriesError
+                const isSuccess = !isCategoriesLoading && !isCategoriesError && categories !== undefined
+                const categoriesList = isSuccess && categories ? categories.map((c) => c.name) : []
                 const filteredCategories = categoriesList.filter((cat) =>
                   cat.toLowerCase().includes(searchQuery.toLowerCase())
                 )
@@ -282,17 +277,25 @@ export function EditProfileForm() {
                   <FormItem>
                     <div className={cn(
                       "w-full border border-gray-200 rounded-[16px] bg-white transition-all overflow-hidden mt-4",
-                      isOpen ? "border-[#0b4d8d] shadow-sm" : "hover:border-gray-300"
+                      isOpen && !isDisabled ? "border-[#0b4d8d] shadow-sm" : "hover:border-gray-300",
+                      isDisabled && "opacity-50 bg-gray-50/50 cursor-not-allowed pointer-events-none"
                     )}>
                       {/* Trigger / Header bar */}
                       <div className="flex items-center justify-between min-h-[52px] px-4 py-2 gap-3">
                         {/* Left Side: Pill Tags & Placeholder */}
                         <div
                           className="flex flex-wrap gap-1.5 items-center flex-1 cursor-pointer"
-                          onClick={() => setIsOpen(!isOpen)}
+                          onClick={() => !isDisabled && setIsOpen(!isOpen)}
                         >
                           {values.length === 0 ? (
-                            <span className="text-sm text-gray-400 select-none">Select categories...</span>
+                            <span className="text-sm text-gray-400 select-none">
+                              {isCategoriesLoading 
+                                ? "Loading categories..." 
+                                : isCategoriesError 
+                                  ? "Failed to load categories" 
+                                  : "Select categories..."
+                              }
+                            </span>
                           ) : (
                             values.map((item) => (
                               <span
@@ -335,8 +338,9 @@ export function EditProfileForm() {
                           )}
                           <button
                             type="button"
-                            className="text-gray-450 hover:text-gray-600 focus:outline-none"
-                            onClick={() => setIsOpen(!isOpen)}
+                            className="text-gray-450 hover:text-gray-600 focus:outline-none disabled:opacity-50"
+                            onClick={() => !isDisabled && setIsOpen(!isOpen)}
+                            disabled={isDisabled}
                             aria-label={isOpen ? "Close menu" : "Open menu"}
                           >
                             <svg
@@ -438,6 +442,11 @@ export function EditProfileForm() {
                       )}
                     </div>
                     <FormMessage />
+                    {isCategoriesError && (
+                      <p className="text-xs text-red-500 mt-1.5 px-1 font-medium">
+                        Failed to load categories. Please try refreshing the page.
+                      </p>
+                    )}
                   </FormItem>
                 )
               }}
