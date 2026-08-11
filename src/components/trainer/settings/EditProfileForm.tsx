@@ -286,13 +286,14 @@ export function EditProfileForm() {
                         <div
                           className="flex flex-wrap gap-1.5 items-center flex-1 cursor-pointer"
                           onClick={() => !isDisabled && setIsOpen(!isOpen)}
+                          role='combobox'
                         >
                           {values.length === 0 ? (
                             <span className="text-sm text-gray-400 select-none">
-                              {isCategoriesLoading 
-                                ? "Loading categories..." 
-                                : isCategoriesError 
-                                  ? "Failed to load categories" 
+                              {isCategoriesLoading
+                                ? "Loading categories..."
+                                : isCategoriesError
+                                  ? "Failed to load categories"
                                   : "Select categories..."
                               }
                             </span>
@@ -306,8 +307,11 @@ export function EditProfileForm() {
                                 <button
                                   type="button"
                                   className='text-gray-450 hover:text-gray-600 focus:outline-none'
+                                  disabled={isDisabled}
                                   onClick={(e) => {
                                     e.stopPropagation()
+                                    // Prevent removal if categories are loading or fetch failed
+                                    if (isDisabled) return
                                     field.onChange(values.filter((v) => v !== item))
                                   }}
                                   aria-label={`Remove ${item}`}
@@ -329,7 +333,12 @@ export function EditProfileForm() {
                               <button
                                 type="button"
                                 className="text-gray-400 hover:text-gray-600 focus:outline-none"
-                                onClick={() => field.onChange([])}
+                                disabled={isDisabled}
+                                onClick={() => {
+                                  // Prevent clearing if categories are loading or fetch failed
+                                  if (isDisabled) return
+                                  field.onChange([])
+                                }}
                                 aria-label="Clear all selections"
                               >
                                 <X className="h-4 w-4" />
@@ -443,7 +452,7 @@ export function EditProfileForm() {
                     </div>
                     <FormMessage />
                     {isCategoriesError && (
-                      <p className="text-xs text-red-500 mt-1.5 px-1 font-medium">
+                      <p role='alert' aria-live='polite' className="text-xs text-red-500 mt-1.5 px-1 font-medium">
                         Failed to load categories. Please try refreshing the page.
                       </p>
                     )}
