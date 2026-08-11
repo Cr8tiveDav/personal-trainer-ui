@@ -93,3 +93,30 @@ export function useDeleteAdminCategory() {
     },
   });
 }
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+export interface CategoriesResponse {
+  status: string;
+  code: string;
+  message: string;
+  data: {
+    items: Category[];
+  };
+}
+
+export function useCategories() {
+  return useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const response = await getRequest<CategoriesResponse>({
+        url: API_ENDPOINTS.CATEGORIES,
+      });
+      return response.data?.items ?? [];
+    },
+  });
+}

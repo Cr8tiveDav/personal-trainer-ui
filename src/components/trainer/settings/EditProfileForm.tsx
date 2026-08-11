@@ -7,6 +7,7 @@ import * as z from 'zod'
 import Image from 'next/image'
 import { Pencil, Camera, X } from 'lucide-react'
 import { useEditTrainerProfile, useTrainerMe } from '@/api/trainers'
+import { useCategories } from '@/api/settings'
 import { cn } from '@/utils'
 import {
   Form,
@@ -54,6 +55,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>
 export function EditProfileForm() {
   const { data: response, isLoading: isLoadingProfile } = useTrainerMe()
   const { mutateAsync, isPending } = useEditTrainerProfile()
+  const { data: categories = [] } = useCategories()
 
   const trainer = response?.data
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -271,7 +273,8 @@ export function EditProfileForm() {
               name="specializations"
               render={({ field }) => {
                 const values = field.value || []
-                const filteredCategories = PREDEFINED_CATEGORIES.filter((cat) =>
+                const categoriesList = categories.length > 0 ? categories.map((c) => c.name) : PREDEFINED_CATEGORIES
+                const filteredCategories = categoriesList.filter((cat) =>
                   cat.toLowerCase().includes(searchQuery.toLowerCase())
                 )
 

@@ -58,6 +58,8 @@ export const API_ENDPOINTS = {
     SUBMIT: '/contact-us',
   },
 
+  CATEGORIES: '/categories',
+
   DASHBOARD: {
     SUBSCRIPTION_COUNT: '/admin/subscriptions/count',
   },
