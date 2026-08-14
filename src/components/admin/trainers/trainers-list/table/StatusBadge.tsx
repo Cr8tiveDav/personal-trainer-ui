@@ -13,7 +13,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value }) => {
 
   if (type === 'specialty') {
     badgeStyles =
-      'bg-[#EDF4FD] text-primary border-none px-3 py-1 text-xs font-medium rounded-[9999px] capitalize';
+      'bg-[#EDF4FD] text-primary border-none px-3 py-1 text-xs font-medium rounded-[9999px] capitalize max-w-[150px]';
   } else if (type === 'status') {
     switch (value.toLowerCase()) {
       case 'active':
@@ -42,8 +42,9 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value }) => {
   return (
     <span
       className={cn('inline-flex items-center justify-center', badgeStyles)}
+      title={value}
     >
-      {value}
+      <span className='truncate w-full text-center'>{value}</span>
     </span>
   );
 };
