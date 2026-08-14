@@ -50,6 +50,9 @@ export interface BackendTrainerResponse {
   total_reviews: number;
   created_at: string;
   updated_at: string;
+  whatsapp_number?: string | null;
+  apple_id?: string | null;
+  messenger_handle?: string | null;
 }
 
 export type CreatedTrainer = BackendTrainerResponse;
@@ -91,8 +94,11 @@ export interface UpdateTrainerPayload {
   years_of_experience?: number;
   intro_video_url?: string;
   display_picture?: string;
-  phone_number?: string;
+  phone_number?: string | null;
   onboarding_status?: string;
+  whatsapp_number?: string | null;
+  apple_id?: string | null;
+  messenger_handle?: string | null;
 }
 
 export type UpdateTrainerResponse = ApiEnvelope<BackendTrainerResponse>;

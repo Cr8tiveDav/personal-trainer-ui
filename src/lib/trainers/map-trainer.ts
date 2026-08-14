@@ -98,5 +98,8 @@ export function mapBackendToFrontend(
     averageRating: rating,
     totalReviews: backendTrainer.total_reviews ?? 0,
     yearsOfExperience: backendTrainer.years_of_experience ?? 0,
+    whatsappNumber: backendTrainer.whatsapp_number?.trim() || undefined,
+    appleId: backendTrainer.apple_id?.trim() || undefined,
+    messengerHandle: backendTrainer.messenger_handle?.trim() || undefined,
   };
 }

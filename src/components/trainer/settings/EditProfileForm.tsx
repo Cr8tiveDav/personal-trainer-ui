@@ -41,6 +41,15 @@ const profileSchema = z.object({
     },
     PHONE_NUMBER_ERROR
   ),
+  whatsapp_number: z.string().optional().refine(
+    (val) => {
+      if (!val) return true; // It's optional, so empty is fine
+      return isStrongPhoneNumber(val);
+    },
+    PHONE_NUMBER_ERROR
+  ),
+  apple_id: z.string().optional(),
+  messenger_handle: z.string().optional(),
 })
 
 type ProfileFormValues = z.infer<typeof profileSchema>
@@ -64,6 +73,9 @@ export function EditProfileForm() {
       specializations: [],
       display_picture: '',
       phone_number: '',
+      whatsapp_number: '',
+      apple_id: '',
+      messenger_handle: '',
     },
   })
 
@@ -75,6 +87,9 @@ export function EditProfileForm() {
         specializations: trainer.specializations || [],
         display_picture: trainer.displayPictureUrl || '',
         phone_number: trainer.phoneNumber || '',
+        whatsapp_number: trainer.whatsappNumber || '',
+        apple_id: trainer.appleId || '',
+        messenger_handle: trainer.messengerHandle || '',
       })
     }
   }, [trainer, form])
@@ -87,6 +102,9 @@ export function EditProfileForm() {
         specializations: values.specializations,
         display_picture: values.display_picture,
         phone_number: values.phone_number ? (normalizePhoneNumber(values.phone_number) ?? values.phone_number) : undefined,
+        whatsapp_number: values.whatsapp_number ? (normalizePhoneNumber(values.whatsapp_number) ?? values.whatsapp_number) : null,
+        apple_id: values.apple_id || null,
+        messenger_handle: values.messenger_handle || null,
       })
     } catch {
       // Error handled by mutation
@@ -254,6 +272,74 @@ export function EditProfileForm() {
             </div>
           </div>
 
+          {/* Contact Channels Section */}
+          <div className="bg-white border border-gray-100 rounded-[12px] p-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-1">Contact Channels</h3>
+            <p className="text-sm text-gray-500 mb-6">
+              Alternative ways for clients and admins to reach you.
+            </p>
+
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <FormField
+                  control={form.control}
+                  name='whatsapp_number'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">WhatsApp Number</FormLabel>
+                      <FormControl>
+                        <PhoneInputField
+                          value={field.value}
+                          onChange={field.onChange}
+                          name={field.name}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='apple_id'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">Apple ID (FaceTime)</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='email@example.com or phone number'
+                          className='h-12 border-gray-300 focus:border-[#0b4d8d] focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[16px] bg-white px-4 text-sm text-gray-900 placeholder:text-gray-400 transition-colors'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <FormField
+                  control={form.control}
+                  name='messenger_handle'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">Messenger Username</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder='your.username'
+                          className='h-12 border-gray-300 focus:border-[#0b4d8d] focus-visible:ring-0 focus-visible:ring-offset-0 rounded-[16px] bg-white px-4 text-sm text-gray-900 placeholder:text-gray-400 transition-colors'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Categories Section */}
           <div className="bg-white border border-gray-100 rounded-[12px] p-8">
             <h3 className="text-lg font-semibold text-gray-900 mb-1">Categories</h3>
@@ -287,6 +373,8 @@ export function EditProfileForm() {
                           className="flex flex-wrap gap-1.5 items-center flex-1 cursor-pointer"
                           onClick={() => !isDisabled && setIsOpen(!isOpen)}
                           role='combobox'
+                          aria-expanded={isOpen}
+                          aria-controls="categories-dropdown-panel"
                         >
                           {values.length === 0 ? (
                             <span className="text-sm text-gray-400 select-none">
@@ -371,7 +459,7 @@ export function EditProfileForm() {
 
                       {/* Dropdown Panel Content */}
                       {isOpen && (
-                        <div className="border-t border-gray-200">
+                        <div id="categories-dropdown-panel" className="border-t border-gray-200">
                           {/* Search Input */}
                           <div className="relative border-b border-gray-100 px-4 py-2 bg-gray-50/50">
                             <input

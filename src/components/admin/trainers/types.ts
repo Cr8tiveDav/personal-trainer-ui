@@ -23,6 +23,9 @@ export interface Trainer {
   averageRating?: number;
   totalReviews?: number;
   yearsOfExperience?: number;
+  whatsappNumber?: string;
+  appleId?: string;
+  messengerHandle?: string;
 }
 
 export type {

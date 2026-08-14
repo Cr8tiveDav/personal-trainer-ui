@@ -36,6 +36,18 @@ export function buildUpdateTrainerFormData(
     body.append('onboarding_status', input.onboarding_status)
   }
 
+  if (input.whatsapp_number !== undefined) {
+    body.append('whatsapp_number', input.whatsapp_number ?? '')
+  }
+
+  if (input.apple_id !== undefined) {
+    body.append('apple_id', input.apple_id ?? '')
+  }
+
+  if (input.messenger_handle !== undefined) {
+    body.append('messenger_handle', input.messenger_handle ?? '')
+  }
+
   if (input.display_picture_file && input.display_picture_file.size > 0) {
     body.append('display_picture', input.display_picture_file)
   } else if (input.display_picture) {
