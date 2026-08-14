@@ -1,10 +1,13 @@
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useUpdateTrainer } from '@/api/trainers'
+import { useCategories } from '@/api/settings'
+import { X } from 'lucide-react'
+import { cn } from '@/utils'
 import {
   Dialog,
   DialogContent,
@@ -40,16 +43,8 @@ const ONBOARDING_STATUS_LABELS: Record<(typeof ONBOARDING_STATUSES)[number], str
   suspended: 'Suspended',
 }
 
-const SPECIALIZATION_OPTIONS = [
-  { value: 'yoga', label: 'Yoga' },
-  { value: 'speed', label: 'Speed' },
-  { value: 'cardio', label: 'Cardio' },
-  { value: 'endurance', label: 'Endurance' },
-  { value: 'strength', label: 'Strength & Conditioning' },
-]
-
 const editSchema = z.object({
-  specialization: z.string().min(1, 'Specialty is required'),
+  specializations: z.array(z.string()).min(1, 'At least one specialty is required'),
   bio: z.string().max(400).optional(),
   years_of_experience: z
     .number({ message: 'Must be a number' })
@@ -69,11 +64,14 @@ interface EditTrainerModalProps {
 
 export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalProps) {
   const { mutateAsync, isPending } = useUpdateTrainer(trainer.id)
+  const { data: categories, isLoading: isCategoriesLoading, isError: isCategoriesError } = useCategories()
+  const [isOpen, setIsOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const form = useForm<EditFormValues>({
     resolver: zodResolver(editSchema),
     defaultValues: {
-      specialization: trainer.specializations?.[0] ?? trainer.specialty ?? '',
+      specializations: trainer.specializations ?? [],
       bio: trainer.bio ?? '',
       years_of_experience: trainer.yearsOfExperience ?? undefined,
       intro_video_url: trainer.introVideoUrl ?? '',
@@ -86,7 +84,7 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
   // Re-sync form when trainer data changes (e.g. after a save)
   useEffect(() => {
     form.reset({
-      specialization: trainer.specializations?.[0] ?? trainer.specialty ?? '',
+      specializations: trainer.specializations ?? [],
       bio: trainer.bio ?? '',
       years_of_experience: trainer.yearsOfExperience ?? undefined,
       intro_video_url: trainer.introVideoUrl ?? '',
@@ -101,7 +99,7 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
   async function onSubmit(values: EditFormValues) {
     try {
       await mutateAsync({
-        specializations: [values.specialization],
+        specializations: values.specializations,
         bio: values.bio || undefined,
         years_of_experience: values.years_of_experience,
         intro_video_url: values.intro_video_url || undefined,
@@ -116,7 +114,7 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className='sm:max-w-lg'>
+      <DialogContent className='sm:max-w-lg max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Edit Trainer</DialogTitle>
         </DialogHeader>
@@ -136,31 +134,6 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4 mt-2'>
             <div className='grid grid-cols-2 gap-4'>
-              <FormField
-                control={form.control}
-                name='specialization'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Specialty <span className='text-red-500'>*</span></FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger className='login-input'>
-                          <SelectValue placeholder='Select specialty' />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {SPECIALIZATION_OPTIONS.map(({ value, label }) => (
-                          <SelectItem key={value} value={value}>
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <FormField
                 control={form.control}
                 name='onboarding_status'
@@ -185,35 +158,35 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
                   </FormItem>
                 )}
               />
-            </div>
 
-            <FormField
-              control={form.control}
-              name='years_of_experience'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Years of Experience</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='number'
-                      min={0}
-                      step={1}
-                      placeholder='e.g. 3'
-                      className='login-input'
-                      value={field.value ?? ''}
-                      onChange={(e) => {
-                        const raw = e.target.value
-                        field.onChange(raw === '' ? undefined : Number(raw))
-                      }}
-                      onBlur={field.onBlur}
-                      name={field.name}
-                      ref={field.ref}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name='years_of_experience'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Years of Experience</FormLabel>
+                    <FormControl>
+                      <Input
+                        type='number'
+                        min={0}
+                        step={1}
+                        placeholder='e.g. 3'
+                        className='login-input'
+                        value={field.value ?? ''}
+                        onChange={(e) => {
+                          const raw = e.target.value
+                          field.onChange(raw === '' ? undefined : Number(raw))
+                        }}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -258,6 +231,207 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="specializations"
+              render={({ field }) => {
+                const values = field.value || []
+                const isDisabled = isCategoriesLoading || isCategoriesError
+                const isSuccess = !isCategoriesLoading && !isCategoriesError && categories !== undefined
+                const categoriesList = isSuccess && categories ? categories.map((c) => c.name) : []
+                const filteredCategories = categoriesList.filter((cat) =>
+                  cat.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+
+                return (
+                  <FormItem>
+                    <FormLabel>Specialties <span className='text-red-500'>*</span></FormLabel>
+                    <div className={cn(
+                      "w-full border border-gray-200 rounded-[12px] bg-white transition-all overflow-hidden mt-1.5",
+                      isOpen && !isDisabled ? "border-[#0b4d8d] shadow-sm" : "hover:border-gray-300",
+                      isDisabled && "opacity-50 bg-gray-50/50 cursor-not-allowed pointer-events-none"
+                    )}>
+                      {/* Trigger / Header bar */}
+                      <div className="flex items-center justify-between min-h-[44px] px-3 py-1.5 gap-2">
+                        {/* Left Side: Pill Tags & Placeholder */}
+                        <div
+                          className="flex flex-wrap gap-1 items-center flex-1 cursor-pointer"
+                          onClick={() => !isDisabled && setIsOpen(!isOpen)}
+                          role='combobox'
+                          aria-expanded={isOpen}
+                          aria-controls="admin-categories-dropdown-panel"
+                        >
+                          {values.length === 0 ? (
+                            <span className="text-sm text-gray-400 select-none">
+                              {isCategoriesLoading
+                                ? "Loading categories..."
+                                : isCategoriesError
+                                  ? "Failed to load categories"
+                                  : "Select categories..."
+                              }
+                            </span>
+                          ) : (
+                            values.map((item) => (
+                              <span
+                                key={item}
+                                className='inline-flex items-center gap-1 rounded-full bg-gray-100 border border-gray-200 px-2 py-0.5 text-xs font-semibold text-gray-700'
+                              >
+                                <span className="capitalize">{item}</span>
+                                <button
+                                  type="button"
+                                  className='text-gray-450 hover:text-gray-600 focus:outline-none'
+                                  disabled={isDisabled}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    if (isDisabled) return
+                                    field.onChange(values.filter((v) => v !== item))
+                                  }}
+                                  aria-label={`Remove ${item}`}
+                                >
+                                  <X className='h-3 w-3' />
+                                </button>
+                              </span>
+                            ))
+                          )}
+                        </div>
+
+                        {/* Right Side Controls */}
+                        <div className="flex items-center gap-2 shrink-0 border-l border-gray-200 pl-2">
+                          {values.length > 0 && (
+                            <>
+                              <div className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-[#344054] px-1 text-[10px] font-bold text-white">
+                                {values.length}
+                              </div>
+                              <button
+                                type="button"
+                                className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                                disabled={isDisabled}
+                                onClick={() => {
+                                  if (isDisabled) return
+                                  field.onChange([])
+                                }}
+                                aria-label="Clear all selections"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </>
+                          )}
+                          <button
+                            type="button"
+                            className="text-gray-450 hover:text-gray-600 focus:outline-none disabled:opacity-50"
+                            onClick={() => !isDisabled && setIsOpen(!isOpen)}
+                            disabled={isDisabled}
+                            aria-label={isOpen ? "Close menu" : "Open menu"}
+                          >
+                            <svg
+                              className={cn("h-4 w-4 transition-transform duration-205", isOpen && "rotate-180")}
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              stroke='currentColor'
+                              strokeWidth={2.5}
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin="round"
+                                d='M19 9l-7 7-7-7'
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Dropdown Panel Content */}
+                      {isOpen && (
+                        <div id="admin-categories-dropdown-panel" className="border-t border-gray-200">
+                          {/* Search Input */}
+                          <div className="relative border-b border-gray-100 px-3 py-1.5 bg-gray-50/50">
+                            <input
+                              type="text"
+                              value={searchQuery}
+                              onChange={(e) => setSearchQuery(e.target.value)}
+                              placeholder="Search..."
+                              className="w-full h-8 bg-transparent text-sm placeholder:text-gray-400 text-gray-900 focus:outline-none pr-8"
+                            />
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                              <svg
+                                className="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                strokeWidth={2.5}
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+
+                          {/* Checklist */}
+                          <div className="py-1 max-h-48 overflow-y-auto divide-y divide-gray-100">
+                            {filteredCategories.map((cat) => {
+                              const isChecked = values.some(
+                                (v) => v.toLowerCase() === cat.toLowerCase()
+                              )
+                              return (
+                                <div
+                                  key={cat}
+                                  onClick={() => {
+                                    if (isChecked) {
+                                      field.onChange(values.filter((v) => v.toLowerCase() !== cat.toLowerCase()))
+                                    } else {
+                                      field.onChange([...values, cat])
+                                    }
+                                  }}
+                                  className="flex items-center gap-3 px-3 py-2 text-sm font-semibold text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors select-none"
+                                >
+                                  <div className={cn(
+                                    "flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border transition-colors duration-205",
+                                    isChecked
+                                      ? "border-[#0b4d8d] bg-[#0b4d8d] text-white"
+                                      : "border-gray-300 bg-white"
+                                  )}>
+                                    {isChecked && (
+                                      <svg
+                                        className="h-3 w-3 stroke-[3px]"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                      >
+                                        <path
+                                          strokeLinecap='round'
+                                          strokeLinejoin="round"
+                                          d="M5 13l4 4L19 7"
+                                        />
+                                      </svg>
+                                    )}
+                                  </div>
+                                  <span>{cat}</span>
+                                </div>
+                              )
+                            })}
+                            {filteredCategories.length === 0 && (
+                              <div className="px-3 py-3 text-sm text-gray-400 text-center">
+                                No specialties found
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <FormMessage />
+                    {isCategoriesError && (
+                      <p role='alert' aria-live='polite' className="text-xs text-red-500 mt-1.5 px-1 font-medium">
+                        Failed to load categories. Please try refreshing the page.
+                      </p>
+                    )}
+                  </FormItem>
+                )
+              }}
+            />
+
             <div className='flex justify-end gap-3 pt-2'>
               <Button
                 type='button'
@@ -267,7 +441,7 @@ export function EditTrainerModal({ open, onClose, trainer }: EditTrainerModalPro
               >
                 Cancel
               </Button>
-              <Button type='submit' disabled={isSubmitting}>
+              <Button type='submit' disabled={!form.formState.isDirty || isSubmitting}>
                 {isSubmitting ? 'Saving...' : 'Save changes'}
               </Button>
             </div>
